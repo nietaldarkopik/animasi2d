@@ -1,0 +1,7731 @@
+{
+ "doc": {
+  "schema": 2,
+  "settings": {
+   "width": 1280,
+   "height": 720,
+   "fps": 24
+  },
+  "audio": [],
+  "scenes": [
+   {
+    "id": "s-depan",
+    "name": "Depan – diam & melambai",
+    "duration": 4,
+    "background": "#eef1f6",
+    "transition": {
+     "type": "fade",
+     "duration": 0.4
+    },
+    "board": {
+     "location": "Lembar uji rig",
+     "summary": "Badan perempuan SMA lengan panjang + rok panjang, tampak depan."
+    },
+    "layers": [
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-root",
+      "type": "bone",
+      "name": "Kit SMA P3 · Pinggul (root)",
+      "length": 25.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:root"
+      },
+      "x": 640.0,
+      "y": 381.84,
+      "rotation": -90,
+      "parentId": null
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-leg_l",
+      "type": "bone",
+      "name": "Kit SMA P3 · Paha kiri",
+      "length": 107.52,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:leg_l"
+      },
+      "x": -18.48,
+      "y": -29.4,
+      "rotation": 180.0,
+      "parentId": "kitdep-bone-root"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-thigh_l",
+      "type": "image",
+      "name": "Kit SMA P3 · Paha kiri",
+      "assetId": "@depan-thigh_l.png",
+      "x": 40.32,
+      "y": 0.84,
+      "rotation": -90.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-leg_l",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:thigh_l"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-shin_l",
+      "type": "bone",
+      "name": "Kit SMA P3 · Betis kiri",
+      "length": 137.76,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:shin_l"
+      },
+      "x": 107.52,
+      "y": 0.0,
+      "rotation": 0.0,
+      "parentId": "kitdep-bone-leg_l"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-shin_l",
+      "type": "image",
+      "name": "Kit SMA P3 · Betis kiri + kaus kaki",
+      "assetId": "@depan-shin_l.png",
+      "x": 70.56,
+      "y": 0.0,
+      "rotation": -90.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-shin_l",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:shin_l"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-foot_l",
+      "type": "bone",
+      "name": "Kit SMA P3 · Kaki kiri",
+      "length": 25.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:foot_l"
+      },
+      "x": 137.76,
+      "y": 0.0,
+      "rotation": 0.0,
+      "parentId": "kitdep-bone-shin_l"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-shoe_l",
+      "type": "image",
+      "name": "Kit SMA P3 · Sepatu kiri",
+      "assetId": "@depan-shoe_l.png",
+      "x": 19.32,
+      "y": -1.26,
+      "rotation": -90,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-foot_l",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:shoe_l"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-leg_r",
+      "type": "bone",
+      "name": "Kit SMA P3 · Paha kanan",
+      "length": 107.52,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:leg_r"
+      },
+      "x": -18.48,
+      "y": 29.4,
+      "rotation": 180.0,
+      "parentId": "kitdep-bone-root"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-thigh_r",
+      "type": "image",
+      "name": "Kit SMA P3 · Paha kanan",
+      "assetId": "@depan-thigh_r.png",
+      "x": 40.32,
+      "y": -0.84,
+      "rotation": -90.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-leg_r",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:thigh_r"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-shin_r",
+      "type": "bone",
+      "name": "Kit SMA P3 · Betis kanan",
+      "length": 137.76,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:shin_r"
+      },
+      "x": 107.52,
+      "y": 0.0,
+      "rotation": 0.0,
+      "parentId": "kitdep-bone-leg_r"
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-foot_r",
+      "type": "bone",
+      "name": "Kit SMA P3 · Kaki kanan",
+      "length": 25.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:foot_r"
+      },
+      "x": 137.76,
+      "y": 0.0,
+      "rotation": 0.0,
+      "parentId": "kitdep-bone-shin_r"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-shoe_r",
+      "type": "image",
+      "name": "Kit SMA P3 · Sepatu kanan",
+      "assetId": "@depan-shoe_r.png",
+      "x": 19.32,
+      "y": 2.94,
+      "rotation": -90,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-foot_r",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:shoe_r"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-shin_r",
+      "type": "image",
+      "name": "Kit SMA P3 · Betis kanan + kaus kaki",
+      "assetId": "@depan-shin_r.png",
+      "x": 70.56,
+      "y": 0.42,
+      "rotation": -90.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-shin_r",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:shin_r"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-skirt",
+      "type": "image",
+      "name": "Kit SMA P3 · Rok pendek",
+      "assetId": "@depan-skirt.png",
+      "x": 6.72,
+      "y": 0.42,
+      "rotation": 90,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-root",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:skirt"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-torso",
+      "type": "bone",
+      "name": "Kit SMA P3 · Badan",
+      "length": 187.32,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:torso"
+      },
+      "x": 0.0,
+      "y": 0.0,
+      "rotation": 0.0,
+      "parentId": "kitdep-bone-root",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 0.6,
+         "e": "easeInOut"
+        },
+        {
+         "f": 12,
+         "v": -0.6,
+         "e": "easeInOut"
+        },
+        {
+         "f": 24,
+         "v": 0.6,
+         "e": "easeInOut"
+        },
+        {
+         "f": 36,
+         "v": -0.6,
+         "e": "easeInOut"
+        },
+        {
+         "f": 48,
+         "v": 0.6,
+         "e": "easeInOut"
+        },
+        {
+         "f": 60,
+         "v": -0.6,
+         "e": "easeInOut"
+        },
+        {
+         "f": 72,
+         "v": 0.6,
+         "e": "easeInOut"
+        },
+        {
+         "f": 84,
+         "v": -0.6,
+         "e": "easeInOut"
+        },
+        {
+         "f": 96,
+         "v": 0.6,
+         "e": "easeInOut"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-neck",
+      "type": "image",
+      "name": "Kit SMA P3 · Leher",
+      "assetId": "@depan-neck.png",
+      "x": 193.62,
+      "y": 0.42,
+      "rotation": 90.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-torso",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:neck"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-torso",
+      "type": "image",
+      "name": "Kit SMA P3 · Badan (kemeja pelaut + dasi)",
+      "assetId": "@depan-torso.png",
+      "x": 129.78,
+      "y": 0.42,
+      "rotation": 90.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-torso",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:torso"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-head",
+      "type": "bone",
+      "name": "Kit SMA P3 · Kepala",
+      "length": 92.4,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:head"
+      },
+      "x": 187.32,
+      "y": -0.0,
+      "rotation": 0.0,
+      "parentId": "kitdep-bone-torso",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": -0.8,
+         "e": "easeInOut"
+        },
+        {
+         "f": 12,
+         "v": 1.2,
+         "e": "easeInOut"
+        },
+        {
+         "f": 24,
+         "v": -0.8,
+         "e": "easeInOut"
+        },
+        {
+         "f": 36,
+         "v": 1.2,
+         "e": "easeInOut"
+        },
+        {
+         "f": 48,
+         "v": -0.8,
+         "e": "easeInOut"
+        },
+        {
+         "f": 60,
+         "v": 1.2,
+         "e": "easeInOut"
+        },
+        {
+         "f": 72,
+         "v": -0.8,
+         "e": "easeInOut"
+        },
+        {
+         "f": 84,
+         "v": 1.2,
+         "e": "easeInOut"
+        },
+        {
+         "f": 96,
+         "v": -0.8,
+         "e": "easeInOut"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-collar",
+      "type": "image",
+      "name": "Kit SMA P3 · Kerah (di depan leher)",
+      "assetId": "@depan-collar.png",
+      "x": 182.7,
+      "y": 0.42,
+      "rotation": 90.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-torso",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:collar"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-arm_l",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan atas kiri",
+      "length": 119.112,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:arm_l"
+      },
+      "x": 166.32,
+      "y": -44.52,
+      "rotation": 208.19,
+      "parentId": "kitdep-bone-torso",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 208.19,
+         "e": "easeInOut"
+        },
+        {
+         "f": 18,
+         "v": 214.19,
+         "e": "easeInOut"
+        },
+        {
+         "f": 96,
+         "v": 208.19,
+         "e": "easeInOut"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-arm_l_up",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan atas kiri (lengan baju)",
+      "assetId": "@depan-arm_l_up.png",
+      "x": 62.874,
+      "y": 10.618,
+      "rotation": -118.19,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-arm_l",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:arm_l_up"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-forearm_l",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan bawah kiri",
+      "length": 56.616,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:forearm_l"
+      },
+      "x": 119.132,
+      "y": 0.003,
+      "rotation": 4.09,
+      "parentId": "kitdep-bone-arm_l"
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-hand_l",
+      "type": "bone",
+      "name": "Kit SMA P3 · Tangan kiri",
+      "length": 39.48,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:hand_l"
+      },
+      "x": 56.63,
+      "y": -0.004,
+      "rotation": -8.44,
+      "parentId": "kitdep-bone-forearm_l"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-hand_l",
+      "type": "image",
+      "name": "Kit SMA P3 · Tangan kiri",
+      "assetId": "@depan-hand_l.png",
+      "x": 17.395,
+      "y": 1.956,
+      "rotation": -113.84,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-hand_l",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:hand_l"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-arm_l_low",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan bawah kiri",
+      "assetId": "@depan-arm_l_low.png",
+      "x": 29.885,
+      "y": 2.483,
+      "rotation": -122.28,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-forearm_l",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:arm_l_low"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-arm_r",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan atas kanan",
+      "length": 119.112,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:arm_r"
+      },
+      "x": 166.32,
+      "y": 44.52,
+      "rotation": 151.81,
+      "parentId": "kitdep-bone-torso",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 151.81,
+         "e": "easeInOut"
+        },
+        {
+         "f": 18,
+         "v": 1.81,
+         "e": "easeInOut"
+        },
+        {
+         "f": 78,
+         "v": 1.81,
+         "e": "easeInOut"
+        },
+        {
+         "f": 96,
+         "v": 151.81,
+         "e": "easeInOut"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-arm_r_up",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan atas kanan (lengan baju)",
+      "assetId": "@depan-arm_r_up.png",
+      "x": 62.729,
+      "y": -12.125,
+      "rotation": -61.81,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-arm_r",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:arm_r_up"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-forearm_r",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan bawah kanan",
+      "length": 56.616,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:forearm_r"
+      },
+      "x": 119.132,
+      "y": -0.003,
+      "rotation": -4.09,
+      "parentId": "kitdep-bone-arm_r",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": -4.09,
+         "e": "easeInOut"
+        },
+        {
+         "f": 18,
+         "v": -34.09,
+         "e": "easeInOut"
+        },
+        {
+         "f": 24,
+         "v": -44.09,
+         "e": "easeInOut"
+        },
+        {
+         "f": 32,
+         "v": -16.09,
+         "e": "easeInOut"
+        },
+        {
+         "f": 40,
+         "v": -44.09,
+         "e": "easeInOut"
+        },
+        {
+         "f": 48,
+         "v": -16.09,
+         "e": "easeInOut"
+        },
+        {
+         "f": 56,
+         "v": -44.09,
+         "e": "easeInOut"
+        },
+        {
+         "f": 64,
+         "v": -16.09,
+         "e": "easeInOut"
+        },
+        {
+         "f": 72,
+         "v": -44.09,
+         "e": "easeInOut"
+        },
+        {
+         "f": 78,
+         "v": -34.09,
+         "e": "easeInOut"
+        },
+        {
+         "f": 96,
+         "v": -4.09,
+         "e": "easeInOut"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-bone-hand_r",
+      "type": "bone",
+      "name": "Kit SMA P3 · Tangan kanan",
+      "length": 39.48,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitdep",
+       "role": "bone:hand_r"
+      },
+      "x": 56.63,
+      "y": 0.004,
+      "rotation": 8.44,
+      "parentId": "kitdep-bone-forearm_r",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 8.44,
+         "e": "easeInOut"
+        },
+        {
+         "f": 24,
+         "v": -1.56,
+         "e": "easeInOut"
+        },
+        {
+         "f": 32,
+         "v": 16.44,
+         "e": "easeInOut"
+        },
+        {
+         "f": 40,
+         "v": -1.56,
+         "e": "easeInOut"
+        },
+        {
+         "f": 48,
+         "v": 16.44,
+         "e": "easeInOut"
+        },
+        {
+         "f": 56,
+         "v": -1.56,
+         "e": "easeInOut"
+        },
+        {
+         "f": 64,
+         "v": 16.44,
+         "e": "easeInOut"
+        },
+        {
+         "f": 72,
+         "v": -1.56,
+         "e": "easeInOut"
+        },
+        {
+         "f": 96,
+         "v": 8.44,
+         "e": "easeInOut"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-hand_r",
+      "type": "image",
+      "name": "Kit SMA P3 · Tangan kanan",
+      "assetId": "@depan-hand_r.png",
+      "x": 17.734,
+      "y": -2.725,
+      "rotation": -66.16,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-hand_r",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:hand_r"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitdep-piece-arm_r_low",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan bawah kanan",
+      "assetId": "@depan-arm_r_low.png",
+      "x": 29.979,
+      "y": -3.418,
+      "rotation": -57.72,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitdep-bone-forearm_r",
+      "rig": {
+       "id": "kitdep",
+       "role": "piece:arm_r_low"
+      }
+     }
+    ]
+   },
+   {
+    "id": "s-kanan",
+    "name": "Samping kanan – jalan",
+    "duration": 4,
+    "background": "#eef1f6",
+    "transition": {
+     "type": "fade",
+     "duration": 0.4
+    },
+    "board": {
+     "location": "Lembar uji rig",
+     "summary": "Badan perempuan SMA lengan panjang + rok panjang, tampak samping kanan."
+    },
+    "layers": [
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-root",
+      "type": "bone",
+      "name": "Kit SMA P3 · Pinggul (root)",
+      "length": 25.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:root"
+      },
+      "x": 220.0,
+      "y": 383.52,
+      "rotation": -90,
+      "parentId": null,
+      "keyframes": {
+       "y": [
+        {
+         "f": 0,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 388.52,
+         "e": "linear"
+        }
+       ],
+       "x": [
+        {
+         "f": 0,
+         "v": 220.0,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 246.25,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 272.5,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 298.75,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 325.0,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 351.25,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 377.5,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 403.75,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 430.0,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 456.25,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 482.5,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 508.75,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 535.0,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 561.25,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 587.5,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 613.75,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 640.0,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 666.25,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 692.5,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 718.75,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 745.0,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 771.25,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 797.5,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 823.75,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 850.0,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 876.25,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 902.5,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 928.75,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 955.0,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 981.25,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 1007.5,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 1033.75,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 1060.0,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-leg_far",
+      "type": "bone",
+      "name": "Kit SMA P3 · Paha jauh",
+      "length": 117.768,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:leg_far"
+      },
+      "x": -16.8,
+      "y": 0.0,
+      "rotation": 176.73,
+      "parentId": "kitkan-bone-root",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 187.73,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 165.73,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 187.73,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 165.73,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 187.73,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 165.73,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 187.73,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 165.73,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 187.73,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-thigh_far",
+      "type": "image",
+      "name": "Kit SMA P3 · Paha jauh",
+      "assetId": "@kanan-thigh_far.png",
+      "x": 49.228,
+      "y": -0.132,
+      "rotation": -86.73,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-leg_far",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:thigh_far"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-shin_far",
+      "type": "bone",
+      "name": "Kit SMA P3 · Betis jauh",
+      "length": 130.62,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:shin_far"
+      },
+      "x": 117.792,
+      "y": -0.001,
+      "rotation": 8.06,
+      "parentId": "kitkan-bone-leg_far",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 24.06,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 24.06,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 24.06,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 24.06,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 8.06,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-shin_far",
+      "type": "image",
+      "name": "Kit SMA P3 · Betis jauh + kaus kaki",
+      "assetId": "@kanan-shin_far.png",
+      "x": 67.526,
+      "y": 1.085,
+      "rotation": -94.79,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-shin_far",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:shin_far"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-foot_far",
+      "type": "bone",
+      "name": "Kit SMA P3 · Kaki jauh",
+      "length": 25.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:foot_far"
+      },
+      "x": 130.657,
+      "y": 0.01,
+      "rotation": -94.79,
+      "parentId": "kitkan-bone-shin_far",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": -99.033,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": -99.033,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": -100.79,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": -99.033,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": -100.79,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": -99.033,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": -94.79,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-shoe_far",
+      "type": "image",
+      "name": "Kit SMA P3 · Sepatu jauh",
+      "assetId": "@kanan-shoe_far.png",
+      "x": 18.06,
+      "y": 16.8,
+      "rotation": 0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-foot_far",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:shoe_far"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-leg_near",
+      "type": "bone",
+      "name": "Kit SMA P3 · Paha dekat",
+      "length": 117.768,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:leg_near"
+      },
+      "x": -16.8,
+      "y": 0.0,
+      "rotation": 176.73,
+      "parentId": "kitkan-bone-root",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 165.73,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 187.73,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 165.73,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 187.73,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 165.73,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 187.73,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 165.73,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 187.73,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 184.508,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 176.73,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 168.952,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 165.73,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-thigh_near",
+      "type": "image",
+      "name": "Kit SMA P3 · Paha dekat",
+      "assetId": "@kanan-thigh_near.png",
+      "x": 49.228,
+      "y": -0.132,
+      "rotation": -86.73,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-leg_near",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:thigh_near"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-shin_near",
+      "type": "bone",
+      "name": "Kit SMA P3 · Betis dekat",
+      "length": 130.62,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:shin_near"
+      },
+      "x": 117.792,
+      "y": -0.001,
+      "rotation": 8.06,
+      "parentId": "kitkan-bone-leg_near",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 24.06,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 24.06,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 24.06,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 8.06,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 24.06,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 19.374,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 8.06,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-shin_near",
+      "type": "image",
+      "name": "Kit SMA P3 · Betis dekat + kaus kaki",
+      "assetId": "@kanan-shin_near.png",
+      "x": 67.526,
+      "y": 1.085,
+      "rotation": -94.79,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-shin_near",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:shin_near"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-foot_near",
+      "type": "bone",
+      "name": "Kit SMA P3 · Kaki dekat",
+      "length": 25.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:foot_near"
+      },
+      "x": 130.657,
+      "y": 0.01,
+      "rotation": -94.79,
+      "parentId": "kitkan-bone-shin_near",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": -99.033,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": -99.033,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": -99.033,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": -99.033,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": -94.79,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": -94.79,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-shoe_near",
+      "type": "image",
+      "name": "Kit SMA P3 · Sepatu dekat",
+      "assetId": "@kanan-shoe_near.png",
+      "x": 18.06,
+      "y": 16.8,
+      "rotation": 0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-foot_near",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:shoe_near"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-skirt",
+      "type": "image",
+      "name": "Kit SMA P3 · Rok pendek",
+      "assetId": "@kanan-skirt.png",
+      "x": 5.88,
+      "y": -0.84,
+      "rotation": 90,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-root",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:skirt"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-torso",
+      "type": "bone",
+      "name": "Kit SMA P3 · Badan",
+      "length": 189.168,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:torso"
+      },
+      "x": 0.0,
+      "y": 0.0,
+      "rotation": 2.54,
+      "parentId": "kitkan-bone-root",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 0.04,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 0.04,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-arm_far",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan atas jauh",
+      "length": 105.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:arm_far"
+      },
+      "x": 158.922,
+      "y": -18.821,
+      "rotation": 176.54,
+      "parentId": "kitkan-bone-torso",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 172.94,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 173.994,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 179.086,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 180.14,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 179.086,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 173.994,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 172.94,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 173.994,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 179.086,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 180.14,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 179.086,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 173.994,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 172.94,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 173.994,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 179.086,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 180.14,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 179.086,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 173.994,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 172.94,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 173.994,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 179.086,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 180.14,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 179.086,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 173.994,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 172.94,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-arm_far_up",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan atas jauh",
+      "assetId": "@kanan-arm_far_up.png",
+      "x": 36.109,
+      "y": 1.0,
+      "rotation": -89.08,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-arm_far",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:arm_far_up"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-forearm_far",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan bawah jauh",
+      "length": 63.588,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:forearm_far"
+      },
+      "x": 105.013,
+      "y": 0.006,
+      "rotation": -6.67,
+      "parentId": "kitkan-bone-arm_far",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": -20.67,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": -20.67,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": -20.67,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": -20.67,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": -20.67,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-hand_far",
+      "type": "bone",
+      "name": "Kit SMA P3 · Tangan jauh",
+      "length": 39.228,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:hand_far"
+      },
+      "x": 63.558,
+      "y": -0.005,
+      "rotation": -2.28,
+      "parentId": "kitkan-bone-forearm_far"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-neck",
+      "type": "image",
+      "name": "Kit SMA P3 · Leher",
+      "assetId": "@kanan-neck.png",
+      "x": 195.49,
+      "y": -9.513,
+      "rotation": 87.46,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-torso",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:neck"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-torso",
+      "type": "image",
+      "name": "Kit SMA P3 · Badan (kemeja pelaut)",
+      "assetId": "@kanan-torso.png",
+      "x": 128.272,
+      "y": 1.036,
+      "rotation": 87.46,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-torso",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:torso"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-head",
+      "type": "bone",
+      "name": "Kit SMA P3 · Kepala",
+      "length": 92.4,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:head"
+      },
+      "x": 189.187,
+      "y": 0.016,
+      "rotation": -2.54,
+      "parentId": "kitkan-bone-torso",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": -1.04,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": -4.04,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": -1.04,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": -4.04,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": -1.04,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": -4.04,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": -1.04,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": -4.04,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": -1.04,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": -4.04,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": -1.04,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": -4.04,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": -1.04,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": -4.04,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": -1.04,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": -2.54,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": -4.04,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": -2.54,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-collar",
+      "type": "image",
+      "name": "Kit SMA P3 · Kerah (di depan leher)",
+      "assetId": "@kanan-collar.png",
+      "x": 185.131,
+      "y": -6.11,
+      "rotation": 87.46,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-torso",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:collar"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-arm_near",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan atas dekat",
+      "length": 105.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:arm_near"
+      },
+      "x": 158.922,
+      "y": -18.821,
+      "rotation": 176.54,
+      "parentId": "kitkan-bone-torso",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 182.54,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 180.783,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 172.297,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 170.54,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 172.297,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 180.783,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 182.54,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 180.783,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 172.297,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 170.54,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 172.297,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 180.783,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 182.54,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 180.783,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 172.297,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 170.54,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 172.297,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 180.783,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 182.54,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 180.783,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 172.297,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 170.54,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 172.297,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 176.54,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 180.783,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 182.54,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-forearm_near",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan bawah dekat",
+      "length": 63.588,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:forearm_near"
+      },
+      "x": 105.013,
+      "y": 0.006,
+      "rotation": -6.67,
+      "parentId": "kitkan-bone-arm_near",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": -20.67,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": -20.67,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": -20.67,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": -20.67,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": -17.741,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": -10.67,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": -10.67,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-bone-hand_near",
+      "type": "bone",
+      "name": "Kit SMA P3 · Tangan dekat",
+      "length": 39.228,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkan",
+       "role": "bone:hand_near"
+      },
+      "x": 63.558,
+      "y": -0.005,
+      "rotation": -2.28,
+      "parentId": "kitkan-bone-forearm_near"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-hand_near",
+      "type": "image",
+      "name": "Kit SMA P3 · Tangan dekat",
+      "assetId": "@kanan-hand_near.png",
+      "x": 17.343,
+      "y": -1.672,
+      "rotation": -80.13,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-hand_near",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:hand_near"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-arm_near_low",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan bawah dekat",
+      "assetId": "@kanan-arm_near_low.png",
+      "x": 30.169,
+      "y": -0.641,
+      "rotation": -82.41,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-forearm_near",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:arm_near_low"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkan-piece-arm_near_up",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan atas dekat (lengan baju)",
+      "assetId": "@kanan-arm_near_up.png",
+      "x": 46.607,
+      "y": 1.168,
+      "rotation": -89.08,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkan-bone-arm_near",
+      "rig": {
+       "id": "kitkan",
+       "role": "piece:arm_near_up"
+      }
+     }
+    ]
+   },
+   {
+    "id": "s-kiri",
+    "name": "Samping kiri – jalan",
+    "duration": 4,
+    "background": "#eef1f6",
+    "transition": {
+     "type": "fade",
+     "duration": 0.4
+    },
+    "board": {
+     "location": "Lembar uji rig",
+     "summary": "Badan perempuan SMA lengan panjang + rok panjang, tampak samping kiri."
+    },
+    "layers": [
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-root",
+      "type": "bone",
+      "name": "Kit SMA P3 · Pinggul (root)",
+      "length": 25.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:root"
+      },
+      "x": 1060.0,
+      "y": 383.52,
+      "rotation": -90,
+      "parentId": null,
+      "keyframes": {
+       "y": [
+        {
+         "f": 0,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 388.52,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 378.52,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 383.52,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 388.52,
+         "e": "linear"
+        }
+       ],
+       "x": [
+        {
+         "f": 0,
+         "v": 1060.0,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 1033.75,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 1007.5,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 981.25,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 955.0,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 928.75,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 902.5,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 876.25,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 850.0,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 823.75,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 797.5,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 771.25,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 745.0,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 718.75,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 692.5,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 666.25,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 640.0,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 613.75,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 587.5,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 561.25,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 535.0,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 508.75,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 482.5,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 456.25,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 430.0,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 403.75,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 377.5,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 351.25,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 325.0,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 298.75,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 272.5,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 246.25,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 220.0,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-leg_far",
+      "type": "bone",
+      "name": "Kit SMA P3 · Paha jauh",
+      "length": 117.768,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:leg_far"
+      },
+      "x": -16.8,
+      "y": 0.0,
+      "rotation": 183.27,
+      "parentId": "kitkir-bone-root",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 172.27,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 194.27,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 172.27,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 194.27,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 172.27,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 194.27,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 172.27,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 194.27,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 172.27,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-thigh_far",
+      "type": "image",
+      "name": "Kit SMA P3 · Paha jauh",
+      "assetId": "@kiri-thigh_far.png",
+      "x": 49.228,
+      "y": 0.132,
+      "rotation": -93.27,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-leg_far",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:thigh_far"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-shin_far",
+      "type": "bone",
+      "name": "Kit SMA P3 · Betis jauh",
+      "length": 130.62,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:shin_far"
+      },
+      "x": 117.792,
+      "y": 0.001,
+      "rotation": -8.06,
+      "parentId": "kitkir-bone-leg_far",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": -24.06,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": -24.06,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": -24.06,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": -24.06,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": -8.06,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-shin_far",
+      "type": "image",
+      "name": "Kit SMA P3 · Betis jauh + kaus kaki",
+      "assetId": "@kiri-shin_far.png",
+      "x": 67.526,
+      "y": -1.085,
+      "rotation": -85.21,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-shin_far",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:shin_far"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-foot_far",
+      "type": "bone",
+      "name": "Kit SMA P3 · Kaki jauh",
+      "length": 25.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:foot_far"
+      },
+      "x": 130.657,
+      "y": -0.01,
+      "rotation": 94.79,
+      "parentId": "kitkir-bone-shin_far",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 99.033,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 99.033,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 100.79,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 99.033,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 100.79,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 99.033,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 94.79,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-shoe_far",
+      "type": "image",
+      "name": "Kit SMA P3 · Sepatu jauh",
+      "assetId": "@kiri-shoe_far.png",
+      "x": 18.06,
+      "y": -16.8,
+      "rotation": -180,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-foot_far",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:shoe_far"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-leg_near",
+      "type": "bone",
+      "name": "Kit SMA P3 · Paha dekat",
+      "length": 117.768,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:leg_near"
+      },
+      "x": -16.8,
+      "y": 0.0,
+      "rotation": 183.27,
+      "parentId": "kitkir-bone-root",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 194.27,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 172.27,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 194.27,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 172.27,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 194.27,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 172.27,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 194.27,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 172.27,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 175.492,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 183.27,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 191.048,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 194.27,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-thigh_near",
+      "type": "image",
+      "name": "Kit SMA P3 · Paha dekat",
+      "assetId": "@kiri-thigh_near.png",
+      "x": 49.228,
+      "y": 0.132,
+      "rotation": -93.27,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-leg_near",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:thigh_near"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-shin_near",
+      "type": "bone",
+      "name": "Kit SMA P3 · Betis dekat",
+      "length": 130.62,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:shin_near"
+      },
+      "x": 117.792,
+      "y": 0.001,
+      "rotation": -8.06,
+      "parentId": "kitkir-bone-leg_near",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": -24.06,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": -24.06,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": -24.06,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": -8.06,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": -24.06,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": -19.374,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": -8.06,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-shin_near",
+      "type": "image",
+      "name": "Kit SMA P3 · Betis dekat + kaus kaki",
+      "assetId": "@kiri-shin_near.png",
+      "x": 67.526,
+      "y": -1.085,
+      "rotation": -85.21,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-shin_near",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:shin_near"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-foot_near",
+      "type": "bone",
+      "name": "Kit SMA P3 · Kaki dekat",
+      "length": 25.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:foot_near"
+      },
+      "x": 130.657,
+      "y": -0.01,
+      "rotation": 94.79,
+      "parentId": "kitkir-bone-shin_near",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 99.033,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 99.033,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 99.033,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 99.033,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 94.79,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 94.79,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-shoe_near",
+      "type": "image",
+      "name": "Kit SMA P3 · Sepatu dekat",
+      "assetId": "@kiri-shoe_near.png",
+      "x": 18.06,
+      "y": -16.8,
+      "rotation": -180,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-foot_near",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:shoe_near"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-skirt",
+      "type": "image",
+      "name": "Kit SMA P3 · Rok pendek",
+      "assetId": "@kiri-skirt.png",
+      "x": 5.88,
+      "y": 0.84,
+      "rotation": 90,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-root",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:skirt"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-torso",
+      "type": "bone",
+      "name": "Kit SMA P3 · Badan",
+      "length": 189.168,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:torso"
+      },
+      "x": 0.0,
+      "y": 0.0,
+      "rotation": -2.54,
+      "parentId": "kitkir-bone-root",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": -0.04,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": -0.04,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-arm_far",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan atas jauh",
+      "length": 105.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:arm_far"
+      },
+      "x": 158.922,
+      "y": 18.821,
+      "rotation": 183.46,
+      "parentId": "kitkir-bone-torso",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 187.06,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 186.006,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 180.914,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 179.86,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 180.914,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 186.006,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 187.06,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 186.006,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 180.914,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 179.86,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 180.914,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 186.006,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 187.06,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 186.006,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 180.914,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 179.86,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 180.914,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 186.006,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 187.06,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 186.006,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 180.914,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 179.86,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 180.914,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 186.006,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 187.06,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-arm_far_up",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan atas jauh",
+      "assetId": "@kiri-arm_far_up.png",
+      "x": 36.109,
+      "y": -1.0,
+      "rotation": -90.92,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-arm_far",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:arm_far_up"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-forearm_far",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan bawah jauh",
+      "length": 63.588,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:forearm_far"
+      },
+      "x": 105.013,
+      "y": -0.006,
+      "rotation": 6.67,
+      "parentId": "kitkir-bone-arm_far",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 20.67,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 20.67,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 20.67,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 20.67,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 20.67,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-hand_far",
+      "type": "bone",
+      "name": "Kit SMA P3 · Tangan jauh",
+      "length": 39.228,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:hand_far"
+      },
+      "x": 63.558,
+      "y": 0.005,
+      "rotation": 2.28,
+      "parentId": "kitkir-bone-forearm_far"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-neck",
+      "type": "image",
+      "name": "Kit SMA P3 · Leher",
+      "assetId": "@kiri-neck.png",
+      "x": 195.49,
+      "y": 9.513,
+      "rotation": 92.54,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-torso",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:neck"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-torso",
+      "type": "image",
+      "name": "Kit SMA P3 · Badan (kemeja pelaut)",
+      "assetId": "@kiri-torso.png",
+      "x": 128.272,
+      "y": -1.036,
+      "rotation": 92.54,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-torso",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:torso"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-head",
+      "type": "bone",
+      "name": "Kit SMA P3 · Kepala",
+      "length": 92.4,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:head"
+      },
+      "x": 189.187,
+      "y": -0.016,
+      "rotation": 2.54,
+      "parentId": "kitkir-bone-torso",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 1.04,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 4.04,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 1.04,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 4.04,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 1.04,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 4.04,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 1.04,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 4.04,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 1.04,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 4.04,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 1.04,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 4.04,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 1.04,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 4.04,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 1.04,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 2.54,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 4.04,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 2.54,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-collar",
+      "type": "image",
+      "name": "Kit SMA P3 · Kerah (di depan leher)",
+      "assetId": "@kiri-collar.png",
+      "x": 185.131,
+      "y": 6.11,
+      "rotation": 92.54,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-torso",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:collar"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-arm_near",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan atas dekat",
+      "length": 105.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:arm_near"
+      },
+      "x": 158.922,
+      "y": 18.821,
+      "rotation": 183.46,
+      "parentId": "kitkir-bone-torso",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 177.46,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 179.217,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 187.703,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 189.46,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 187.703,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 179.217,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 177.46,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 179.217,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 187.703,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 189.46,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 187.703,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 179.217,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 177.46,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 179.217,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 187.703,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 189.46,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 187.703,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 179.217,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 177.46,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 179.217,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 187.703,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 189.46,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 187.703,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 183.46,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 179.217,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 177.46,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-forearm_near",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan bawah dekat",
+      "length": 63.588,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:forearm_near"
+      },
+      "x": 105.013,
+      "y": -0.006,
+      "rotation": 6.67,
+      "parentId": "kitkir-bone-arm_near",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 3,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 6,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 9,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 12,
+         "v": 20.67,
+         "e": "linear"
+        },
+        {
+         "f": 15,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 18,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 21,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 24,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 27,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 30,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 33,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 36,
+         "v": 20.67,
+         "e": "linear"
+        },
+        {
+         "f": 39,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 42,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 45,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 48,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 51,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 54,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 57,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 60,
+         "v": 20.67,
+         "e": "linear"
+        },
+        {
+         "f": 63,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 66,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 69,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 72,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 75,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 78,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 81,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 84,
+         "v": 20.67,
+         "e": "linear"
+        },
+        {
+         "f": 87,
+         "v": 17.741,
+         "e": "linear"
+        },
+        {
+         "f": 90,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 93,
+         "v": 10.67,
+         "e": "linear"
+        },
+        {
+         "f": 96,
+         "v": 10.67,
+         "e": "linear"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-bone-hand_near",
+      "type": "bone",
+      "name": "Kit SMA P3 · Tangan dekat",
+      "length": 39.228,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitkir",
+       "role": "bone:hand_near"
+      },
+      "x": 63.558,
+      "y": 0.005,
+      "rotation": 2.28,
+      "parentId": "kitkir-bone-forearm_near"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-hand_near",
+      "type": "image",
+      "name": "Kit SMA P3 · Tangan dekat",
+      "assetId": "@kiri-hand_near.png",
+      "x": 17.343,
+      "y": 1.672,
+      "rotation": -99.87,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-hand_near",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:hand_near"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-arm_near_low",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan bawah dekat",
+      "assetId": "@kiri-arm_near_low.png",
+      "x": 30.169,
+      "y": 0.641,
+      "rotation": -97.59,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-forearm_near",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:arm_near_low"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitkir-piece-arm_near_up",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan atas dekat (lengan baju)",
+      "assetId": "@kiri-arm_near_up.png",
+      "x": 46.607,
+      "y": -1.168,
+      "rotation": -90.92,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitkir-bone-arm_near",
+      "rig": {
+       "id": "kitkir",
+       "role": "piece:arm_near_up"
+      }
+     }
+    ]
+   },
+   {
+    "id": "s-belakang",
+    "name": "Belakang – diam",
+    "duration": 3,
+    "background": "#eef1f6",
+    "transition": {
+     "type": "fade",
+     "duration": 0.4
+    },
+    "board": {
+     "location": "Lembar uji rig",
+     "summary": "Badan perempuan SMA lengan panjang + rok panjang, tampak belakang."
+    },
+    "layers": [
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-root",
+      "type": "bone",
+      "name": "Kit SMA P3 · Pinggul (root)",
+      "length": 25.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:root"
+      },
+      "x": 640.0,
+      "y": 381.84,
+      "rotation": -90,
+      "parentId": null,
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": -89.2,
+         "e": "easeInOut"
+        },
+        {
+         "f": 18,
+         "v": -90.8,
+         "e": "easeInOut"
+        },
+        {
+         "f": 36,
+         "v": -89.2,
+         "e": "easeInOut"
+        },
+        {
+         "f": 54,
+         "v": -90.8,
+         "e": "easeInOut"
+        },
+        {
+         "f": 72,
+         "v": -89.2,
+         "e": "easeInOut"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-leg_l",
+      "type": "bone",
+      "name": "Kit SMA P3 · Paha kiri",
+      "length": 109.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:leg_l"
+      },
+      "x": -18.48,
+      "y": -29.4,
+      "rotation": 181.32,
+      "parentId": "kitbel-bone-root"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-thigh_l",
+      "type": "image",
+      "name": "Kit SMA P3 · Paha kiri",
+      "assetId": "@belakang-thigh_l.png",
+      "x": 40.72,
+      "y": -1.358,
+      "rotation": -91.32,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-leg_l",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:thigh_l"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-shin_l",
+      "type": "bone",
+      "name": "Kit SMA P3 · Betis kiri",
+      "length": 136.08,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:shin_l"
+      },
+      "x": 109.229,
+      "y": 0.004,
+      "rotation": -0.97,
+      "parentId": "kitbel-bone-leg_l"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-shin_l",
+      "type": "image",
+      "name": "Kit SMA P3 · Betis kiri + kaus kaki",
+      "assetId": "@belakang-shin_l.png",
+      "x": 70.11,
+      "y": -5.048,
+      "rotation": -90.35,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-shin_l",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:shin_l"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-foot_l",
+      "type": "bone",
+      "name": "Kit SMA P3 · Kaki kiri",
+      "length": 25.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:foot_l"
+      },
+      "x": 136.083,
+      "y": 0.009,
+      "rotation": -0.35,
+      "parentId": "kitbel-bone-shin_l"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-shoe_l",
+      "type": "image",
+      "name": "Kit SMA P3 · Sepatu kiri",
+      "assetId": "@belakang-shoe_l.png",
+      "x": 18.06,
+      "y": -6.3,
+      "rotation": -90,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-foot_l",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:shoe_l"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-leg_r",
+      "type": "bone",
+      "name": "Kit SMA P3 · Paha kanan",
+      "length": 109.284,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:leg_r"
+      },
+      "x": -18.48,
+      "y": 27.72,
+      "rotation": 178.24,
+      "parentId": "kitbel-bone-root"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-thigh_r",
+      "type": "image",
+      "name": "Kit SMA P3 · Paha kanan",
+      "assetId": "@belakang-thigh_r.png",
+      "x": 40.824,
+      "y": -2.107,
+      "rotation": -88.24,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-leg_r",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:thigh_r"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-shin_r",
+      "type": "bone",
+      "name": "Kit SMA P3 · Betis kanan",
+      "length": 136.08,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:shin_r"
+      },
+      "x": 109.252,
+      "y": -0.005,
+      "rotation": 1.76,
+      "parentId": "kitbel-bone-leg_r"
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-foot_r",
+      "type": "bone",
+      "name": "Kit SMA P3 · Kaki kanan",
+      "length": 25.2,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:foot_r"
+      },
+      "x": 136.08,
+      "y": 0.0,
+      "rotation": 0.0,
+      "parentId": "kitbel-bone-shin_r"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-shoe_r",
+      "type": "image",
+      "name": "Kit SMA P3 · Sepatu kanan",
+      "assetId": "@belakang-shoe_r.png",
+      "x": 18.06,
+      "y": 0.42,
+      "rotation": -90,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-foot_r",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:shoe_r"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-shin_r",
+      "type": "image",
+      "name": "Kit SMA P3 · Betis kanan + kaus kaki",
+      "assetId": "@belakang-shin_r.png",
+      "x": 70.14,
+      "y": 0.42,
+      "rotation": -90.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-shin_r",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:shin_r"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-skirt",
+      "type": "image",
+      "name": "Kit SMA P3 · Rok pendek",
+      "assetId": "@belakang-skirt.png",
+      "x": 7.56,
+      "y": 1.26,
+      "rotation": 90,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-root",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:skirt"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-torso",
+      "type": "bone",
+      "name": "Kit SMA P3 · Badan",
+      "length": 191.52,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:torso"
+      },
+      "x": 0.0,
+      "y": 0.0,
+      "rotation": 0.0,
+      "parentId": "kitbel-bone-root",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": -1.2,
+         "e": "easeInOut"
+        },
+        {
+         "f": 18,
+         "v": 1.2,
+         "e": "easeInOut"
+        },
+        {
+         "f": 36,
+         "v": -1.2,
+         "e": "easeInOut"
+        },
+        {
+         "f": 54,
+         "v": 1.2,
+         "e": "easeInOut"
+        },
+        {
+         "f": 72,
+         "v": -1.2,
+         "e": "easeInOut"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-neck",
+      "type": "image",
+      "name": "Kit SMA P3 · Leher",
+      "assetId": "@belakang-neck.png",
+      "x": 203.28,
+      "y": -0.84,
+      "rotation": 90.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-torso",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:neck"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-torso",
+      "type": "image",
+      "name": "Kit SMA P3 · Badan (kemeja pelaut)",
+      "assetId": "@belakang-torso.png",
+      "x": 133.56,
+      "y": 0.42,
+      "rotation": 90.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-torso",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:torso"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-head",
+      "type": "bone",
+      "name": "Kit SMA P3 · Kepala",
+      "length": 92.4,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:head"
+      },
+      "x": 191.52,
+      "y": -0.0,
+      "rotation": 0.0,
+      "parentId": "kitbel-bone-torso",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 1.5,
+         "e": "easeInOut"
+        },
+        {
+         "f": 18,
+         "v": -1.5,
+         "e": "easeInOut"
+        },
+        {
+         "f": 36,
+         "v": 1.5,
+         "e": "easeInOut"
+        },
+        {
+         "f": 54,
+         "v": -1.5,
+         "e": "easeInOut"
+        },
+        {
+         "f": 72,
+         "v": 1.5,
+         "e": "easeInOut"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-collar",
+      "type": "image",
+      "name": "Kit SMA P3 · Kerah (di depan leher)",
+      "assetId": "@belakang-collar.png",
+      "x": 192.78,
+      "y": 0.42,
+      "rotation": 90.0,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-torso",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:collar"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-arm_l",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan atas kiri",
+      "length": 121.38,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:arm_l"
+      },
+      "x": 166.32,
+      "y": -46.2,
+      "rotation": 205.86,
+      "parentId": "kitbel-bone-torso",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 203.86,
+         "e": "easeInOut"
+        },
+        {
+         "f": 18,
+         "v": 208.86,
+         "e": "easeInOut"
+        },
+        {
+         "f": 36,
+         "v": 203.86,
+         "e": "easeInOut"
+        },
+        {
+         "f": 54,
+         "v": 208.86,
+         "e": "easeInOut"
+        },
+        {
+         "f": 72,
+         "v": 203.86,
+         "e": "easeInOut"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-arm_l_up",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan atas kiri (lengan baju)",
+      "assetId": "@belakang-arm_l_up.png",
+      "x": 65.207,
+      "y": 13.2,
+      "rotation": -115.86,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-arm_l",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:arm_l_up"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-forearm_l",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan bawah kiri",
+      "length": 52.668,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:forearm_l"
+      },
+      "x": 121.347,
+      "y": -0.009,
+      "rotation": 8.08,
+      "parentId": "kitbel-bone-arm_l"
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-hand_l",
+      "type": "bone",
+      "name": "Kit SMA P3 · Tangan kiri",
+      "length": 39.816,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:hand_l"
+      },
+      "x": 52.653,
+      "y": 0.003,
+      "rotation": -9.0,
+      "parentId": "kitbel-bone-forearm_l"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-hand_l",
+      "type": "image",
+      "name": "Kit SMA P3 · Tangan kiri",
+      "assetId": "@belakang-hand_l.png",
+      "x": 17.934,
+      "y": 3.703,
+      "rotation": -114.94,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-hand_l",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:hand_l"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-arm_l_low",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan bawah kiri",
+      "assetId": "@belakang-arm_l_low.png",
+      "x": 28.329,
+      "y": 5.235,
+      "rotation": -123.94,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-forearm_l",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:arm_l_low"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-arm_r",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan atas kanan",
+      "length": 121.38,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:arm_r"
+      },
+      "x": 166.32,
+      "y": 46.2,
+      "rotation": 154.14,
+      "parentId": "kitbel-bone-torso",
+      "keyframes": {
+       "rotation": [
+        {
+         "f": 0,
+         "v": 157.14,
+         "e": "easeInOut"
+        },
+        {
+         "f": 18,
+         "v": 152.14,
+         "e": "easeInOut"
+        },
+        {
+         "f": 36,
+         "v": 157.14,
+         "e": "easeInOut"
+        },
+        {
+         "f": 54,
+         "v": 152.14,
+         "e": "easeInOut"
+        },
+        {
+         "f": 72,
+         "v": 157.14,
+         "e": "easeInOut"
+        }
+       ]
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-arm_r_up",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan atas kanan (lengan baju)",
+      "assetId": "@belakang-arm_r_up.png",
+      "x": 66.902,
+      "y": -12.845,
+      "rotation": -64.14,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-arm_r",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:arm_r_up"
+      }
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-forearm_r",
+      "type": "bone",
+      "name": "Kit SMA P3 · Lengan bawah kanan",
+      "length": 52.668,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:forearm_r"
+      },
+      "x": 121.347,
+      "y": 0.009,
+      "rotation": -8.08,
+      "parentId": "kitbel-bone-arm_r"
+     },
+     {
+      "scaleX": 1,
+      "scaleY": 1,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-bone-hand_r",
+      "type": "bone",
+      "name": "Kit SMA P3 · Tangan kanan",
+      "length": 39.816,
+      "pivotX": 0,
+      "pivotY": 0,
+      "rig": {
+       "id": "kitbel",
+       "role": "bone:hand_r"
+      },
+      "x": 52.653,
+      "y": -0.003,
+      "rotation": 9.0,
+      "parentId": "kitbel-bone-forearm_r"
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-hand_r",
+      "type": "image",
+      "name": "Kit SMA P3 · Tangan kanan",
+      "assetId": "@belakang-hand_r.png",
+      "x": 18.111,
+      "y": -4.084,
+      "rotation": -65.06,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-hand_r",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:hand_r"
+      }
+     },
+     {
+      "scaleX": 0.42,
+      "scaleY": 0.42,
+      "opacity": 1,
+      "visible": true,
+      "locked": false,
+      "id": "kitbel-piece-arm_r_low",
+      "type": "image",
+      "name": "Kit SMA P3 · Lengan bawah kanan",
+      "assetId": "@belakang-arm_r_low.png",
+      "x": 28.798,
+      "y": -5.932,
+      "rotation": -56.06,
+      "pivotX": 0,
+      "pivotY": 0,
+      "parentId": "kitbel-bone-forearm_r",
+      "rig": {
+       "id": "kitbel",
+       "role": "piece:arm_r_low"
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "head": {
+  "scene": 0,
+  "bone": "kitdep-bone-head",
+  "joint": [
+   200.0,
+   218.0
+  ],
+  "angle": -90,
+  "K": 0.84,
+  "cx": 640.0,
+  "cy": 360.0
+ }
+}

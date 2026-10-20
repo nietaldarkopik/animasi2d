@@ -1,0 +1,134 @@
+{
+ "rambut_depan": [
+  "rambut_depan/rambut_depan_01.png",
+  "rambut_depan/rambut_depan_02.png",
+  "rambut_depan/rambut_depan_03.png",
+  "rambut_depan/rambut_depan_04.png",
+  "rambut_depan/rambut_depan_05.png",
+  "rambut_depan/rambut_depan_06.png",
+  "rambut_depan/rambut_depan_07.png",
+  "rambut_depan/rambut_depan_08.png"
+ ],
+ "rambut_belakang": [
+  "rambut_belakang/rambut_belakang_01.png",
+  "rambut_belakang/rambut_belakang_02.png",
+  "rambut_belakang/rambut_belakang_03.png",
+  "rambut_belakang/rambut_belakang_04.png",
+  "rambut_belakang/rambut_belakang_05.png",
+  "rambut_belakang/rambut_belakang_06.png",
+  "rambut_belakang/rambut_belakang_07.png",
+  "rambut_belakang/rambut_belakang_08.png"
+ ],
+ "wajah": [
+  "wajah/wajah_01.png",
+  "wajah/wajah_02.png",
+  "wajah/wajah_03.png",
+  "wajah/wajah_04.png",
+  "wajah/wajah_05.png",
+  "wajah/wajah_06.png",
+  "wajah/wajah_07.png",
+  "wajah/wajah_08.png"
+ ],
+ "mata": [
+  "mata/mata_01.png",
+  "mata/mata_02.png",
+  "mata/mata_03.png",
+  "mata/mata_04.png",
+  "mata/mata_05.png",
+  "mata/mata_06.png"
+ ],
+ "alis": [
+  "alis/alis_01.png",
+  "alis/alis_02.png",
+  "alis/alis_03.png",
+  "alis/alis_04.png",
+  "alis/alis_05.png",
+  "alis/alis_06.png"
+ ],
+ "mulut": [
+  "mulut/mulut_01.png",
+  "mulut/mulut_02.png",
+  "mulut/mulut_03.png",
+  "mulut/mulut_04.png",
+  "mulut/mulut_05.png",
+  "mulut/mulut_06.png",
+  "mulut/mulut_07.png",
+  "mulut/mulut_08.png",
+  "mulut/mulut_09.png"
+ ],
+ "kemeja": [
+  "kemeja/kemeja_01.png",
+  "kemeja/kemeja_02.png",
+  "kemeja/kemeja_03.png",
+  "kemeja/kemeja_04.png",
+  "kemeja/kemeja_05.png",
+  "kemeja/kemeja_06.png"
+ ],
+ "jaket": [
+  "jaket/jaket_01.png",
+  "jaket/jaket_02.png",
+  "jaket/jaket_03.png",
+  "jaket/jaket_04.png",
+  "jaket/jaket_05.png",
+  "jaket/jaket_06.png"
+ ],
+ "celana": [
+  "celana/celana_01.png",
+  "celana/celana_02.png",
+  "celana/celana_03.png",
+  "celana/celana_04.png"
+ ],
+ "rok": [
+  "rok/rok_01.png",
+  "rok/rok_02.png",
+  "rok/rok_03.png",
+  "rok/rok_04.png"
+ ],
+ "kerudung": [
+  "kerudung/kerudung_01.png",
+  "kerudung/kerudung_02.png",
+  "kerudung/kerudung_03.png",
+  "kerudung/kerudung_04.png",
+  "kerudung/kerudung_05.png",
+  "kerudung/kerudung_06.png"
+ ],
+ "aksesoris": [
+  "aksesoris/aksesoris_01.png",
+  "aksesoris/aksesoris_02.png",
+  "aksesoris/aksesoris_03.png",
+  "aksesoris/aksesoris_04.png",
+  "aksesoris/aksesoris_05.png",
+  "aksesoris/aksesoris_06.png",
+  "aksesoris/aksesoris_07.png",
+  "aksesoris/aksesoris_08.png"
+ ],
+ "sepatu": [
+  "sepatu/sepatu_01.png",
+  "sepatu/sepatu_02.png",
+  "sepatu/sepatu_03.png",
+  "sepatu/sepatu_04.png"
+ ],
+ "pose": [
+  "pose/pose_berdiri.png",
+  "pose/pose_samping.png",
+  "pose/pose_belakang.png",
+  "pose/pose_jalan.png",
+  "pose/pose_lari.png",
+  "pose/pose_duduk.png",
+  "pose/pose_tangan_di_pinggang.png",
+  "pose/pose_angkat_tangan.png",
+  "pose/pose_menunjuk.png",
+  "pose/pose_lainnya.png"
+ ],
+ "ekspresi": [
+  "ekspresi/ekspresi_senang.png",
+  "ekspresi/ekspresi_tertawa.png",
+  "ekspresi/ekspresi_kaget.png",
+  "ekspresi/ekspresi_serius.png",
+  "ekspresi/ekspresi_sedih.png",
+  "ekspresi/ekspresi_marah.png",
+  "ekspresi/ekspresi_bingung.png",
+  "ekspresi/ekspresi_wink.png",
+  "ekspresi/ekspresi_malu.png"
+ ]
+}

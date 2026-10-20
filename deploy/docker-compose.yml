@@ -1,0 +1,95 @@
+# Production-style stack:  postgres + redis + app (php-fpm) + worker (queue) + scheduler + web (nginx)
+#
+#   cp deploy/.env.production.example deploy/.env      # then edit it (passwords, APP_KEY, APP_URL, AI_API_KEY)
+#   docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d --build
+#
+# TLS: terminate HTTPS in front of the `web` service (Caddy / Traefik / your load balancer) and set APP_URL=https://...
+name: cartoon-maker
+
+x-app: &app
+  image: cartoon-maker-app:latest   # built once, reused by app / worker / scheduler
+  build:
+    context: ..
+    dockerfile: deploy/Dockerfile
+    target: app
+  env_file: .env
+  restart: unless-stopped
+  depends_on:
+    postgres: { condition: service_healthy }
+    redis: { condition: service_healthy }
+  volumes:
+    # uploaded images/audio, exports: the SAME volume must be mounted by every container that touches files
+    - studio_files:/var/www/html/storage/app
+  extra_hosts:
+    - "host.docker.internal:host-gateway"   # reach a 9router running on the Docker host
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+  app:
+    <<: *app
+    environment:
+      RUN_MIGRATIONS: "1"       # only this container migrates
+    healthcheck:
+      test: ["CMD-SHELL", "php -r 'exit(@fsockopen(\"127.0.0.1\", 9000) ? 0 : 1);'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  worker:
+    <<: *app
+    user: "82:82"               # www-data in the alpine php image
+    command: ["php", "artisan", "queue:work", "redis", "--tries=1", "--timeout=900", "--max-time=3600", "--sleep=2"]
+    depends_on:
+      app: { condition: service_healthy }
+    stop_grace_period: 120s     # let a running export finish
+
+  scheduler:
+    <<: *app
+    user: "82:82"
+    command: ["php", "artisan", "schedule:work"]
+    depends_on:
+      app: { condition: service_healthy }
+
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      app: { condition: service_healthy }
+
+volumes:
+  pgdata:
+  redisdata:
+  studio_files:

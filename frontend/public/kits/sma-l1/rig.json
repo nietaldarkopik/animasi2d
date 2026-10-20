@@ -1,0 +1,414 @@
+{
+ "id": "sma-l1",
+ "match": "Kit SMA L1 (anime)",
+ "label": "Laki-laki – lengan pendek & celana panjang",
+ "view": "depan",
+ "bones": [
+  {
+   "key": "root",
+   "name": "Pinggul (root)",
+   "parent": null,
+   "joint": [
+    200.0,
+    443.0
+   ],
+   "angle": -90,
+   "length": 30.0,
+   "order": 0
+  },
+  {
+   "key": "leg_l",
+   "name": "Paha kiri",
+   "parent": "root",
+   "joint": [
+    174.0,
+    445.0
+   ],
+   "angle": 91.85,
+   "length": 155.1,
+   "order": 0
+  },
+  {
+   "key": "shin_l",
+   "name": "Betis kiri",
+   "parent": "leg_l",
+   "joint": [
+    169.0,
+    600.0
+   ],
+   "angle": 91.97,
+   "length": 145.1,
+   "order": 10
+  },
+  {
+   "key": "foot_l",
+   "name": "Kaki kiri",
+   "parent": "shin_l",
+   "joint": [
+    164.0,
+    745.0
+   ],
+   "angle": 90,
+   "length": 30.0,
+   "order": 10
+  },
+  {
+   "key": "leg_r",
+   "name": "Paha kanan",
+   "parent": "root",
+   "joint": [
+    227.0,
+    445.0
+   ],
+   "angle": 88.52,
+   "length": 155.1,
+   "order": 1
+  },
+  {
+   "key": "shin_r",
+   "name": "Betis kanan",
+   "parent": "leg_r",
+   "joint": [
+    231.0,
+    600.0
+   ],
+   "angle": 88.03,
+   "length": 145.1,
+   "order": 10
+  },
+  {
+   "key": "foot_r",
+   "name": "Kaki kanan",
+   "parent": "shin_r",
+   "joint": [
+    236.0,
+    745.0
+   ],
+   "angle": 90,
+   "length": 30.0,
+   "order": 10
+  },
+  {
+   "key": "torso",
+   "name": "Badan",
+   "parent": "root",
+   "joint": [
+    200.0,
+    443.0
+   ],
+   "angle": -90.0,
+   "length": 238.0,
+   "order": 10
+  },
+  {
+   "key": "head",
+   "name": "Kepala",
+   "parent": "torso",
+   "joint": [
+    200.0,
+    205.0
+   ],
+   "angle": -90,
+   "length": 110.0,
+   "order": 20
+  },
+  {
+   "key": "arm_l",
+   "name": "Lengan atas kiri",
+   "parent": "torso",
+   "joint": [
+    131.0,
+    240.0
+   ],
+   "angle": 104.14,
+   "length": 139.2,
+   "order": 30
+  },
+  {
+   "key": "forearm_l",
+   "name": "Lengan bawah kiri",
+   "parent": "arm_l",
+   "joint": [
+    97.0,
+    375.0
+   ],
+   "angle": 97.13,
+   "length": 80.6,
+   "order": 10
+  },
+  {
+   "key": "hand_l",
+   "name": "Tangan kiri",
+   "parent": "forearm_l",
+   "joint": [
+    87.0,
+    455.0
+   ],
+   "angle": 96.84,
+   "length": 50.4,
+   "order": -1
+  },
+  {
+   "key": "arm_r",
+   "name": "Lengan atas kanan",
+   "parent": "torso",
+   "joint": [
+    269.0,
+    240.0
+   ],
+   "angle": 75.86,
+   "length": 139.2,
+   "order": 31
+  },
+  {
+   "key": "forearm_r",
+   "name": "Lengan bawah kanan",
+   "parent": "arm_r",
+   "joint": [
+    303.0,
+    375.0
+   ],
+   "angle": 82.87,
+   "length": 80.6,
+   "order": 10
+  },
+  {
+   "key": "hand_r",
+   "name": "Tangan kanan",
+   "parent": "forearm_r",
+   "joint": [
+    313.0,
+    455.0
+   ],
+   "angle": 83.16,
+   "length": 50.4,
+   "order": -1
+  }
+ ],
+ "parts": [
+  {
+   "key": "arm_l_up",
+   "name": "Lengan atas kiri (lengan baju)",
+   "bone": "arm_l",
+   "order": 0,
+   "file": "depan-arm_l_up.png",
+   "box": {
+    "x0": 82.0,
+    "y0": 215.0,
+    "x1": 140.0,
+    "y1": 386.0
+   },
+   "slot": "top"
+  },
+  {
+   "key": "arm_l_low",
+   "name": "Lengan bawah kiri",
+   "bone": "forearm_l",
+   "order": 1,
+   "file": "depan-arm_l_low.png",
+   "box": {
+    "x0": 72.0,
+    "y0": 373.0,
+    "x1": 116.0,
+    "y1": 462.0
+   },
+   "slot": "top"
+  },
+  {
+   "key": "hand_l",
+   "name": "Tangan kiri",
+   "bone": "hand_l",
+   "order": 2,
+   "file": "depan-hand_l.png",
+   "box": {
+    "x0": 69.0,
+    "y0": 452.0,
+    "x1": 102.0,
+    "y1": 505.0
+   },
+   "slot": "top"
+  },
+  {
+   "key": "arm_r_up",
+   "name": "Lengan atas kanan (lengan baju)",
+   "bone": "arm_r",
+   "order": 3,
+   "file": "depan-arm_r_up.png",
+   "box": {
+    "x0": 262.0,
+    "y0": 216.0,
+    "x1": 318.0,
+    "y1": 386.0
+   },
+   "slot": "top"
+  },
+  {
+   "key": "arm_r_low",
+   "name": "Lengan bawah kanan",
+   "bone": "forearm_r",
+   "order": 4,
+   "file": "depan-arm_r_low.png",
+   "box": {
+    "x0": 285.0,
+    "y0": 373.0,
+    "x1": 328.0,
+    "y1": 463.0
+   },
+   "slot": "top"
+  },
+  {
+   "key": "hand_r",
+   "name": "Tangan kanan",
+   "bone": "hand_r",
+   "order": 5,
+   "file": "depan-hand_r.png",
+   "box": {
+    "x0": 298.0,
+    "y0": 453.0,
+    "x1": 331.0,
+    "y1": 505.0
+   },
+   "slot": "top"
+  },
+  {
+   "key": "thigh_l",
+   "name": "Paha kiri (celana)",
+   "bone": "leg_l",
+   "order": 6,
+   "file": "depan-thigh_l.png",
+   "box": {
+    "x0": 131.0,
+    "y0": 435.0,
+    "x1": 202.0,
+    "y1": 607.0
+   },
+   "slot": "bottom"
+  },
+  {
+   "key": "shin_l",
+   "name": "Betis kiri (celana)",
+   "bone": "shin_l",
+   "order": 7,
+   "file": "depan-shin_l.png",
+   "box": {
+    "x0": 126.0,
+    "y0": 597.0,
+    "x1": 182.0,
+    "y1": 752.0
+   },
+   "slot": "bottom"
+  },
+  {
+   "key": "shoe_l",
+   "name": "Sepatu kiri",
+   "bone": "foot_l",
+   "order": 8,
+   "file": "depan-shoe_l.png",
+   "box": {
+    "x0": 106.0,
+    "y0": 742.0,
+    "x1": 170.0,
+    "y1": 797.0
+   },
+   "slot": "shoes"
+  },
+  {
+   "key": "thigh_r",
+   "name": "Paha kanan (celana)",
+   "bone": "leg_r",
+   "order": 9,
+   "file": "depan-thigh_r.png",
+   "box": {
+    "x0": 198.0,
+    "y0": 435.0,
+    "x1": 269.0,
+    "y1": 607.0
+   },
+   "slot": "bottom"
+  },
+  {
+   "key": "shin_r",
+   "name": "Betis kanan (celana)",
+   "bone": "shin_r",
+   "order": 10,
+   "file": "depan-shin_r.png",
+   "box": {
+    "x0": 218.0,
+    "y0": 597.0,
+    "x1": 274.0,
+    "y1": 752.0
+   },
+   "slot": "bottom"
+  },
+  {
+   "key": "shoe_r",
+   "name": "Sepatu kanan",
+   "bone": "foot_r",
+   "order": 11,
+   "file": "depan-shoe_r.png",
+   "box": {
+    "x0": 230.0,
+    "y0": 743.0,
+    "x1": 294.0,
+    "y1": 796.0
+   },
+   "slot": "shoes"
+  },
+  {
+   "key": "pelvis",
+   "name": "Pinggul (ikat pinggang + celana atas)",
+   "bone": "root",
+   "order": 5,
+   "file": "depan-pelvis.png",
+   "box": {
+    "x0": 131.0,
+    "y0": 379.0,
+    "x1": 269.0,
+    "y1": 485.0
+   },
+   "slot": "bottom"
+  },
+  {
+   "key": "neck",
+   "name": "Leher",
+   "bone": "torso",
+   "order": 1,
+   "file": "depan-neck.png",
+   "box": {
+    "x0": 181.0,
+    "y0": 191.0,
+    "x1": 218.0,
+    "y1": 216.0
+   },
+   "slot": "body"
+  },
+  {
+   "key": "torso",
+   "name": "Badan (kemeja + dasi)",
+   "bone": "torso",
+   "order": 2,
+   "file": "depan-torso.png",
+   "box": {
+    "x0": 136.0,
+    "y0": 191.0,
+    "x1": 266.0,
+    "y1": 383.0
+   },
+   "slot": "top"
+  },
+  {
+   "key": "collar",
+   "name": "Kerah (di depan leher)",
+   "bone": "torso",
+   "order": 25,
+   "file": "depan-collar.png",
+   "box": {
+    "x0": 153.0,
+    "y0": 193.0,
+    "x1": 248.0,
+    "y1": 232.0
+   },
+   "slot": "top"
+  }
+ ]
+}

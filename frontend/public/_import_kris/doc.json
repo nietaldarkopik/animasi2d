@@ -1,0 +1,1973 @@
+{
+ "schema": 2,
+ "settings": {
+  "width": 1080,
+  "height": 1920,
+  "fps": 24
+ },
+ "audio": [],
+ "scenes": [
+  {
+   "id": "scene-kris-walk",
+   "name": "Kris jalan & bicara",
+   "duration": 5,
+   "background": "#efe4cf",
+   "transition": null,
+   "subtitles": [
+    {
+     "id": "sub1",
+     "start": 0.25,
+     "end": 1.73,
+     "text": "Halo! Aku Kris."
+    },
+    {
+     "id": "sub2",
+     "start": 1.85,
+     "end": 4.95,
+     "text": "Hari ini aku mau cerita soal sekolahku!"
+    }
+   ],
+   "board": {
+    "location": "Lorong sekolah",
+    "summary": "Kris berjalan mendekat ke kamera sambil menyapa.",
+    "dialog": [
+     {
+      "id": "sub1",
+      "who": "Kris",
+      "text": "Halo! Aku Kris."
+     },
+     {
+      "id": "sub2",
+      "who": "Kris",
+      "text": "Hari ini aku mau cerita soal sekolahku!"
+     }
+    ]
+   },
+   "layers": [
+    {
+     "scaleX": 1,
+     "scaleY": 1,
+     "opacity": 1,
+     "visible": true,
+     "locked": true,
+     "id": "bg-lorong",
+     "type": "image",
+     "name": "Latar \u00b7 Lorong sekolah",
+     "assetId": "@lorong.png",
+     "x": 540.0,
+     "y": 960.0,
+     "rotation": 0
+    },
+    {
+     "scaleX": 1.0,
+     "scaleY": 1.0,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-bone-root",
+     "type": "bone",
+     "name": "Kris \u00b7 Pinggul (root)",
+     "length": 76.0,
+     "pivotX": 0,
+     "pivotY": 0,
+     "rig": {
+      "id": "kris",
+      "role": "bone:root"
+     },
+     "x": 540.0,
+     "y": 1150,
+     "rotation": -90,
+     "parentId": null,
+     "keyframes": {
+      "scaleX": [
+       {
+        "f": 0,
+        "v": 0.55,
+        "e": "linear"
+       },
+       {
+        "f": 120,
+        "v": 1.0,
+        "e": "linear"
+       }
+      ],
+      "scaleY": [
+       {
+        "f": 0,
+        "v": 0.55,
+        "e": "linear"
+       },
+       {
+        "f": 120,
+        "v": 1.0,
+        "e": "linear"
+       }
+      ],
+      "y": [
+       {
+        "f": 0,
+        "v": 803.85,
+        "e": "easeInOut"
+       },
+       {
+        "f": 6,
+        "v": 813.492,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": 839.165,
+        "e": "easeInOut"
+       },
+       {
+        "f": 18,
+        "v": 848.178,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": 874.48,
+        "e": "easeInOut"
+       },
+       {
+        "f": 30,
+        "v": 882.862,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": 909.795,
+        "e": "easeInOut"
+       },
+       {
+        "f": 42,
+        "v": 917.548,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": 945.11,
+        "e": "easeInOut"
+       },
+       {
+        "f": 54,
+        "v": 952.232,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": 980.425,
+        "e": "easeInOut"
+       },
+       {
+        "f": 66,
+        "v": 986.918,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": 1015.74,
+        "e": "easeInOut"
+       },
+       {
+        "f": 78,
+        "v": 1021.602,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": 1051.055,
+        "e": "easeInOut"
+       },
+       {
+        "f": 90,
+        "v": 1056.287,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": 1086.37,
+        "e": "easeInOut"
+       },
+       {
+        "f": 102,
+        "v": 1090.973,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": 1121.685,
+        "e": "easeInOut"
+       },
+       {
+        "f": 114,
+        "v": 1125.658,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": 1157.0,
+        "e": "easeInOut"
+       }
+      ],
+      "x": [
+       {
+        "f": 0,
+        "v": 540.0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 6,
+        "v": 534.847,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": 540.0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 18,
+        "v": 545.558,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": 540.0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 30,
+        "v": 534.038,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": 540.0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 42,
+        "v": 546.367,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": 540.0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 54,
+        "v": 533.227,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": 540.0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 66,
+        "v": 547.178,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": 540.0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 78,
+        "v": 532.418,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": 540.0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 90,
+        "v": 547.987,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": 540.0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 102,
+        "v": 531.607,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": 540.0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 114,
+        "v": 548.798,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": 540.0,
+        "e": "easeInOut"
+       }
+      ],
+      "rotation": [
+       {
+        "f": 0,
+        "v": -90,
+        "e": "easeInOut"
+       },
+       {
+        "f": 6,
+        "v": -88.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": -90,
+        "e": "easeInOut"
+       },
+       {
+        "f": 18,
+        "v": -91.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": -90,
+        "e": "easeInOut"
+       },
+       {
+        "f": 30,
+        "v": -88.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": -90,
+        "e": "easeInOut"
+       },
+       {
+        "f": 42,
+        "v": -91.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": -90,
+        "e": "easeInOut"
+       },
+       {
+        "f": 54,
+        "v": -88.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": -90,
+        "e": "easeInOut"
+       },
+       {
+        "f": 66,
+        "v": -91.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": -90,
+        "e": "easeInOut"
+       },
+       {
+        "f": 78,
+        "v": -88.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": -90,
+        "e": "easeInOut"
+       },
+       {
+        "f": 90,
+        "v": -91.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": -90,
+        "e": "easeInOut"
+       },
+       {
+        "f": 102,
+        "v": -88.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": -90,
+        "e": "easeInOut"
+       },
+       {
+        "f": 114,
+        "v": -91.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": -90,
+        "e": "easeInOut"
+       }
+      ]
+     }
+    },
+    {
+     "scaleX": 1,
+     "scaleY": 1,
+     "opacity": 0.22,
+     "visible": true,
+     "locked": false,
+     "id": "kris-shadow",
+     "type": "shape",
+     "shape": "ellipse",
+     "name": "Kris \u00b7 Bayangan",
+     "fill": "#000000",
+     "width": 389.5,
+     "height": 49.4,
+     "x": -613.7,
+     "y": 0.0,
+     "rotation": 90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-root",
+     "rig": {
+      "id": "kris",
+      "role": "piece:shadow"
+     }
+    },
+    {
+     "scaleX": 1,
+     "scaleY": 1,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-bone-leg_l",
+     "type": "bone",
+     "name": "Kris \u00b7 Paha kiri",
+     "length": 190.0,
+     "pivotX": 0,
+     "pivotY": 0,
+     "rig": {
+      "id": "kris",
+      "role": "bone:leg_l"
+     },
+     "x": -133.0,
+     "y": -66.5,
+     "rotation": 180,
+     "parentId": "kris-bone-root",
+     "keyframes": {
+      "scaleX": [
+       {
+        "f": 0,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 18,
+        "v": 0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 42,
+        "v": 0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 66,
+        "v": 0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 90,
+        "v": 0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 114,
+        "v": 0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": 1,
+        "e": "easeInOut"
+       }
+      ]
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-thigh_l",
+     "type": "image",
+     "name": "Kris \u00b7 Paha kiri",
+     "assetId": "@kris-thigh_l.png",
+     "x": 97.375,
+     "y": 11.4,
+     "rotation": -90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-leg_l",
+     "rig": {
+      "id": "kris",
+      "role": "piece:thigh_l"
+     }
+    },
+    {
+     "scaleX": 1,
+     "scaleY": 1,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-bone-shin_l",
+     "type": "bone",
+     "name": "Kris \u00b7 Betis kiri",
+     "length": 285.0,
+     "pivotX": 0,
+     "pivotY": 0,
+     "rig": {
+      "id": "kris",
+      "role": "bone:shin_l"
+     },
+     "x": 190.0,
+     "y": 0.0,
+     "rotation": 0,
+     "parentId": "kris-bone-leg_l",
+     "keyframes": {
+      "rotation": [
+       {
+        "f": 0,
+        "v": 0,
+        "e": "easeInOut"
+       }
+      ]
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-shin_l",
+     "type": "image",
+     "name": "Kris \u00b7 Betis kiri",
+     "assetId": "@kris-shin_l.png",
+     "x": 152.0,
+     "y": 4.75,
+     "rotation": -90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-shin_l",
+     "rig": {
+      "id": "kris",
+      "role": "piece:shin_l"
+     }
+    },
+    {
+     "scaleX": 1,
+     "scaleY": 1,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-bone-leg_r",
+     "type": "bone",
+     "name": "Kris \u00b7 Paha kanan",
+     "length": 190.0,
+     "pivotX": 0,
+     "pivotY": 0,
+     "rig": {
+      "id": "kris",
+      "role": "bone:leg_r"
+     },
+     "x": -133.0,
+     "y": 66.5,
+     "rotation": 180,
+     "parentId": "kris-bone-root",
+     "keyframes": {
+      "scaleX": [
+       {
+        "f": 0,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 6,
+        "v": 0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 30,
+        "v": 0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 54,
+        "v": 0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 78,
+        "v": 0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 102,
+        "v": 0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": 1,
+        "e": "easeInOut"
+       }
+      ]
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-thigh_r",
+     "type": "image",
+     "name": "Kris \u00b7 Paha kanan",
+     "assetId": "@kris-thigh_r.png",
+     "x": 97.375,
+     "y": -23.275,
+     "rotation": -90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-leg_r",
+     "rig": {
+      "id": "kris",
+      "role": "piece:thigh_r"
+     }
+    },
+    {
+     "scaleX": 1,
+     "scaleY": 1,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-bone-shin_r",
+     "type": "bone",
+     "name": "Kris \u00b7 Betis kanan",
+     "length": 285.0,
+     "pivotX": 0,
+     "pivotY": 0,
+     "rig": {
+      "id": "kris",
+      "role": "bone:shin_r"
+     },
+     "x": 190.0,
+     "y": 0.0,
+     "rotation": 0,
+     "parentId": "kris-bone-leg_r",
+     "keyframes": {
+      "rotation": [
+       {
+        "f": 0,
+        "v": 0,
+        "e": "easeInOut"
+       }
+      ]
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-shin_r",
+     "type": "image",
+     "name": "Kris \u00b7 Betis kanan",
+     "assetId": "@kris-shin_r.png",
+     "x": 152.0,
+     "y": -40.85,
+     "rotation": -90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-shin_r",
+     "rig": {
+      "id": "kris",
+      "role": "piece:shin_r"
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-pelvis",
+     "type": "image",
+     "name": "Kris \u00b7 Pinggul (celana atas)",
+     "assetId": "@kris-pelvis.png",
+     "x": -56.525,
+     "y": 11.875,
+     "rotation": 90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-root",
+     "rig": {
+      "id": "kris",
+      "role": "piece:pelvis"
+     }
+    },
+    {
+     "scaleX": 1,
+     "scaleY": 1,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-bone-torso",
+     "type": "bone",
+     "name": "Kris \u00b7 Badan",
+     "length": 465.5,
+     "pivotX": 0,
+     "pivotY": 0,
+     "rig": {
+      "id": "kris",
+      "role": "bone:torso"
+     },
+     "x": 0.0,
+     "y": 0.0,
+     "rotation": 0,
+     "parentId": "kris-bone-root",
+     "keyframes": {
+      "rotation": [
+       {
+        "f": 0,
+        "v": 0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 6,
+        "v": -1.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": 0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 18,
+        "v": 1.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": 0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 30,
+        "v": -1.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": 0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 42,
+        "v": 1.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": 0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 54,
+        "v": -1.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": 0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 66,
+        "v": 1.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": 0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 78,
+        "v": -1.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": 0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 90,
+        "v": 1.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": 0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 102,
+        "v": -1.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": 0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 114,
+        "v": 1.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": 0,
+        "e": "easeInOut"
+       }
+      ]
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-hair_back",
+     "type": "image",
+     "name": "Kris \u00b7 Rambut belakang",
+     "assetId": "@kris-hair_back.png",
+     "x": 631.75,
+     "y": 11.875,
+     "rotation": 90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-torso",
+     "rig": {
+      "id": "kris",
+      "role": "piece:hair_back"
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-torso",
+     "type": "image",
+     "name": "Kris \u00b7 Badan (hoodie)",
+     "assetId": "@kris-torso.png",
+     "x": 239.4,
+     "y": 12.35,
+     "rotation": 90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-torso",
+     "rig": {
+      "id": "kris",
+      "role": "piece:torso"
+     }
+    },
+    {
+     "scaleX": 1,
+     "scaleY": 1,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-bone-head",
+     "type": "bone",
+     "name": "Kris \u00b7 Kepala",
+     "length": 285.0,
+     "pivotX": 0,
+     "pivotY": 0,
+     "rig": {
+      "id": "kris",
+      "role": "bone:head"
+     },
+     "x": 465.5,
+     "y": -0.0,
+     "rotation": 0,
+     "parentId": "kris-bone-torso",
+     "keyframes": {
+      "rotation": [
+       {
+        "f": 0,
+        "v": 0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 6,
+        "v": -0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": -0.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 18,
+        "v": 2.3,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": -0.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 30,
+        "v": 0.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": 0,
+        "e": "easeInOut"
+       },
+       {
+        "f": 42,
+        "v": 0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": -0.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 54,
+        "v": 0.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": -0.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 66,
+        "v": 2.3,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": -0.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 78,
+        "v": 0.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": -0.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 90,
+        "v": 2.3,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": -0.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 102,
+        "v": 0.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": -0.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 114,
+        "v": 0.9,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": 0,
+        "e": "easeInOut"
+       }
+      ]
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-face",
+     "type": "image",
+     "name": "Kris \u00b7 Wajah",
+     "assetId": "@kris-face.png",
+     "x": 71.25,
+     "y": 9.5,
+     "rotation": 90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-head",
+     "rig": {
+      "id": "kris",
+      "role": "piece:face"
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-hair_front",
+     "type": "image",
+     "name": "Kris \u00b7 Rambut depan",
+     "assetId": "@kris-hair_front.png",
+     "x": 186.2,
+     "y": 11.875,
+     "rotation": 90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-head",
+     "rig": {
+      "id": "kris",
+      "role": "piece:hair_front"
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-eyes",
+     "type": "image",
+     "name": "Kris \u00b7 Mata",
+     "assetId": "@kris-eyes.png",
+     "x": 95.95,
+     "y": 10.45,
+     "rotation": 90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-head",
+     "rig": {
+      "id": "kris",
+      "role": "piece:eyes"
+     },
+     "expr": {
+      "default": "@kris-eyes.png",
+      "mata-tutup": "@kris-eyes-closed.png"
+     },
+     "swaps": [
+      {
+       "f": 28,
+       "assetId": "@kris-eyes-closed.png"
+      },
+      {
+       "f": 31,
+       "assetId": "@kris-eyes.png"
+      },
+      {
+       "f": 74,
+       "assetId": "@kris-eyes-closed.png"
+      },
+      {
+       "f": 77,
+       "assetId": "@kris-eyes.png"
+      },
+      {
+       "f": 106,
+       "assetId": "@kris-eyes-closed.png"
+      },
+      {
+       "f": 109,
+       "assetId": "@kris-eyes.png"
+      }
+     ]
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-brows",
+     "type": "image",
+     "name": "Kris \u00b7 Alis",
+     "assetId": "@kris-brows.png",
+     "x": 133.95,
+     "y": 11.875,
+     "rotation": 90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-head",
+     "rig": {
+      "id": "kris",
+      "role": "piece:brows"
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-mouth",
+     "type": "image",
+     "name": "Kris \u00b7 Mulut",
+     "assetId": "@kris-mouth.png",
+     "x": 26.6,
+     "y": 11.4,
+     "rotation": 90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-head",
+     "rig": {
+      "id": "kris",
+      "role": "piece:mouth"
+     },
+     "expr": {
+      "default": "@kris-mouth.png",
+      "mulut-e": "@kris-mouth-E.png",
+      "mulut-o": "@kris-mouth-O.png",
+      "mulut-tutup": "@kris-mouth-M.png"
+     },
+     "swaps": [
+      {
+       "f": 7,
+       "assetId": "@kris-mouth.png"
+      },
+      {
+       "f": 11,
+       "assetId": "@kris-mouth-O.png"
+      },
+      {
+       "f": 15,
+       "assetId": "@kris-mouth-M.png"
+      },
+      {
+       "f": 19,
+       "assetId": "@kris-mouth.png"
+      },
+      {
+       "f": 23,
+       "assetId": "@kris-mouth-O.png"
+      },
+      {
+       "f": 27,
+       "assetId": "@kris-mouth-E.png"
+      },
+      {
+       "f": 29,
+       "assetId": "@kris-mouth-M.png"
+      },
+      {
+       "f": 31,
+       "assetId": "@kris-mouth-M.png"
+      },
+      {
+       "f": 46,
+       "assetId": "@kris-mouth.png"
+      },
+      {
+       "f": 49,
+       "assetId": "@kris-mouth-E.png"
+      },
+      {
+       "f": 53,
+       "assetId": "@kris-mouth-E.png"
+      },
+      {
+       "f": 57,
+       "assetId": "@kris-mouth-E.png"
+      },
+      {
+       "f": 60,
+       "assetId": "@kris-mouth.png"
+      },
+      {
+       "f": 64,
+       "assetId": "@kris-mouth-O.png"
+      },
+      {
+       "f": 68,
+       "assetId": "@kris-mouth.png"
+      },
+      {
+       "f": 72,
+       "assetId": "@kris-mouth-O.png"
+      },
+      {
+       "f": 75,
+       "assetId": "@kris-mouth-E.png"
+      },
+      {
+       "f": 79,
+       "assetId": "@kris-mouth-E.png"
+      },
+      {
+       "f": 83,
+       "assetId": "@kris-mouth.png"
+      },
+      {
+       "f": 87,
+       "assetId": "@kris-mouth-O.png"
+      },
+      {
+       "f": 90,
+       "assetId": "@kris-mouth.png"
+      },
+      {
+       "f": 93,
+       "assetId": "@kris-mouth-M.png"
+      },
+      {
+       "f": 94,
+       "assetId": "@kris-mouth-E.png"
+      },
+      {
+       "f": 98,
+       "assetId": "@kris-mouth-O.png"
+      },
+      {
+       "f": 101,
+       "assetId": "@kris-mouth.png"
+      },
+      {
+       "f": 104,
+       "assetId": "@kris-mouth-M.png"
+      },
+      {
+       "f": 105,
+       "assetId": "@kris-mouth-O.png"
+      },
+      {
+       "f": 109,
+       "assetId": "@kris-mouth-M.png"
+      },
+      {
+       "f": 123,
+       "assetId": "@kris-mouth.png"
+      }
+     ]
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-glasses",
+     "type": "image",
+     "name": "Kris \u00b7 Kacamata",
+     "assetId": "@kris-glasses.png",
+     "x": 90.25,
+     "y": 6.65,
+     "rotation": 90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-head",
+     "rig": {
+      "id": "kris",
+      "role": "piece:glasses"
+     }
+    },
+    {
+     "scaleX": 1,
+     "scaleY": 1,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-bone-arm_l",
+     "type": "bone",
+     "name": "Kris \u00b7 Lengan atas kiri",
+     "length": 201.4,
+     "pivotX": 0,
+     "pivotY": 0,
+     "rig": {
+      "id": "kris",
+      "role": "bone:arm_l"
+     },
+     "x": 376.2,
+     "y": -136.8,
+     "rotation": 180,
+     "parentId": "kris-bone-torso",
+     "keyframes": {
+      "rotation": [
+       {
+        "f": 0,
+        "v": 182.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": 176.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": 182.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": 176.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": 182.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": 176.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": 182.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": 176.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": 182.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": 176.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": 182.2,
+        "e": "easeInOut"
+       }
+      ],
+      "scaleX": [
+       {
+        "f": 0,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": 0.95,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": 0.95,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": 0.95,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": 0.95,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": 0.95,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": 1,
+        "e": "easeInOut"
+       }
+      ]
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-sleeve_l_up",
+     "type": "image",
+     "name": "Kris \u00b7 Lengan baju atas kiri",
+     "assetId": "@kris-sleeve_l_up.png",
+     "x": 110.675,
+     "y": 16.15,
+     "rotation": -90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-arm_l",
+     "rig": {
+      "id": "kris",
+      "role": "piece:sleeve_l_up"
+     }
+    },
+    {
+     "scaleX": 1,
+     "scaleY": 1,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-bone-forearm_l",
+     "type": "bone",
+     "name": "Kris \u00b7 Lengan bawah kiri",
+     "length": 247.0,
+     "pivotX": 0,
+     "pivotY": 0,
+     "rig": {
+      "id": "kris",
+      "role": "bone:forearm_l"
+     },
+     "x": 201.4,
+     "y": 0.0,
+     "rotation": 0,
+     "parentId": "kris-bone-arm_l",
+     "keyframes": {
+      "rotation": [
+       {
+        "f": 0,
+        "v": 1.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": -4,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": 1.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": -4,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": 1.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": -4,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": 1.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": -4,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": 1.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": -4,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": 1.5,
+        "e": "easeInOut"
+       }
+      ]
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-hand_l",
+     "type": "image",
+     "name": "Kris \u00b7 Tangan kiri",
+     "assetId": "@kris-hand_l.png",
+     "x": 135.375,
+     "y": 8.075,
+     "rotation": -90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-forearm_l",
+     "rig": {
+      "id": "kris",
+      "role": "piece:hand_l"
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-sleeve_l_low",
+     "type": "image",
+     "name": "Kris \u00b7 Lengan baju bawah kiri",
+     "assetId": "@kris-sleeve_l_low.png",
+     "x": 74.575,
+     "y": 22.325,
+     "rotation": -90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-forearm_l",
+     "rig": {
+      "id": "kris",
+      "role": "piece:sleeve_l_low"
+     }
+    },
+    {
+     "scaleX": 1,
+     "scaleY": 1,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-bone-arm_r",
+     "type": "bone",
+     "name": "Kris \u00b7 Lengan atas kanan",
+     "length": 201.4,
+     "pivotX": 0,
+     "pivotY": 0,
+     "rig": {
+      "id": "kris",
+      "role": "bone:arm_r"
+     },
+     "x": 376.2,
+     "y": 136.8,
+     "rotation": 180,
+     "parentId": "kris-bone-torso",
+     "keyframes": {
+      "rotation": [
+       {
+        "f": 0,
+        "v": 183.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": 177.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": 183.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": 177.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": 183.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": 177.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": 183.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": 177.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": 183.2,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": 177.8,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": 183.2,
+        "e": "easeInOut"
+       }
+      ],
+      "scaleX": [
+       {
+        "f": 0,
+        "v": 0.95,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": 0.95,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": 0.95,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": 0.95,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": 0.95,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": 1,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": 0.95,
+        "e": "easeInOut"
+       }
+      ]
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-sleeve_r_up",
+     "type": "image",
+     "name": "Kris \u00b7 Lengan baju atas kanan",
+     "assetId": "@kris-sleeve_r_up.png",
+     "x": 110.675,
+     "y": -27.075,
+     "rotation": -90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-arm_r",
+     "rig": {
+      "id": "kris",
+      "role": "piece:sleeve_r_up"
+     }
+    },
+    {
+     "scaleX": 1,
+     "scaleY": 1,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-bone-forearm_r",
+     "type": "bone",
+     "name": "Kris \u00b7 Lengan bawah kanan",
+     "length": 247.0,
+     "pivotX": 0,
+     "pivotY": 0,
+     "rig": {
+      "id": "kris",
+      "role": "bone:forearm_r"
+     },
+     "x": 201.4,
+     "y": 0.0,
+     "rotation": 0,
+     "parentId": "kris-bone-arm_r",
+     "keyframes": {
+      "rotation": [
+       {
+        "f": 0,
+        "v": 4,
+        "e": "easeInOut"
+       },
+       {
+        "f": 12,
+        "v": -1.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 24,
+        "v": 4,
+        "e": "easeInOut"
+       },
+       {
+        "f": 36,
+        "v": -1.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 48,
+        "v": 4,
+        "e": "easeInOut"
+       },
+       {
+        "f": 60,
+        "v": -1.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 72,
+        "v": 4,
+        "e": "easeInOut"
+       },
+       {
+        "f": 84,
+        "v": -1.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 96,
+        "v": 4,
+        "e": "easeInOut"
+       },
+       {
+        "f": 108,
+        "v": -1.5,
+        "e": "easeInOut"
+       },
+       {
+        "f": 120,
+        "v": 4,
+        "e": "easeInOut"
+       }
+      ]
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-hand_r",
+     "type": "image",
+     "name": "Kris \u00b7 Tangan kanan",
+     "assetId": "@kris-hand_r.png",
+     "x": 126.825,
+     "y": -17.575,
+     "rotation": -90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-forearm_r",
+     "rig": {
+      "id": "kris",
+      "role": "piece:hand_r"
+     }
+    },
+    {
+     "scaleX": 0.95,
+     "scaleY": 0.95,
+     "opacity": 1,
+     "visible": true,
+     "locked": false,
+     "id": "kris-piece-sleeve_r_low",
+     "type": "image",
+     "name": "Kris \u00b7 Lengan baju bawah kanan",
+     "assetId": "@kris-sleeve_r_low.png",
+     "x": 76.95,
+     "y": -27.075,
+     "rotation": -90,
+     "pivotX": 0,
+     "pivotY": 0,
+     "parentId": "kris-bone-forearm_r",
+     "rig": {
+      "id": "kris",
+      "role": "piece:sleeve_r_low"
+     }
+    }
+   ]
+  }
+ ]
+}

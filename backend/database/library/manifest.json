@@ -1,0 +1,966 @@
+{
+ "categories": [
+  {
+   "slug": "hair_back",
+   "name": "Rambut belakang",
+   "kind": "part",
+   "z_order": 1,
+   "sort": 1
+  },
+  {
+   "slug": "body",
+   "name": "Badan (kaki)",
+   "kind": "part",
+   "z_order": 2,
+   "sort": 2
+  },
+  {
+   "slug": "shoes",
+   "name": "Sepatu",
+   "kind": "part",
+   "z_order": 3,
+   "sort": 14
+  },
+  {
+   "slug": "bottom",
+   "name": "Bawahan",
+   "kind": "part",
+   "z_order": 4,
+   "sort": 13
+  },
+  {
+   "slug": "torso",
+   "name": "Badan atas",
+   "kind": "part",
+   "z_order": 5,
+   "sort": 3
+  },
+  {
+   "slug": "arm_l",
+   "name": "Lengan kiri",
+   "kind": "part",
+   "z_order": 6,
+   "sort": 4
+  },
+  {
+   "slug": "arm_r",
+   "name": "Lengan kanan",
+   "kind": "part",
+   "z_order": 6,
+   "sort": 5
+  },
+  {
+   "slug": "top",
+   "name": "Atasan",
+   "kind": "part",
+   "z_order": 7,
+   "sort": 12
+  },
+  {
+   "slug": "bag",
+   "name": "Tas",
+   "kind": "part",
+   "z_order": 8,
+   "sort": 16
+  },
+  {
+   "slug": "face",
+   "name": "Wajah",
+   "kind": "part",
+   "z_order": 9,
+   "sort": 6
+  },
+  {
+   "slug": "hair_front",
+   "name": "Rambut depan",
+   "kind": "part",
+   "z_order": 10,
+   "sort": 7
+  },
+  {
+   "slug": "hijab",
+   "name": "Kerudung",
+   "kind": "part",
+   "z_order": 11,
+   "sort": 8
+  },
+  {
+   "slug": "eyes",
+   "name": "Mata",
+   "kind": "part",
+   "z_order": 12,
+   "sort": 9
+  },
+  {
+   "slug": "brows",
+   "name": "Alis",
+   "kind": "part",
+   "z_order": 13,
+   "sort": 10
+  },
+  {
+   "slug": "mouth",
+   "name": "Mulut",
+   "kind": "part",
+   "z_order": 14,
+   "sort": 11
+  },
+  {
+   "slug": "glasses",
+   "name": "Kacamata",
+   "kind": "part",
+   "z_order": 15,
+   "sort": 17
+  },
+  {
+   "slug": "hat",
+   "name": "Topi",
+   "kind": "part",
+   "z_order": 16,
+   "sort": 18
+  },
+  {
+   "slug": "headphone",
+   "name": "Headphone",
+   "kind": "part",
+   "z_order": 17,
+   "sort": 19
+  },
+  {
+   "slug": "accessory",
+   "name": "Aksesori",
+   "kind": "part",
+   "z_order": 18,
+   "sort": 15
+  },
+  {
+   "slug": "pose",
+   "name": "Referensi: Pose",
+   "kind": "reference",
+   "z_order": 0,
+   "sort": 4
+  },
+  {
+   "slug": "expression_ref",
+   "name": "Referensi: Ekspresi",
+   "kind": "reference",
+   "z_order": 0,
+   "sort": 5
+  },
+  {
+   "slug": "bg_school",
+   "name": "Lokasi: Sekolah",
+   "kind": "background",
+   "z_order": 0,
+   "sort": 1
+  },
+  {
+   "slug": "bg_home",
+   "name": "Lokasi: Rumah",
+   "kind": "background",
+   "z_order": 0,
+   "sort": 2
+  },
+  {
+   "slug": "bg_outdoor",
+   "name": "Lokasi: Luar ruangan",
+   "kind": "background",
+   "z_order": 0,
+   "sort": 3
+  },
+  {
+   "slug": "prop_school",
+   "name": "Properti: Sekolah",
+   "kind": "prop",
+   "z_order": 0,
+   "sort": 1
+  },
+  {
+   "slug": "prop_home",
+   "name": "Properti: Rumah",
+   "kind": "prop",
+   "z_order": 0,
+   "sort": 2
+  },
+  {
+   "slug": "prop_misc",
+   "name": "Properti: Lainnya",
+   "kind": "prop",
+   "z_order": 0,
+   "sort": 3
+  }
+ ],
+ "assets": [
+  {
+   "key": "face_round",
+   "category": "face",
+   "name": "Wajah bulat",
+   "tags": [
+    "wajah",
+    "kepala"
+   ],
+   "file": "svg/face/face_round.svg"
+  },
+  {
+   "key": "face_oval",
+   "category": "face",
+   "name": "Wajah oval",
+   "tags": [
+    "wajah",
+    "kepala"
+   ],
+   "file": "svg/face/face_oval.svg"
+  },
+  {
+   "key": "face_square",
+   "category": "face",
+   "name": "Wajah tegas",
+   "tags": [
+    "wajah",
+    "kepala"
+   ],
+   "file": "svg/face/face_square.svg"
+  },
+  {
+   "key": "face_heart",
+   "category": "face",
+   "name": "Wajah lancip",
+   "tags": [
+    "wajah",
+    "kepala"
+   ],
+   "file": "svg/face/face_heart.svg"
+  },
+  {
+   "key": "body_legs",
+   "category": "body",
+   "name": "Badan: hanya kaki (untuk torso & lengan terpisah)",
+   "tags": [
+    "badan",
+    "kaki"
+   ],
+   "file": "svg/body/body_legs.svg"
+  },
+  {
+   "key": "body_slim",
+   "category": "body",
+   "name": "Badan ramping",
+   "tags": [
+    "badan",
+    "tubuh"
+   ],
+   "file": "svg/body/body_slim.svg"
+  },
+  {
+   "key": "body_normal",
+   "category": "body",
+   "name": "Badan normal",
+   "tags": [
+    "badan",
+    "tubuh"
+   ],
+   "file": "svg/body/body_normal.svg"
+  },
+  {
+   "key": "body_sturdy",
+   "category": "body",
+   "name": "Badan kekar",
+   "tags": [
+    "badan",
+    "tubuh"
+   ],
+   "file": "svg/body/body_sturdy.svg"
+  },
+  {
+   "key": "top_smk_short",
+   "category": "top",
+   "name": "Seragam SMK lengan pendek",
+   "tags": [
+    "atasan",
+    "seragam",
+    "smk",
+    "kemeja"
+   ],
+   "file": "svg/top/top_smk_short.svg"
+  },
+  {
+   "key": "top_smk_long",
+   "category": "top",
+   "name": "Seragam SMK lengan panjang",
+   "tags": [
+    "atasan",
+    "seragam",
+    "smk",
+    "kemeja"
+   ],
+   "file": "svg/top/top_smk_long.svg"
+  },
+  {
+   "key": "top_hoodie",
+   "category": "top",
+   "name": "Jaket hoodie",
+   "tags": [
+    "atasan",
+    "jaket",
+    "hoodie"
+   ],
+   "file": "svg/top/top_hoodie.svg"
+  },
+  {
+   "key": "top_tshirt",
+   "category": "top",
+   "name": "Kaos oblong",
+   "tags": [
+    "atasan",
+    "kaos",
+    "kasual"
+   ],
+   "file": "svg/top/top_tshirt.svg"
+  },
+  {
+   "key": "acc_tie",
+   "category": "accessory",
+   "name": "Dasi",
+   "tags": [
+    "aksesori",
+    "dasi",
+    "seragam"
+   ],
+   "file": "svg/accessory/acc_tie.svg"
+  },
+  {
+   "key": "acc_lanyard",
+   "category": "accessory",
+   "name": "Tali ID card",
+   "tags": [
+    "aksesori",
+    "id card",
+    "tali"
+   ],
+   "file": "svg/accessory/acc_lanyard.svg"
+  },
+  {
+   "key": "bottom_trousers",
+   "category": "bottom",
+   "name": "Celana panjang",
+   "tags": [
+    "bawahan",
+    "celana",
+    "seragam"
+   ],
+   "file": "svg/bottom/bottom_trousers.svg"
+  },
+  {
+   "key": "bottom_skirt",
+   "category": "bottom",
+   "name": "Rok panjang",
+   "tags": [
+    "bawahan",
+    "rok",
+    "seragam"
+   ],
+   "file": "svg/bottom/bottom_skirt.svg"
+  },
+  {
+   "key": "shoes_sneakers",
+   "category": "shoes",
+   "name": "Sepatu sneakers",
+   "tags": [
+    "sepatu"
+   ],
+   "file": "svg/shoes/shoes_sneakers.svg"
+  },
+  {
+   "key": "bag_backpack",
+   "category": "bag",
+   "name": "Tas ransel",
+   "tags": [
+    "tas",
+    "ransel"
+   ],
+   "file": "svg/bag/bag_backpack.svg"
+  },
+  {
+   "key": "hairb_long",
+   "category": "hair_back",
+   "name": "Rambut belakang panjang",
+   "tags": [
+    "rambut",
+    "panjang"
+   ],
+   "file": "svg/hair_back/hairb_long.svg"
+  },
+  {
+   "key": "hairb_short",
+   "category": "hair_back",
+   "name": "Rambut belakang pendek",
+   "tags": [
+    "rambut",
+    "pendek"
+   ],
+   "file": "svg/hair_back/hairb_short.svg"
+  },
+  {
+   "key": "hairb_bun",
+   "category": "hair_back",
+   "name": "Rambut belakang + sanggul",
+   "tags": [
+    "rambut",
+    "sanggul"
+   ],
+   "file": "svg/hair_back/hairb_bun.svg"
+  },
+  {
+   "key": "hairf_messy",
+   "category": "hair_front",
+   "name": "Rambut acak",
+   "tags": [
+    "rambut",
+    "pendek",
+    "acak"
+   ],
+   "file": "svg/hair_front/hairf_messy.svg"
+  },
+  {
+   "key": "hairf_neat",
+   "category": "hair_front",
+   "name": "Rambut rapi belah samping",
+   "tags": [
+    "rambut",
+    "pendek",
+    "rapi"
+   ],
+   "file": "svg/hair_front/hairf_neat.svg"
+  },
+  {
+   "key": "hairf_long",
+   "category": "hair_front",
+   "name": "Rambut panjang belah tengah",
+   "tags": [
+    "rambut",
+    "panjang"
+   ],
+   "file": "svg/hair_front/hairf_long.svg"
+  },
+  {
+   "key": "hairf_bob",
+   "category": "hair_front",
+   "name": "Rambut sebahu (bob)",
+   "tags": [
+    "rambut",
+    "sebahu"
+   ],
+   "file": "svg/hair_front/hairf_bob.svg"
+  },
+  {
+   "key": "hijab_basic",
+   "category": "hijab",
+   "name": "Kerudung segi empat",
+   "tags": [
+    "kerudung",
+    "hijab"
+   ],
+   "file": "svg/hijab/hijab_basic.svg"
+  },
+  {
+   "key": "eyes_round",
+   "category": "eyes",
+   "name": "Mata bulat",
+   "tags": [
+    "mata",
+    "normal"
+   ],
+   "file": "svg/eyes/eyes_round.svg"
+  },
+  {
+   "key": "eyes_wide",
+   "category": "eyes",
+   "name": "Mata terbelalak",
+   "tags": [
+    "mata",
+    "kaget"
+   ],
+   "file": "svg/eyes/eyes_wide.svg"
+  },
+  {
+   "key": "eyes_serious",
+   "category": "eyes",
+   "name": "Mata serius",
+   "tags": [
+    "mata",
+    "serius"
+   ],
+   "file": "svg/eyes/eyes_serious.svg"
+  },
+  {
+   "key": "eyes_think",
+   "category": "eyes",
+   "name": "Mata melirik",
+   "tags": [
+    "mata",
+    "berpikir"
+   ],
+   "file": "svg/eyes/eyes_think.svg"
+  },
+  {
+   "key": "eyes_happy",
+   "category": "eyes",
+   "name": "Mata senyum",
+   "tags": [
+    "mata",
+    "senang"
+   ],
+   "file": "svg/eyes/eyes_happy.svg"
+  },
+  {
+   "key": "eyes_laugh",
+   "category": "eyes",
+   "name": "Mata tertawa",
+   "tags": [
+    "mata",
+    "tertawa"
+   ],
+   "file": "svg/eyes/eyes_laugh.svg"
+  },
+  {
+   "key": "eyes_wink",
+   "category": "eyes",
+   "name": "Mata kedip",
+   "tags": [
+    "mata",
+    "kedip"
+   ],
+   "file": "svg/eyes/eyes_wink.svg"
+  },
+  {
+   "key": "brows_normal",
+   "category": "brows",
+   "name": "Alis normal",
+   "tags": [
+    "alis"
+   ],
+   "file": "svg/brows/brows_normal.svg"
+  },
+  {
+   "key": "brows_up",
+   "category": "brows",
+   "name": "Alis naik",
+   "tags": [
+    "alis",
+    "kaget"
+   ],
+   "file": "svg/brows/brows_up.svg"
+  },
+  {
+   "key": "brows_serious",
+   "category": "brows",
+   "name": "Alis serius",
+   "tags": [
+    "alis",
+    "serius"
+   ],
+   "file": "svg/brows/brows_serious.svg"
+  },
+  {
+   "key": "brows_worried",
+   "category": "brows",
+   "name": "Alis sedih",
+   "tags": [
+    "alis",
+    "sedih"
+   ],
+   "file": "svg/brows/brows_worried.svg"
+  },
+  {
+   "key": "mouth_smile",
+   "category": "mouth",
+   "name": "Senyum",
+   "tags": [
+    "mulut",
+    "senang"
+   ],
+   "file": "svg/mouth/mouth_smile.svg"
+  },
+  {
+   "key": "mouth_open",
+   "category": "mouth",
+   "name": "Senyum lebar",
+   "tags": [
+    "mulut",
+    "senang"
+   ],
+   "file": "svg/mouth/mouth_open.svg"
+  },
+  {
+   "key": "mouth_laugh",
+   "category": "mouth",
+   "name": "Tertawa",
+   "tags": [
+    "mulut",
+    "tertawa"
+   ],
+   "file": "svg/mouth/mouth_laugh.svg"
+  },
+  {
+   "key": "mouth_surprised",
+   "category": "mouth",
+   "name": "Kaget (o)",
+   "tags": [
+    "mulut",
+    "kaget"
+   ],
+   "file": "svg/mouth/mouth_surprised.svg"
+  },
+  {
+   "key": "mouth_flat",
+   "category": "mouth",
+   "name": "Datar",
+   "tags": [
+    "mulut",
+    "serius"
+   ],
+   "file": "svg/mouth/mouth_flat.svg"
+  },
+  {
+   "key": "mouth_think",
+   "category": "mouth",
+   "name": "Mencibir",
+   "tags": [
+    "mulut",
+    "berpikir"
+   ],
+   "file": "svg/mouth/mouth_think.svg"
+  },
+  {
+   "key": "glasses_round",
+   "category": "glasses",
+   "name": "Kacamata bulat",
+   "tags": [
+    "kacamata"
+   ],
+   "file": "svg/glasses/glasses_round.svg"
+  },
+  {
+   "key": "glasses_square",
+   "category": "glasses",
+   "name": "Kacamata kotak",
+   "tags": [
+    "kacamata"
+   ],
+   "file": "svg/glasses/glasses_square.svg"
+  },
+  {
+   "key": "hat_cap",
+   "category": "hat",
+   "name": "Topi baseball (depan)",
+   "tags": [
+    "topi"
+   ],
+   "file": "svg/hat/hat_cap.svg"
+  },
+  {
+   "key": "hat_cap_back",
+   "category": "hat",
+   "name": "Topi baseball (terbalik)",
+   "tags": [
+    "topi"
+   ],
+   "file": "svg/hat/hat_cap_back.svg"
+  },
+  {
+   "key": "headphone_head",
+   "category": "headphone",
+   "name": "Headphone di kepala",
+   "tags": [
+    "headphone"
+   ],
+   "file": "svg/headphone/headphone_head.svg"
+  },
+  {
+   "key": "headphone_neck",
+   "category": "headphone",
+   "name": "Headphone di leher",
+   "tags": [
+    "headphone"
+   ],
+   "file": "svg/headphone/headphone_neck.svg"
+  },
+  {
+   "key": "bg_school_yard",
+   "category": "bg_school",
+   "name": "Halaman sekolah",
+   "tags": [
+    "sekolah",
+    "halaman",
+    "luar"
+   ],
+   "file": "svg/bg_school/bg_school_yard.svg"
+  },
+  {
+   "key": "bg_school_class",
+   "category": "bg_school",
+   "name": "Ruang kelas",
+   "tags": [
+    "sekolah",
+    "kelas",
+    "dalam"
+   ],
+   "file": "svg/bg_school/bg_school_class.svg"
+  },
+  {
+   "key": "bg_school_lab",
+   "category": "bg_school",
+   "name": "Lab komputer",
+   "tags": [
+    "sekolah",
+    "lab",
+    "komputer",
+    "informatika"
+   ],
+   "file": "svg/bg_school/bg_school_lab.svg"
+  },
+  {
+   "key": "bg_home_living",
+   "category": "bg_home",
+   "name": "Ruang tamu",
+   "tags": [
+    "rumah",
+    "ruang tamu",
+    "dalam"
+   ],
+   "file": "svg/bg_home/bg_home_living.svg"
+  },
+  {
+   "key": "bg_park",
+   "category": "bg_outdoor",
+   "name": "Taman",
+   "tags": [
+    "taman",
+    "luar",
+    "alam"
+   ],
+   "file": "svg/bg_outdoor/bg_park.svg"
+  },
+  {
+   "key": "bg_school_canteen",
+   "category": "bg_school",
+   "name": "Kantin sekolah",
+   "tags": [
+    "sekolah",
+    "kantin",
+    "makan",
+    "dalam"
+   ],
+   "file": "svg/bg_school/bg_school_canteen.svg"
+  },
+  {
+   "key": "bg_school_library",
+   "category": "bg_school",
+   "name": "Perpustakaan",
+   "tags": [
+    "sekolah",
+    "perpustakaan",
+    "buku",
+    "dalam"
+   ],
+   "file": "svg/bg_school/bg_school_library.svg"
+  },
+  {
+   "key": "bg_school_field",
+   "category": "bg_school",
+   "name": "Lapangan upacara",
+   "tags": [
+    "sekolah",
+    "lapangan",
+    "olahraga",
+    "luar"
+   ],
+   "file": "svg/bg_school/bg_school_field.svg"
+  },
+  {
+   "key": "bg_home_bedroom",
+   "category": "bg_home",
+   "name": "Kamar tidur",
+   "tags": [
+    "rumah",
+    "kamar",
+    "tidur",
+    "dalam"
+   ],
+   "file": "svg/bg_home/bg_home_bedroom.svg"
+  },
+  {
+   "key": "bg_home_kitchen",
+   "category": "bg_home",
+   "name": "Dapur",
+   "tags": [
+    "rumah",
+    "dapur",
+    "masak",
+    "dalam"
+   ],
+   "file": "svg/bg_home/bg_home_kitchen.svg"
+  },
+  {
+   "key": "bg_street",
+   "category": "bg_outdoor",
+   "name": "Jalan raya",
+   "tags": [
+    "jalan",
+    "kota",
+    "luar"
+   ],
+   "file": "svg/bg_outdoor/bg_street.svg"
+  },
+  {
+   "key": "prop_books",
+   "category": "prop_school",
+   "name": "Tumpukan buku",
+   "tags": [
+    "buku",
+    "sekolah"
+   ],
+   "file": "svg/prop_school/prop_books.svg"
+  },
+  {
+   "key": "prop_laptop",
+   "category": "prop_school",
+   "name": "Laptop",
+   "tags": [
+    "laptop",
+    "komputer",
+    "informatika"
+   ],
+   "file": "svg/prop_school/prop_laptop.svg"
+  },
+  {
+   "key": "prop_backpack",
+   "category": "prop_school",
+   "name": "Tas ransel",
+   "tags": [
+    "tas",
+    "sekolah"
+   ],
+   "file": "svg/prop_school/prop_backpack.svg"
+  },
+  {
+   "key": "prop_chair",
+   "category": "prop_school",
+   "name": "Kursi sekolah",
+   "tags": [
+    "kursi",
+    "sekolah"
+   ],
+   "file": "svg/prop_school/prop_chair.svg"
+  },
+  {
+   "key": "prop_desk",
+   "category": "prop_school",
+   "name": "Meja sekolah",
+   "tags": [
+    "meja",
+    "sekolah"
+   ],
+   "file": "svg/prop_school/prop_desk.svg"
+  },
+  {
+   "key": "prop_clock",
+   "category": "prop_school",
+   "name": "Jam dinding",
+   "tags": [
+    "jam",
+    "waktu"
+   ],
+   "file": "svg/prop_school/prop_clock.svg"
+  },
+  {
+   "key": "prop_ball",
+   "category": "prop_misc",
+   "name": "Bola",
+   "tags": [
+    "bola",
+    "olahraga"
+   ],
+   "file": "svg/prop_misc/prop_ball.svg"
+  },
+  {
+   "key": "prop_basketball",
+   "category": "prop_misc",
+   "name": "Bola basket",
+   "tags": [
+    "bola",
+    "basket",
+    "olahraga"
+   ],
+   "file": "svg/prop_misc/prop_basketball.svg"
+  },
+  {
+   "key": "prop_mug",
+   "category": "prop_home",
+   "name": "Gelas / mug",
+   "tags": [
+    "gelas",
+    "minum"
+   ],
+   "file": "svg/prop_home/prop_mug.svg"
+  },
+  {
+   "key": "prop_phone",
+   "category": "prop_home",
+   "name": "Ponsel",
+   "tags": [
+    "ponsel",
+    "hp"
+   ],
+   "file": "svg/prop_home/prop_phone.svg"
+  },
+  {
+   "key": "prop_plant",
+   "category": "prop_home",
+   "name": "Tanaman pot",
+   "tags": [
+    "tanaman",
+    "pot"
+   ],
+   "file": "svg/prop_home/prop_plant.svg"
+  },
+  {
+   "key": "prop_lamp",
+   "category": "prop_home",
+   "name": "Lampu meja",
+   "tags": [
+    "lampu"
+   ],
+   "file": "svg/prop_home/prop_lamp.svg"
+  },
+  {
+   "key": "prop_gift",
+   "category": "prop_misc",
+   "name": "Kotak hadiah",
+   "tags": [
+    "hadiah",
+    "kado"
+   ],
+   "file": "svg/prop_misc/prop_gift.svg"
+  },
+  {
+   "key": "prop_umbrella",
+   "category": "prop_misc",
+   "name": "Payung",
+   "tags": [
+    "payung",
+    "hujan"
+   ],
+   "file": "svg/prop_misc/prop_umbrella.svg"
+  },
+  {
+   "key": "prop_flower",
+   "category": "prop_misc",
+   "name": "Bunga",
+   "tags": [
+    "bunga"
+   ],
+   "file": "svg/prop_misc/prop_flower.svg"
+  }
+ ]
+}

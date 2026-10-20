@@ -1,0 +1,17 @@
+[
+ {
+  "id": "sma-p2",
+  "match": "Kit SMA P2 (anime)",
+  "label": "Perempuan – lengan & rok panjang"
+ },
+ {
+  "id": "sma-p3",
+  "match": "Kit SMA P3 (anime)",
+  "label": "Perempuan – lengan & rok pendek"
+ },
+ {
+  "id": "sma-l1",
+  "match": "Kit SMA L1 (anime)",
+  "label": "Laki-laki – lengan pendek & celana panjang"
+ }
+]

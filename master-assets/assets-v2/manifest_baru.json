@@ -1,0 +1,98 @@
+{
+ "wajah_laki": [
+  "wajah_laki/wajah_laki_01_oval.png",
+  "wajah_laki/wajah_laki_02_rahang_kotak.png",
+  "wajah_laki/wajah_laki_03_bulat.png",
+  "wajah_laki/wajah_laki_04_panjang.png",
+  "wajah_laki/wajah_laki_05_dagu_v.png",
+  "wajah_laki/wajah_laki_06_tulang_pipi_lebar.png",
+  "wajah_laki/wajah_laki_07_ramping.png",
+  "wajah_laki/wajah_laki_08_dagu_tegas.png",
+  "wajah_laki/wajah_laki_09_hati.png",
+  "wajah_laki/wajah_laki_10_rahang_lembut.png"
+ ],
+ "wajah_perempuan": [
+  "wajah_perempuan/wajah_perempuan_01_oval_kecil.png",
+  "wajah_perempuan/wajah_perempuan_02_bulat_imut.png",
+  "wajah_perempuan/wajah_perempuan_03_hati.png",
+  "wajah_perempuan/wajah_perempuan_04_dagu_v_lembut.png",
+  "wajah_perempuan/wajah_perempuan_05_agak_panjang.png",
+  "wajah_perempuan/wajah_perempuan_06_mungil_bulat.png",
+  "wajah_perempuan/wajah_perempuan_07_dagu_runcing.png",
+  "wajah_perempuan/wajah_perempuan_08_pipi_lebar.png",
+  "wajah_perempuan/wajah_perempuan_09_ramping.png",
+  "wajah_perempuan/wajah_perempuan_10_pipi_chubby.png"
+ ],
+ "rambut_laki": [
+  "rambut_laki/rambut_laki_01_acak_spiky.png",
+  "rambut_laki/rambut_laki_02_crew_cut.png",
+  "rambut_laki/rambut_laki_03_belah_samping.png",
+  "rambut_laki/rambut_laki_04_curtain_belah_tengah.png",
+  "rambut_laki/rambut_laki_05_undercut_poni.png",
+  "rambut_laki/rambut_laki_06_ikal_sedang.png",
+  "rambut_laki/rambut_laki_07_quiff.png",
+  "rambut_laki/rambut_laki_08_cepak.png",
+  "rambut_laki/rambut_laki_09_poni_panjang.png",
+  "rambut_laki/rambut_laki_10_two_block.png"
+ ],
+ "rambut_perempuan": [
+  "rambut_perempuan/rambut_perempuan_01_panjang_lurus_poni.png",
+  "rambut_perempuan/rambut_perempuan_02_bob.png",
+  "rambut_perempuan/rambut_perempuan_03_twin_tail.png",
+  "rambut_perempuan/rambut_perempuan_04_ponytail_tinggi.png",
+  "rambut_perempuan/rambut_perempuan_05_ponytail_samping.png",
+  "rambut_perempuan/rambut_perempuan_06_panjang_bergelombang.png",
+  "rambut_perempuan/rambut_perempuan_07_pixie.png",
+  "rambut_perempuan/rambut_perempuan_08_hime_cut.png",
+  "rambut_perempuan/rambut_perempuan_09_kepang_dua.png",
+  "rambut_perempuan/rambut_perempuan_10_cepol.png"
+ ],
+ "kerudung_depan": [
+  "kerudung_depan/kerudung_depan_01_putih.png",
+  "kerudung_depan/kerudung_depan_02_navy.png",
+  "kerudung_depan/kerudung_depan_03_hitam.png",
+  "kerudung_depan/kerudung_depan_04_abu_muda.png",
+  "kerudung_depan/kerudung_depan_05_pink.png",
+  "kerudung_depan/kerudung_depan_06_abu_tua.png",
+  "kerudung_depan/kerudung_depan_07_biru_muda.png",
+  "kerudung_depan/kerudung_depan_08_krem.png",
+  "kerudung_depan/kerudung_depan_09_maroon.png",
+  "kerudung_depan/kerudung_depan_10_hijau_sage.png"
+ ],
+ "atasan_perempuan": [
+  "atasan_perempuan/atasan_perempuan_01_seragam_putih_pendek.png",
+  "atasan_perempuan/atasan_perempuan_02_seragam_putih_panjang.png",
+  "atasan_perempuan/atasan_perempuan_03_seragam_pita.png",
+  "atasan_perempuan/atasan_perempuan_04_sailor.png",
+  "atasan_perempuan/atasan_perempuan_05_kardigan_krem.png",
+  "atasan_perempuan/atasan_perempuan_06_blus_pink.png",
+  "atasan_perempuan/atasan_perempuan_07_tunik_biru.png",
+  "atasan_perempuan/atasan_perempuan_08_kaos_garis.png",
+  "atasan_perempuan/atasan_perempuan_09_sweater_hijau.png",
+  "atasan_perempuan/atasan_perempuan_10_rompi_navy.png"
+ ],
+ "atasan_laki": [
+  "atasan_laki/atasan_laki_01_seragam_putih_dasi.png",
+  "atasan_laki/atasan_laki_02_kemeja_putih_panjang.png",
+  "atasan_laki/atasan_laki_03_batik.png",
+  "atasan_laki/atasan_laki_04_pramuka.png",
+  "atasan_laki/atasan_laki_05_polo_navy.png",
+  "atasan_laki/atasan_laki_06_kaos_hitam.png",
+  "atasan_laki/atasan_laki_07_kaos_putih_print.png",
+  "atasan_laki/atasan_laki_08_flanel_merah.png",
+  "atasan_laki/atasan_laki_09_kemeja_olive.png",
+  "atasan_laki/atasan_laki_10_sweatshirt_abu.png"
+ ],
+ "mata_baru": [
+  "mata_baru/mata_baru_01_bulat_coklat.png",
+  "mata_baru/mata_baru_02_tajam_abu.png",
+  "mata_baru/mata_baru_03_sayu_hazel.png",
+  "mata_baru/mata_baru_04_kucing_amber.png",
+  "mata_baru/mata_baru_05_besar_biru.png",
+  "mata_baru/mata_baru_06_ngantuk_coklat.png",
+  "mata_baru/mata_baru_07_almond_hijau.png",
+  "mata_baru/mata_baru_08_bulu_lentik_ungu.png",
+  "mata_baru/mata_baru_09_tegas_hitam.png",
+  "mata_baru/mata_baru_10_bulat_teal.png"
+ ]
+}

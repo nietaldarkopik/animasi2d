@@ -1,0 +1,24 @@
+{
+ "badan": [
+  "badan/badan_01_laki_depan.png",
+  "badan/badan_02_laki_kanan.png",
+  "badan/badan_03_laki_kiri.png",
+  "badan/badan_04_laki_belakang.png",
+  "badan/badan_05_perempuan_depan.png",
+  "badan/badan_06_perempuan_kanan.png",
+  "badan/badan_07_perempuan_kiri.png",
+  "badan/badan_08_perempuan_belakang.png"
+ ],
+ "lengan": [
+  "lengan/lengan_01_lurus_bawah.png",
+  "lengan/lengan_02_angkat_ke_atas.png",
+  "lengan/lengan_03_tangan_di_pinggang.png",
+  "lengan/lengan_04_menunjuk.png",
+  "lengan/lengan_05_melambai.png",
+  "lengan/lengan_06_kepal_ditekuk.png",
+  "lengan/lengan_07_rentang_samping.png",
+  "lengan/lengan_08_silang_dada.png",
+  "lengan/lengan_09_lurus_samping.png",
+  "lengan/lengan_10_ayun_jalan.png"
+ ]
+}

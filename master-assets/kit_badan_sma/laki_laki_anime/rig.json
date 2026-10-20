@@ -1,0 +1,1530 @@
+{
+ "depan": {
+  "label": "depan",
+  "bones": [
+   {
+    "key": "root",
+    "name": "Pinggul (root)",
+    "parent": null,
+    "joint": [
+     200.0,
+     443.0
+    ],
+    "angle": -90,
+    "length": 30.0,
+    "order": 0
+   },
+   {
+    "key": "leg_l",
+    "name": "Paha kiri",
+    "parent": "root",
+    "joint": [
+     174.0,
+     445.0
+    ],
+    "angle": 91.85,
+    "length": 155.1,
+    "order": 0
+   },
+   {
+    "key": "shin_l",
+    "name": "Betis kiri",
+    "parent": "leg_l",
+    "joint": [
+     169.0,
+     600.0
+    ],
+    "angle": 91.97,
+    "length": 145.1,
+    "order": 10
+   },
+   {
+    "key": "foot_l",
+    "name": "Kaki kiri",
+    "parent": "shin_l",
+    "joint": [
+     164.0,
+     745.0
+    ],
+    "angle": 90,
+    "length": 30.0,
+    "order": 10
+   },
+   {
+    "key": "leg_r",
+    "name": "Paha kanan",
+    "parent": "root",
+    "joint": [
+     227.0,
+     445.0
+    ],
+    "angle": 88.52,
+    "length": 155.1,
+    "order": 1
+   },
+   {
+    "key": "shin_r",
+    "name": "Betis kanan",
+    "parent": "leg_r",
+    "joint": [
+     231.0,
+     600.0
+    ],
+    "angle": 88.03,
+    "length": 145.1,
+    "order": 10
+   },
+   {
+    "key": "foot_r",
+    "name": "Kaki kanan",
+    "parent": "shin_r",
+    "joint": [
+     236.0,
+     745.0
+    ],
+    "angle": 90,
+    "length": 30.0,
+    "order": 10
+   },
+   {
+    "key": "torso",
+    "name": "Badan",
+    "parent": "root",
+    "joint": [
+     200.0,
+     443.0
+    ],
+    "angle": -90.0,
+    "length": 238.0,
+    "order": 10
+   },
+   {
+    "key": "head",
+    "name": "Kepala",
+    "parent": "torso",
+    "joint": [
+     200.0,
+     205.0
+    ],
+    "angle": -90,
+    "length": 110.0,
+    "order": 20
+   },
+   {
+    "key": "arm_l",
+    "name": "Lengan atas kiri",
+    "parent": "torso",
+    "joint": [
+     131.0,
+     240.0
+    ],
+    "angle": 104.14,
+    "length": 139.2,
+    "order": 30
+   },
+   {
+    "key": "forearm_l",
+    "name": "Lengan bawah kiri",
+    "parent": "arm_l",
+    "joint": [
+     97.0,
+     375.0
+    ],
+    "angle": 97.13,
+    "length": 80.6,
+    "order": 10
+   },
+   {
+    "key": "hand_l",
+    "name": "Tangan kiri",
+    "parent": "forearm_l",
+    "joint": [
+     87.0,
+     455.0
+    ],
+    "angle": 96.84,
+    "length": 50.4,
+    "order": -1
+   },
+   {
+    "key": "arm_r",
+    "name": "Lengan atas kanan",
+    "parent": "torso",
+    "joint": [
+     269.0,
+     240.0
+    ],
+    "angle": 75.86,
+    "length": 139.2,
+    "order": 31
+   },
+   {
+    "key": "forearm_r",
+    "name": "Lengan bawah kanan",
+    "parent": "arm_r",
+    "joint": [
+     303.0,
+     375.0
+    ],
+    "angle": 82.87,
+    "length": 80.6,
+    "order": 10
+   },
+   {
+    "key": "hand_r",
+    "name": "Tangan kanan",
+    "parent": "forearm_r",
+    "joint": [
+     313.0,
+     455.0
+    ],
+    "angle": 83.16,
+    "length": 50.4,
+    "order": -1
+   }
+  ],
+  "parts": [
+   {
+    "key": "arm_l_up",
+    "name": "Lengan atas kiri (lengan baju)",
+    "bone": "arm_l",
+    "order": 0,
+    "file": "depan-arm_l_up.png",
+    "box": {
+     "x0": 82.0,
+     "y0": 215.0,
+     "x1": 140.0,
+     "y1": 386.0
+    }
+   },
+   {
+    "key": "arm_l_low",
+    "name": "Lengan bawah kiri",
+    "bone": "forearm_l",
+    "order": 1,
+    "file": "depan-arm_l_low.png",
+    "box": {
+     "x0": 72.0,
+     "y0": 373.0,
+     "x1": 116.0,
+     "y1": 462.0
+    }
+   },
+   {
+    "key": "hand_l",
+    "name": "Tangan kiri",
+    "bone": "hand_l",
+    "order": 2,
+    "file": "depan-hand_l.png",
+    "box": {
+     "x0": 69.0,
+     "y0": 452.0,
+     "x1": 102.0,
+     "y1": 505.0
+    }
+   },
+   {
+    "key": "arm_r_up",
+    "name": "Lengan atas kanan (lengan baju)",
+    "bone": "arm_r",
+    "order": 3,
+    "file": "depan-arm_r_up.png",
+    "box": {
+     "x0": 262.0,
+     "y0": 216.0,
+     "x1": 318.0,
+     "y1": 386.0
+    }
+   },
+   {
+    "key": "arm_r_low",
+    "name": "Lengan bawah kanan",
+    "bone": "forearm_r",
+    "order": 4,
+    "file": "depan-arm_r_low.png",
+    "box": {
+     "x0": 285.0,
+     "y0": 373.0,
+     "x1": 328.0,
+     "y1": 463.0
+    }
+   },
+   {
+    "key": "hand_r",
+    "name": "Tangan kanan",
+    "bone": "hand_r",
+    "order": 5,
+    "file": "depan-hand_r.png",
+    "box": {
+     "x0": 298.0,
+     "y0": 453.0,
+     "x1": 331.0,
+     "y1": 505.0
+    }
+   },
+   {
+    "key": "thigh_l",
+    "name": "Paha kiri (celana)",
+    "bone": "leg_l",
+    "order": 6,
+    "file": "depan-thigh_l.png",
+    "box": {
+     "x0": 131.0,
+     "y0": 435.0,
+     "x1": 202.0,
+     "y1": 607.0
+    }
+   },
+   {
+    "key": "shin_l",
+    "name": "Betis kiri (celana)",
+    "bone": "shin_l",
+    "order": 7,
+    "file": "depan-shin_l.png",
+    "box": {
+     "x0": 126.0,
+     "y0": 597.0,
+     "x1": 182.0,
+     "y1": 752.0
+    }
+   },
+   {
+    "key": "shoe_l",
+    "name": "Sepatu kiri",
+    "bone": "foot_l",
+    "order": 8,
+    "file": "depan-shoe_l.png",
+    "box": {
+     "x0": 106.0,
+     "y0": 742.0,
+     "x1": 170.0,
+     "y1": 797.0
+    }
+   },
+   {
+    "key": "thigh_r",
+    "name": "Paha kanan (celana)",
+    "bone": "leg_r",
+    "order": 9,
+    "file": "depan-thigh_r.png",
+    "box": {
+     "x0": 198.0,
+     "y0": 435.0,
+     "x1": 269.0,
+     "y1": 607.0
+    }
+   },
+   {
+    "key": "shin_r",
+    "name": "Betis kanan (celana)",
+    "bone": "shin_r",
+    "order": 10,
+    "file": "depan-shin_r.png",
+    "box": {
+     "x0": 218.0,
+     "y0": 597.0,
+     "x1": 274.0,
+     "y1": 752.0
+    }
+   },
+   {
+    "key": "shoe_r",
+    "name": "Sepatu kanan",
+    "bone": "foot_r",
+    "order": 11,
+    "file": "depan-shoe_r.png",
+    "box": {
+     "x0": 230.0,
+     "y0": 743.0,
+     "x1": 294.0,
+     "y1": 796.0
+    }
+   },
+   {
+    "key": "pelvis",
+    "name": "Pinggul (ikat pinggang + celana atas)",
+    "bone": "root",
+    "order": 5,
+    "file": "depan-pelvis.png",
+    "box": {
+     "x0": 131.0,
+     "y0": 379.0,
+     "x1": 269.0,
+     "y1": 485.0
+    }
+   },
+   {
+    "key": "neck",
+    "name": "Leher",
+    "bone": "torso",
+    "order": 1,
+    "file": "depan-neck.png",
+    "box": {
+     "x0": 181.0,
+     "y0": 191.0,
+     "x1": 218.0,
+     "y1": 216.0
+    }
+   },
+   {
+    "key": "torso",
+    "name": "Badan (kemeja + dasi)",
+    "bone": "torso",
+    "order": 2,
+    "file": "depan-torso.png",
+    "box": {
+     "x0": 136.0,
+     "y0": 191.0,
+     "x1": 266.0,
+     "y1": 383.0
+    }
+   },
+   {
+    "key": "collar",
+    "name": "Kerah (di depan leher)",
+    "bone": "torso",
+    "order": 25,
+    "file": "depan-collar.png",
+    "box": {
+     "x0": 153.0,
+     "y0": 193.0,
+     "x1": 248.0,
+     "y1": 232.0
+    }
+   }
+  ]
+ },
+ "kiri": {
+  "label": "samping kiri",
+  "bones": [
+   {
+    "key": "root",
+    "name": "Pinggul (root)",
+    "parent": null,
+    "joint": [
+     195.0,
+     440.0
+    ],
+    "angle": -90,
+    "length": 30.0,
+    "order": 0
+   },
+   {
+    "key": "leg_far",
+    "name": "Paha jauh",
+    "parent": "root",
+    "joint": [
+     195.0,
+     445.0
+    ],
+    "angle": 90.0,
+    "length": 155.0,
+    "order": 0
+   },
+   {
+    "key": "shin_far",
+    "name": "Betis jauh",
+    "parent": "leg_far",
+    "joint": [
+     195.0,
+     600.0
+    ],
+    "angle": 86.19,
+    "length": 150.3,
+    "order": 10
+   },
+   {
+    "key": "foot_far",
+    "name": "Kaki jauh",
+    "parent": "shin_far",
+    "joint": [
+     205.0,
+     750.0
+    ],
+    "angle": 180,
+    "length": 30.0,
+    "order": 10
+   },
+   {
+    "key": "leg_near",
+    "name": "Paha dekat",
+    "parent": "root",
+    "joint": [
+     195.0,
+     445.0
+    ],
+    "angle": 90.0,
+    "length": 155.0,
+    "order": 1
+   },
+   {
+    "key": "shin_near",
+    "name": "Betis dekat",
+    "parent": "leg_near",
+    "joint": [
+     195.0,
+     600.0
+    ],
+    "angle": 86.19,
+    "length": 150.3,
+    "order": 10
+   },
+   {
+    "key": "foot_near",
+    "name": "Kaki dekat",
+    "parent": "shin_near",
+    "joint": [
+     205.0,
+     750.0
+    ],
+    "angle": 180,
+    "length": 30.0,
+    "order": 10
+   },
+   {
+    "key": "torso",
+    "name": "Badan",
+    "parent": "root",
+    "joint": [
+     195.0,
+     440.0
+    ],
+    "angle": -92.21,
+    "length": 233.2,
+    "order": 10
+   },
+   {
+    "key": "head",
+    "name": "Kepala",
+    "parent": "torso",
+    "joint": [
+     186.0,
+     207.0
+    ],
+    "angle": -90,
+    "length": 110.0,
+    "order": 20
+   },
+   {
+    "key": "arm_far",
+    "name": "Lengan atas jauh",
+    "parent": "torso",
+    "joint": [
+     212.0,
+     240.0
+    ],
+    "angle": 92.45,
+    "length": 140.1,
+    "order": -5
+   },
+   {
+    "key": "forearm_far",
+    "name": "Lengan bawah jauh",
+    "parent": "arm_far",
+    "joint": [
+     206.0,
+     380.0
+    ],
+    "angle": 100.3,
+    "length": 78.3,
+    "order": 10
+   },
+   {
+    "key": "hand_far",
+    "name": "Tangan jauh",
+    "parent": "forearm_far",
+    "joint": [
+     192.0,
+     457.0
+    ],
+    "angle": 96.34,
+    "length": 54.3,
+    "order": -1
+   },
+   {
+    "key": "arm_near",
+    "name": "Lengan atas dekat",
+    "parent": "torso",
+    "joint": [
+     212.0,
+     240.0
+    ],
+    "angle": 92.45,
+    "length": 140.1,
+    "order": 30
+   },
+   {
+    "key": "forearm_near",
+    "name": "Lengan bawah dekat",
+    "parent": "arm_near",
+    "joint": [
+     206.0,
+     380.0
+    ],
+    "angle": 100.3,
+    "length": 78.3,
+    "order": 10
+   },
+   {
+    "key": "hand_near",
+    "name": "Tangan dekat",
+    "parent": "forearm_near",
+    "joint": [
+     192.0,
+     457.0
+    ],
+    "angle": 96.34,
+    "length": 54.3,
+    "order": -1
+   }
+  ],
+  "parts": [
+   {
+    "key": "arm_far_up",
+    "name": "Lengan atas jauh",
+    "bone": "arm_far",
+    "order": 0,
+    "file": "kiri-arm_far_up.png",
+    "box": {
+     "x0": 184.0,
+     "y0": 205.0,
+     "x1": 247.0,
+     "y1": 375.0
+    }
+   },
+   {
+    "key": "thigh_far",
+    "name": "Paha jauh",
+    "bone": "leg_far",
+    "order": 1,
+    "file": "kiri-thigh_far.png",
+    "box": {
+     "x0": 155.0,
+     "y0": 435.0,
+     "x1": 246.0,
+     "y1": 607.0
+    }
+   },
+   {
+    "key": "shin_far",
+    "name": "Betis jauh",
+    "bone": "shin_far",
+    "order": 2,
+    "file": "kiri-shin_far.png",
+    "box": {
+     "x0": 172.0,
+     "y0": 597.0,
+     "x1": 242.0,
+     "y1": 758.0
+    }
+   },
+   {
+    "key": "shoe_far",
+    "name": "Sepatu jauh",
+    "bone": "foot_far",
+    "order": 3,
+    "file": "kiri-shoe_far.png",
+    "box": {
+     "x0": 131.0,
+     "y0": 748.0,
+     "x1": 240.0,
+     "y1": 792.0
+    }
+   },
+   {
+    "key": "thigh_near",
+    "name": "Paha dekat (celana)",
+    "bone": "leg_near",
+    "order": 4,
+    "file": "kiri-thigh_near.png",
+    "box": {
+     "x0": 155.0,
+     "y0": 435.0,
+     "x1": 246.0,
+     "y1": 607.0
+    }
+   },
+   {
+    "key": "shin_near",
+    "name": "Betis dekat (celana)",
+    "bone": "shin_near",
+    "order": 5,
+    "file": "kiri-shin_near.png",
+    "box": {
+     "x0": 172.0,
+     "y0": 597.0,
+     "x1": 242.0,
+     "y1": 758.0
+    }
+   },
+   {
+    "key": "shoe_near",
+    "name": "Sepatu dekat",
+    "bone": "foot_near",
+    "order": 6,
+    "file": "kiri-shoe_near.png",
+    "box": {
+     "x0": 131.0,
+     "y0": 748.0,
+     "x1": 240.0,
+     "y1": 792.0
+    }
+   },
+   {
+    "key": "pelvis",
+    "name": "Pinggul (ikat pinggang + celana atas)",
+    "bone": "root",
+    "order": 5,
+    "file": "kiri-pelvis.png",
+    "box": {
+     "x0": 151.0,
+     "y0": 379.0,
+     "x1": 246.0,
+     "y1": 475.0
+    }
+   },
+   {
+    "key": "neck",
+    "name": "Leher",
+    "bone": "torso",
+    "order": 1,
+    "file": "kiri-neck.png",
+    "box": {
+     "x0": 180.0,
+     "y0": 191.0,
+     "x1": 210.0,
+     "y1": 205.0
+    }
+   },
+   {
+    "key": "torso",
+    "name": "Badan (kemeja)",
+    "bone": "torso",
+    "order": 2,
+    "file": "kiri-torso.png",
+    "box": {
+     "x0": 145.0,
+     "y0": 191.0,
+     "x1": 247.0,
+     "y1": 383.0
+    }
+   },
+   {
+    "key": "collar",
+    "name": "Kerah (di depan leher)",
+    "bone": "torso",
+    "order": 25,
+    "file": "kiri-collar.png",
+    "box": {
+     "x0": 167.0,
+     "y0": 191.0,
+     "x1": 220.0,
+     "y1": 232.0
+    }
+   },
+   {
+    "key": "arm_near_up",
+    "name": "Lengan atas dekat (lengan baju)",
+    "bone": "arm_near",
+    "order": 11,
+    "file": "kiri-arm_near_up.png",
+    "box": {
+     "x0": 184.0,
+     "y0": 205.0,
+     "x1": 247.0,
+     "y1": 389.0
+    }
+   },
+   {
+    "key": "arm_near_low",
+    "name": "Lengan bawah dekat",
+    "bone": "forearm_near",
+    "order": 12,
+    "file": "kiri-arm_near_low.png",
+    "box": {
+     "x0": 190.0,
+     "y0": 380.0,
+     "x1": 225.0,
+     "y1": 453.0
+    }
+   },
+   {
+    "key": "hand_near",
+    "name": "Tangan dekat",
+    "bone": "hand_near",
+    "order": 13,
+    "file": "kiri-hand_near.png",
+    "box": {
+     "x0": 169.0,
+     "y0": 453.0,
+     "x1": 210.0,
+     "y1": 507.0
+    }
+   }
+  ]
+ },
+ "belakang": {
+  "label": "belakang",
+  "bones": [
+   {
+    "key": "root",
+    "name": "Pinggul (root)",
+    "parent": null,
+    "joint": [
+     200.0,
+     443.0
+    ],
+    "angle": -90,
+    "length": 30.0,
+    "order": 0
+   },
+   {
+    "key": "leg_l",
+    "name": "Paha kiri",
+    "parent": "root",
+    "joint": [
+     172.0,
+     445.0
+    ],
+    "angle": 92.95,
+    "length": 155.2,
+    "order": 0
+   },
+   {
+    "key": "shin_l",
+    "name": "Betis kiri",
+    "parent": "leg_l",
+    "joint": [
+     164.0,
+     600.0
+    ],
+    "angle": 91.97,
+    "length": 145.1,
+    "order": 10
+   },
+   {
+    "key": "foot_l",
+    "name": "Kaki kiri",
+    "parent": "shin_l",
+    "joint": [
+     159.0,
+     745.0
+    ],
+    "angle": 90,
+    "length": 30.0,
+    "order": 10
+   },
+   {
+    "key": "leg_r",
+    "name": "Paha kanan",
+    "parent": "root",
+    "joint": [
+     230.0,
+     445.0
+    ],
+    "angle": 87.78,
+    "length": 155.1,
+    "order": 1
+   },
+   {
+    "key": "shin_r",
+    "name": "Betis kanan",
+    "parent": "leg_r",
+    "joint": [
+     236.0,
+     600.0
+    ],
+    "angle": 87.63,
+    "length": 145.1,
+    "order": 10
+   },
+   {
+    "key": "foot_r",
+    "name": "Kaki kanan",
+    "parent": "shin_r",
+    "joint": [
+     242.0,
+     745.0
+    ],
+    "angle": 90,
+    "length": 30.0,
+    "order": 10
+   },
+   {
+    "key": "torso",
+    "name": "Badan",
+    "parent": "root",
+    "joint": [
+     200.0,
+     443.0
+    ],
+    "angle": -90.0,
+    "length": 243.0,
+    "order": 10
+   },
+   {
+    "key": "head",
+    "name": "Kepala",
+    "parent": "torso",
+    "joint": [
+     200.0,
+     200.0
+    ],
+    "angle": -90,
+    "length": 110.0,
+    "order": 20
+   },
+   {
+    "key": "arm_l",
+    "name": "Lengan atas kiri",
+    "parent": "torso",
+    "joint": [
+     132.0,
+     240.0
+    ],
+    "angle": 105.72,
+    "length": 140.2,
+    "order": 30
+   },
+   {
+    "key": "forearm_l",
+    "name": "Lengan bawah kiri",
+    "parent": "arm_l",
+    "joint": [
+     94.0,
+     375.0
+    ],
+    "angle": 95.71,
+    "length": 80.4,
+    "order": 10
+   },
+   {
+    "key": "hand_l",
+    "name": "Tangan kiri",
+    "parent": "forearm_l",
+    "joint": [
+     86.0,
+     455.0
+    ],
+    "angle": 92.29,
+    "length": 50.0,
+    "order": -1
+   },
+   {
+    "key": "arm_r",
+    "name": "Lengan atas kanan",
+    "parent": "torso",
+    "joint": [
+     268.0,
+     240.0
+    ],
+    "angle": 74.28,
+    "length": 140.2,
+    "order": 31
+   },
+   {
+    "key": "forearm_r",
+    "name": "Lengan bawah kanan",
+    "parent": "arm_r",
+    "joint": [
+     306.0,
+     375.0
+    ],
+    "angle": 84.29,
+    "length": 80.4,
+    "order": 10
+   },
+   {
+    "key": "hand_r",
+    "name": "Tangan kanan",
+    "parent": "forearm_r",
+    "joint": [
+     314.0,
+     455.0
+    ],
+    "angle": 87.71,
+    "length": 50.0,
+    "order": -1
+   }
+  ],
+  "parts": [
+   {
+    "key": "arm_l_up",
+    "name": "Lengan atas kiri (lengan baju)",
+    "bone": "arm_l",
+    "order": 0,
+    "file": "belakang-arm_l_up.png",
+    "box": {
+     "x0": 83.0,
+     "y0": 218.0,
+     "x1": 134.0,
+     "y1": 387.0
+    }
+   },
+   {
+    "key": "arm_l_low",
+    "name": "Lengan bawah kiri",
+    "bone": "forearm_l",
+    "order": 1,
+    "file": "belakang-arm_l_low.png",
+    "box": {
+     "x0": 72.0,
+     "y0": 373.0,
+     "x1": 116.0,
+     "y1": 463.0
+    }
+   },
+   {
+    "key": "hand_l",
+    "name": "Tangan kiri",
+    "bone": "hand_l",
+    "order": 2,
+    "file": "belakang-hand_l.png",
+    "box": {
+     "x0": 70.0,
+     "y0": 453.0,
+     "x1": 104.0,
+     "y1": 504.0
+    }
+   },
+   {
+    "key": "arm_r_up",
+    "name": "Lengan atas kanan (lengan baju)",
+    "bone": "arm_r",
+    "order": 3,
+    "file": "belakang-arm_r_up.png",
+    "box": {
+     "x0": 266.0,
+     "y0": 217.0,
+     "x1": 319.0,
+     "y1": 387.0
+    }
+   },
+   {
+    "key": "arm_r_low",
+    "name": "Lengan bawah kanan",
+    "bone": "forearm_r",
+    "order": 4,
+    "file": "belakang-arm_r_low.png",
+    "box": {
+     "x0": 285.0,
+     "y0": 373.0,
+     "x1": 329.0,
+     "y1": 463.0
+    }
+   },
+   {
+    "key": "hand_r",
+    "name": "Tangan kanan",
+    "bone": "hand_r",
+    "order": 5,
+    "file": "belakang-hand_r.png",
+    "box": {
+     "x0": 298.0,
+     "y0": 453.0,
+     "x1": 332.0,
+     "y1": 504.0
+    }
+   },
+   {
+    "key": "thigh_l",
+    "name": "Paha kiri (celana)",
+    "bone": "leg_l",
+    "order": 6,
+    "file": "belakang-thigh_l.png",
+    "box": {
+     "x0": 132.0,
+     "y0": 435.0,
+     "x1": 202.0,
+     "y1": 607.0
+    }
+   },
+   {
+    "key": "shin_l",
+    "name": "Betis kiri (celana)",
+    "bone": "shin_l",
+    "order": 7,
+    "file": "belakang-shin_l.png",
+    "box": {
+     "x0": 127.0,
+     "y0": 597.0,
+     "x1": 183.0,
+     "y1": 752.0
+    }
+   },
+   {
+    "key": "shoe_l",
+    "name": "Sepatu kiri",
+    "bone": "foot_l",
+    "order": 8,
+    "file": "belakang-shoe_l.png",
+    "box": {
+     "x0": 113.0,
+     "y0": 743.0,
+     "x1": 169.0,
+     "y1": 792.0
+    }
+   },
+   {
+    "key": "thigh_r",
+    "name": "Paha kanan (celana)",
+    "bone": "leg_r",
+    "order": 9,
+    "file": "belakang-thigh_r.png",
+    "box": {
+     "x0": 198.0,
+     "y0": 435.0,
+     "x1": 270.0,
+     "y1": 607.0
+    }
+   },
+   {
+    "key": "shin_r",
+    "name": "Betis kanan (celana)",
+    "bone": "shin_r",
+    "order": 10,
+    "file": "belakang-shin_r.png",
+    "box": {
+     "x0": 219.0,
+     "y0": 597.0,
+     "x1": 275.0,
+     "y1": 752.0
+    }
+   },
+   {
+    "key": "shoe_r",
+    "name": "Sepatu kanan",
+    "bone": "foot_r",
+    "order": 11,
+    "file": "belakang-shoe_r.png",
+    "box": {
+     "x0": 232.0,
+     "y0": 743.0,
+     "x1": 289.0,
+     "y1": 792.0
+    }
+   },
+   {
+    "key": "pelvis",
+    "name": "Pinggul (ikat pinggang + celana atas)",
+    "bone": "root",
+    "order": 5,
+    "file": "belakang-pelvis.png",
+    "box": {
+     "x0": 132.0,
+     "y0": 379.0,
+     "x1": 270.0,
+     "y1": 483.0
+    }
+   },
+   {
+    "key": "neck",
+    "name": "Leher",
+    "bone": "torso",
+    "order": 1,
+    "file": "belakang-neck.png",
+    "box": {
+     "x0": 182.0,
+     "y0": 185.0,
+     "x1": 220.0,
+     "y1": 189.0
+    }
+   },
+   {
+    "key": "torso",
+    "name": "Badan (kemeja)",
+    "bone": "torso",
+    "order": 2,
+    "file": "belakang-torso.png",
+    "box": {
+     "x0": 134.0,
+     "y0": 185.0,
+     "x1": 267.0,
+     "y1": 383.0
+    }
+   },
+   {
+    "key": "collar",
+    "name": "Kerah (di depan leher)",
+    "bone": "torso",
+    "order": 25,
+    "file": "belakang-collar.png",
+    "box": {
+     "x0": 154.0,
+     "y0": 185.0,
+     "x1": 247.0,
+     "y1": 218.0
+    }
+   }
+  ]
+ },
+ "kanan": {
+  "label": "samping kanan",
+  "bones": [
+   {
+    "key": "root",
+    "name": "Pinggul (root)",
+    "parent": null,
+    "joint": [
+     205.0,
+     440.0
+    ],
+    "angle": -90,
+    "length": 30.0,
+    "order": 0
+   },
+   {
+    "key": "leg_far",
+    "name": "Paha jauh",
+    "parent": "root",
+    "joint": [
+     205.0,
+     445.0
+    ],
+    "angle": 90.0,
+    "length": 155.0,
+    "order": 0
+   },
+   {
+    "key": "shin_far",
+    "name": "Betis jauh",
+    "parent": "leg_far",
+    "joint": [
+     205.0,
+     600.0
+    ],
+    "angle": 93.81,
+    "length": 150.3,
+    "order": 10
+   },
+   {
+    "key": "foot_far",
+    "name": "Kaki jauh",
+    "parent": "shin_far",
+    "joint": [
+     195.0,
+     750.0
+    ],
+    "angle": 0,
+    "length": 30.0,
+    "order": 10
+   },
+   {
+    "key": "leg_near",
+    "name": "Paha dekat",
+    "parent": "root",
+    "joint": [
+     205.0,
+     445.0
+    ],
+    "angle": 90.0,
+    "length": 155.0,
+    "order": 1
+   },
+   {
+    "key": "shin_near",
+    "name": "Betis dekat",
+    "parent": "leg_near",
+    "joint": [
+     205.0,
+     600.0
+    ],
+    "angle": 93.81,
+    "length": 150.3,
+    "order": 10
+   },
+   {
+    "key": "foot_near",
+    "name": "Kaki dekat",
+    "parent": "shin_near",
+    "joint": [
+     195.0,
+     750.0
+    ],
+    "angle": 0,
+    "length": 30.0,
+    "order": 10
+   },
+   {
+    "key": "torso",
+    "name": "Badan",
+    "parent": "root",
+    "joint": [
+     205.0,
+     440.0
+    ],
+    "angle": -87.79000000000002,
+    "length": 233.2,
+    "order": 10
+   },
+   {
+    "key": "head",
+    "name": "Kepala",
+    "parent": "torso",
+    "joint": [
+     214.0,
+     207.0
+    ],
+    "angle": -90,
+    "length": 110.0,
+    "order": 20
+   },
+   {
+    "key": "arm_far",
+    "name": "Lengan atas jauh",
+    "parent": "torso",
+    "joint": [
+     188.0,
+     240.0
+    ],
+    "angle": 87.55000000000001,
+    "length": 140.1,
+    "order": -5
+   },
+   {
+    "key": "forearm_far",
+    "name": "Lengan bawah jauh",
+    "parent": "arm_far",
+    "joint": [
+     194.0,
+     380.0
+    ],
+    "angle": 79.69999999999999,
+    "length": 78.3,
+    "order": 10
+   },
+   {
+    "key": "hand_far",
+    "name": "Tangan jauh",
+    "parent": "forearm_far",
+    "joint": [
+     208.0,
+     457.0
+    ],
+    "angle": 83.65999999999997,
+    "length": 54.3,
+    "order": -1
+   },
+   {
+    "key": "arm_near",
+    "name": "Lengan atas dekat",
+    "parent": "torso",
+    "joint": [
+     188.0,
+     240.0
+    ],
+    "angle": 87.55000000000001,
+    "length": 140.1,
+    "order": 30
+   },
+   {
+    "key": "forearm_near",
+    "name": "Lengan bawah dekat",
+    "parent": "arm_near",
+    "joint": [
+     194.0,
+     380.0
+    ],
+    "angle": 79.69999999999999,
+    "length": 78.3,
+    "order": 10
+   },
+   {
+    "key": "hand_near",
+    "name": "Tangan dekat",
+    "parent": "forearm_near",
+    "joint": [
+     208.0,
+     457.0
+    ],
+    "angle": 83.65999999999997,
+    "length": 54.3,
+    "order": -1
+   }
+  ],
+  "parts": [
+   {
+    "key": "arm_far_up",
+    "name": "Lengan atas jauh",
+    "bone": "arm_far",
+    "order": 0,
+    "file": "kanan-arm_far_up.png",
+    "box": {
+     "x0": 153.0,
+     "y0": 205.0,
+     "x1": 216.0,
+     "y1": 375.0
+    }
+   },
+   {
+    "key": "thigh_far",
+    "name": "Paha jauh",
+    "bone": "leg_far",
+    "order": 1,
+    "file": "kanan-thigh_far.png",
+    "box": {
+     "x0": 154.0,
+     "y0": 435.0,
+     "x1": 245.0,
+     "y1": 607.0
+    }
+   },
+   {
+    "key": "shin_far",
+    "name": "Betis jauh",
+    "bone": "shin_far",
+    "order": 2,
+    "file": "kanan-shin_far.png",
+    "box": {
+     "x0": 158.0,
+     "y0": 597.0,
+     "x1": 228.0,
+     "y1": 758.0
+    }
+   },
+   {
+    "key": "shoe_far",
+    "name": "Sepatu jauh",
+    "bone": "foot_far",
+    "order": 3,
+    "file": "kanan-shoe_far.png",
+    "box": {
+     "x0": 160.0,
+     "y0": 748.0,
+     "x1": 269.0,
+     "y1": 792.0
+    }
+   },
+   {
+    "key": "thigh_near",
+    "name": "Paha dekat (celana)",
+    "bone": "leg_near",
+    "order": 4,
+    "file": "kanan-thigh_near.png",
+    "box": {
+     "x0": 154.0,
+     "y0": 435.0,
+     "x1": 245.0,
+     "y1": 607.0
+    }
+   },
+   {
+    "key": "shin_near",
+    "name": "Betis dekat (celana)",
+    "bone": "shin_near",
+    "order": 5,
+    "file": "kanan-shin_near.png",
+    "box": {
+     "x0": 158.0,
+     "y0": 597.0,
+     "x1": 228.0,
+     "y1": 758.0
+    }
+   },
+   {
+    "key": "shoe_near",
+    "name": "Sepatu dekat",
+    "bone": "foot_near",
+    "order": 6,
+    "file": "kanan-shoe_near.png",
+    "box": {
+     "x0": 160.0,
+     "y0": 748.0,
+     "x1": 269.0,
+     "y1": 792.0
+    }
+   },
+   {
+    "key": "pelvis",
+    "name": "Pinggul (ikat pinggang + celana atas)",
+    "bone": "root",
+    "order": 5,
+    "file": "kanan-pelvis.png",
+    "box": {
+     "x0": 154.0,
+     "y0": 379.0,
+     "x1": 249.0,
+     "y1": 475.0
+    }
+   },
+   {
+    "key": "neck",
+    "name": "Leher",
+    "bone": "torso",
+    "order": 1,
+    "file": "kanan-neck.png",
+    "box": {
+     "x0": 190.0,
+     "y0": 191.0,
+     "x1": 220.0,
+     "y1": 205.0
+    }
+   },
+   {
+    "key": "torso",
+    "name": "Badan (kemeja)",
+    "bone": "torso",
+    "order": 2,
+    "file": "kanan-torso.png",
+    "box": {
+     "x0": 153.0,
+     "y0": 191.0,
+     "x1": 255.0,
+     "y1": 383.0
+    }
+   },
+   {
+    "key": "collar",
+    "name": "Kerah (di depan leher)",
+    "bone": "torso",
+    "order": 25,
+    "file": "kanan-collar.png",
+    "box": {
+     "x0": 180.0,
+     "y0": 191.0,
+     "x1": 233.0,
+     "y1": 232.0
+    }
+   },
+   {
+    "key": "arm_near_up",
+    "name": "Lengan atas dekat (lengan baju)",
+    "bone": "arm_near",
+    "order": 11,
+    "file": "kanan-arm_near_up.png",
+    "box": {
+     "x0": 153.0,
+     "y0": 205.0,
+     "x1": 216.0,
+     "y1": 389.0
+    }
+   },
+   {
+    "key": "arm_near_low",
+    "name": "Lengan bawah dekat",
+    "bone": "forearm_near",
+    "order": 12,
+    "file": "kanan-arm_near_low.png",
+    "box": {
+     "x0": 175.0,
+     "y0": 380.0,
+     "x1": 210.0,
+     "y1": 453.0
+    }
+   },
+   {
+    "key": "hand_near",
+    "name": "Tangan dekat",
+    "bone": "hand_near",
+    "order": 13,
+    "file": "kanan-hand_near.png",
+    "box": {
+     "x0": 190.0,
+     "y0": 453.0,
+     "x1": 231.0,
+     "y1": 507.0
+    }
+   }
+  ]
+ }
+}

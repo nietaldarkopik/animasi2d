@@ -1,0 +1,16 @@
+# Housekeeping scheduler (prunes old exports, expired tokens). Alternative: a cron entry
+#   * * * * * www-data cd /var/www/cartoon-maker/backend && php artisan schedule:run >> /dev/null 2>&1
+[Unit]
+Description=Cartoon Maker AI scheduler
+After=network.target postgresql.service
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/cartoon-maker/backend
+ExecStart=/usr/bin/php artisan schedule:work
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

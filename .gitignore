@@ -1,0 +1,35 @@
+# dependencies / build output
+node_modules/
+vendor/
+frontend/dist/
+
+# secrets and local state
+*.env*
+.env*
+**/.env*
+!.env.example
+!.env.production.example
+!**/env.example
+!**/.env.example
+!**/.env.production.example
+deploy/.env
+backend/database/*.sqlite*
+backend/storage/app/private/
+backend/storage/logs/
+backend/storage/framework/testing/
+
+# editor / OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# generated exports & output
+daily_output/
+tools/node_modules/
+backend/storage/app/projects/
+
+# python cache
+__pycache__/
+*.pyc
+*.pyo

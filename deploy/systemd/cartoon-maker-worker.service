@@ -1,0 +1,21 @@
+# Queue worker: exports (FFmpeg), AI jobs. Install to /etc/systemd/system/, then:
+#   sudo systemctl daemon-reload && sudo systemctl enable --now cartoon-maker-worker
+# Run several copies (cartoon-maker-worker@1, @2 ...) if exports must run in parallel.
+[Unit]
+Description=Cartoon Maker AI queue worker
+After=network.target postgresql.service redis-server.service
+Wants=postgresql.service redis-server.service
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/cartoon-maker/backend
+ExecStart=/usr/bin/php artisan queue:work redis --tries=1 --timeout=900 --max-time=3600 --sleep=2
+Restart=always
+RestartSec=3
+# let a running export finish before stopping
+TimeoutStopSec=120
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target
