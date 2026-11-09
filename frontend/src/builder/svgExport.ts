@@ -1,4 +1,4 @@
-import { layerEntries, placement, tintSvg, VIEWS } from './spec'
+import { CANVAS, layerEntries, placement, RIGHT_SHOE, tintSvg, VIEWS } from './spec'
 import type { CharacterConfig, LibAsset } from './types'
 
 /**
@@ -141,9 +141,13 @@ export function composeSvg(o: SvgOptions): SvgResult {
     // same chain as the canvas renderer: move to the pivot (+ offset), rotate, scale, move back; then place the image box
     const tf = `translate(${num(pl.px + pl.dx)} ${num(pl.py + pl.dy)})${pl.rot ? ` rotate(${num(pl.rot)})` : ''}${pl.scale !== 1 ? ` scale(${num(pl.scale)})` : ''} translate(${num(-pl.px)} ${num(-pl.py)})`
     const place = `translate(${num(pl.x)} ${num(pl.y)}) scale(${num(pl.w / part.vbW)} ${num(pl.h / part.vbH)})`
+    // a mirrored single shoe: the other foot is the same drawing flipped about the centre line, placed with the same transform
+    const flipped = asset.mirror && e.slot === 'shoes' && !o.config.parts[RIGHT_SHOE] ? `<g transform="translate(${CANVAS.w} 0) scale(-1 1)"><g transform="${tf}"><g transform="${place}">${part.kind === 'svg' ? scopeIds(part.inner, `${id}-r`) : part.inner}</g></g></g>` : ''
     body.push(
       `<g id="${id}" inkscape:groupmode="layer" inkscape:label="${xmlEscape(label)}" data-part="${xmlEscape(e.slot)}" data-source="${part.kind}"${clip}>` +
-      `<g transform="${tf}"><g transform="${place}">${inner}</g></g></g>`,
+      (e.slot === RIGHT_SHOE && asset.mirror
+        ? `<g transform="${tf}"><g transform="translate(${CANVAS.w} 0) scale(-1 1)"><g transform="${place}">${inner}</g></g></g></g>`
+        : `<g transform="${tf}"><g transform="${place}">${inner}</g></g>${flipped}</g>`),
     )
   }
 

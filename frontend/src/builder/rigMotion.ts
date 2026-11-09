@@ -141,14 +141,16 @@ export function applyRigMotion(doc: SceneDocument, rig: RigRef, id: string, star
       const steps = Math.max(1, Math.round(duration * (run ? 3 : 1.8)))
       if (root) applyPreset(root, id, { duration, amount: distance * dir, cycles: steps, phase: 0 }, start, fps, evalLayer(root, start))
       const legA = run ? 42 : 26
-      const armA = run ? 48 : 20
+      // In front view a clockwise turn swings the left arm OUT and the right arm IN, so both arms in the same phase alternate
+      // (one out while the other is in). Opposite phases would throw both arms out together, like wings.
+      const armA = run ? 24 : 13
       sine(doc, rig.bones.leg_l, legA, steps, 0, start, duration, rest('leg_l'))
       sine(doc, rig.bones.leg_r, legA, steps, 180, start, duration, rest('leg_r'))
       sine(doc, rig.bones.shin_l, legA * 0.6, steps, 90, start, duration, rest('shin_l'))
       sine(doc, rig.bones.shin_r, legA * 0.6, steps, 270, start, duration, rest('shin_r'))
-      sine(doc, rig.bones.arm_l, armA, steps, 180, start, duration, rest('arm_l'))
+      sine(doc, rig.bones.arm_l, armA, steps, 0, start, duration, rest('arm_l'))
       sine(doc, rig.bones.arm_r, armA, steps, 0, start, duration, rest('arm_r'))
-      if (run) { sine(doc, rig.bones.forearm_l, 25, steps, 180, start, duration, rest('forearm_l') + 40); sine(doc, rig.bones.forearm_r, 25, steps, 0, start, duration, rest('forearm_r') - 40) }
+      if (run) { sine(doc, rig.bones.forearm_l, 25, steps, 0, start, duration, rest('forearm_l') + 40); sine(doc, rig.bones.forearm_r, 25, steps, 0, start, duration, rest('forearm_r') - 40) }
       break
     }
     case 'wave': {

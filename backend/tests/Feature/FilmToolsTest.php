@@ -51,7 +51,7 @@ class FilmToolsTest extends TestCase
             'camera' => ['zoom' => [['f' => 24, 'v' => 1.5, 'e' => 'easeInOut'], ['f' => 0, 'v' => 1, 'e' => 'linear']], 'x' => [['f' => 0, 'v' => 100, 'e' => 'linear']]],
             'effects' => [['id' => 'e1', 'kind' => 'rain', 'intensity' => 0.5], ['id' => 'e2', 'kind' => 'tint', 'intensity' => 0.4, 'color' => '#1c2a66', 'blend' => 'multiply', 'label' => 'Malam']],
             'subtitles' => [['id' => 'a', 'start' => 0, 'end' => 1, 'text' => 'Halo'], ['id' => 'b', 'start' => 1, 'end' => 2, 'text' => 'Hai']],
-            'board' => ['location' => 'Sekolah', 'summary' => 'Pagi hari', 'dialog' => [['id' => 'd1', 'who' => 'Uki', 'text' => 'Halo!'], ['id' => 'd2', 'who' => 'Sekar', 'text' => 'Hai']]],
+            'board' => ['location' => 'Sekolah', 'summary' => 'Pagi hari', 'dialog' => [['id' => 'd1', 'who' => 'Uki', 'text' => 'Halo!'], ['id' => 'd2', 'who' => 'Sekar', 'text' => 'Hai']], 'cast' => ['Ines', 'Pak Suga']],
             'transition' => ['type' => 'wipe', 'duration' => 1],
         ];
         $r = $this->putJson("/api/projects/$pid", ['document' => $this->doc($scene)], $h)->assertOk();
@@ -61,6 +61,7 @@ class FilmToolsTest extends TestCase
         $this->assertSame('Malam', $s['effects'][1]['label']);
         $this->assertSame(['Halo', 'Hai'], array_column($s['subtitles'], 'text'));
         $this->assertSame(['Uki', 'Sekar'], array_column($s['board']['dialog'], 'who'));
+        $this->assertSame(['Ines', 'Pak Suga'], $s['board']['cast'], 'the crowd of the scene is kept');
         $this->assertSame('wipe', $s['transition']['type']);
 
         // empty lists are dropped; the stored document is what a reload returns
@@ -179,5 +180,71 @@ class FilmToolsTest extends TestCase
         }
         $this->post("/api/projects/$pid/audio", ['file' => new UploadedFile($tmp, 'a.wav', 'audio/wav', null, true)], $h)->assertCreated();
         @unlink($tmp);
+    }
+
+    public function test_daily_cartoon_flags_survive_a_save(): void
+    {
+        $h = $this->headers();
+        $pid = $this->project($h);
+        $doc = $this->doc([]) + ['auto_generated' => true, 'characters' => ['Kris', 'Riska']];
+        $r = $this->putJson("/api/projects/$pid", ['document' => $doc], $h)->assertOk();
+        $this->assertTrue($r->json('data.document.auto_generated'));
+        $this->assertSame(['Kris', 'Riska'], $r->json('data.document.characters'));
+        // after the editor placed the characters it saves the flag as false: it must be kept as false, not dropped
+        $doc['auto_generated'] = false;
+        $this->assertFalse($this->putJson("/api/projects/$pid", ['document' => $doc], $h)->assertOk()->json('data.document.auto_generated'));
+        $this->putJson("/api/projects/$pid", ['document' => array_merge($doc, ['characters' => array_fill(0, 11, 'x')])], $h)->assertStatus(422);
+    }
+
+    public function test_export_skips_audio_whose_file_is_missing_instead_of_failing_the_film(): void
+    {
+        $tmp = sys_get_temp_dir().'/ms_'.uniqid();
+        foreach ([['-f', 'lavfi', '-i', 'sine=frequency=440:duration=2', "$tmp.wav"], ['-f', 'lavfi', '-i', 'color=c=white:s=160x90:d=2:r=10', '-c:v', 'libvpx', "$tmp.webm"]] as $args) {
+            $p = new Process([config('services.ffmpeg.bin'), '-y', '-loglevel', 'error', ...$args]);
+            $p->run();
+            if (! $p->isSuccessful()) {
+                $this->markTestSkipped('ffmpeg unavailable');
+            }
+        }
+        $h = $this->headers();
+        $pid = $this->project($h);
+        $good = $this->post("/api/projects/$pid/audio", ['file' => new UploadedFile("$tmp.wav", 'a.wav', 'audio/wav', null, true)], $h)->assertCreated()->json('data');
+        $lost = $this->post("/api/projects/$pid/audio", ['file' => new UploadedFile("$tmp.wav", 'b.wav', 'audio/wav', null, true)], $h)->assertCreated()->json('data');
+        $row = Asset::find($lost['id']);
+        Storage::disk($row->disk)->delete($row->path); // a text-to-speech run that left only the database row
+
+        $job = $this->post("/api/projects/$pid/exports", ['format' => 'mp4', 'width' => 160, 'height' => 90, 'fps' => 10, 'file' => new UploadedFile("$tmp.webm", 'v.webm', 'video/webm', null, true),
+            'audio' => json_encode([['asset_id' => $good['id'], 'start' => 0, 'volume' => 1], ['asset_id' => $lost['id'], 'start' => 0.5, 'volume' => 1]])], $h)->assertStatus(202)->json('data');
+        $e = \App\Models\ExportJob::find($job['id'])->refresh();
+        $this->assertSame('done', $e->status, (string) $e->error);
+        @unlink("$tmp.wav");
+        @unlink("$tmp.webm");
+    }
+
+    public function test_asset_urls_are_stable_for_a_while_so_the_browser_can_cache_images(): void
+    {
+        $h = $this->headers();
+        $pid = $this->project($h);
+        $id = $this->post("/api/projects/$pid/assets", ['file' => UploadedFile::fake()->image('a.png', 8, 8)], $h)->assertCreated()->json('data.id');
+        $urls = [];
+        for ($i = 0; $i < 3; $i++) {
+            $urls[] = $this->getJson("/api/projects/$pid/assets", $h)->assertOk()->json('data.0.url');
+        }
+        $this->assertSame($urls[0], $urls[1], 'same URL on every load within the step');
+        $this->assertSame($urls[0], $urls[2]);
+        parse_str((string) parse_url($urls[0], PHP_URL_QUERY), $q);
+        $this->assertSame(0, ((int) $q['expires']) % 1800, 'expiry rounded to the 30 minute step');
+        $this->assertGreaterThanOrEqual(time() + 11.5 * 3600, (int) $q['expires'], 'still valid for ~12 hours');
+        $this->get($urls[0])->assertOk(); // the signature is valid
+        $this->get(preg_replace('/signature=[0-9a-f]+/', 'signature=deadbeef', $urls[0]))->assertForbidden();
+    }
+
+    public function test_a_hand_written_script_can_put_a_silent_crowd_in_a_scene(): void
+    {
+        $svc = app(\App\Services\DailyCartoonService::class);
+        $out = $svc->validateScript(['title' => 'MOS', 'scenes' => [['name' => 'Upacara', 'location' => 'Lapangan upacara', 'cast' => ['Ines', ' Riska ', 'Ines', 'Narator', ''], 'dialog' => [['who' => 'Pak Suga', 'text' => 'Selamat datang!']]]]]);
+        $this->assertSame(['Ines', 'Riska'], $out['scenes'][0]['cast']);
+        $this->expectException(\InvalidArgumentException::class);
+        $svc->validateScript(['scenes' => [['cast' => array_map(fn ($i) => "Siswa $i", range(1, 17)), 'dialog' => [['who' => 'A', 'text' => 'b']]]]]);
     }
 }

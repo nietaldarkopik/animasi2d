@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { evalCamera } from './anim'
+import { evalCamera, hasCamera } from './anim'
 import { camFocus, camKeyFrames, camPan, camShake, camZoom } from './camera'
 import { addEffect, balloonSize, boardFromScript, makeBalloon, makeShadow, makeTitle, parseScript, pickBackground, propPlacement, sceneSecondsFor, setTimeOfDay, spreadX, subtitlesFromDialog, subtitleSeconds, timeOfDay } from './filmTools'
 import { effectAt, migrate, mergeView, sceneView } from './movie'
@@ -220,5 +220,52 @@ describe('document plumbing', () => {
     const z = effectAt(p, 0, 3.9, 1280)
     expect(z).toMatchObject({ kind: 'zoom' })
     expect((z as { scale: number }).scale).toBeGreaterThan(1)
+  })
+})
+
+describe('documents written by other tools', () => {
+  const scene = (extra: object) => ({ id: 's', name: 'S', duration: 5, background: '#ffffff', transition: null, layers: [], ...extra })
+  const load = (extra: object) => migrate({ schema: 2, settings: { width: 1280, height: 720, fps: 24 }, audio: [], scenes: [scene(extra)] }).scenes[0]
+
+  it('lifts a camera written as plain numbers + nested keyframes (project 56) and never throws', () => {
+    const s = load({ camera: { x: 640, y: 360, zoom: 1, rotation: 0, keyframes: { zoom: [{ e: 'easeOut', f: 0, v: 1 }, { e: 'linear', f: 619, v: 1.05 }], rotation: [{ f: 10, v: 3 }] } } })
+    expect(s.camera!.zoom).toEqual([{ f: 0, v: 1, e: 'easeOut' }, { f: 619, v: 1.05, e: 'linear' }])
+    expect(s.camera!.rot).toEqual([{ f: 10, v: 3, e: 'linear' }])
+    expect(s.camera!.x).toBeUndefined() // a bare number is not a track
+    expect(evalCamera(s.camera, 619, 1280, 720).zoom).toBeCloseTo(1.05, 6)
+    expect(camKeyFrames(s.camera)).toEqual([0, 10, 619])
+  })
+
+  it('drops garbage instead of crashing: bad camera, effects, subtitles, board', () => {
+    const s = load({ camera: { zoom: 'big', x: { f: 1 }, y: [{ f: -1, v: 2 }, { f: 'a', v: 1 }, null] }, effects: [{ kind: 'lava', intensity: 1 }, null, 5, { id: 'e', kind: 'rain', intensity: 0.4 }], subtitles: [{ text: 'ok', start: 0, end: 1 }, { text: 5, start: 0, end: 1 }, { text: 'x' }], board: [] })
+    expect(s.camera).toBeUndefined()
+    expect(s.effects).toEqual([{ id: 'e', kind: 'rain', intensity: 0.4 }])
+    expect(s.subtitles).toHaveLength(1)
+    expect(s.board).toBeUndefined()
+  })
+
+  it('keeps a good camera as it is, sorted, one key per frame', () => {
+    const s = load({ camera: { zoom: [{ f: 20, v: 2, e: 'linear' }, { f: 0, v: 1, e: 'easeIn' }, { f: 20, v: 3, e: 'step' }] } })
+    expect(s.camera!.zoom).toEqual([{ f: 0, v: 1, e: 'easeIn' }, { f: 20, v: 3, e: 'step' }])
+  })
+
+  it('camera helpers tolerate malformed tracks even if one slips through', () => {
+    const bad = { zoom: 5, x: 'a', y: null } as unknown as Parameters<typeof evalCamera>[0]
+    expect(evalCamera(bad, 3, 1000, 500)).toEqual({ x: 500, y: 250, zoom: 1, rot: 0 })
+    expect(camKeyFrames(bad)).toEqual([])
+    expect(hasCamera(bad)).toBe(false)
+  })
+})
+
+describe('daily-cartoon documents', () => {
+  it('migrate keeps the generator flags the auto director reads (auto_generated, characters)', () => {
+    const raw = { schema: 2, settings: { width: 1280, height: 720, fps: 24 }, audio: [], auto_generated: true, characters: ['Kris', 'Riska', 7], scenes: [{ id: 's', name: 'S', duration: 5, background: '#ffffff', transition: null, layers: [] }] }
+    const p = migrate(raw)
+    expect(p.auto_generated).toBe(true)
+    expect(p.characters).toEqual(['Kris', 'Riska'])
+    expect(migrate({ ...raw, auto_generated: false }).auto_generated).toBe(false) // "already directed" survives too
+    const plain = migrate({ ...raw, auto_generated: undefined, characters: undefined })
+    expect('auto_generated' in plain).toBe(false)
+    expect('characters' in plain).toBe(false)
   })
 })

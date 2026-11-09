@@ -123,6 +123,12 @@ class ProjectController extends Controller
             "$p.board.dialog.*.id" => 'required|string|max:64',
             "$p.board.dialog.*.who" => 'nullable|string|max:60',
             "$p.board.dialog.*.text" => 'required|string|max:500',
+            "$p.board.cast" => 'nullable|array|max:16',            // who else is in the scene (a crowd), without speaking
+            "$p.board.cast.*" => 'string|max:60',
+            "$p.board.beats" => 'nullable|array|max:300',           // actions and sound effects of the script
+            "$p.board.beats.*.at" => 'required|numeric|min:0|max:600',
+            "$p.board.beats.*.action" => 'nullable|string|max:200',
+            "$p.board.beats.*.sfx" => 'nullable|string|max:40',
             "$p.camera" => 'nullable|array',
         ];
         foreach (['x', 'y', 'zoom', 'rot'] as $prop) {
@@ -161,7 +167,12 @@ class ProjectController extends Controller
             'document.scenes.*.transition.duration' => 'numeric|min:0.1|max:3',
             'document.scenes.*.layers' => 'present|array|max:500',
             ...$this->sceneExtraRules(),
-            'document.audio' => 'nullable|array|max:20',
+            'document.auto_generated' => 'nullable|boolean', // daily-cartoon films: characters are placed by the editor the first time it opens them
+            'document.character_ids' => 'nullable|array|max:20', // lower-case name => Character Builder id (names can repeat)
+            'document.character_ids.*' => 'integer',
+            'document.characters' => 'nullable|array|max:10',
+            'document.characters.*' => 'string|max:60',
+            'document.audio' => 'nullable|array|max:200',
             'document.audio.*.id' => 'required|string|max:64',
             'document.audio.*.assetId' => 'required|integer',
             'document.audio.*.name' => 'required|string|max:120',
@@ -355,6 +366,10 @@ class ProjectController extends Controller
             if (isset($scene['board']['dialog'])) {
                 ksort($scene['board']['dialog']);
                 $scene['board']['dialog'] = array_values($scene['board']['dialog']);
+            }
+            if (isset($scene['board']['beats'])) {
+                ksort($scene['board']['beats']);
+                $scene['board']['beats'] = array_values($scene['board']['beats']);
             }
             if (isset($scene['camera'])) {
                 foreach ($scene['camera'] as $prop => $list) {

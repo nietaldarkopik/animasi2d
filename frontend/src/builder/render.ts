@@ -1,5 +1,5 @@
 import { BASE } from '../api'
-import { layerEntries, placement, tintSvg, VIEWS, type FracBox } from './spec'
+import { CANVAS, layerEntries, placement, RIGHT_SHOE, tintSvg, VIEWS, type FracBox } from './spec'
 import type { CharacterConfig, LibAsset, Palette } from './types'
 
 /** Server URLs are relative to the app origin ("/api/..."); with an absolute VITE_API_URL they must point at that host. */
@@ -80,6 +80,8 @@ export function tintedImage(im: HTMLImageElement, key: string, p: { tint?: strin
 }
 
 export interface RenderOpts {
+  /** draw only these slots (the rest of the configuration still counts: a left shoe whose right foot has its own part is drawn alone) */
+  only?: string[]
   /** pixels per canvas unit */
   scale: number
   zOf: (slot: string) => number
@@ -102,7 +104,7 @@ export async function renderCharacter(config: CharacterConfig, assets: Record<nu
   const ctx = cv.getContext('2d')!
   if (!o.transparent && o.background) { ctx.fillStyle = o.background; ctx.fillRect(0, 0, cv.width, cv.height) }
 
-  const entries = layerEntries(config, o.zOf).filter((e) => (o.pass === 'back' ? e.pass === 'back' : o.pass === 'front' ? e.pass !== 'back' : true))
+  const entries = layerEntries(config, o.zOf).filter((e) => !o.only || o.only.includes(e.slot)).filter((e) => (o.pass === 'back' ? e.pass === 'back' : o.pass === 'front' ? e.pass !== 'back' : true))
   const images = await Promise.all(entries.map((e) => (assets[config.parts[e.slot].assetId] ? assetImage(assets[config.parts[e.slot].assetId], config.palette) : Promise.resolve(null))))
   entries.forEach((e, i) => {
     const im = images[i]
@@ -124,8 +126,27 @@ export async function renderCharacter(config: CharacterConfig, assets: Record<nu
     ctx.scale(pl.scale, pl.scale)
     ctx.translate(-pl.px, -pl.py)
     const part = config.parts[e.slot]
-    ctx.drawImage(hasTint(part) ? tintedImage(im, `${asset.id}:${asset.hash}:${config.palette ? JSON.stringify(asset.tintable ? config.palette : '') : ''}`, part) : im, pl.x, pl.y, pl.w, pl.h)
+    const drawn = hasTint(part) ? tintedImage(im, `${asset.id}:${asset.hash}:${config.palette ? JSON.stringify(asset.tintable ? config.palette : '') : ''}`, part) : im
+    if (e.slot === RIGHT_SHOE && asset.mirror) { // the right foot: the left shoe flipped about the centre line, then moved/scaled/turned on its own
+      ctx.translate(CANVAS.w, 0)
+      ctx.scale(-1, 1)
+    }
+    ctx.drawImage(drawn, pl.x, pl.y, pl.w, pl.h)
     ctx.restore()
+    // a single mirrored shoe without a part of its own for the right foot: the same transform, mirrored (a symmetric pair)
+    if (asset.mirror && e.slot === 'shoes' && !config.parts[RIGHT_SHOE]) {
+      ctx.save()
+      ctx.scale(o.scale, o.scale)
+      ctx.translate(-v.x, -v.y)
+      ctx.translate(CANVAS.w, 0)
+      ctx.scale(-1, 1)
+      ctx.translate(pl.px + pl.dx, pl.py + pl.dy)
+      ctx.rotate((pl.rot * Math.PI) / 180)
+      ctx.scale(pl.scale, pl.scale)
+      ctx.translate(-pl.px, -pl.py)
+      ctx.drawImage(drawn, pl.x, pl.y, pl.w, pl.h)
+      ctx.restore()
+    }
   })
   return cv
 }
@@ -153,6 +174,21 @@ export async function assetPng(a: LibAsset, maxSide: number): Promise<{ blob: Bl
   cv.height = Math.max(1, Math.round(a.height * k))
   cv.getContext('2d')!.drawImage(im, 0, 0, cv.width, cv.height)
   return { blob: await canvasBlob(cv), width: cv.width, height: cv.height }
+}
+
+/** The visible box + hit mask of an asset as seen by `slot`: the right shoe is the left one flipped. */
+const flipped = new WeakMap<AlphaInfo, AlphaInfo>()
+export function infoForSlot(info: AlphaInfo, slot: string): AlphaInfo {
+  if (slot !== RIGHT_SHOE) return info
+  let f = flipped.get(info)
+  if (!f) {
+    const { w, h, a } = info.mask
+    const m = new Uint8ClampedArray(a.length)
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) m[y * w + x] = a[y * w + (w - 1 - x)]
+    f = { ...info, frac: { x0: 1 - info.frac.x1, y0: info.frac.y0, x1: 1 - info.frac.x0, y1: info.frac.y1 }, mask: { w, h, a: m } }
+    flipped.set(info, f)
+  }
+  return f
 }
 
 export interface AlphaInfo { frac: FracBox; mask: { w: number; h: number; a: Uint8ClampedArray }; /** mean lightness (0..255) of the visible pixels */ lum: number }

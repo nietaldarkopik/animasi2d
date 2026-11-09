@@ -128,6 +128,21 @@ describe('movements', () => {
     expect(evalLayer(left.d.layers.find((l) => l.id === left.r.bones.root.id)!, frames).x - x0).toBeCloseTo(-300, 0)
   })
 
+  it('arms never both swing outwards at once (that would look like wings): one out while the other is in', () => {
+    const { d, r } = setup()
+    applyRigMotion(d, r, 'run', 0, { duration: 2, distance: 400, dir: 1 })
+    const armL = d.layers.find((l) => l.id === r.bones.arm_l.id)!, armR = d.layers.find((l) => l.id === r.bones.arm_r.id)!
+    let bothOut = 0, alternating = 0
+    for (let f = 0; f <= 48; f++) {
+      const out = evalLayer(armL, f).rotation - restRotation('arm_l') // clockwise = outwards for the left arm
+      const outR = -(evalLayer(armR, f).rotation - restRotation('arm_r')) // anticlockwise = outwards for the right arm
+      if (out > 8 && outR > 8) bothOut++
+      if (out > 8 && outR < -8) alternating++
+    }
+    expect(bothOut).toBe(0)
+    expect(alternating).toBeGreaterThan(5)
+  })
+
   it('starts from the playhead and keeps keys that are outside its range', () => {
     const { d, r } = setup()
     const root = d.layers.find((l) => l.id === r.bones.root.id)!

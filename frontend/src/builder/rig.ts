@@ -34,6 +34,9 @@ export const SKELETON: BoneSpec[] = [
   { key: 'forearm_l', name: 'Lengan bawah kiri', parent: 'arm_l', joint: { x: 106, y: 452 }, angle: 90, length: 160, order: 10 },
   { key: 'arm_r', name: 'Lengan atas kanan', parent: 'torso', joint: { x: 294, y: 340 }, angle: 90, length: 112, order: 31 },
   { key: 'forearm_r', name: 'Lengan bawah kanan', parent: 'arm_r', joint: { x: 294, y: 452 }, angle: 90, length: 160, order: 10 },
+  // the wrists: the hand turns on its own (a hand piece is cut from the arm part at its wrist)
+  { key: 'hand_l', name: 'Tangan kiri', parent: 'forearm_l', joint: { x: 106, y: 540 }, angle: 90, length: 50, order: 10 },
+  { key: 'hand_r', name: 'Tangan kanan', parent: 'forearm_r', joint: { x: 294, y: 540 }, angle: 90, length: 50, order: 10 },
 ]
 
 /** One image of the rig: attached to a bone, covering `box` on the character canvas. */

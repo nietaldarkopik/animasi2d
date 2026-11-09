@@ -105,7 +105,7 @@ export function CharacterLibraryDialog({ projectId, onClose }: { projectId: numb
       const root = layers.find((l) => l.type === 'bone' && !l.parentId)
       if (root) useEditor.getState().select(root.id)
       const nExpr = new Set(prepared.specs.flatMap((p) => Object.keys(p.expr ?? {}))).size
-      setNote(`"${prepared.name}" disisipkan sebagai rig${prepared.kit ? ` (badan dari ${prepared.kit})` : ''}: ${layers.filter((l) => l.type === 'bone').length} bone + ${prepared.specs.length} gambar${nExpr ? `, ${nExpr} ekspresi` : ''}. Pilih karakternya lalu pakai panel Alat film (Pose, Gerakan, Ekspresi) di sisi kanan. Catatan: rambut belakang menempel di badan (tidak ikut miring bersama kepala).`)
+      setNote(`"${prepared.name}" disisipkan sebagai rig (tiap bagian dipotong di titik sendi karakter${prepared.bones ? '' : ', bone bawaan'}): ${layers.filter((l) => l.type === 'bone').length} bone + ${prepared.specs.length} gambar${nExpr ? `, ${nExpr} ekspresi` : ''}. Pilih karakternya lalu pakai panel Alat film (Pose, Gerakan, Ekspresi) di sisi kanan. Titik sendi bisa diatur di Builder → Bone. Catatan: rambut belakang menempel di badan (tidak ikut miring bersama kepala).`)
     } catch (e) {
       setError((e as Error).message)
     } finally {

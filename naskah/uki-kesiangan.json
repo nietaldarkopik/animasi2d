@@ -1,0 +1,57 @@
+{
+  "title": "Uki Kesiangan di Hari Ujian Saringan",
+  "theme": "Disiplin dan pantang menyerah",
+  "scenes": [
+    {
+      "name": "Bangun Kesiangan",
+      "location": "Kamar tidur",
+      "time": "pagi",
+      "dialog": [
+        { "who": "Jajang", "text": "Kak Uki, bangun! Ini sudah jam tujuh kurang lima belas, lho!" },
+        { "who": "Uki", "text": "Hah?! Hari ini ujian saringan masuk SMK Informatika! Aku harus cepat!" },
+        { "who": "Uki", "text": "Aduh, semalam aku begadang belajar sampai alarmnya tidak terdengar." },
+        { "who": "Jajang", "text": "Sudah, Kak, jangan panik. Cepat mandi dan berangkat sekarang!" }
+      ]
+    },
+    {
+      "name": "Berlari ke Sekolah",
+      "location": "Jalan raya",
+      "time": "pagi",
+      "dialog": [
+        { "who": "Uki", "text": "Ayo cepat, ayo cepat! Kalau terlambat, aku bisa tidak boleh ikut ujian!" },
+        { "who": "Uki", "text": "Tenang, tenang. Gerbang sekolahnya sudah kelihatan di depan!" }
+      ]
+    },
+    {
+      "name": "Terlambat di Gerbang",
+      "location": "Halaman sekolah",
+      "time": "pagi",
+      "dialog": [
+        { "who": "Sekar", "text": "Ujian sudah dimulai dua puluh menit yang lalu. Kamu terlambat, ya?" },
+        { "who": "Uki", "text": "Iya, maaf. Aku kesiangan. Apa aku masih boleh ikut ujian?" },
+        { "who": "Sekar", "text": "Masih boleh, tapi waktumu tinggal sedikit. Cepat masuk ke lab komputer!" }
+      ]
+    },
+    {
+      "name": "Mengerjakan Ujian",
+      "location": "Lab komputer",
+      "time": "siang",
+      "dialog": [
+        { "who": "Uki", "text": "Waktunya sempit sekali. Kerjakan dulu soal yang paling mudah." },
+        { "who": "Sekar", "text": "Sepuluh menit lagi, Uki. Jangan panik, jawab yang kamu bisa!" },
+        { "who": "Uki", "text": "Selesai! Sebagian soal belum sempat kuperiksa. Semoga hasilnya cukup." }
+      ]
+    },
+    {
+      "name": "Pengumuman Hasil",
+      "location": "Halaman sekolah",
+      "time": "siang",
+      "dialog": [
+        { "who": "Sekar", "text": "Uki, hasil saringan sudah keluar! Kamu lulus!" },
+        { "who": "Uki", "text": "Benarkah? Nilaiku berapa?" },
+        { "who": "Sekar", "text": "Nilainya pas-pasan, tapi kamu tetap diterima di SMK Informatika." },
+        { "who": "Uki", "text": "Alhamdulillah! Mulai besok aku tidak akan kesiangan lagi dan akan belajar lebih giat!" }
+      ]
+    }
+  ]
+}

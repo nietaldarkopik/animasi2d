@@ -1,4 +1,4 @@
-import type { AudioClip, Layer, ProjectDoc, Scene, SceneDocument, Transition, TransitionType } from './types'
+import type { AudioClip, CameraProp, Ease, EffectKind, Keyframe, Layer, ProjectDoc, Scene, SceneCamera, SceneDocument, SceneEffect, Subtitle, Transition, TransitionType } from './types'
 
 export const TRANSITIONS: { v: TransitionType; label: string }[] = [
   { v: 'none', label: 'Potong langsung' },
@@ -12,10 +12,63 @@ export const TRANSITIONS: { v: TransitionType; label: string }[] = [
 
 export const sceneUid = () => 's' + Math.random().toString(36).slice(2, 9)
 
+const EASES = new Set<Ease>(['linear', 'easeIn', 'easeOut', 'easeInOut', 'step'])
+const EFFECTS = new Set<EffectKind>(['rain', 'snow', 'tint', 'vignette'])
+const CAM_TRACK: Record<string, CameraProp> = { x: 'x', y: 'y', zoom: 'zoom', rot: 'rot', rotation: 'rot' }
+
+const keysOf = (raw: unknown): Keyframe[] => {
+  if (!Array.isArray(raw)) return []
+  const byFrame = new Map<number, Keyframe>()
+  for (const k of raw as { f?: unknown; v?: unknown; e?: unknown }[]) {
+    if (k && Number.isFinite(k.f) && (k.f as number) >= 0 && Number.isFinite(k.v)) byFrame.set(Math.round(k.f as number), { f: Math.round(k.f as number), v: k.v as number, e: EASES.has(k.e as Ease) ? (k.e as Ease) : 'linear' })
+  }
+  return [...byFrame.values()].sort((a, b) => a.f - b.f)
+}
+
+/**
+ * A scene camera in the shape the editor uses ({ x|y|zoom|rot: Keyframe[] }). Documents made by other tools can hold other
+ * shapes (plain numbers, keyframes nested under `keyframes`, `rotation` instead of `rot`): tracks that are lists of keys are kept,
+ * the nested form is lifted, everything else is dropped (the camera then simply stays at its default).
+ */
+export function normalizeCamera(raw: unknown): SceneCamera | undefined {
+  if (!raw || typeof raw !== 'object') return undefined
+  const src = raw as Record<string, unknown>
+  const out: SceneCamera = {}
+  const take = (o: Record<string, unknown>) => {
+    for (const [name, v] of Object.entries(o)) {
+      const prop = CAM_TRACK[name]
+      const keys = prop ? keysOf(v) : []
+      if (prop && keys.length) out[prop] = keys
+    }
+  }
+  if (src.keyframes && typeof src.keyframes === 'object') take(src.keyframes as Record<string, unknown>)
+  take(src)
+  return Object.keys(out).length ? out : undefined
+}
+
+/** Drops malformed entries of the scene extras instead of letting one bad value break the whole editor. */
+function normalizeScene(s: Scene): Scene {
+  const out: Scene = { ...s, layers: Array.isArray(s.layers) ? s.layers : [] }
+  const cam = normalizeCamera((s as { camera?: unknown }).camera)
+  if (cam) out.camera = cam; else delete out.camera
+  const fx = Array.isArray(s.effects) ? (s.effects as SceneEffect[]).filter((e) => e && EFFECTS.has(e.kind) && Number.isFinite(e.intensity)) : []
+  if (fx.length) out.effects = fx; else delete out.effects
+  const subs = Array.isArray(s.subtitles) ? (s.subtitles as Subtitle[]).filter((u) => u && typeof u.text === 'string' && Number.isFinite(u.start) && Number.isFinite(u.end)) : []
+  if (subs.length) out.subtitles = subs; else delete out.subtitles
+  if (out.board && (typeof out.board !== 'object' || Array.isArray(out.board))) delete out.board
+  return out
+}
+
 /** Upgrade any stored document (schema 1: one scene) to schema 2. */
 export function migrate(raw: any): ProjectDoc {
   if (raw && Array.isArray(raw.scenes)) {
-    return { schema: 2, settings: raw.settings, scenes: raw.scenes, audio: Array.isArray(raw.audio) ? raw.audio : [] }
+    return {
+      schema: 2, settings: raw.settings, scenes: (raw.scenes as Scene[]).map(normalizeScene), audio: Array.isArray(raw.audio) ? raw.audio : [],
+      // set by the daily-cartoon generator: "characters still have to be placed" + who the film is about (the auto director reads them)
+      ...(typeof raw.auto_generated === 'boolean' ? { auto_generated: raw.auto_generated } : {}),
+      ...(raw.character_ids && typeof raw.character_ids === 'object' && !Array.isArray(raw.character_ids) ? { character_ids: Object.fromEntries(Object.entries(raw.character_ids as Record<string, unknown>).filter(([, v]) => Number.isInteger(v))) as Record<string, number> } : {}),
+      ...(Array.isArray(raw.characters) ? { characters: (raw.characters as unknown[]).filter((c): c is string => typeof c === 'string') } : {}),
+    }
   }
   const s = raw?.settings ?? {}
   return {

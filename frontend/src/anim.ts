@@ -91,15 +91,16 @@ export const CAMERA_PROPS: { prop: CameraProp; label: string }[] = [
 /** Camera at `frame`: the scene point in the middle of the view, zoom (1 = whole scene) and roll in degrees. */
 export function evalCamera(cam: SceneCamera | undefined, frame: number, width: number, height: number) {
   if (!cam) return { x: width / 2, y: height / 2, zoom: 1, rot: 0 }
+  const keys = (k: unknown) => (Array.isArray(k) ? (k as Keyframe[]) : undefined) // a malformed track is ignored, never fatal
   return {
-    x: evalKeys(cam.x, frame, width / 2),
-    y: evalKeys(cam.y, frame, height / 2),
-    zoom: Math.max(0.05, evalKeys(cam.zoom, frame, 1)),
-    rot: evalKeys(cam.rot, frame, 0),
+    x: evalKeys(keys(cam.x), frame, width / 2),
+    y: evalKeys(keys(cam.y), frame, height / 2),
+    zoom: Math.max(0.05, evalKeys(keys(cam.zoom), frame, 1)),
+    rot: evalKeys(keys(cam.rot), frame, 0),
   }
 }
 
-export const hasCamera = (cam: SceneCamera | undefined) => !!cam && Object.values(cam).some((k) => k && k.length > 0)
+export const hasCamera = (cam: SceneCamera | undefined) => !!cam && Object.values(cam).some((k) => Array.isArray(k) && k.length > 0)
 
 /** Insert/replace a camera key (mutates `cam`). */
 export function setCamKey(cam: SceneCamera, prop: CameraProp, f: number, v: number, e: Ease = 'easeInOut') {

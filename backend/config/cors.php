@@ -21,7 +21,7 @@ return [
 
     'allowed_origins' => explode(',', env('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173')),
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => ['#^http://(localhost|127\.0\.0\.1):\d+$#'], // any local dev-server port (Vite moves to 5174 when 5173 is taken)
 
     'allowed_headers' => ['*'],
 

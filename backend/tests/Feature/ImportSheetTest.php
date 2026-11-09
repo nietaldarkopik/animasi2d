@@ -39,6 +39,8 @@ class ImportSheetTest extends TestCase
         imagealphablending($im, false);
         imagesavealpha($im, true);
         imagefill($im, 0, 0, imagecolorallocatealpha($im, 0, 0, 0, 127));
+        imagealphablending($im, true);
+        imagefilledrectangle($im, 240, 240, 560, 560, imagecolorallocate($im, 90, 60, 40)); // some art, inside the area of the slot (an empty sheet slot would be held by the validator)
         imagepng($im, $this->dir."/items/$key.png");
 
         return ['key' => $key, 'category' => $category, 'name' => $name, 'tags' => ['smk', 'sheet'], 'file' => "items/$key.png"];

@@ -1,0 +1,1736 @@
+{
+    "id": "vrm-vroid",
+    "label": "VRoid 7 kepala (render VRM), kanvas 400x800",
+    "family": "sma-anime",
+    "preset": "vroid",
+    "canvas": {
+        "width": 400,
+        "height": 800,
+        "px_per_unit": 2,
+        "centerline_x": 200,
+        "ground_y": 799
+    },
+    "views": [
+        "front",
+        "right",
+        "left",
+        "back"
+    ],
+    "reference": {
+        "head_width_max": 190,
+        "figure_top_y": 0,
+        "figure_bottom_y": 799,
+        "note": "Wajah 158-188 unit lebar; tinggi badan sampai telapak sepatu ~ 800; ukuran tiap bagian dibatasi per slot di bawah."
+    },
+    "landmarks": {
+        "head.neck_anchor": {
+            "x": 200,
+            "y": 320
+        },
+        "torso.left_shoulder": {
+            "x": 106,
+            "y": 340
+        },
+        "torso.right_shoulder": {
+            "x": 294,
+            "y": 340
+        },
+        "arm.elbow_y": 452,
+        "arm.wrist_y": 540,
+        "torso.waist_y": 546,
+        "leg.hip_y": 556,
+        "leg.knee_y": 661,
+        "leg.ankle_y": 745,
+        "leg.left_hip": {
+            "x": 172,
+            "y": 556
+        },
+        "leg.right_hip": {
+            "x": 228,
+            "y": 556
+        }
+    },
+    "slots": {
+        "hair_back": {
+            "anchor": {
+                "x": 200,
+                "y": 200
+            },
+            "max_width": 320,
+            "align_by": [],
+            "views": {
+                "front": {
+                    "region": [
+                        74,
+                        0,
+                        325,
+                        379
+                    ],
+                    "w": [
+                        64,
+                        289
+                    ],
+                    "h": [
+                        133,
+                        599
+                    ],
+                    "anchors": {
+                        "head.top_anchor": {
+                            "x": 197.1,
+                            "y": 1
+                        },
+                        "part.center": {
+                            "x": 199.9,
+                            "y": 188
+                        }
+                    },
+                    "families": []
+                },
+                "right": {
+                    "region": [
+                        20,
+                        0,
+                        279,
+                        379
+                    ],
+                    "w": [
+                        67,
+                        304
+                    ],
+                    "h": [
+                        133,
+                        601
+                    ],
+                    "anchors": {
+                        "head.top_anchor": {
+                            "x": 124.1,
+                            "y": 0
+                        },
+                        "part.center": {
+                            "x": 132.3,
+                            "y": 145.1
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        122,
+                        0,
+                        380,
+                        379
+                    ],
+                    "w": [
+                        67,
+                        302
+                    ],
+                    "h": [
+                        133,
+                        601
+                    ],
+                    "anchors": {
+                        "head.top_anchor": {
+                            "x": 275.6,
+                            "y": 0
+                        },
+                        "part.center": {
+                            "x": 267.4,
+                            "y": 145.3
+                        }
+                    },
+                    "families": []
+                },
+                "back": {
+                    "region": [
+                        75,
+                        0,
+                        326,
+                        379
+                    ],
+                    "w": [
+                        64,
+                        289
+                    ],
+                    "h": [
+                        133,
+                        599
+                    ],
+                    "anchors": {
+                        "head.top_anchor": {
+                            "x": 202.5,
+                            "y": 1
+                        },
+                        "part.center": {
+                            "x": 199.7,
+                            "y": 188
+                        }
+                    },
+                    "families": []
+                }
+            }
+        },
+        "body": {
+            "anchor": {
+                "x": 200,
+                "y": 520
+            },
+            "max_width": 260,
+            "align_by": [],
+            "views": {
+                "front": {
+                    "region": [
+                        73,
+                        219,
+                        327,
+                        800
+                    ],
+                    "w": [
+                        65,
+                        295
+                    ],
+                    "h": [
+                        211,
+                        952
+                    ],
+                    "anchors": {
+                        "torso.neck_anchor": {
+                            "x": 199.8,
+                            "y": 264
+                        },
+                        "foot.ground_anchor": {
+                            "x": 199.8,
+                            "y": 792
+                        }
+                    },
+                    "families": []
+                },
+                "right": {
+                    "region": [
+                        105,
+                        219,
+                        306,
+                        800
+                    ],
+                    "w": [
+                        44,
+                        199
+                    ],
+                    "h": [
+                        211,
+                        952
+                    ],
+                    "anchors": {
+                        "torso.neck_anchor": {
+                            "x": 229.5,
+                            "y": 264
+                        },
+                        "foot.ground_anchor": {
+                            "x": 209.1,
+                            "y": 792
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        95,
+                        219,
+                        296,
+                        800
+                    ],
+                    "w": [
+                        44,
+                        199
+                    ],
+                    "h": [
+                        211,
+                        952
+                    ],
+                    "anchors": {
+                        "torso.neck_anchor": {
+                            "x": 170.4,
+                            "y": 264
+                        },
+                        "foot.ground_anchor": {
+                            "x": 190.5,
+                            "y": 792
+                        }
+                    },
+                    "families": []
+                },
+                "back": {
+                    "region": [
+                        73,
+                        219,
+                        327,
+                        800
+                    ],
+                    "w": [
+                        65,
+                        295
+                    ],
+                    "h": [
+                        211,
+                        952
+                    ],
+                    "anchors": {
+                        "torso.neck_anchor": {
+                            "x": 199.8,
+                            "y": 264
+                        },
+                        "foot.ground_anchor": {
+                            "x": 199.8,
+                            "y": 792
+                        }
+                    },
+                    "families": []
+                }
+            }
+        },
+        "shoes": {
+            "anchor": {
+                "x": 200,
+                "y": 765
+            },
+            "max_width": 200,
+            "align_by": [
+                "foot.ankle_anchor"
+            ],
+            "views": {
+                "front": {
+                    "region": [
+                        94,
+                        720,
+                        222,
+                        800
+                    ],
+                    "w": [
+                        15,
+                        68
+                    ],
+                    "h": [
+                        13,
+                        61
+                    ],
+                    "anchors": {
+                        "foot.ankle_anchor": {
+                            "x": 159.6,
+                            "y": 765
+                        },
+                        "foot.ground_anchor": {
+                            "x": 157.6,
+                            "y": 798
+                        }
+                    },
+                    "families": []
+                },
+                "right": {
+                    "region": [
+                        116,
+                        720,
+                        301,
+                        800
+                    ],
+                    "w": [
+                        37,
+                        171
+                    ],
+                    "h": [
+                        13,
+                        63
+                    ],
+                    "anchors": {
+                        "foot.ankle_anchor": {
+                            "x": 182.4,
+                            "y": 765
+                        },
+                        "foot.ground_anchor": {
+                            "x": 208.9,
+                            "y": 799
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        99,
+                        720,
+                        285,
+                        800
+                    ],
+                    "w": [
+                        38,
+                        172
+                    ],
+                    "h": [
+                        13,
+                        63
+                    ],
+                    "anchors": {
+                        "foot.ankle_anchor": {
+                            "x": 217,
+                            "y": 765
+                        },
+                        "foot.ground_anchor": {
+                            "x": 190.6,
+                            "y": 799
+                        }
+                    },
+                    "families": []
+                },
+                "back": {
+                    "region": [
+                        94,
+                        720,
+                        306,
+                        800
+                    ],
+                    "w": [
+                        48,
+                        219
+                    ],
+                    "h": [
+                        13,
+                        63
+                    ],
+                    "anchors": {
+                        "foot.ankle_anchor": {
+                            "x": 199.9,
+                            "y": 765
+                        },
+                        "foot.ground_anchor": {
+                            "x": 199.5,
+                            "y": 799
+                        }
+                    },
+                    "families": []
+                }
+            }
+        },
+        "bottom": {
+            "anchor": {
+                "x": 200,
+                "y": 650
+            },
+            "max_width": 220,
+            "align_by": [
+                "torso.waist_anchor"
+            ],
+            "views": {
+                "front": {
+                    "region": [
+                        47,
+                        246,
+                        356,
+                        504
+                    ],
+                    "w": [
+                        87,
+                        394
+                    ],
+                    "h": [
+                        67,
+                        302
+                    ],
+                    "anchors": {
+                        "torso.waist_anchor": {
+                            "x": 199.7,
+                            "y": 291
+                        },
+                        "leg.ankle_anchor": {
+                            "x": 201.7,
+                            "y": 458
+                        }
+                    },
+                    "families": []
+                },
+                "right": {
+                    "region": [
+                        74,
+                        246,
+                        318,
+                        504
+                    ],
+                    "w": [
+                        61,
+                        277
+                    ],
+                    "h": [
+                        67,
+                        302
+                    ],
+                    "anchors": {
+                        "torso.waist_anchor": {
+                            "x": 206.9,
+                            "y": 291
+                        },
+                        "leg.ankle_anchor": {
+                            "x": 259.5,
+                            "y": 458
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        82,
+                        246,
+                        326,
+                        504
+                    ],
+                    "w": [
+                        61,
+                        277
+                    ],
+                    "h": [
+                        67,
+                        302
+                    ],
+                    "anchors": {
+                        "torso.waist_anchor": {
+                            "x": 192.4,
+                            "y": 291
+                        },
+                        "leg.ankle_anchor": {
+                            "x": 139.7,
+                            "y": 458
+                        }
+                    },
+                    "families": []
+                },
+                "back": {
+                    "region": [
+                        45,
+                        246,
+                        353,
+                        504
+                    ],
+                    "w": [
+                        87,
+                        392
+                    ],
+                    "h": [
+                        67,
+                        302
+                    ],
+                    "anchors": {
+                        "torso.waist_anchor": {
+                            "x": 199.9,
+                            "y": 291
+                        },
+                        "leg.ankle_anchor": {
+                            "x": 198.2,
+                            "y": 458
+                        }
+                    },
+                    "families": []
+                }
+            }
+        },
+        "top": {
+            "anchor": {
+                "x": 200,
+                "y": 440
+            },
+            "max_width": 240,
+            "align_by": [
+                "torso.neck_anchor"
+            ],
+            "views": {
+                "front": {
+                    "region": [
+                        47,
+                        93,
+                        354,
+                        347
+                    ],
+                    "w": [
+                        86,
+                        390
+                    ],
+                    "h": [
+                        65,
+                        295
+                    ],
+                    "anchors": {
+                        "torso.neck_anchor": {
+                            "x": 199.8,
+                            "y": 138
+                        },
+                        "torso.waist_anchor": {
+                            "x": 199.7,
+                            "y": 301
+                        }
+                    },
+                    "families": []
+                },
+                "right": {
+                    "region": [
+                        105,
+                        93,
+                        317,
+                        347
+                    ],
+                    "w": [
+                        48,
+                        219
+                    ],
+                    "h": [
+                        65,
+                        295
+                    ],
+                    "anchors": {
+                        "torso.neck_anchor": {
+                            "x": 173.9,
+                            "y": 138
+                        },
+                        "torso.waist_anchor": {
+                            "x": 211.5,
+                            "y": 301
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        84,
+                        93,
+                        296,
+                        347
+                    ],
+                    "w": [
+                        48,
+                        219
+                    ],
+                    "h": [
+                        65,
+                        295
+                    ],
+                    "anchors": {
+                        "torso.neck_anchor": {
+                            "x": 225.5,
+                            "y": 138
+                        },
+                        "torso.waist_anchor": {
+                            "x": 188.1,
+                            "y": 301
+                        }
+                    },
+                    "families": []
+                },
+                "back": {
+                    "region": [
+                        47,
+                        93,
+                        354,
+                        347
+                    ],
+                    "w": [
+                        86,
+                        390
+                    ],
+                    "h": [
+                        65,
+                        295
+                    ],
+                    "anchors": {
+                        "torso.neck_anchor": {
+                            "x": 199.8,
+                            "y": 138
+                        },
+                        "torso.waist_anchor": {
+                            "x": 199.7,
+                            "y": 301
+                        }
+                    },
+                    "families": []
+                }
+            }
+        },
+        "bag": {
+            "anchor": {
+                "x": 200,
+                "y": 430
+            },
+            "max_width": 260,
+            "align_by": [],
+            "views": []
+        },
+        "face": {
+            "anchor": {
+                "x": 200,
+                "y": 190
+            },
+            "max_width": 170,
+            "align_by": [
+                "head.top_anchor"
+            ],
+            "views": {
+                "front": {
+                    "region": [
+                        104,
+                        0,
+                        297,
+                        181
+                    ],
+                    "w": [
+                        41,
+                        185
+                    ],
+                    "h": [
+                        46,
+                        208
+                    ],
+                    "anchors": {
+                        "head.top_anchor": {
+                            "x": 199.8,
+                            "y": 20
+                        },
+                        "head.neck_anchor": {
+                            "x": 199.7,
+                            "y": 135
+                        }
+                    },
+                    "families": []
+                },
+                "right": {
+                    "region": [
+                        125,
+                        0,
+                        289,
+                        180
+                    ],
+                    "w": [
+                        29,
+                        133
+                    ],
+                    "h": [
+                        46,
+                        208
+                    ],
+                    "anchors": {
+                        "head.top_anchor": {
+                            "x": 209.4,
+                            "y": 19
+                        },
+                        "head.neck_anchor": {
+                            "x": 218.9,
+                            "y": 134
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        112,
+                        0,
+                        275,
+                        180
+                    ],
+                    "w": [
+                        29,
+                        131
+                    ],
+                    "h": [
+                        45,
+                        207
+                    ],
+                    "anchors": {
+                        "head.top_anchor": {
+                            "x": 189.9,
+                            "y": 20
+                        },
+                        "head.neck_anchor": {
+                            "x": 180.5,
+                            "y": 134
+                        }
+                    },
+                    "families": []
+                }
+            }
+        },
+        "hair_front": {
+            "anchor": {
+                "x": 200,
+                "y": 150
+            },
+            "max_width": 300,
+            "align_by": [],
+            "views": {
+                "front": {
+                    "region": [
+                        106,
+                        0,
+                        295,
+                        220
+                    ],
+                    "w": [
+                        39,
+                        178
+                    ],
+                    "h": [
+                        65,
+                        293
+                    ],
+                    "anchors": {
+                        "head.top_anchor": {
+                            "x": 199.9,
+                            "y": 12
+                        },
+                        "part.center": {
+                            "x": 199.8,
+                            "y": 74.1
+                        }
+                    },
+                    "families": []
+                },
+                "right": {
+                    "region": [
+                        141,
+                        0,
+                        294,
+                        221
+                    ],
+                    "w": [
+                        25,
+                        113
+                    ],
+                    "h": [
+                        65,
+                        295
+                    ],
+                    "anchors": {
+                        "head.top_anchor": {
+                            "x": 199.4,
+                            "y": 12
+                        },
+                        "part.center": {
+                            "x": 212.4,
+                            "y": 78.2
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        107,
+                        0,
+                        260,
+                        220
+                    ],
+                    "w": [
+                        25,
+                        113
+                    ],
+                    "h": [
+                        65,
+                        293
+                    ],
+                    "anchors": {
+                        "head.top_anchor": {
+                            "x": 199.9,
+                            "y": 12
+                        },
+                        "part.center": {
+                            "x": 187.1,
+                            "y": 78.3
+                        }
+                    },
+                    "families": []
+                },
+                "back": {
+                    "region": [
+                        105,
+                        0,
+                        295,
+                        220
+                    ],
+                    "w": [
+                        39,
+                        180
+                    ],
+                    "h": [
+                        65,
+                        293
+                    ],
+                    "anchors": {
+                        "head.top_anchor": {
+                            "x": 199.7,
+                            "y": 12
+                        },
+                        "part.center": {
+                            "x": 199.7,
+                            "y": 73.9
+                        }
+                    },
+                    "families": []
+                }
+            }
+        },
+        "hijab": {
+            "anchor": {
+                "x": 200,
+                "y": 230
+            },
+            "max_width": 260,
+            "align_by": [],
+            "views": {
+                "front": {
+                    "region": [
+                        0,
+                        0,
+                        400,
+                        680
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": [],
+                    "families": []
+                },
+                "right": {
+                    "region": [
+                        0,
+                        0,
+                        400,
+                        680
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": [],
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        0,
+                        0,
+                        400,
+                        680
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": [],
+                    "families": []
+                },
+                "back": {
+                    "region": [
+                        0,
+                        0,
+                        400,
+                        680
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": [],
+                    "families": []
+                }
+            }
+        },
+        "eyes": {
+            "anchor": {
+                "x": 200,
+                "y": 196
+            },
+            "max_width": 160,
+            "align_by": [
+                "face.left_eye_anchor",
+                "face.right_eye_anchor"
+            ],
+            "views": {
+                "front": {
+                    "region": [
+                        117,
+                        34,
+                        283,
+                        145
+                    ],
+                    "w": [
+                        29,
+                        136
+                    ],
+                    "h": [
+                        7,
+                        37
+                    ],
+                    "anchors": {
+                        "face.left_eye_anchor": {
+                            "x": 178,
+                            "y": 89.7
+                        },
+                        "face.right_eye_anchor": {
+                            "x": 221.5,
+                            "y": 89.7
+                        }
+                    },
+                    "families": {
+                        "vrm-avatarsample-m": {
+                            "n": 7,
+                            "anchors": {
+                                "face.left_eye_anchor": {
+                                    "x": 178,
+                                    "y": 89.7
+                                },
+                                "face.right_eye_anchor": {
+                                    "x": 221.5,
+                                    "y": 89.7
+                                }
+                            }
+                        }
+                    }
+                },
+                "right": {
+                    "region": [
+                        172,
+                        35,
+                        278,
+                        145
+                    ],
+                    "w": [
+                        6,
+                        28
+                    ],
+                    "h": [
+                        7,
+                        36
+                    ],
+                    "anchors": {
+                        "face.left_eye_anchor": {
+                            "x": 221.1,
+                            "y": 89.8
+                        },
+                        "face.right_eye_anchor": {
+                            "x": 227.6,
+                            "y": 87.2
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        122,
+                        35,
+                        228,
+                        145
+                    ],
+                    "w": [
+                        6,
+                        28
+                    ],
+                    "h": [
+                        7,
+                        36
+                    ],
+                    "anchors": {
+                        "face.left_eye_anchor": {
+                            "x": 171.6,
+                            "y": 86.9
+                        },
+                        "face.right_eye_anchor": {
+                            "x": 178,
+                            "y": 89.8
+                        }
+                    },
+                    "families": []
+                }
+            }
+        },
+        "brows": {
+            "anchor": {
+                "x": 200,
+                "y": 165
+            },
+            "max_width": 160,
+            "align_by": [
+                "face.left_brow_anchor",
+                "face.right_brow_anchor"
+            ],
+            "views": {
+                "front": {
+                    "region": [
+                        123,
+                        23,
+                        277,
+                        128
+                    ],
+                    "w": [
+                        22,
+                        115
+                    ],
+                    "h": [
+                        1,
+                        10
+                    ],
+                    "anchors": {
+                        "face.left_brow_anchor": {
+                            "x": 179.1,
+                            "y": 73.7
+                        },
+                        "face.right_brow_anchor": {
+                            "x": 220.5,
+                            "y": 73.7
+                        }
+                    },
+                    "families": {
+                        "vrm-avatarsample-m": {
+                            "n": 5,
+                            "anchors": {
+                                "face.left_brow_anchor": {
+                                    "x": 179.1,
+                                    "y": 73.7
+                                },
+                                "face.right_brow_anchor": {
+                                    "x": 220.5,
+                                    "y": 73.7
+                                }
+                            }
+                        }
+                    }
+                },
+                "right": {
+                    "region": [
+                        180,
+                        28,
+                        280,
+                        121
+                    ],
+                    "w": [
+                        3,
+                        18
+                    ],
+                    "h": [
+                        1,
+                        5
+                    ],
+                    "anchors": {
+                        "face.left_brow_anchor": {
+                            "x": 227.6,
+                            "y": 74
+                        },
+                        "face.right_brow_anchor": {
+                            "x": 231.8,
+                            "y": 73.6
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        121,
+                        28,
+                        221,
+                        121
+                    ],
+                    "w": [
+                        3,
+                        18
+                    ],
+                    "h": [
+                        1,
+                        5
+                    ],
+                    "anchors": {
+                        "face.left_brow_anchor": {
+                            "x": 168.2,
+                            "y": 73.6
+                        },
+                        "face.right_brow_anchor": {
+                            "x": 173,
+                            "y": 74.4
+                        }
+                    },
+                    "families": []
+                }
+            }
+        },
+        "mouth": {
+            "anchor": {
+                "x": 200,
+                "y": 250
+            },
+            "max_width": 70,
+            "align_by": [
+                "face.mouth_anchor"
+            ],
+            "views": {
+                "front": {
+                    "region": [
+                        126,
+                        50,
+                        275,
+                        181
+                    ],
+                    "w": [
+                        23,
+                        106
+                    ],
+                    "h": [
+                        16,
+                        73
+                    ],
+                    "anchors": {
+                        "face.mouth_anchor": {
+                            "x": 199.9,
+                            "y": 111.9
+                        }
+                    },
+                    "families": {
+                        "vrm-avatarsample-m": {
+                            "n": 11,
+                            "anchors": {
+                                "face.mouth_anchor": {
+                                    "x": 199.9,
+                                    "y": 111.9
+                                }
+                            }
+                        }
+                    }
+                },
+                "right": {
+                    "region": [
+                        126,
+                        50,
+                        275,
+                        180
+                    ],
+                    "w": [
+                        23,
+                        106
+                    ],
+                    "h": [
+                        15,
+                        72
+                    ],
+                    "anchors": {
+                        "face.mouth_anchor": {
+                            "x": 206.3,
+                            "y": 110.9
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        126,
+                        50,
+                        275,
+                        180
+                    ],
+                    "w": [
+                        23,
+                        106
+                    ],
+                    "h": [
+                        15,
+                        72
+                    ],
+                    "anchors": {
+                        "face.mouth_anchor": {
+                            "x": 193.5,
+                            "y": 110.8
+                        }
+                    },
+                    "families": []
+                }
+            }
+        },
+        "glasses": {
+            "anchor": {
+                "x": 200,
+                "y": 196
+            },
+            "max_width": 190,
+            "align_by": [
+                "face.glasses_anchor"
+            ],
+            "views": []
+        },
+        "hat": {
+            "anchor": {
+                "x": 200,
+                "y": 95
+            },
+            "max_width": 260,
+            "align_by": [],
+            "views": []
+        },
+        "headphone": {
+            "anchor": {
+                "x": 200,
+                "y": 200
+            },
+            "max_width": 300,
+            "align_by": [],
+            "views": []
+        },
+        "accessory": {
+            "anchor": {
+                "x": 200,
+                "y": 420
+            },
+            "max_width": 60,
+            "align_by": [],
+            "views": {
+                "front": {
+                    "region": [
+                        0,
+                        60,
+                        400,
+                        700
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": [],
+                    "families": []
+                },
+                "right": {
+                    "region": [
+                        0,
+                        60,
+                        400,
+                        700
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": [],
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        0,
+                        60,
+                        400,
+                        700
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": [],
+                    "families": []
+                },
+                "back": {
+                    "region": [
+                        0,
+                        60,
+                        400,
+                        700
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": [],
+                    "families": []
+                }
+            }
+        },
+        "torso": {
+            "anchor": {
+                "x": 200,
+                "y": 415
+            },
+            "max_width": 240,
+            "align_by": [],
+            "views": {
+                "front": {
+                    "region": [
+                        112,
+                        0,
+                        288,
+                        233
+                    ],
+                    "w": [
+                        34,
+                        154
+                    ],
+                    "h": [
+                        68,
+                        309
+                    ],
+                    "anchors": {
+                        "torso.neck_anchor": {
+                            "x": 199.8,
+                            "y": 16
+                        },
+                        "torso.waist_anchor": {
+                            "x": 199.7,
+                            "y": 187
+                        }
+                    },
+                    "families": []
+                },
+                "right": {
+                    "region": [
+                        87,
+                        0,
+                        284,
+                        233
+                    ],
+                    "w": [
+                        42,
+                        192
+                    ],
+                    "h": [
+                        68,
+                        309
+                    ],
+                    "anchors": {
+                        "torso.neck_anchor": {
+                            "x": 181.8,
+                            "y": 16
+                        },
+                        "torso.waist_anchor": {
+                            "x": 234.9,
+                            "y": 187
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        116,
+                        0,
+                        314,
+                        233
+                    ],
+                    "w": [
+                        43,
+                        194
+                    ],
+                    "h": [
+                        68,
+                        309
+                    ],
+                    "anchors": {
+                        "torso.neck_anchor": {
+                            "x": 217.8,
+                            "y": 16
+                        },
+                        "torso.waist_anchor": {
+                            "x": 164.8,
+                            "y": 187
+                        }
+                    },
+                    "families": []
+                },
+                "back": {
+                    "region": [
+                        112,
+                        0,
+                        288,
+                        233
+                    ],
+                    "w": [
+                        34,
+                        154
+                    ],
+                    "h": [
+                        68,
+                        309
+                    ],
+                    "anchors": {
+                        "torso.neck_anchor": {
+                            "x": 199.8,
+                            "y": 16
+                        },
+                        "torso.waist_anchor": {
+                            "x": 199.7,
+                            "y": 187
+                        }
+                    },
+                    "families": []
+                }
+            }
+        },
+        "arm_l": {
+            "anchor": {
+                "x": 110,
+                "y": 460
+            },
+            "max_width": 60,
+            "align_by": [],
+            "views": {
+                "front": {
+                    "region": [
+                        0,
+                        60,
+                        400,
+                        640
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": {
+                        "arm.shoulder_anchor": {
+                            "x": 169.6,
+                            "y": 149
+                        },
+                        "arm.hand_anchor": {
+                            "x": 54.5,
+                            "y": 448
+                        }
+                    },
+                    "families": []
+                },
+                "right": {
+                    "region": [
+                        0,
+                        60,
+                        400,
+                        640
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": {
+                        "arm.shoulder_anchor": {
+                            "x": 183.6,
+                            "y": 150
+                        },
+                        "arm.hand_anchor": {
+                            "x": 187.7,
+                            "y": 448
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        0,
+                        60,
+                        400,
+                        640
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": {
+                        "arm.shoulder_anchor": {
+                            "x": 216.9,
+                            "y": 149
+                        },
+                        "arm.hand_anchor": {
+                            "x": 211.8,
+                            "y": 448
+                        }
+                    },
+                    "families": []
+                },
+                "back": {
+                    "region": [
+                        0,
+                        60,
+                        400,
+                        640
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": {
+                        "arm.shoulder_anchor": {
+                            "x": 230,
+                            "y": 149
+                        },
+                        "arm.hand_anchor": {
+                            "x": 345.1,
+                            "y": 448
+                        }
+                    },
+                    "families": []
+                }
+            }
+        },
+        "arm_r": {
+            "anchor": {
+                "x": 290,
+                "y": 460
+            },
+            "max_width": 60,
+            "align_by": [],
+            "views": {
+                "front": {
+                    "region": [
+                        0,
+                        60,
+                        400,
+                        640
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": {
+                        "arm.shoulder_anchor": {
+                            "x": 229.9,
+                            "y": 149
+                        },
+                        "arm.hand_anchor": {
+                            "x": 345.1,
+                            "y": 448
+                        }
+                    },
+                    "families": []
+                },
+                "right": {
+                    "region": [
+                        0,
+                        60,
+                        400,
+                        640
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": {
+                        "arm.shoulder_anchor": {
+                            "x": 182.5,
+                            "y": 149
+                        },
+                        "arm.hand_anchor": {
+                            "x": 187.7,
+                            "y": 448
+                        }
+                    },
+                    "families": []
+                },
+                "left": {
+                    "region": [
+                        0,
+                        60,
+                        400,
+                        640
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": {
+                        "arm.shoulder_anchor": {
+                            "x": 216.7,
+                            "y": 149
+                        },
+                        "arm.hand_anchor": {
+                            "x": 211.8,
+                            "y": 448
+                        }
+                    },
+                    "families": []
+                },
+                "back": {
+                    "region": [
+                        0,
+                        60,
+                        400,
+                        640
+                    ],
+                    "w": null,
+                    "h": null,
+                    "anchors": {
+                        "arm.shoulder_anchor": {
+                            "x": 169.7,
+                            "y": 149
+                        },
+                        "arm.hand_anchor": {
+                            "x": 54.6,
+                            "y": 448
+                        }
+                    },
+                    "families": []
+                }
+            }
+        }
+    },
+    "anchor_tolerance": {
+        "warn": 14,
+        "error": 40
+    },
+    "families": {
+        "male": {
+            "label": "Laki-laki (lembar v2)",
+            "compatible": [
+                "male",
+                "kit-l1",
+                "general",
+                "legacy"
+            ]
+        },
+        "female": {
+            "label": "Perempuan (lembar v2)",
+            "compatible": [
+                "female",
+                "kit-p",
+                "kit-p2",
+                "kit-p3",
+                "general",
+                "legacy"
+            ]
+        },
+        "kit-l1": {
+            "label": "Kit SMA L1 (laki-laki)",
+            "compatible": [
+                "male",
+                "kit-l1",
+                "general",
+                "legacy"
+            ]
+        },
+        "kit-p": {
+            "label": "Kit SMA P (perempuan)",
+            "compatible": [
+                "female",
+                "kit-p",
+                "kit-p2",
+                "kit-p3",
+                "general",
+                "legacy"
+            ]
+        },
+        "kit-p2": {
+            "label": "Kit SMA P2 (perempuan, rok panjang)",
+            "compatible": [
+                "female",
+                "kit-p",
+                "kit-p2",
+                "kit-p3",
+                "general",
+                "legacy"
+            ]
+        },
+        "kit-p3": {
+            "label": "Kit SMA P3 (perempuan, rok pendek)",
+            "compatible": [
+                "female",
+                "kit-p",
+                "kit-p2",
+                "kit-p3",
+                "general",
+                "legacy"
+            ]
+        },
+        "legacy": {
+            "label": "Lembar pertama",
+            "compatible": [
+                "male",
+                "female",
+                "kit-l1",
+                "kit-p",
+                "kit-p2",
+                "kit-p3",
+                "general",
+                "legacy"
+            ]
+        },
+        "general": {
+            "label": "Umum",
+            "compatible": [
+                "male",
+                "female",
+                "kit-l1",
+                "kit-p",
+                "kit-p2",
+                "kit-p3",
+                "general",
+                "legacy",
+                "vrm-avatarsample-m"
+            ]
+        },
+        "vrm-avatarsample-m": {
+            "label": "VRM: avatarsample-m",
+            "compatible": [
+                "vrm-avatarsample-m",
+                "general"
+            ]
+        }
+    },
+    "region_margin": 45,
+    "size_range": [
+        0.4,
+        1.8
+    ]
+}

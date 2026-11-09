@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { BACK_Z, baseBox, effectiveZ, layerEntries, moveLayerZ, clampXform, DEFAULT_PALETTE, drawOrder, emptyConfig, EXPRESSIONS, fromCanvas, hitsPart, partBox, placement, scaleAboutCenter, tintSvg, toCanvas, VIEWS } from './spec'
+import type { CharacterConfig } from './types'
 
 describe('tintSvg', () => {
   const pal = { ...DEFAULT_PALETTE, hair: '#ff0000', accent: '#00ff00', skin: '#0000ff' }
@@ -176,5 +177,30 @@ describe('layering', () => {
       if (upZ !== null) cur = cfg({ ...(cur.parts as Record<string, object>), a: P({ z: upZ }) })
     }
     expect(drawOrder(cur, () => 0)).toEqual(['b', 'c', 'a'])
+  })
+})
+
+describe('layering per facing', () => {
+  const zOf = (s: string) => ({ hair_back: 1, body: 2, top: 5, hair_front: 8, arm_l: 4 } as Record<string, number>)[s] ?? 0
+  const cfg = (facing: 'front' | 'right' | 'left' | 'back', parts: CharacterConfig['parts']): CharacterConfig => ({ ...emptyConfig('full'), facing, parts })
+  const p = (extra = {}) => ({ assetId: 1, dx: 0, dy: 0, scale: 1, ...extra })
+
+  it('uses the category order from the front, and the hair falls over the clothes from behind', () => {
+    const parts = { top: p(), hair_front: p() }
+    expect(drawOrder(cfg('front', parts), zOf)).toEqual(['top', 'hair_front'])
+    expect(effectiveZ(cfg('back', parts), 'hair_front', zOf)).toBeGreaterThan(effectiveZ(cfg('back', parts), 'top', zOf))
+  })
+
+  it('keeps one stacking per direction: an override for one facing does not touch the others', () => {
+    const parts = { top: p({ zv: { right: 9 } }), arm_l: p() }
+    expect(effectiveZ(cfg('right', parts), 'top', zOf)).toBe(9)
+    expect(effectiveZ(cfg('front', parts), 'top', zOf)).toBe(5)
+    expect(effectiveZ(cfg('left', parts), 'top', zOf)).toBe(5)
+  })
+
+  it('the old z override only applies to the front', () => {
+    const parts = { top: p({ z: 9 }) }
+    expect(effectiveZ(cfg('front', parts), 'top', zOf)).toBe(9)
+    expect(effectiveZ(cfg('left', parts), 'top', zOf)).toBe(5)
   })
 })

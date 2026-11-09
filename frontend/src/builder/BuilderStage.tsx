@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { BoneOverlay } from './BoneOverlay'
+import type { CharRig } from './charRig'
 import { PartOverlay } from './PartOverlay'
 import { absUrl, renderCharacter, type AlphaInfo } from './render'
 import { VIEWS, type PartXform } from './spec'
@@ -21,6 +23,8 @@ interface Props {
   onSelect: (slots: string[], primary: string | null) => void
   onChange: (updates: Record<string, PartXform>, key: string) => void
   onError: (message: string) => void
+  /** bone mode: the joints are shown and dragged instead of the parts */
+  bone?: { rig: CharRig; guessed: boolean; onChange: (rig: CharRig, key: string) => void } | null
 }
 
 const CHECKER = 'repeating-conic-gradient(#2b2f3a 0 25%, #20232c 0 50%) 0 0 / 16px 16px'
@@ -30,7 +34,7 @@ const CHECKER = 'repeating-conic-gradient(#2b2f3a 0 25%, #20232c 0 50%) 0 0 / 16
  * zoomable / pannable viewport that fills the whole centre panel. Wheel = zoom at the cursor, Space+drag / middle button /
  * hand tool = pan. The character itself is rendered by `renderCharacter` at a resolution that follows the zoom.
  */
-export function BuilderStage({ config, assets, infos, zOf, ready, selected, primary, splitY, backdrop, resetKey, onSelect, onChange, onError }: Props) {
+export function BuilderStage({ config, assets, infos, zOf, ready, selected, primary, splitY, backdrop, resetKey, onSelect, onChange, onError, bone }: Props) {
   const view = VIEWS[config.view]
   const stage = stageOf(view)
   const box = useRef<HTMLDivElement>(null)
@@ -110,7 +114,8 @@ export function BuilderStage({ config, assets, infos, zOf, ready, selected, prim
           <img src={absUrl(backdrop.url)} alt="" draggable={false} style={{ position: 'absolute', left: (view.x - stage.x) * vp.zoom, top: (view.y - stage.y) * vp.zoom, width: view.w * vp.zoom, height: view.h * vp.zoom, objectFit: 'cover' }} />
         )}
         <canvas ref={canvas} aria-label="Pratinjau karakter" data-rect={`${stage.x},${stage.y},${stage.w},${stage.h}`} data-scale={rs} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />
-        {ready && (
+        {ready && bone && <BoneOverlay rig={bone.rig} guessed={bone.guessed} stage={stage} ppu={vp.zoom} onChange={bone.onChange} />}
+        {ready && !bone && (
           <PartOverlay config={config} assets={assets} infos={infos} selected={selected} primary={primary} zOf={zOf} view={view} stage={stage} ppu={vp.zoom}
             splitY={splitY} panMode={hand || space} onSelect={onSelect} onChange={onChange} onPan={pan} />
         )}

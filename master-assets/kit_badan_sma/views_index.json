@@ -1,0 +1,254 @@
+[
+ {
+  "kit": "laki_laki_anime",
+  "view": "right",
+  "slot": "top",
+  "file": "laki_laki_anime/views/kanan-top.png",
+  "name": "Kit SMA L1 (anime) – kemeja putih lengan pendek + dasi + badge OSIS (kanan)"
+ },
+ {
+  "kit": "laki_laki_anime",
+  "view": "right",
+  "slot": "bottom",
+  "file": "laki_laki_anime/views/kanan-bottom.png",
+  "name": "Kit SMA L1 (anime) – celana abu-abu SMA + ikat pinggang (kanan)"
+ },
+ {
+  "kit": "laki_laki_anime",
+  "view": "right",
+  "slot": "shoes",
+  "file": "laki_laki_anime/views/kanan-shoes.png",
+  "name": "Kit SMA L1 (anime) – sepatu hitam bertali (kanan)"
+ },
+ {
+  "kit": "laki_laki_anime",
+  "view": "right",
+  "slot": "body",
+  "file": "laki_laki_anime/views/kanan-body.png",
+  "name": "Kit SMA L1 (anime) – leher (badan laki-laki) (kanan)"
+ },
+ {
+  "kit": "laki_laki_anime",
+  "view": "left",
+  "slot": "top",
+  "file": "laki_laki_anime/views/kiri-top.png",
+  "name": "Kit SMA L1 (anime) – kemeja putih lengan pendek + dasi + badge OSIS (kiri)"
+ },
+ {
+  "kit": "laki_laki_anime",
+  "view": "left",
+  "slot": "bottom",
+  "file": "laki_laki_anime/views/kiri-bottom.png",
+  "name": "Kit SMA L1 (anime) – celana abu-abu SMA + ikat pinggang (kiri)"
+ },
+ {
+  "kit": "laki_laki_anime",
+  "view": "left",
+  "slot": "shoes",
+  "file": "laki_laki_anime/views/kiri-shoes.png",
+  "name": "Kit SMA L1 (anime) – sepatu hitam bertali (kiri)"
+ },
+ {
+  "kit": "laki_laki_anime",
+  "view": "left",
+  "slot": "body",
+  "file": "laki_laki_anime/views/kiri-body.png",
+  "name": "Kit SMA L1 (anime) – leher (badan laki-laki) (kiri)"
+ },
+ {
+  "kit": "laki_laki_anime",
+  "view": "back",
+  "slot": "top",
+  "file": "laki_laki_anime/views/belakang-top.png",
+  "name": "Kit SMA L1 (anime) – kemeja putih lengan pendek + dasi + badge OSIS (belakang)"
+ },
+ {
+  "kit": "laki_laki_anime",
+  "view": "back",
+  "slot": "bottom",
+  "file": "laki_laki_anime/views/belakang-bottom.png",
+  "name": "Kit SMA L1 (anime) – celana abu-abu SMA + ikat pinggang (belakang)"
+ },
+ {
+  "kit": "laki_laki_anime",
+  "view": "back",
+  "slot": "shoes",
+  "file": "laki_laki_anime/views/belakang-shoes.png",
+  "name": "Kit SMA L1 (anime) – sepatu hitam bertali (belakang)"
+ },
+ {
+  "kit": "laki_laki_anime",
+  "view": "back",
+  "slot": "body",
+  "file": "laki_laki_anime/views/belakang-body.png",
+  "name": "Kit SMA L1 (anime) – leher (badan laki-laki) (belakang)"
+ },
+ {
+  "kit": "perempuan_panjang_anime",
+  "view": "right",
+  "slot": "top",
+  "file": "perempuan_panjang_anime/views/kanan-top.png",
+  "name": "Kit SMA P2 (anime) – kemeja putih lengan panjang + dasi (kanan)"
+ },
+ {
+  "kit": "perempuan_panjang_anime",
+  "view": "right",
+  "slot": "body",
+  "file": "perempuan_panjang_anime/views/kanan-body.png",
+  "name": "Kit SMA P2 (anime) – kaki & leher (kanan)"
+ },
+ {
+  "kit": "perempuan_panjang_anime",
+  "view": "right",
+  "slot": "shoes",
+  "file": "perempuan_panjang_anime/views/kanan-shoes.png",
+  "name": "Kit SMA P2 (anime) – sepatu pantofel + kaus kaki (kanan)"
+ },
+ {
+  "kit": "perempuan_panjang_anime",
+  "view": "right",
+  "slot": "bottom",
+  "file": "perempuan_panjang_anime/views/kanan-bottom.png",
+  "name": "Kit SMA P2 (anime) – rok abu-abu panjang (kanan)"
+ },
+ {
+  "kit": "perempuan_panjang_anime",
+  "view": "left",
+  "slot": "top",
+  "file": "perempuan_panjang_anime/views/kiri-top.png",
+  "name": "Kit SMA P2 (anime) – kemeja putih lengan panjang + dasi (kiri)"
+ },
+ {
+  "kit": "perempuan_panjang_anime",
+  "view": "left",
+  "slot": "body",
+  "file": "perempuan_panjang_anime/views/kiri-body.png",
+  "name": "Kit SMA P2 (anime) – kaki & leher (kiri)"
+ },
+ {
+  "kit": "perempuan_panjang_anime",
+  "view": "left",
+  "slot": "shoes",
+  "file": "perempuan_panjang_anime/views/kiri-shoes.png",
+  "name": "Kit SMA P2 (anime) – sepatu pantofel + kaus kaki (kiri)"
+ },
+ {
+  "kit": "perempuan_panjang_anime",
+  "view": "left",
+  "slot": "bottom",
+  "file": "perempuan_panjang_anime/views/kiri-bottom.png",
+  "name": "Kit SMA P2 (anime) – rok abu-abu panjang (kiri)"
+ },
+ {
+  "kit": "perempuan_panjang_anime",
+  "view": "back",
+  "slot": "top",
+  "file": "perempuan_panjang_anime/views/belakang-top.png",
+  "name": "Kit SMA P2 (anime) – kemeja putih lengan panjang + dasi (belakang)"
+ },
+ {
+  "kit": "perempuan_panjang_anime",
+  "view": "back",
+  "slot": "body",
+  "file": "perempuan_panjang_anime/views/belakang-body.png",
+  "name": "Kit SMA P2 (anime) – kaki & leher (belakang)"
+ },
+ {
+  "kit": "perempuan_panjang_anime",
+  "view": "back",
+  "slot": "shoes",
+  "file": "perempuan_panjang_anime/views/belakang-shoes.png",
+  "name": "Kit SMA P2 (anime) – sepatu pantofel + kaus kaki (belakang)"
+ },
+ {
+  "kit": "perempuan_panjang_anime",
+  "view": "back",
+  "slot": "bottom",
+  "file": "perempuan_panjang_anime/views/belakang-bottom.png",
+  "name": "Kit SMA P2 (anime) – rok abu-abu panjang (belakang)"
+ },
+ {
+  "kit": "perempuan_pendek_anime",
+  "view": "right",
+  "slot": "top",
+  "file": "perempuan_pendek_anime/views/kanan-top.png",
+  "name": "Kit SMA P3 (anime) – kemeja pelaut lengan pendek + dasi merah (kanan)"
+ },
+ {
+  "kit": "perempuan_pendek_anime",
+  "view": "right",
+  "slot": "body",
+  "file": "perempuan_pendek_anime/views/kanan-body.png",
+  "name": "Kit SMA P3 (anime) – kaki & leher (rok pendek) (kanan)"
+ },
+ {
+  "kit": "perempuan_pendek_anime",
+  "view": "right",
+  "slot": "shoes",
+  "file": "perempuan_pendek_anime/views/kanan-shoes.png",
+  "name": "Kit SMA P3 (anime) – sepatu pantofel (kanan)"
+ },
+ {
+  "kit": "perempuan_pendek_anime",
+  "view": "right",
+  "slot": "bottom",
+  "file": "perempuan_pendek_anime/views/kanan-bottom.png",
+  "name": "Kit SMA P3 (anime) – rok lipit pendek abu-ungu (kanan)"
+ },
+ {
+  "kit": "perempuan_pendek_anime",
+  "view": "left",
+  "slot": "top",
+  "file": "perempuan_pendek_anime/views/kiri-top.png",
+  "name": "Kit SMA P3 (anime) – kemeja pelaut lengan pendek + dasi merah (kiri)"
+ },
+ {
+  "kit": "perempuan_pendek_anime",
+  "view": "left",
+  "slot": "body",
+  "file": "perempuan_pendek_anime/views/kiri-body.png",
+  "name": "Kit SMA P3 (anime) – kaki & leher (rok pendek) (kiri)"
+ },
+ {
+  "kit": "perempuan_pendek_anime",
+  "view": "left",
+  "slot": "shoes",
+  "file": "perempuan_pendek_anime/views/kiri-shoes.png",
+  "name": "Kit SMA P3 (anime) – sepatu pantofel (kiri)"
+ },
+ {
+  "kit": "perempuan_pendek_anime",
+  "view": "left",
+  "slot": "bottom",
+  "file": "perempuan_pendek_anime/views/kiri-bottom.png",
+  "name": "Kit SMA P3 (anime) – rok lipit pendek abu-ungu (kiri)"
+ },
+ {
+  "kit": "perempuan_pendek_anime",
+  "view": "back",
+  "slot": "top",
+  "file": "perempuan_pendek_anime/views/belakang-top.png",
+  "name": "Kit SMA P3 (anime) – kemeja pelaut lengan pendek + dasi merah (belakang)"
+ },
+ {
+  "kit": "perempuan_pendek_anime",
+  "view": "back",
+  "slot": "body",
+  "file": "perempuan_pendek_anime/views/belakang-body.png",
+  "name": "Kit SMA P3 (anime) – kaki & leher (rok pendek) (belakang)"
+ },
+ {
+  "kit": "perempuan_pendek_anime",
+  "view": "back",
+  "slot": "shoes",
+  "file": "perempuan_pendek_anime/views/belakang-shoes.png",
+  "name": "Kit SMA P3 (anime) – sepatu pantofel (belakang)"
+ },
+ {
+  "kit": "perempuan_pendek_anime",
+  "view": "back",
+  "slot": "bottom",
+  "file": "perempuan_pendek_anime/views/belakang-bottom.png",
+  "name": "Kit SMA P3 (anime) – rok lipit pendek abu-ungu (belakang)"
+ }
+]

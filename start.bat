@@ -25,14 +25,19 @@ if errorlevel 1 (
   exit /b 1
 )
 
-start "Backend :8000"  /D "%ROOT%backend"  cmd /k php artisan serve
-start "Queue worker"   /D "%ROOT%backend"  cmd /k php artisan queue:work --tries=1
+start "Backend :8010"  /D "%ROOT%backend"  cmd /k php artisan serve --host=127.0.0.1 --port=8010
+start "Queue worker"   /D "%ROOT%backend"  cmd /k php artisan queue:work --queue=default --tries=1
+rem worker kedua khusus cerita/film: satu film menunggu ekspor yang dikerjakan worker di atas, jadi tidak boleh satu worker saja
+start "Queue cerita"   /D "%ROOT%backend"  cmd /k php artisan queue:work --queue=story --tries=1
 start "Frontend :5173" /D "%ROOT%frontend" cmd /k npm run dev
+rem Penjadwal Laravel: membuat film kartun harian otomatis tiap pagi jam 07:00 (lihat backend/routes/console.php) dan membersihkan data lama.
+rem Hapus baris ini (atau tutup jendelanya) bila Anda TIDAK ingin film dibuat otomatis.
+start "Scheduler (film harian 07:00)" /D "%ROOT%backend" cmd /k php artisan schedule:work
 
 echo.
 echo Menunggu server siap...
 timeout /t 6 /nobreak >nul
 start "" http://localhost:5173
 
-echo Tiga jendela terbuka (Backend, Queue worker, Frontend). Tutup jendela-jendela itu untuk berhenti.
+echo Empat jendela terbuka (Backend, Queue worker, Frontend, Scheduler). Tutup jendela-jendela itu untuk berhenti.
 endlocal

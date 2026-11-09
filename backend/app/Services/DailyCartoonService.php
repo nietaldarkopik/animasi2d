@@ -27,6 +27,20 @@ class DailyCartoonService
      * Curated catalog of episodic Indonesian cartoon stories.
      * Used when AI is not configured or as fallback.
      */
+    /** which story of the day this is (0, 1, ...): the catalog fallback rotates so two stories a day are never the same */
+    public int $slot = 0;
+
+    /** the narrator speaks over the film: a voice and a caption, but no character and no speech balloon */
+    public const NARRATORS = ['narator', 'narrator'];
+
+    /** lower-case speaker => edge-tts voice id, for speakers whose voice is chosen by a story series (the rest use the worker's name map) */
+    public array $voices = [];
+
+    public static function isNarrator(string $who): bool
+    {
+        return in_array(mb_strtolower(trim($who)), self::NARRATORS, true);
+    }
+
     protected array $catalog = [
         [
             'title' => 'Sarapan Pagi dan Semangat Sekolah',
@@ -158,7 +172,7 @@ class DailyCartoonService
                 $prompt .= "    {\n";
                 $prompt .= '      "name": "Nama Scene 1",'."\n";
                 $prompt .= '      "location": "Pilih salah satu: Halaman sekolah / Ruang kelas / Lab komputer / Taman / Kantin sekolah / Ruang tamu",'."\n";
-                $prompt .= '      "time": "pagi atau siang atau sore",'."\n";
+                $prompt .= '      "time": "pagi atau siang atau sore atau malam",'."\n";
                 $prompt .= '      "dialog": ['."\n";
                 $prompt .= '        {"who": "'.$char1.'", "text": "kalimat santai maksimal 15 kata"},'."\n";
                 $prompt .= '        {"who": "'.$char2.'", "text": "kalimat santai maksimal 15 kata"}'."\n";
@@ -185,6 +199,8 @@ class DailyCartoonService
                 $json = AiClient::extractJson($response);
 
                 if (!empty($json['scenes']) && is_array($json['scenes'])) {
+                    $json['source'] = 'ai';
+
                     return $json;
                 }
             } catch (\Throwable $e) {
@@ -193,12 +209,13 @@ class DailyCartoonService
         }
 
         // Fallback: pick from catalog
-        $index = abs(crc32($topic ?? date('Y-m-d'))) % count($this->catalog);
+        $index = $topic ? abs(crc32($topic)) % count($this->catalog) : (((int) date('z')) * 2 + $this->slot) % count($this->catalog);
         $story = $this->catalog[$index];
         if ($topic) {
-            $story['title'] = $topic;
-            $story['theme'] = 'Pilihan Pengguna';
+            // AI is not reachable: the requested topic CANNOT be written. Say so instead of pretending the catalog story is about it.
+            $story['theme'] = 'Cerita katalog (topik "'.$topic.'" tidak dipakai karena AI tidak tersedia)';
         }
+        $story['source'] = 'catalog';
 
         // Adjust character names
         foreach ($story['scenes'] as &$sc) {
@@ -224,22 +241,32 @@ class DailyCartoonService
         $pythonBin = config('services.python.bin', 'python');
         $scriptPath = base_path('../worker/tts_generator.py');
 
-        $process = new Process([
-            $pythonBin,
-            $scriptPath,
-            '--text', $text,
-            '--who', $who,
-            '--out', $fullPath
-        ]);
-        $process->setTimeout(60);
-        $process->run();
-
-        $duration = 2.5;
-        if ($process->isSuccessful()) {
-            $out = json_decode($process->getOutput(), true);
-            if (isset($out['duration']) && $out['duration'] > 0) {
-                $duration = (float) $out['duration'];
+        // Edge-TTS is an online service: a request can fail for a moment (network, rate limit). Retry a few times, and only
+        // keep an asset when a real, non-empty audio file exists; otherwise the film is made without that line's voice.
+        $duration = max(1.5, round(mb_strlen($text) * 0.07 + 0.6, 2)); // reading-time estimate when there is no audio
+        $made = false;
+        foreach ([0, 1, 3] as $attempt => $wait) {
+            if ($wait) {
+                sleep($wait);
             }
+            $voice = $this->voices[mb_strtolower($who)] ?? null;
+            $process = new Process([$pythonBin, $scriptPath, '--text', $text, '--who', $who, '--out', $fullPath, ...($voice ? ['--voice', $voice] : [])]);
+            $process->setTimeout(60);
+            $process->run();
+            if ($process->isSuccessful() && File::exists($fullPath) && File::size($fullPath) > 0) {
+                $out = json_decode($process->getOutput(), true);
+                if (isset($out['duration']) && $out['duration'] > 0) {
+                    $duration = (float) $out['duration'];
+                }
+                $made = true;
+                break;
+            }
+            File::delete($fullPath);
+        }
+        if (! $made) {
+            \Illuminate\Support\Facades\Log::warning("TTS gagal untuk \"{$who}: {$text}\" setelah 3 percobaan: ".trim(substr($process->getErrorOutput().$process->getOutput(), 0, 300)));
+
+            return ['asset_id' => null, 'duration' => $duration, 'path' => null, 'who' => $who, 'text' => $text];
         }
 
         // Save Asset in database
@@ -327,13 +354,67 @@ class DailyCartoonService
         ]);
     }
 
+    /** @return list<array{action?: string, sfx?: string}> */
+    public static function cleanBeats(mixed $beats): array
+    {
+        $out = [];
+        foreach (is_array($beats) ? $beats : [] as $b) {
+            $action = trim((string) ($b['action'] ?? ''));
+            $sfx = trim((string) ($b['sfx'] ?? ''));
+            if ($action !== '') {
+                $out[] = ['action' => mb_substr($action, 0, 200)];
+            } elseif ($sfx !== '') {
+                $out[] = ['sfx' => mb_substr($sfx, 0, 40)];
+            }
+        }
+
+        return array_slice($out, 0, 20);
+    }
+
     /**
-     * End-to-end generation of today's cartoon.
+     * A script written by hand (or by another tool): {title, theme?, scenes: [{name, location, time?, cast?: [name], dialog: [{who, text, before?: [beat]}], after?: [beat]}]}.
+     * `cast` = who else is in the scene without speaking (a crowd of students, teachers...): they stand behind the speakers.
+     * A beat is {action: "Uki melambai"} or {sfx: "bel"}: `before` happens just before that line, `after` at the end of the scene.
+     * Returns it cleaned up, or throws with a message that says what is wrong.
      */
-    public function createDailyCartoon(int $userId, ?string $topic = null, array $characterNames = ['Sekar', 'Uki']): array
+    public function validateScript(array $s): array
+    {
+        $scenes = $s['scenes'] ?? null;
+        if (! is_array($scenes) || $scenes === [] || count($scenes) > 12) {
+            throw new \InvalidArgumentException('Naskah harus punya 1–12 scene ("scenes").');
+        }
+        $out = ['title' => mb_substr(trim((string) ($s['title'] ?? 'Film Kartun')), 0, 80) ?: 'Film Kartun', 'theme' => mb_substr((string) ($s['theme'] ?? 'Naskah buatan sendiri'), 0, 120), 'source' => 'custom', 'scenes' => []];
+        foreach (array_values($scenes) as $i => $sc) {
+            $n = $i + 1;
+            $dialog = [];
+            foreach ($sc['dialog'] ?? [] as $d) {
+                $who = trim((string) ($d['who'] ?? ''));
+                $text = trim((string) ($d['text'] ?? ''));
+                if ($who === '' || $text === '') {
+                    throw new \InvalidArgumentException("Scene $n: setiap dialog butuh \"who\" dan \"text\".");
+                }
+                $before = self::cleanBeats($d['before'] ?? []);
+                $dialog[] = ['who' => mb_substr($who, 0, 40), 'text' => mb_substr($text, 0, 300)] + ($before ? ['before' => $before] : []);
+            }
+            $after = self::cleanBeats($sc['after'] ?? []);
+            if ($dialog === [] && $after === []) {
+                throw new \InvalidArgumentException("Scene $n: dialog kosong.");
+            }
+            $time = in_array($sc['time'] ?? null, ['pagi', 'siang', 'sore', 'malam'], true) ? $sc['time'] : 'siang';
+            $cast = array_values(array_unique(array_filter(array_map(fn ($c) => mb_substr(trim((string) $c), 0, 60), (array) ($sc['cast'] ?? [])), fn ($c) => $c !== '' && ! self::isNarrator($c))));
+            if (count($cast) > 16) {
+                throw new \InvalidArgumentException("Scene $n: paling banyak 16 pemeran latar (\"cast\").");
+            }
+            $out['scenes'][] = ['name' => mb_substr(trim((string) ($sc['name'] ?? "Scene $n")), 0, 80) ?: "Scene $n", 'location' => (string) ($sc['location'] ?? ''), 'time' => $time, 'dialog' => $dialog] + ($cast ? ['cast' => $cast] : []) + ($after ? ['after' => $after] : []);
+        }
+
+        return $out;
+    }
+
+    public function createDailyCartoon(int $userId, ?string $topic = null, array $characterNames = ['Sekar', 'Uki'], ?array $customScript = null, array $characterIds = []): array
     {
         $dateStr = date('d F Y');
-        $script = $this->generateScript($topic, $characterNames);
+        $script = $customScript !== null ? $this->validateScript($customScript) : $this->generateScript($topic, $characterNames);
         $title = 'Kartun Harian: ' . ($script['title'] ?? 'Petualangan Seru') . ' (' . date('Y-m-d') . ')';
 
         $project = Project::create([
@@ -378,8 +459,16 @@ class DailyCartoonService
             // 2. Process dialogue & audio
             $sceneLocalTime = 0.5; // initial silence/entry buffer
             $subtitles = [];
+            $beats = []; // actions and sound effects, on the timeline of the scene (the auto-director acts them out)
+            $hold = function (array $list) use (&$beats, &$sceneLocalTime) {
+                foreach ($list as $b) {
+                    $beats[] = ['at' => round($sceneLocalTime, 2)] + $b;
+                    $sceneLocalTime += isset($b['action']) ? 2.0 : 1.2; // the moment needs its own time on screen
+                }
+            };
 
             foreach ($sc['dialog'] as $dIndex => $dlg) {
+                $hold($dlg['before'] ?? []);
                 $who = $dlg['who'];
                 $text = $dlg['text'];
 
@@ -387,24 +476,33 @@ class DailyCartoonService
                 $audioData = $this->synthesizeDialogue($userId, $project->id, $who, $text);
                 $duration = max(1.5, $audioData['duration']);
 
-                // Track in project audio list (for full movie playback and FFmpeg mixing)
-                $projectAudioClips[] = [
-                    'id' => 'aud_' . Str::random(8),
-                    'assetId' => $audioData['asset_id'],
-                    'name' => "{$who}: {$text}",
-                    'start' => round($globalTimeline + $sceneLocalTime, 2),
-                    'volume' => 1.0,
-                    'fadeIn' => 0.05,
-                    'fadeOut' => 0.05
-                ];
+                // Track in project audio list (for full movie playback and FFmpeg mixing); a line whose voice could not be made stays silent
+                if ($audioData['asset_id']) {
+                    $projectAudioClips[] = [
+                        'id' => 'aud_' . Str::random(8),
+                        'assetId' => $audioData['asset_id'],
+                        'name' => mb_substr("{$who}: {$text}", 0, 120), // (the document allows 120 characters; the "Who: " prefix is what the lip-sync looks for)
+                        'start' => round($globalTimeline + $sceneLocalTime, 2),
+                        'volume' => 1.0,
+                        'kind' => 'voice',
+                        'fadeIn' => 0.05,
+                        'fadeOut' => 0.05
+                    ];
+                }
 
                 // Subtitle
                 $subtitles[] = [
                     'id' => 'sub_' . Str::random(8),
                     'start' => round($sceneLocalTime, 2),
                     'end' => round($sceneLocalTime + $duration, 2),
-                    'text' => "{$who}: {$text}"
+                    'text' => self::isNarrator($who) ? $text : "{$who}: {$text}" // narration is a plain caption
                 ];
+
+                if (self::isNarrator($who)) {
+                    $sceneLocalTime += $duration + 0.3;
+
+                    continue;
+                }
 
                 // Speech Balloon at character position
                 // Left character (Sekar) at x: 380, Right character (Uki) at x: 900
@@ -449,6 +547,7 @@ class DailyCartoonService
                 $sceneLocalTime += $duration + 0.3; // brief pause between dialogue lines
             }
 
+            $hold($sc['after'] ?? []);
             $sceneDuration = max(4.0, round($sceneLocalTime + 0.8, 1));
             $globalTimeline += $sceneDuration;
 
@@ -459,20 +558,16 @@ class DailyCartoonService
                 $effects[] = ['id' => 'eff_pagi', 'kind' => 'tint', 'intensity' => 0.22, 'color' => '#ffe3a8', 'blend' => 'normal', 'label' => 'Pagi'];
             } elseif ($timePreset === 'sore') {
                 $effects[] = ['id' => 'eff_sore', 'kind' => 'tint', 'intensity' => 0.55, 'color' => '#ff9a52', 'blend' => 'multiply', 'label' => 'Sore'];
+            } elseif ($timePreset === 'malam') {
+                $effects[] = ['id' => 'eff_malam', 'kind' => 'tint', 'intensity' => 0.6, 'color' => '#27377a', 'blend' => 'multiply', 'label' => 'Malam'];
             }
 
-            // Cinematic subtle camera pan
+            // Cinematic subtle camera push-in, in the editor's camera format: one key list per property (x | y | zoom | rot)
             $camera = [
-                'x' => $W / 2,
-                'y' => $H / 2,
-                'zoom' => 1.0,
-                'rotation' => 0,
-                'keyframes' => [
-                    'zoom' => [
-                        ['f' => 0, 'v' => 1.0, 'e' => 'easeOut'],
-                        ['f' => (int) round($sceneDuration * $fps), 'v' => 1.05, 'e' => 'linear']
-                    ]
-                ]
+                'zoom' => [
+                    ['f' => 0, 'v' => 1.0, 'e' => 'easeOut'],
+                    ['f' => max(1, (int) round($sceneDuration * $fps)), 'v' => 1.05, 'e' => 'linear'],
+                ],
             ];
 
             $scenes[] = [
@@ -488,7 +583,9 @@ class DailyCartoonService
                 'board' => [
                     'location' => $sc['location'] ?? '',
                     'summary' => $sc['name'] ?? '',
-                    'dialog' => array_map(fn($d) => ['id' => Str::random(8), 'who' => $d['who'], 'text' => $d['text']], $sc['dialog'])
+                    'dialog' => array_map(fn($d) => ['id' => Str::random(8), 'who' => $d['who'], 'text' => $d['text']], $sc['dialog']),
+                    ...(! empty($sc['cast']) ? ['cast' => $sc['cast']] : []), // in the scene without speaking (placed behind the speakers by the auto-director)
+                    ...($beats ? ['beats' => $beats] : []),
                 ]
             ];
         }
@@ -503,7 +600,8 @@ class DailyCartoonService
             'scenes' => $scenes,
             'audio' => $projectAudioClips,
             'auto_generated' => true,
-            'characters' => $characterNames
+            'characters' => $characterNames,
+            ...($characterIds ? ['character_ids' => array_map('intval', $characterIds)] : []),
         ];
 
         $project->update(['document' => $document]);

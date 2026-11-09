@@ -120,7 +120,7 @@ class CharacterBuilderTest extends TestCase
 
         $png = tempnam(sys_get_temp_dir(), 'pn').'.png';
         imagepng(imagecreatetruecolor(50, 60), $png);
-        $this->post('/api/library/assets', ['file' => new UploadedFile($png, 'p.png', 'image/png', null, true), 'category' => 'glasses', 'name' => 'PNG'], $this->h($u))->assertCreated()->assertJsonPath('data.width', 50);
+        $this->post('/api/library/assets', ['file' => new UploadedFile($png, 'p.png', 'image/png', null, true), 'category' => 'glasses', 'name' => 'PNG'], $this->h($u))->assertCreated()->assertJsonPath('data.width', 800); // conformed to the standard part canvas (400x800 units at 2x)
         $txt = tempnam(sys_get_temp_dir(), 'tx');
         file_put_contents($txt, 'hello');
         $this->post('/api/library/assets', ['file' => new UploadedFile($txt, 'p.png', 'image/png', null, true), 'category' => 'glasses', 'name' => 'bad'], $this->h($u))->assertStatus(422);
@@ -325,9 +325,12 @@ class CharacterBuilderTest extends TestCase
         $parts = $this->baseParts();
         $parts['top']['z'] = 7.5;
         $parts['eyes']['split'] = 320.4;
+        $parts['top']['zv'] = ['back' => 9.1234, 'left' => 3, 'sideways' => 4];
         $c = $this->postJson('/api/builder/characters', ['name' => 'Z', 'config' => $this->config($parts)], $this->h($u))->assertCreated()->json('data');
         $this->assertSame(7.5, $c['config']['parts']['top']['z']);
         $this->assertSame(320.4, $c['config']['parts']['eyes']['split']);
+        $this->assertEquals(['back' => 9.123, 'left' => 3.0], $c['config']['parts']['top']['zv'], 'a stacking per direction; unknown directions are dropped');
+        $this->assertArrayNotHasKey('zv', $c['config']['parts']['face']);
         $this->assertArrayNotHasKey('z', $c['config']['parts']['face']);
         $this->assertArrayNotHasKey('split', $c['config']['parts']['face']);
 
@@ -417,7 +420,7 @@ class CharacterBuilderTest extends TestCase
             .'<path fill="#010203" d="M 10 10 L 20 10 L 20 20 Z"/></svg>';
         $r = $this->post('/api/library/assets', ['file' => $this->svgFile($svg), 'category' => 'accessory', 'name' => 'Hasil trace', 'tags' => 'trace'], $this->h($u))->assertCreated();
         $this->assertSame('image/svg+xml', $r->json('data.mime'));
-        $this->assertSame([640, 480], [$r->json('data.width'), $r->json('data.height')]);
+        $this->assertSame([400, 800], [$r->json('data.width'), $r->json('data.height')]); // wrapped into the standard part canvas
         $stored = Storage::disk('local')->get(LibraryAsset::find($r->json('data.id'))->path);
         $this->assertStringContainsString('fill-rule="evenodd"', $stored);
         $this->assertStringContainsString('stroke-linejoin="round"', $stored);
@@ -426,5 +429,22 @@ class CharacterBuilderTest extends TestCase
         // over the size limit it is refused with a clear message (a high-detail trace can be big)
         $big = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 0 L1 1 '.str_repeat('L 2.5 3.5 ', 40000).'Z"/></svg>';
         $this->post('/api/library/assets', ['file' => $this->svgFile($big), 'category' => 'accessory', 'name' => 'Besar'], $this->h($u))->assertStatus(422)->assertJsonPath('message', fn ($m) => str_contains($m, '300'));
+    }
+
+    public function test_the_skeleton_is_stored_with_the_character_per_facing(): void
+    {
+        $u = User::factory()->create();
+        $keys = ['neck', 'shoulder_l', 'elbow_l', 'wrist_l', 'shoulder_r', 'elbow_r', 'wrist_r', 'hip', 'hip_l', 'knee_l', 'ankle_l', 'hip_r', 'knee_r', 'ankle_r'];
+        $joints = array_combine($keys, array_map(fn ($i) => ['x' => 100 + $i * 10.04, 'y' => 300 + $i * 20], array_keys($keys)));
+        $cfg = $this->config($this->baseParts()) + ['rig' => ['front' => ['joints' => $joints, 'armWidth' => 30, 'junk' => 1]]];
+        $c = $this->postJson('/api/builder/characters', ['name' => 'R', 'config' => $cfg], $this->h($u))->assertCreated()->json('data');
+        $this->assertSame(['front'], array_keys($c['config']['rig']));
+        $this->assertEquals(['x' => 110.0, 'y' => 320.0], $c['config']['rig']['front']['joints']['shoulder_l']);
+        $this->assertEquals(30, $c['config']['rig']['front']['armWidth']);
+        $this->assertArrayNotHasKey('junk', $c['config']['rig']['front']);
+
+        unset($joints['knee_r']);
+        $this->postJson('/api/builder/characters', ['name' => 'R', 'config' => $this->config($this->baseParts()) + ['rig' => ['front' => ['joints' => $joints]]]], $this->h($u))->assertStatus(422);
+        $this->postJson('/api/builder/characters', ['name' => 'R', 'config' => $this->config($this->baseParts()) + ['rig' => ['up' => ['joints' => $cfg['rig']['front']['joints']]]]], $this->h($u))->assertStatus(422);
     }
 }

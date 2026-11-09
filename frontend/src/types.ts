@@ -94,6 +94,10 @@ export interface SceneBoard {
   location?: string
   summary?: string
   dialog?: { id: string; who: string; text: string }[]
+  /** who else is in the scene without speaking (a crowd): the auto-director places them behind the speakers */
+  cast?: string[]
+  /** what happens without words, at `at` seconds into the scene: an action ("Uki melambai") or a sound effect ("bel"); the auto-director acts them out */
+  beats?: { at: number; action?: string; sfx?: string }[]
 }
 
 /** One scene of the film. */
@@ -132,6 +136,8 @@ export interface ProjectDoc {
   audio: AudioClip[]
   auto_generated?: boolean
   characters?: string[]
+  /** lower-case character name -> Character Builder id: which of several same-named characters the film uses */
+  character_ids?: Record<string, number>
 }
 
 export interface Project {

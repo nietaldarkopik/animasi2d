@@ -114,12 +114,12 @@ class UpscaleTest extends TestCase
         $done = $this->getJson('/api/ai/jobs/'.$job['id'], $this->h($u))->json('data');
         $this->assertSame('done', $done['status'], (string) $done['error']);
         $hd = $done['result']['asset'];
-        $this->assertSame([120, 160], [$hd['width'], $hd['height']]);
+        $this->assertSame([1600, 3200], [$hd['width'], $hd['height']], 'a part stays on the standard canvas, 2x bigger'); // 60x80 upload -> conformed 800x1600 -> HD 2x
         $this->assertSame('Topi kecil (HD 2x)', $hd['name']);
         $this->assertSame('hat', $hd['category']);
         $this->assertContains('hd', $hd['tags']);
         $this->assertSame($own['id'], LibraryAsset::find($hd['id'])->meta['upscaled_from']);
-        $this->assertSame(60, LibraryAsset::find($own['id'])->width, 'original is untouched');
+        $this->assertSame(800, LibraryAsset::find($own['id'])->width, 'original is untouched');
     }
 
     public function test_library_upscale_rules_and_isolation(): void
@@ -140,7 +140,7 @@ class UpscaleTest extends TestCase
         $v = $this->post('/api/library/assets', ['file' => new UploadedFile($svg, 'a.svg', 'image/svg+xml', null, true), 'category' => 'hat', 'name' => 'vektor'], $this->h($u))->json('data');
         $this->postJson("/api/library/assets/{$v['id']}/upscale", ['factor' => 2], $this->h($u))->assertStatus(422)->assertSee('vektor');
 
-        $big = $this->post('/api/library/assets', ['file' => $this->png(1200, 100), 'category' => 'hat', 'name' => 'besar'], $this->h($u))->json('data');
+        $big = $this->post('/api/library/assets', ['file' => $this->png(1200, 100), 'category' => 'bg_school', 'name' => 'besar'], $this->h($u))->json('data'); // not a part: no standard canvas, so the 1100 px limit applies
         $this->postJson("/api/library/assets/{$big['id']}/upscale", ['factor' => 2], $this->h($u))->assertStatus(422);
 
         config(['services.upscaler.bin' => '/definitely/not/here']);

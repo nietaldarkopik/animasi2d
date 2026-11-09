@@ -46,14 +46,17 @@ export function ExportDialog({ projectId, studio, onClose }: { projectId: number
     return () => clearInterval(t)
   }, [active]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // headless / automatic runs (?auto_export=1) read the result from these window flags. Only an export that was started by THIS run
+  // counts: an older (maybe failed) export of the same project must not be reported as the outcome.
+  const autoMode = typeof window !== 'undefined' && window.location.search.includes('auto_export=1')
+  const autoBase = useRef<number | null>(null)
   useEffect(() => {
+    if (!autoMode) return
     const latest = history[0]
-    if (latest && latest.status === 'done') {
-      ;(window as any).__EXPORT_DONE__ = latest
-    } else if (latest && latest.status === 'failed') {
-      ;(window as any).__EXPORT_FAILED__ = latest.error || 'Export gagal'
-    }
-  }, [history])
+    if (!latest || autoBase.current === null || latest.id <= autoBase.current) return
+    if (latest.status === 'done') (window as any).__EXPORT_DONE__ = latest
+    else if (latest.status === 'failed') (window as any).__EXPORT_FAILED__ = latest.error || 'Export gagal'
+  }, [history, autoMode])
 
   useEffect(() => {
     if (window.location.search.includes('auto_export=1')) {
@@ -66,6 +69,7 @@ export function ExportDialog({ projectId, studio, onClose }: { projectId: number
 
   async function start() {
     setError('')
+    if (autoMode) autoBase.current = (await api.exports(projectId).catch(() => []))[0]?.id ?? 0 // exports that already exist are not ours
     const sc = studio.current
     if (!sc) return setError('Kanvas belum siap.')
     const ev = (n: number, lo: number, hi: number) => Number.isFinite(n) && n >= lo && n <= hi

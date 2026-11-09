@@ -28,9 +28,14 @@ export function ProjectsPage() {
     }
   }
 
-  async function create(e: FormEvent) {
+  async function create(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (!name.trim()) return
+    if (!name.trim()) {
+      setError('Isi dulu nama project, lalu klik Buat project.')
+      e.currentTarget.querySelector('input')?.focus()
+      return
+    }
+    setError('')
     try {
       const p = await api.createProject(name.trim())
       nav(`/projects/${p.id}`)

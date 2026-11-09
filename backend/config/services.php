@@ -70,5 +70,12 @@ return [
         'probe' => env('FFPROBE_BIN') ?: 'ffprobe',
     ],
 
-];
 
+    // clipper-tool: unggah otomatis film kartun ke YouTube (cartoon:generate-daily --publish)
+    'clipper' => [
+        'path' => env('CLIPPER_PATH'),
+        'account' => env('CLIPPER_YOUTUBE_ACCOUNT'),
+        'privacy' => env('CLIPPER_PRIVACY', 'private'),
+    ],
+
+];

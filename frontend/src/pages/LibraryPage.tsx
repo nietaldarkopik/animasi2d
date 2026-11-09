@@ -2,18 +2,42 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api, setToken } from '../api'
 import { absUrl } from '../builder/render'
-import type { LibAsset, LibCategory } from '../builder/types'
+import type { DesignFamilyInfo, Facing, LibAsset, LibCategory } from '../builder/types'
+import { isFullCanvas, SLOT_ANCHORS } from '../builder/spec'
+import { summarize } from '../builder/validation'
 import { AppNav } from '../components/AppNav'
 import { AssetEditDialog } from '../components/AssetEditDialog'
 import { ImageToSvgDialog } from '../components/ImageToSvgDialog'
 
+const FACINGS: [Facing, string][] = [['front', 'Depan'], ['right', 'Kanan'], ['left', 'Kiri'], ['back', 'Belakang']]
 const CHECKER = 'repeating-conic-gradient(#2b2f3a 0 25%, #20232c 0 50%) 0 0 / 14px 14px'
 
 function Thumb({ a, size = 120 }: { a: LibAsset; size?: number }) {
   const bg = a.category.startsWith('bg_')
+  const an = SLOT_ANCHORS[a.category]
+  const k = size / Math.max((an?.maxW ?? 260) * 1.15, 110)
   return (
-    <div style={{ width: size, height: bg ? size * 0.5625 : size * 1.3, background: CHECKER, borderRadius: 6, overflow: 'hidden', border: '1px solid var(--border)' }}>
-      <img src={absUrl(a.url)} alt={a.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+    <div style={{ position: 'relative', width: size, height: bg ? size * 0.5625 : size * 1.3, background: CHECKER, borderRadius: 6, overflow: 'hidden', border: '1px solid var(--border)' }}>
+      {an && isFullCanvas(a)
+        // parts live on the shared 400x800 canvas: zoom to the region of their slot so the art fills the tile
+        ? <>
+            <img src={absUrl(a.url)} alt={a.name} loading="lazy" draggable={false} style={{ position: 'relative', maxWidth: 'none', width: 400 * k, height: 800 * k, left: size / 2 - an.cx * k, top: size * 0.65 - an.cy * k }} />
+            {a.mirror && <img src={absUrl(a.url)} alt="" aria-hidden loading="lazy" draggable={false} style={{ position: 'absolute', maxWidth: 'none', width: 400 * k, height: 800 * k, left: size / 2 - an.cx * k, top: size * 0.65 - an.cy * k, transform: 'scaleX(-1)' }} />}
+          </>
+        : <img src={absUrl(a.url)} alt={a.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />}
+    </div>
+  )
+}
+
+/** The design-template findings of a part (review list): what is wrong, and a button to check again after fixing the file. */
+function Findings({ a, onRecheck }: { a: LibAsset; onRecheck: () => void }) {
+  const s = summarize(a.validation)
+  if (s.level === 'ok') return a.validation ? <p className="small" style={{ margin: '0 0 4px', color: 'var(--ok)' }}>✓ Lolos validasi template</p> : null
+  return (
+    <div className="small" style={{ margin: '0 0 6px' }}>
+      <strong style={{ color: s.level === 'error' ? 'var(--danger, #e5484d)' : 'var(--warn, #d9a40e)' }}>{s.level === 'error' ? '✗ Belum lolos validasi' : '! Catatan validasi'}</strong>
+      <ul style={{ margin: '2px 0', paddingLeft: 16 }}>{s.messages.map((m, i) => <li key={i}>{m}</li>)}</ul>
+      <button className="link" onClick={onRecheck}>Periksa ulang</button>
     </div>
   )
 }
@@ -37,6 +61,9 @@ export function LibraryPage() {
   const [upCat, setUpCat] = useState('hat')
   const [upName, setUpName] = useState('')
   const [upTags, setUpTags] = useState('')
+  const [upView, setUpView] = useState<Facing>('front')
+  const [upFamily, setUpFamily] = useState('')
+  const [families, setFamilies] = useState<Record<string, DesignFamilyInfo>>({})
   const [busy, setBusy] = useState(false)
 
   // AI
@@ -44,10 +71,13 @@ export function LibraryPage() {
   const [trace, setTrace] = useState<File | null>(null)
   const traceInput = useRef<HTMLInputElement>(null)
   const [aiPrompt, setAiPrompt] = useState('')
+  const [aiView, setAiView] = useState<Facing>('front')
+  const [aiChar, setAiChar] = useState('')
   const [aiState, setAiState] = useState<'idle' | 'working'>('idle')
   const alive = useRef(true)
 
   useEffect(() => { document.title = 'Library Aset — Cartoon Maker AI'; alive.current = true; return () => { alive.current = false } }, [])
+  useEffect(() => { api.designTemplate().then((t) => setFamilies(t.families)).catch(() => {}) }, [])
   useEffect(() => { api.libCategories().then(setCats).catch((e) => setError(e.message)) }, [])
   useEffect(() => { api.enhanceModes().then((r) => { const m = r.modes.find((x) => x.id === 'upscale_ai'); setUpscaler({ available: !!m?.available, reason: m?.unavailable_reason }) }).catch(() => {}) }, [])
 
@@ -67,7 +97,7 @@ export function LibraryPage() {
     if (!upName.trim()) return setError('Isi nama aset.')
     setBusy(true); setError(''); setNote('')
     try {
-      await api.libUpload(f, upCat, upName.trim(), upTags)
+      await api.libUpload(f, upCat, upName.trim(), upTags, upView, upFamily)
       setNote('Aset diunggah.'); setUpName(''); setUpTags(''); if (file.current) file.current.value = ''
       load()
     } catch (err) { setError((err as Error).message) } finally { setBusy(false) }
@@ -78,7 +108,7 @@ export function LibraryPage() {
     if (aiPrompt.trim().length < 3) return setError('Tulis deskripsi aset (min. 3 huruf).')
     setAiState('working'); setError(''); setNote('')
     try {
-      const job = await api.libGenerate(aiCat, aiPrompt.trim())
+      const job = await api.libGenerate(aiCat, aiPrompt.trim(), aiView, aiChar.trim() || undefined)
       for (;;) {
         await new Promise((r) => setTimeout(r, 2000))
         if (!alive.current) return
@@ -146,10 +176,18 @@ export function LibraryPage() {
         <div className="grid2" style={{ alignItems: 'start', gap: 16 }}>
           <form className="card" onSubmit={upload}>
             <h2 style={{ marginTop: 0 }}>Unggah manual</h2>
-            <p className="muted small">SVG (disanitasi otomatis; kanvas karakter 400×800 agar langsung pas) atau PNG/JPEG/WebP (diposisikan otomatis, bisa digeser di builder).</p>
+            <p className="muted small">Bagian karakter apa pun (SVG, PNG, JPEG, WebP, ukuran bebas) otomatis dipas ke format standar slot-nya: kanvas 400×800, ukuran dan posisi tetap, sehingga bisa ditukar dengan bagian lain tanpa resize.</p>
             <label className="field"><span>File</span><input ref={file} type="file" accept=".svg,image/svg+xml,image/png,image/jpeg,image/webp" /></label>
             <label className="field"><span>Kategori</span>
               <select value={upCat} onChange={(e) => setUpCat(e.target.value)}>{cats.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}</select>
+            </label>
+            <label className="field"><span>Menghadap</span>
+              <select value={upView} onChange={(e) => setUpView(e.target.value as Facing)}>{FACINGS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
+            </label>
+            <label className="field"><span>Keluarga desain</span>
+              <select value={upFamily} onChange={(e) => setUpFamily(e.target.value)} title="Bagian yang digambar bersama (lembar laki-laki, lembar perempuan, kit…): hanya dibandingkan dengan bagian sekeluarga">
+                <option value="">Otomatis (dari nama)</option>{Object.entries(families).map(([id, f]) => <option key={id} value={id}>{f.label}</option>)}
+              </select>
             </label>
             <label className="field"><span>Nama</span><input value={upName} maxLength={120} onChange={(e) => setUpName(e.target.value)} /></label>
             <label className="field"><span>Tag (pisahkan koma)</span><input value={upTags} maxLength={200} onChange={(e) => setUpTags(e.target.value)} placeholder="topi, sekolah" /></label>
@@ -162,10 +200,14 @@ export function LibraryPage() {
 
           <form className="card" onSubmit={generate}>
             <h2 style={{ marginTop: 0 }}>AI Asset Studio</h2>
-            <p className="muted small">Model AI menulis SVG di kanvas karakter yang sama. Hasil disanitasi lalu <strong>menunggu review</strong>; kualitas bervariasi, jadi periksa sebelum menyetujui.</p>
+            <p className="muted small">Semua bagian dibuat dengan gaya anime yang sama dan otomatis dipas ke format standar bagian (kanvas 400×800, posisi tetap per slot) agar bisa ditukar tanpa resize. Model AI menulis SVG di kanvas karakter yang sama. Hasil disanitasi lalu <strong>menunggu review</strong>; kualitas bervariasi, jadi periksa sebelum menyetujui.</p>
             <label className="field"><span>Kategori</span>
               <select value={aiCat} onChange={(e) => setAiCat(e.target.value)}>{cats.filter((c) => c.kind === 'part' || c.kind === 'background').map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}</select>
             </label>
+            <label className="field"><span>Menghadap</span>
+              <select value={aiView} onChange={(e) => setAiView(e.target.value as Facing)}>{FACINGS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
+            </label>
+            <label className="field"><span>Karakter (opsional)</span><input value={aiChar} maxLength={200} onChange={(e) => setAiChar(e.target.value)} placeholder="female, teenager, slim" /></label>
             <label className="field"><span>Deskripsi</span>
               <textarea rows={3} value={aiPrompt} maxLength={400} onChange={(e) => setAiPrompt(e.target.value)} placeholder={cats.find((c) => c.slug === aiCat)?.kind === 'background' ? 'Perpustakaan sekolah dengan rak buku dan meja baca' : 'Topi rimba hijau dengan tali dagu'} />
             </label>
@@ -181,6 +223,7 @@ export function LibraryPage() {
                 <div key={a.id} style={{ width: 150 }}>
                   <Thumb a={a} size={150} />
                   <div className="small" style={{ margin: '4px 0' }}><strong>{a.name}</strong><br /><span className="muted">{a.category}{a.meta?.model ? ` · ${a.meta.model}` : ''}</span></div>
+                  <Findings a={a} onRecheck={async () => { try { await api.libValidate(a.id); load() } catch (e) { setError((e as Error).message) } }} />
                   <div className="row"><button className="primary" onClick={() => void review(a, 'approved')}>Setujui</button><button onClick={() => void review(a, 'rejected')}>Tolak</button></div>
                 </div>
               ))}
@@ -211,7 +254,7 @@ export function LibraryPage() {
                   <Thumb a={a} />
                   <div className="small" style={{ marginTop: 4 }}>
                     {a.name}
-                    <div className="muted">{partCats.concat(cats).find((c) => c.slug === a.category)?.name}{a.source !== 'system' ? ` · ${a.source}` : ''}{a.status === 'pending' ? ' · pending' : ''}</div>
+                    <div className="muted">{partCats.concat(cats).find((c) => c.slug === a.category)?.name}{a.source !== 'system' ? ` · ${a.source}` : ''}{a.status === 'pending' ? ' · pending' : ''}{a.family && a.family !== 'general' && families[a.family] ? ` · ${families[a.family].label}` : ''}{summarize(a.validation).level !== 'ok' ? <span title={summarize(a.validation).messages.join('\n')} style={{ color: summarize(a.validation).level === 'error' ? 'var(--danger, #e5484d)' : 'var(--warn, #d9a40e)' }}> · ⚠ validasi</span> : null}</div>
                   </div>
                   {a.mine && a.mime !== 'image/svg+xml' && Math.max(a.width, a.height) <= 1100 && (
                     <div className="row" style={{ gap: 4, margin: '2px 0' }}>

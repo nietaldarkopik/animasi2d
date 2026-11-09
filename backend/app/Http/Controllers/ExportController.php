@@ -36,7 +36,7 @@ class ExportController extends Controller
             'height' => 'required|integer|min:64|max:2160',
             'fps' => 'required|integer|min:1|max:60',
             'file' => 'required|file|max:512000',
-            'audio' => 'nullable|string|max:8000', // JSON: [{asset_id, start, volume}]
+            'audio' => 'nullable|string|max:40000', // JSON: [{asset_id, start, volume}]
             'transparent' => 'nullable|boolean', // png_sequence only: file is a ZIP of PNG frames rendered with alpha
             'max_frames' => 'nullable|integer|min:1|max:400', // sprite_sheet only
         ]);
@@ -45,7 +45,7 @@ class ExportController extends Controller
         if (in_array($data['format'], ['webm', 'mp4'], true) && ! empty($data['audio'])) {
             $decoded = json_decode($data['audio'], true);
             $v = \Illuminate\Support\Facades\Validator::make(['audio' => $decoded], [
-                'audio' => 'required|array|max:20',
+                'audio' => 'required|array|max:200',
                 'audio.*.asset_id' => 'required|integer',
                 'audio.*.start' => 'required|numeric|min:0|max:7200',
                 'audio.*.volume' => 'required|numeric|min:0|max:1',

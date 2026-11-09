@@ -1,4 +1,4 @@
-import type { CharacterConfig, LibAsset, Palette, PartRef } from './types'
+import type { CharacterConfig, Facing, LibAsset, Palette, PartRef } from './types'
 
 /** Shared full-body character canvas. Half body = the same canvas, cropped (no asset is drawn twice). */
 export const CANVAS = { w: 400, h: 800 }
@@ -59,6 +59,14 @@ export function tintSvg(svg: string, palette: Palette): string {
   })
 }
 
+/**
+ * The right shoe of a mirrored single shoe is its own part, "shoes_r": same asset as "shoes" (the left foot), flipped about x=200, with
+ * its OWN offset/scale/rotation, so each shoe can be placed under its leg separately (Shift-click both to move them together).
+ */
+export const RIGHT_SHOE = 'shoes_r'
+/** The category (library slot) a part belongs to: only the right shoe is an alias. */
+export const baseSlot = (slot: string) => (slot === RIGHT_SHOE ? 'shoes' : slot)
+
 export interface Placement {
   /** top-left + size of the image, in canvas units, before the part transform */
   x: number; y: number; w: number; h: number
@@ -69,8 +77,8 @@ export interface Placement {
   rot: number
 }
 
-export function placement(slot: string, asset: Pick<LibAsset, 'width' | 'height'>, ref: Pick<PartRef, 'dx' | 'dy' | 'scale' | 'rot'>): Placement {
-  const a = SLOT_ANCHORS[slot] ?? { cx: 200, cy: 400, maxW: 260 }
+export function placement(slot: string, asset: Pick<LibAsset, 'width' | 'height'> & { mirror?: { px: number; py: number } | null }, ref: Pick<PartRef, 'dx' | 'dy' | 'scale' | 'rot'>): Placement {
+  const a = SLOT_ANCHORS[baseSlot(slot)] ?? { cx: 200, cy: 400, maxW: 260 }
   const base = isFullCanvas(asset)
     ? { x: 0, y: 0, w: CANVAS.w, h: CANVAS.h }
     : (() => {
@@ -78,16 +86,33 @@ export function placement(slot: string, asset: Pick<LibAsset, 'width' | 'height'
         const w = asset.width * k, h = asset.height * k
         return { x: a.cx - w / 2, y: a.cy - h / 2, w, h }
       })()
-  return { ...base, px: a.cx, py: a.cy, dx: ref.dx ?? 0, dy: ref.dy ?? 0, scale: ref.scale ?? 1, rot: ref.rot ?? 0 }
+  // a mirrored single shoe turns, grows and moves about ITS OWN centre (so it keeps matching the leg above it), not about the pair centre
+  // (the right shoe pivots about the mirror image of that centre)
+  const pv = asset.mirror ? { x: slot === RIGHT_SHOE ? CANVAS.w - asset.mirror.px : asset.mirror.px, y: asset.mirror.py } : { x: a.cx, y: a.cy }
+  return { ...base, px: pv.x, py: pv.y, dx: ref.dx ?? 0, dy: ref.dy ?? 0, scale: ref.scale ?? 1, rot: ref.rot ?? 0 }
 }
 
 /** Parts in drawing order (back to front), using the category z_order from the API (and per-part overrides). */
 export function drawOrder(config: CharacterConfig, zOf: (slot: string) => number): string[] {
-  return Object.keys(config.parts).sort((a, b) => effectiveZ(config, a, zOf) - effectiveZ(config, b, zOf) || zOf(a) - zOf(b))
+  return Object.keys(config.parts).sort((a, b) => effectiveZ(config, a, zOf) - effectiveZ(config, b, zOf) || defaultZ(config.facing, a, zOf) - defaultZ(config.facing, b, zOf))
 }
 
-/** z used for stacking: the part's override, else the category order. */
-export const effectiveZ = (config: CharacterConfig, slot: string, zOf: (slot: string) => number) => config.parts[slot]?.z ?? zOf(slot)
+/**
+ * Where a part sits in the stack depends on the direction the character faces: from behind the hair falls OVER the clothes, from the side
+ * the arms are in front of or behind the body. The category order (`zOf`) is the front view; other directions start from it with these.
+ */
+export function defaultZ(facing: Facing | undefined, slot: string, zOf: (slot: string) => number): number {
+  const base = baseSlot(slot)
+  if (facing === 'back' && (base === 'hair_front' || base === 'hair_back')) return zOf('top') + (base === 'hair_front' ? 0.6 : 0.5)
+  return zOf(base)
+}
+
+/** z used for stacking: the override for the direction the character faces, else the part's general override (front only), else the default. */
+export function effectiveZ(config: CharacterConfig, slot: string, zOf: (slot: string) => number): number {
+  const f = config.facing ?? 'front'
+  const p = config.parts[slot]
+  return p?.zv?.[f] ?? (f === 'front' ? p?.z : undefined) ?? defaultZ(f, slot, zOf)
+}
 
 /** Behind the body (category z 2) but in front of the back hair (z 1). */
 export const BACK_Z = 1.1
@@ -113,7 +138,7 @@ export function layerEntries(config: CharacterConfig, zOf: (slot: string) => num
       out.push({ slot, pass: 'front', z, clipToY: p.split })
     } else out.push({ slot, pass: 'whole', z })
   }
-  return out.sort((a, b) => a.z - b.z || zOf(a.slot) - zOf(b.slot) || (a.pass === 'back' ? -1 : 0) - (b.pass === 'back' ? -1 : 0))
+  return out.sort((a, b) => a.z - b.z || defaultZ(config.facing, a.slot, zOf) - defaultZ(config.facing, b.slot, zOf) || (a.pass === 'back' ? -1 : 0) - (b.pass === 'back' ? -1 : 0))
 }
 
 /**

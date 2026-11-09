@@ -1,0 +1,72 @@
+{
+  "title": "Tetangga Baru Uki: Beasiswa dari Pak Suga",
+  "theme": "Rezeki datang lewat silaturahmi dan kebaikan keluarga",
+  "scenes": [
+    {
+      "name": "Dipanggil Tetangga",
+      "location": "Taman",
+      "time": "sore",
+      "dialog": [
+        { "who": "Pak Suga", "text": "Nak, tunggu sebentar! Kamu anak yang tinggal di rumah sebelah, ya?" },
+        { "who": "Uki", "text": "Iya, Pak. Saya Uki. Saya baru pulang dari sekolah." },
+        { "who": "Pak Suga", "text": "Perkenalkan, nama saya Suga. Kami baru pindah ke rumah ini minggu lalu." }
+      ]
+    },
+    {
+      "name": "Ternyata Kepala Sekolah",
+      "location": "Taman",
+      "time": "sore",
+      "dialog": [
+        { "who": "Uki", "text": "Wah, senang berkenalan dengan Bapak. Bapak bekerja di mana?" },
+        { "who": "Pak Suga", "text": "Saya kepala sekolah di SMK Informatika." },
+        { "who": "Uki", "text": "Hah?! Kepala sekolah SMK Informatika? Saya baru saja lulus ujian saringan di sana, Pak!" },
+        { "who": "Pak Suga", "text": "Oh, jadi kamu anak yang lulus dengan nilai pas-pasan itu? Hahaha, tidak apa-apa!" }
+      ]
+    },
+    {
+      "name": "Beasiswa Penuh",
+      "location": "Ruang tamu",
+      "time": "sore",
+      "dialog": [
+        { "who": "Bu Tina", "text": "Silakan duduk, Nak Uki. Ini istri saya, Bu Tina." },
+        { "who": "Pak Suga", "text": "Uki, Bapak punya kabar baik. Kamu mendapat beasiswa penuh di sekolah kami." },
+        { "who": "Uki", "text": "Benarkah, Pak? Sekolahnya gratis?" },
+        { "who": "Pak Suga", "text": "Betul. Semua biaya masuk dan SPP ditanggung beasiswa. Belajarlah yang rajin, ya." },
+        { "who": "Uki", "text": "Alhamdulillah! Terima kasih banyak, Pak. Saya akan belajar sungguh-sungguh!" }
+      ]
+    },
+    {
+      "name": "Bu Tina Mengenal Bapak Uki",
+      "location": "Ruang tamu",
+      "time": "sore",
+      "dialog": [
+        { "who": "Bu Tina", "text": "Nak Uki, nama ayahmu siapa? Wajahmu mirip seseorang yang Ibu kenal." },
+        { "who": "Uki", "text": "Nama ayah saya Pak Darmawan, Bu." },
+        { "who": "Bu Tina", "text": "Ya ampun, Pak Darmawan? Beliau teman baik Ibu waktu kuliah dulu!" },
+        { "who": "Uki", "text": "Wah, benarkah, Bu? Ayah pasti senang mendengarnya." },
+        { "who": "Pak Suga", "text": "Dunia memang sempit. Ajak ibumu datang ke sini malam ini, ya." }
+      ]
+    },
+    {
+      "name": "Menuju Rumah Pak Suga",
+      "location": "Jalan raya",
+      "time": "malam",
+      "dialog": [
+        { "who": "Ibu Uki", "text": "Uki, rumah Pak Suga masih jauh, Nak?" },
+        { "who": "Uki", "text": "Sudah dekat, Bu. Itu rumahnya, yang lampunya menyala." }
+      ]
+    },
+    {
+      "name": "Makan Malam Bersama",
+      "location": "Ruang tamu",
+      "time": "malam",
+      "dialog": [
+        { "who": "Bu Tina", "text": "Selamat datang, Bu! Saya Tina, teman kuliah Pak Darmawan, suami Ibu, dulu." },
+        { "who": "Ibu Uki", "text": "Bu Tina? Masya Allah, sudah lama sekali kita tidak bertemu!" },
+        { "who": "Pak Suga", "text": "Silakan duduk. Terima kasih sudah datang. Anak Ibu sangat sopan dan cerdas." },
+        { "who": "Ibu Uki", "text": "Terima kasih, Pak, atas beasiswanya. Kami sekeluarga sangat bersyukur." },
+        { "who": "Uki", "text": "Saya janji tidak akan mengecewakan Bapak dan Ibu semua!" }
+      ]
+    }
+  ]
+}

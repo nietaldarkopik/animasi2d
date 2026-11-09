@@ -15,10 +15,35 @@ use RuntimeException;
  */
 class RasterAssetGenerator
 {
+    /** The master art style: the same text for every generated part, so every asset keeps one visual identity. */
     public const STYLE = <<<'TXT'
-FIXED ART STYLE - MUST REMAIN IDENTICAL FOR EVERY GENERATION:
-Polished 2D anime-inspired cartoon illustration, matching a consistent school-life webcomic aesthetic. Bold, clean, dark brown-black outlines with consistent line thickness. Smooth, carefully controlled linework. Rich colors, subtle warm highlights, cel-shaded shadows, soft glossy reflections, and detailed but clean shapes. Attractive, natural shapes with professional game-asset quality. Soft lighting, refined contours, and consistent visual proportions. Front-facing orthographic view, no perspective distortion.
+MASTER ART STYLE - CONSISTENT JAPANESE ANIME
+
+Create a professional 2D Japanese anime character illustration using a consistent, high-quality anime art style. Maintain the same visual identity across all generated characters and body parts.
+
+Visual style:
+Modern Japanese anime, clean delicate line art, smooth confident outlines, expressive anime eyes, stylized facial features, attractive anime proportions, carefully detailed hair strands, polished cel shading, soft controlled shadows, clean flat colors, smooth edges, crisp shapes, professional anime character-sheet quality. Balanced proportions, visually appealing design, consistent line weight, consistent shading technique, and harmonious color rendering.
+
+Design rules:
+- Preserve the same art style, line quality, shading, proportions, and rendering technique for every generation.
+- Use clear, well-defined shapes and distinct color regions.
+- Keep details clean and readable, suitable for vector conversion and 2D animation.
+- Follow the specified character attributes, anatomy, clothing, colors, hairstyle, facial features, and accessories exactly.
+- Do not invent additional clothing, accessories, or details that were not requested.
+- When generating an individual body part, draw only the specified part while preserving the same anime design language and visual proportions as the complete character.
+- For isolated assets, use a plain white or transparent background as requested, with no unnecessary objects.
+
+Output requirements:
+Clean 2D anime illustration, animation-asset-friendly design, sharp outlines, no text, no watermark, no photorealism, no 3D rendering, no Western cartoon style, no chibi style, no sketchy unfinished lines, no inconsistent proportions, no excessive gradients, and no unnecessary background elements.
 TXT;
+
+    /** English wording of the four directions a part can face. */
+    private const VIEW = [
+        'front' => 'front view (facing the viewer, symmetrical, orthographic)',
+        'right' => "side view, the character facing the viewer's right (orthographic profile)",
+        'left' => "side view, the character facing the viewer's left (orthographic profile)",
+        'back' => 'back view (seen from behind, orthographic)',
+    ];
 
     /** English description of each component, used as {COMPONENT} in the template. */
     private const COMPONENT = [
@@ -48,37 +73,47 @@ TXT;
         return RemoteImageProvider::available();
     }
 
-    public function prompt(AssetCategory $category, string $variation): string
+    public function prompt(AssetCategory $category, string $variation, string $view = 'front', ?string $character = null): string
     {
         $part = self::COMPONENT[$category->slug] ?? mb_strtolower($category->name);
         $isBg = $category->kind === 'background';
 
         if ($isBg) {
-            return self::STYLE."\n\nCreate a 2D cartoon background scene for a school-life animation: {$variation}.\nNo characters, no text, no watermark. Wide 16:9 composition, a clear floor area in the lower third where characters can stand. Same art direction as all previous backgrounds.";
+            return self::STYLE."\n\nCreate a 2D anime background scene for a school-life animation: {$variation}.\nNo characters, no text, no watermark. Wide 16:9 composition, a clear floor area in the lower third where characters can stand. Same art direction as all previous backgrounds.";
         }
 
-        return "Create a high-quality modular 2D cartoon {$part} asset for a professional character creator application.\n\n".self::STYLE."\n\n"
+        $viewText = self::VIEW[$view] ?? self::VIEW['front'];
+        $anchors = SlotTemplate::ANCHORS[$category->slug] ?? null;
+        $slot = $anchors
+            ? sprintf("This part belongs to a fixed character template (a 400x800 full-body canvas). Its standard size is about %d units wide, centred at x=%d, y=%d of 800; the app places every asset of this slot at the same spot, so it must replace any other {$part} without resizing.", $anchors['maxW'], $anchors['cx'], $anchors['cy'])
+            : '';
+
+        return self::STYLE."\n\n"
+            ."CUSTOM PARAMETERS:\n"
+            .'[CHARACTER]: '.($character ?: 'same character template as every other part (standard anime proportions)')."\n"
+            ."[POSE]: neutral standing pose\n"
+            ."[BODY PART]: {$part}\n"
+            ."[VIEW]: {$viewText}\n"
+            ."[BACKGROUND]: transparent\n"
+            ."[EXTRA REQUIREMENTS]: {$variation}\n\n"
             ."MODULAR ASSET RULES:\n"
-            ."- Generate ONLY the requested {$part} component.\n"
-            ."- It must fit the same standardized character template across all variations.\n"
+            ."- Generate ONLY the requested {$part}; nothing else.\n"
+            ."- {$slot}\n"
+            ."- Draw it exactly as it would sit on the full character, same scale and angle as the complete character in the {$viewText}.\n"
             ."- Any area that belongs to other parts (face interior, eyes, nose, mouth, body) must stay completely transparent.\n"
-            ."- Do not generate a complete character, other body parts, clothes (unless requested), or a background.\n"
-            ."- Keep a clean, recognizable silhouette suitable for mixing and matching, centered on the canvas.\n"
             ."- Genuine transparent alpha background, not black, white, or checkerboard pixels.\n"
-            ."- No text, labels, watermark, extra objects, or decorative elements.\n"
-            ."- Keep outline style, shading, highlights, color treatment and rendering quality identical across all assets.\n\n"
-            ."VARIATION:\n{$variation}\n\n"
-            ."OUTPUT: single isolated asset, high-resolution PNG with transparent alpha channel, full item visible, clean edges, production-ready for a layered 2D cartoon character builder.";
+            ."- Keep outline weight, shading, highlights, and color treatment identical across all assets.\n\n"
+            .'OUTPUT: single isolated asset, high-resolution PNG with transparent alpha channel, full item visible, clean edges, production-ready for a layered 2D character builder.';
     }
 
     /** @return array{png: string, width: int, height: int, model: string, prompt: string} */
-    public function generate(AssetCategory $category, string $variation): array
+    public function generate(AssetCategory $category, string $variation, string $view = 'front', ?string $character = null): array
     {
         if (! self::available()) {
             throw new RuntimeException('Provider gambar AI belum dikonfigurasi.');
         }
         $isBg = $category->kind === 'background';
-        $prompt = $this->prompt($category, $variation);
+        $prompt = $this->prompt($category, $variation, $view, $character);
 
         try {
             $body = [

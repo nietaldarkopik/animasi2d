@@ -1,0 +1,83 @@
+{
+  "title": "MOS SMK Informatika: Hari Pertama Uki",
+  "character_ids": { "uki": 64, "sekar": 69, "pak suga": 55, "bu tina": 56, "kris": 28, "jajang": 30, "ono": 31, "pei": 32, "hilman": 33, "udin": 34, "obi": 35, "arum": 36, "pitri": 37, "mili": 38, "meimei": 39, "karom": 40, "riska": 41, "ines": 42, "fajar": 70 },
+  "theme": "Masa Orientasi Siswa: berkenalan dengan sekolah, guru, dan teman baru",
+  "scenes": [
+    {
+      "name": "Upacara pembukaan MOS",
+      "location": "Lapangan upacara",
+      "time": "pagi",
+      "cast": ["Bu Tina", "Sekar", "Kris", "Jajang", "Arum", "Pitri", "Ono", "Mili", "Hilman", "Riska", "Udin", "Ines"],
+      "dialog": [
+        { "who": "Narator", "text": "Senin pagi, lapangan SMK Informatika penuh siswa baru berseragam putih abu-abu. Hari ini Masa Orientasi Siswa dimulai." },
+        { "who": "Pak Suga", "text": "Selamat pagi, anak-anak! Selamat datang di SMK Informatika. Mulai hari ini kalian adalah keluarga besar sekolah ini." },
+        { "who": "Uki", "text": "Wah, ternyata Pak Suga guru di sini. Pantas beliau tahu sekolah ini gratis." },
+        { "who": "Pak Suga", "text": "Selama tiga hari kalian akan mengenal sekolah, para guru, dan teman-teman baru. Tidak ada perpeloncoan, yang ada belajar dan bersenang-senang!" },
+        { "who": "Sekar", "text": "Syukurlah, aku sempat takut disuruh yang aneh-aneh." }
+      ]
+    },
+    {
+      "name": "Perkenalan di kelas",
+      "location": "Ruang kelas",
+      "time": "pagi",
+      "cast": ["Kris", "Jajang", "Arum", "Pitri", "Ono", "Mili", "Meimei", "Karom", "Obi", "Pei"],
+      "dialog": [
+        { "who": "Bu Tina", "text": "Ibu Tina, wali kelas kalian. Ayo, satu per satu perkenalkan diri dan cita-cita kalian." },
+        { "who": "Uki", "text": "Nama saya Uki. Saya ingin jadi programmer yang membuat aplikasi untuk membantu orang tua di kampung." },
+        { "who": "Sekar", "text": "Saya Sekar. Saya suka menggambar, jadi saya ingin belajar desain dan animasi." },
+        { "who": "Kris", "text": "Saya Kris! Cita-cita saya jadi ahli jaringan, supaya internet di desa saya kencang." },
+        { "who": "Bu Tina", "text": "Bagus sekali. Di sini kalian bisa belajar pemrograman, desain, dan jaringan komputer. Semuanya bisa kalian coba." }
+      ]
+    },
+    {
+      "name": "Mengenal lab komputer",
+      "location": "Lab komputer",
+      "time": "siang",
+      "cast": ["Bu Tina", "Sekar", "Jajang", "Hilman", "Udin", "Riska", "Ines", "Meimei", "Fajar"],
+      "dialog": [
+        { "who": "Pak Suga", "text": "Inilah lab komputer. Di sini kalian akan belajar membuat program pertama kalian." },
+        { "who": "Jajang", "text": "Pak, komputernya boleh langsung dicoba?" },
+        { "who": "Pak Suga", "text": "Boleh. Ketik nama kalian, lalu tekan tombol jalankan. Itu program pertama kalian." },
+        { "who": "Uki", "text": "Berhasil! Layarnya menulis: Halo, Uki!" },
+        { "who": "Narator", "text": "Satu per satu siswa baru tersenyum melihat program kecil mereka berjalan." }
+      ]
+    },
+    {
+      "name": "Istirahat di kantin",
+      "location": "Kantin sekolah",
+      "time": "siang",
+      "cast": ["Kris", "Ono", "Pei", "Obi", "Karom", "Mili", "Pitri", "Arum", "Fajar"],
+      "dialog": [
+        { "who": "Narator", "text": "Bel istirahat berbunyi. Kantin langsung ramai oleh siswa baru dan kakak kelas." },
+        { "who": "Sekar", "text": "Uki, ayo duduk di sini. Aku bawa bekal dua, satu untukmu." },
+        { "who": "Uki", "text": "Terima kasih, Sekar. Ternyata teman-teman di sini ramah semua." },
+        { "who": "Ines", "text": "Boleh gabung? Aku Ines dari kelas sebelah. Katanya besok ada lomba membuat poster digital." },
+        { "who": "Sekar", "text": "Wah, itu bagianku! Ayo kita satu kelompok." }
+      ]
+    },
+    {
+      "name": "Tugas kelompok di perpustakaan",
+      "location": "Perpustakaan",
+      "time": "siang",
+      "cast": ["Ines", "Riska", "Meimei", "Hilman", "Udin", "Jajang", "Kris", "Pitri"],
+      "dialog": [
+        { "who": "Bu Tina", "text": "Tugas MOS kalian: buat poster tentang sekolah impian. Kerjakan berkelompok dan saling membantu." },
+        { "who": "Uki", "text": "Aku buat tulisannya, Sekar gambarnya, Ines yang menyusun warnanya. Setuju?" },
+        { "who": "Sekar", "text": "Setuju! Kerja sama lebih cepat daripada sendiri-sendiri." },
+        { "who": "Bu Tina", "text": "Ibu senang melihat kalian kompak. Itu yang paling penting di SMK." }
+      ]
+    },
+    {
+      "name": "Penutupan MOS",
+      "location": "Lapangan upacara",
+      "time": "sore",
+      "cast": ["Bu Tina", "Sekar", "Ines", "Kris", "Jajang", "Arum", "Pitri", "Ono", "Mili", "Hilman", "Riska", "Udin", "Meimei"],
+      "dialog": [
+        { "who": "Pak Suga", "text": "Anak-anak, Masa Orientasi Siswa sudah selesai. Bapak bangga, kalian sudah saling kenal dan saling membantu." },
+        { "who": "Pak Suga", "text": "Poster terbaik dibuat oleh kelompok Uki, Sekar, dan Ines. Beri tepuk tangan!" },
+        { "who": "Uki", "text": "Terima kasih, Pak! Kami siap belajar di SMK Informatika!" },
+        { "who": "Narator", "text": "Hari-hari baru di SMK Informatika pun dimulai, penuh teman, ilmu, dan mimpi besar." }
+      ]
+    }
+  ]
+}

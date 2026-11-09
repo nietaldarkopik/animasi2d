@@ -15,16 +15,16 @@ if errorlevel 1 (
   exit /b 1
 )
 
-rem Periksa apakah server backend berjalan di port 8000
-netstat -ano | findstr /R /C:":8000 .*LISTENING" >nul
+rem Periksa apakah server backend berjalan di port 8010
+netstat -ano | findstr /R /C:":8010 .*LISTENING" >nul
 if errorlevel 1 (
   echo [*] Menyalakan backend Laravel di latar belakang...
-  start "Backend :8000" /min /D "%ROOT%backend" cmd /c php artisan serve
+  start "Backend :8010" /min /D "%ROOT%backend" cmd /c php artisan serve --host=127.0.0.1 --port=8010
   timeout /t 3 /nobreak >nul
 )
 
 rem Periksa apakah queue worker berjalan
-netstat -ano | findstr /R /C:":8000 .*LISTENING" >nul
+netstat -ano | findstr /R /C:":8010 .*LISTENING" >nul
 start "Queue Worker" /min /D "%ROOT%backend" cmd /c php artisan queue:work --tries=1
 
 rem Periksa apakah frontend dev server berjalan di port 5173

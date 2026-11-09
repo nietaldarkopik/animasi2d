@@ -37,6 +37,9 @@ function baseLayer(over: Partial<Layer> & Pick<Layer, 'type' | 'name'>, w: numbe
   return { id: uid(), x: w / 2, y: h / 2, scaleX: 1, scaleY: 1, rotation: 0, opacity: 1, visible: true, locked: false, ...over }
 }
 
+/** films being directed right now, by project (the effect runs twice in development: both wait for the same run instead of preparing every character twice) */
+const directing = new Map<number, ReturnType<typeof api.saveProject>>()
+
 export function EditorPage() {
   const { id } = useParams()
   const projectId = Number(id)
@@ -50,6 +53,8 @@ export function EditorPage() {
   const [zoom, setZoom] = useState(1)
   const [fit, setFit] = useState(true)
   const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [loadingImages, setLoadingImages] = useState(0)
+  const preloadedFor = useRef<number | null>(null)
   const [svgAsset, setSvgAsset] = useState<{ id: number; name: string; url: string } | null>(null)
   const [hand, setHand] = useState(false) // hand tool: dragging pans the canvas
   const [panning, setPanning] = useState(false)
@@ -101,14 +106,18 @@ export function EditorPage() {
         const p = useEditor.getState().currentProject()
         if (p && p.auto_generated) {
           try {
-            const directed = await directCartoonProject(projectId, p)
-            const saved = await api.saveProject(projectId, {
-              document: directed,
-              base_revision: useEditor.getState().revision,
-            })
-            useEditor.getState().adopt(saved)
+            let job = directing.get(projectId)
+            if (!job) {
+              const base = useEditor.getState().revision
+              job = directCartoonProject(projectId, p).then((directed) => api.saveProject(projectId, { document: directed, base_revision: base }))
+              directing.set(projectId, job)
+            }
+            useEditor.getState().adopt(await job)
           } catch (e) {
-            console.warn('Auto direct warning:', e)
+            // (the film would otherwise be exported without its characters, silently)
+            console.error('Auto-director: hasil penataan tidak tersimpan:', e)
+          } finally {
+            directing.delete(projectId)
           }
         }
         if (window.location.search.includes('auto_export=1')) {
@@ -132,6 +141,7 @@ export function EditorPage() {
       onSelectMany: (ids, additive) => useEditor.getState().selectMany(ids, additive),
       onCommit: (lid, patch) => useEditor.getState().setProps(lid, patch),
       onCommitMany: (patches) => useEditor.getState().setPropsMany(patches, 'group-gesture'),
+      onLoading: (n) => setLoadingImages(n),
     })
     studio.current = sc
     canvasRef.current = sc
@@ -157,6 +167,15 @@ export function EditorPage() {
     }
     studio.current?.sync(s.doc, s.assets, st.movie ? null : s.selectedId, s.frame, s.onion && !s.playing && !st.movie, s.showBones, effect, st.movie || s.camPreview, st.movie ? [] : s.selection)
   }, [canvasReady, s.doc, s.assets, s.selectedId, s.selection, s.frame, s.onion, s.playing, s.showBones, s.movie, s.activeSceneId, s.camPreview])
+
+  // once the open scene is fully on screen, quietly fetch the images of the other scenes so switching scenes is instant
+  useEffect(() => {
+    if (!canvasReady || loadingImages > 0 || preloadedFor.current === projectId) return
+    preloadedFor.current = projectId
+    const st = useEditor.getState()
+    const p = st.currentProject()
+    if (p) void studio.current?.preload(p.scenes.flatMap((x) => x.layers), st.assets)
+  }, [canvasReady, loadingImages, projectId])
 
   // playback
   useEffect(() => {
@@ -487,6 +506,7 @@ export function EditorPage() {
           if (e.dataTransfer.files.length) void addImages(e.dataTransfer.files)
         }}
       >
+        {loadingImages > 0 && <div className="toast" role="status" style={{ position: 'absolute', top: 10, left: '50%', transform: 'translateX(-50%)', bottom: 'auto', zIndex: 5 }}>Memuat gambar… {loadingImages} tersisa</div>}
         <div ref={host} className="canvas-host" style={{ transform: `translate(-50%, -50%) translate(${pan.x}px, ${pan.y}px)` }} />
         <div className="zoombar" title="Roda mouse = zoom ke arah kursor · Shift+roda = geser · tombol tengah / Alt+seret / alat tangan = geser kanvas">
           <button onClick={() => zoomBy(1 / 1.25)} aria-label="Perkecil">−</button>

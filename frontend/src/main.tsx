@@ -9,6 +9,8 @@ import { EditorPage } from './pages/EditorPage'
 import { BuilderListPage } from './pages/BuilderListPage'
 import { BuilderPage } from './pages/BuilderPage'
 import { LibraryPage } from './pages/LibraryPage'
+import { StoriesPage } from './pages/StoriesPage'
+import { StoryPage } from './pages/StoryPage'
 import { ErrorBoundary } from './components/ErrorBoundary'
 
 function Guard({ children }: { children: React.ReactElement }) {
@@ -25,6 +27,8 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/builder" element={<Guard><BuilderListPage /></Guard>} />
         <Route path="/builder/:id" element={<Guard><BuilderPage /></Guard>} />
         <Route path="/library" element={<Guard><LibraryPage /></Guard>} />
+        <Route path="/stories" element={<Guard><StoriesPage /></Guard>} />
+        <Route path="/stories/:id" element={<Guard><StoryPage /></Guard>} />
         <Route path="/projects/:id" element={<Guard><EditorPage /></Guard>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

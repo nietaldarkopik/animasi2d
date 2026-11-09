@@ -1,0 +1,210 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>VRM -> 2D parts</title>
+<script type="importmap">
+{ "imports": {
+  "three": "/node_modules/three/build/three.module.js",
+  "three/addons/": "/node_modules/three/examples/jsm/",
+  "@pixiv/three-vrm": "/node_modules/@pixiv/three-vrm/lib/three-vrm.module.js"
+} }
+</script>
+<body style="margin:0;background:#888">
+<script type="module">
+import * as THREE from 'three'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm'
+
+/**
+ * Renders a VRM avatar as standard-format 2D parts: the character canvas of the Character Builder (400 x 800 units, 2 px per unit, ground
+ * at y = 799, centre line x = 200) with a transparent background. Every part is a group of materials (and, for the bare skin, of
+ * triangles by the bone that moves them), drawn alone from one of four directions.
+ */
+const W = 800, H = 1600            // output pixels (2 px per canvas unit)
+const SS = 2                       // supersampling: drawn at 2x and scaled down for smooth edges
+const TOP_M = 1.372                // metres that sit at canvas y = 0 (the top of the hair of the avatar); feet are at y = 0 m = canvas 799
+const S = 799 / TOP_M              // canvas units per metre
+
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true, premultipliedAlpha: false })
+renderer.setPixelRatio(1)
+renderer.setSize(W * SS, H * SS)
+renderer.setClearColor(0x000000, 0)
+renderer.outputColorSpace = THREE.SRGBColorSpace
+document.body.appendChild(renderer.domElement)
+const out = document.createElement('canvas'); out.width = W; out.height = H
+const scene = new THREE.Scene()
+// toon materials are lit: a headlight (it follows the camera, so every direction is lit the same way) plus an ambient fill
+const headlight = new THREE.DirectionalLight(0xffffff, Math.PI * 0.9)
+const ambient = new THREE.AmbientLight(0xffffff, 1.0)
+scene.add(headlight, headlight.target, ambient)
+
+let vrm = null
+const groups = {} // slot -> [Object3D]
+
+/** slot of a material, from its VRoid name; null = not drawn */
+function slotOfMaterial(name) {
+  if (/FaceMouth/i.test(name)) return 'mouth'
+  if (/FaceBrow/i.test(name)) return 'brows'
+  if (/Eye(White|Iris|Highlight)|Eyelash|Eyeline/i.test(name)) return 'eyes'
+  if (/_Face_\d+_SKIN|Face_00_SKIN/i.test(name)) return 'face'
+  if (/HairBack/i.test(name)) return 'hair_back'
+  if (/Hair/i.test(name)) return 'hair_front'
+  if (/Tops/i.test(name)) return 'top'
+  if (/Bottoms/i.test(name)) return 'bottom'
+  if (/Shoes/i.test(name)) return 'shoes'
+  if (/Body.*SKIN/i.test(name)) return 'skin' // split below by bone
+  return null
+}
+
+/** the bare skin is cut by the bone that moves each vertex: arms (viewer-left is the avatar's RIGHT side), legs, and the rest (torso + neck) */
+function skinClass(boneName) {
+  const arm = /_(Shoulder|UpperArm|LowerArm|Hand|Thumb|Index|Middle|Ring|Little)/.test(boneName)
+  if (arm) return /_R_/.test(boneName) ? 'arm_l' : 'arm_r'
+  // (the hips belong to the legs piece: it sits under the skirt, while the torso piece is drawn over it; cut at the waist the torso would show its hollow inside)
+  if (/(Hips|UpperLeg|LowerLeg|Foot|ToeBase)/.test(boneName)) return 'body'
+  return 'torso'
+}
+
+/**
+ * The hair of a VRoid avatar is ONE mesh: bangs and side locks in front of the face, the long hair behind the head. A 2D character
+ * stacks "hair in front of the face" and "hair behind it" as two layers, so the triangles are sorted by how far forward they are (z of the
+ * triangle in the rest pose) relative to the middle of the head.
+ */
+function splitHairByDepth(mesh, zSplit) {
+  const geo = mesh.geometry, pos = geo.attributes.position, idx = geo.index.array
+  const front = [], back = []
+  for (let t = 0; t < idx.length; t += 3) {
+    const z = (pos.getZ(idx[t]) + pos.getZ(idx[t + 1]) + pos.getZ(idx[t + 2])) / 3
+    ;(z > zSplit ? front : back).push(idx[t], idx[t + 1], idx[t + 2])
+  }
+  const make = (tri, name) => {
+    const g = geo.clone(); g.setIndex(tri)
+    const m = new THREE.SkinnedMesh(g, mesh.material); m.bind(mesh.skeleton, mesh.bindMatrix); m.frustumCulled = false; m.name = name
+    mesh.parent.add(m); return m
+  }
+  mesh.visible = false
+  return { front: make(front, `${mesh.name}:front`), back: make(back, `${mesh.name}:back`) }
+}
+
+function splitSkin(mesh, hemY = null) {
+  const geo = mesh.geometry, idx = geo.index.array, si = geo.attributes.skinIndex, sw = geo.attributes.skinWeight, pos = geo.attributes.position
+  const bones = mesh.skeleton.bones
+  const cls = new Array(si.count)
+  for (let v = 0; v < si.count; v++) {
+    let best = 0, bw = -1
+    for (let k = 0; k < 4; k++) if (sw.getComponent(v, k) > bw) { bw = sw.getComponent(v, k); best = si.getComponent(v, k) }
+    cls[v] = skinClass(bones[best]?.name ?? '')
+    // the torso skin below the hem of the top is the underwear: it belongs with the legs, under the skirt, instead of showing between the two
+    if (cls[v] === 'torso' && hemY !== null && pos.getY(v) < hemY) cls[v] = 'body'
+  }
+  const per = {}
+  for (let t = 0; t < idx.length; t += 3) {
+    const c = [cls[idx[t]], cls[idx[t + 1]], cls[idx[t + 2]]]
+    const k = c[0] === c[1] || c[0] === c[2] ? c[0] : c[1] === c[2] ? c[1] : c[0]
+    ;(per[k] ??= []).push(idx[t], idx[t + 1], idx[t + 2])
+  }
+  const made = {}
+  for (const [k, tri] of Object.entries(per)) {
+    const g = geo.clone()
+    g.setIndex(tri)
+    const m = new THREE.SkinnedMesh(g, mesh.material)
+    m.bind(mesh.skeleton, mesh.bindMatrix)
+    m.frustumCulled = false
+    m.name = `${mesh.name}:${k}`
+    mesh.parent.add(m)
+    made[k] = m
+  }
+  mesh.visible = false
+  return made
+}
+
+window.VRMR = {
+  async load(url) {
+    const loader = new GLTFLoader()
+    loader.register((p) => new VRMLoaderPlugin(p))
+    const gltf = await loader.loadAsync(url)
+    vrm = gltf.userData.vrm
+    VRMUtils.removeUnnecessaryVertices(gltf.scene)
+    scene.add(vrm.scene)
+    const meshes = []
+    vrm.scene.traverse((o) => { if (o.isMesh || o.isSkinnedMesh) meshes.push(o) })
+    for (const m of meshes) {
+      const mat = Array.isArray(m.material) ? m.material.find((x) => !/outline/i.test(x.type)) ?? m.material[0] : m.material
+      const slot = slotOfMaterial(mat?.name ?? '')
+      m.frustumCulled = false
+      if (!slot) { m.visible = false; continue }
+      if (slot === 'hair_front') {
+        const face = groups.face?.[0]
+        face.geometry.computeBoundingBox()
+        const zSplit = face.geometry.boundingBox.getCenter(new THREE.Vector3()).z // the middle of the head
+        const parts = splitHairByDepth(m, zSplit)
+        ;(groups.hair_front ??= []).push(parts.front)
+        ;(groups.hair_back ??= []).push(parts.back)
+        continue
+      }
+      if (slot === 'skin') {
+        const top = meshes.find((x) => /Tops/i.test((Array.isArray(x.material) ? x.material[0] : x.material)?.name ?? ''))
+        let hemY = null
+        if (top) { top.geometry.computeBoundingBox(); hemY = top.geometry.boundingBox.min.y + 0.11 }
+        for (const [k, mm] of Object.entries(splitSkin(m, hemY))) (groups[k] ??= []).push(mm)
+        continue
+      }
+      ;(groups[slot] ??= []).push(m)
+    }
+    const meta = vrm.meta
+    return {
+      meta: { name: meta.name, authors: meta.authors, licenseUrl: meta.licenseUrl, avatarPermission: meta.avatarPermission, commercialUsage: meta.commercialUsage, modification: meta.modification, allowRedistribution: meta.allowRedistribution, creditNotation: meta.creditNotation, version: vrm.meta.metaVersion },
+      slots: Object.fromEntries(Object.entries(groups).map(([k, v]) => [k, v.length])),
+      expressions: Object.keys(vrm.expressionManager?.expressionMap ?? {}),
+    }
+  },
+
+  /** arms down (the avatar is modelled in a T pose): degrees from horizontal */
+  pose({ arm = 72 } = {}) {
+    const h = vrm.humanoid
+    const rad = (arm * Math.PI) / 180
+    h.resetNormalizedPose()
+    h.getNormalizedBoneNode('leftUpperArm').rotation.z = -rad
+    h.getNormalizedBoneNode('rightUpperArm').rotation.z = rad
+  },
+
+  /** bounding box (canvas pixels) of the visible pixels of the last render() */
+  bbox() {
+    const d = out.getContext('2d').getImageData(0, 0, W, H).data
+    let x0 = W, y0 = H, x1 = -1, y1 = -1
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 20) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y }
+    return x1 < 0 ? null : [x0, y0, x1 + 1, y1 + 1]
+  },
+
+  expression(values = {}) {
+    const em = vrm.expressionManager
+    for (const name of Object.keys(em.expressionMap)) em.setValue(name, 0)
+    for (const [k, v] of Object.entries(values)) em.setValue(k, v)
+  },
+
+  /** draw only `slots`, from `view` (front | back | left | right = the direction the avatar faces on screen) */
+  render({ slots, view = 'front', crop = null }) {
+    for (const [k, list] of Object.entries(groups)) for (const o of list) o.visible = slots.includes(k)
+    vrm.update(0)
+    const cam = new THREE.OrthographicCamera(-200 / S, 200 / S, 400 / S, -400 / S, 0.01, 10) // (the frustum is relative to the camera)
+    const mid = TOP_M - 400 / S
+    // (VRM avatars look towards +Z: the FRONT camera is on that side; the one on +X sees the avatar facing LEFT on screen)
+    const pos = { front: [0, 0, 3], back: [0, 0, -3], left: [3, 0, 0], right: [-3, 0, 0] }[view]
+    cam.position.set(pos[0], mid, pos[2])
+    cam.lookAt(0, mid, 0)
+    headlight.position.set(pos[0] * 0.5 + 0.3, mid + 0.8, pos[2] * 0.5 + (pos[2] === 0 ? 0 : 0.3 * Math.sign(pos[2]))) // from the camera side, a little above
+    headlight.target.position.set(0, mid, 0)
+    renderer.render(scene, cam)
+    const ctx = out.getContext('2d')
+    ctx.clearRect(0, 0, W, H)
+    ctx.imageSmoothingQuality = 'high'
+    ctx.drawImage(renderer.domElement, 0, 0, W, H)
+    if (crop) { // keep only a rectangle (canvas pixels): the rest becomes transparent
+      const keep = ctx.getImageData(crop[0], crop[1], crop[2] - crop[0], crop[3] - crop[1])
+      ctx.clearRect(0, 0, W, H)
+      ctx.putImageData(keep, crop[0], crop[1])
+    }
+    return out.toDataURL('image/png')
+  },
+}
+window.VRMR_READY = true
+</script>

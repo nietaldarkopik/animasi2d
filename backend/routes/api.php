@@ -22,10 +22,13 @@ Route::get('/library/assets/{asset}/file', [LibraryController::class, 'file'])->
 Route::get('/builder/versions/{version}/thumbnail', [BuilderCharacterController::class, 'thumbnail'])->name('builder.thumbnail')->middleware('signed:relative');
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/design/templates', [\App\Http\Controllers\DesignController::class, 'templates']);
+    Route::get('/design/template', [\App\Http\Controllers\DesignController::class, 'template']);
     Route::get('/library/categories', [LibraryController::class, 'categories']);
     Route::get('/library/assets', [LibraryController::class, 'index']);
     Route::post('/library/assets', [LibraryController::class, 'store'])->middleware('throttle:30,1');
     Route::post('/library/assets/{asset}/file', [LibraryController::class, 'replace'])->middleware('throttle:30,1');
+    Route::post('/library/assets/{asset}/validate', [LibraryController::class, 'validateAsset']);
     Route::post('/library/assets/{asset}/duplicate', [LibraryController::class, 'duplicate'])->middleware('throttle:30,1');
     Route::patch('/library/assets/{asset}', [LibraryController::class, 'update']);
     Route::delete('/library/assets/{asset}', [LibraryController::class, 'destroy']);
@@ -78,6 +81,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/exports/{export}', [ExportController::class, 'show']);
     Route::get('/exports/{export}/download', [ExportController::class, 'download']);
 
+    // story series: plot + characters + narration -> AI-written episodes -> scheduled films
+    Route::get('/story/series', [\App\Http\Controllers\StoryController::class, 'index']);
+    Route::post('/story/series', [\App\Http\Controllers\StoryController::class, 'store']);
+    Route::get('/story/series/{series}', [\App\Http\Controllers\StoryController::class, 'show']);
+    Route::patch('/story/series/{series}', [\App\Http\Controllers\StoryController::class, 'update']);
+    Route::delete('/story/series/{series}', [\App\Http\Controllers\StoryController::class, 'destroy']);
+    Route::post('/story/series/{series}/generate', [\App\Http\Controllers\StoryController::class, 'generate'])->middleware('throttle:20,1');
+    Route::post('/story/series/{series}/episodes', [\App\Http\Controllers\StoryController::class, 'addEpisode']);
+    Route::patch('/story/episodes/{episode}', [\App\Http\Controllers\StoryController::class, 'updateEpisode']);
+    Route::delete('/story/episodes/{episode}', [\App\Http\Controllers\StoryController::class, 'destroyEpisode']);
+    Route::post('/story/episodes/{episode}/script', [\App\Http\Controllers\StoryController::class, 'writeScript'])->middleware('throttle:20,1');
+    Route::post('/story/episodes/{episode}/produce', [\App\Http\Controllers\StoryController::class, 'produce'])->middleware('throttle:20,1');
     Route::get('/cartoon/status', [\App\Http\Controllers\DailyCartoonController::class, 'status']);
     Route::post('/cartoon/generate', [\App\Http\Controllers\DailyCartoonController::class, 'generate'])->middleware('throttle:10,1');
 });

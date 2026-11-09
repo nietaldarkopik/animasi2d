@@ -36,6 +36,7 @@ class LibraryController extends Controller
             'q' => 'nullable|string|max:80',
             'status' => 'nullable|in:approved,pending,rejected',
             'mine' => 'nullable|boolean',
+            'view' => 'nullable|in:front,right,left,back',
         ]);
         $q = LibraryAsset::visibleTo($request->user()->id)->with('category');
         if (! empty($data['kind'])) {
@@ -51,6 +52,11 @@ class LibraryController extends Controller
         }
         if (! empty($data['mine'])) {
             $q->where('user_id', $request->user()->id);
+        }
+        if (! empty($data['view'])) { // an asset without a view faces front
+            $data['view'] === 'front'
+                ? $q->where(fn ($w) => $w->whereNull('meta->view')->orWhere('meta->view', 'front'))
+                : $q->where('meta->view', $data['view']);
         }
         if (! empty($data['q'])) {
             $like = '%'.str_replace(['%', '_'], ['\\%', '\\_'], $data['q']).'%';
@@ -68,6 +74,8 @@ class LibraryController extends Controller
             'category' => 'required|string|exists:asset_categories,slug',
             'name' => 'required|string|max:120',
             'tags' => 'nullable|string|max:200',
+            'view' => 'nullable|in:front,right,left,back',
+            'family' => ['nullable', \Illuminate\Validation\Rule::in(array_keys(\App\Services\Library\DesignFamily::FAMILIES))],
         ]);
         $file = $request->file('file');
         $category = AssetCategory::where('slug', $data['category'])->firstOrFail();
@@ -78,7 +86,7 @@ class LibraryController extends Controller
             return response()->json(['message' => $e->getMessage(), 'errors' => ['file' => [$e->getMessage()]]], 422);
         }
 
-        $asset = $this->persist($request->user()->id, $category, $data['name'], $this->tags($data['tags'] ?? ''), 'upload', 'approved', $content, $mime, $ext, $w, $h, $tint);
+        $asset = self::persistAsset($request->user()->id, $category, $data['name'], $this->tags($data['tags'] ?? ''), 'upload', 'approved', $content, $mime, $ext, $w, $h, $tint, null, (($data['view'] ?? 'front') === 'front' ? [] : ['view' => $data['view']]) + (empty($data['family']) ? [] : ['family' => $data['family']]));
 
         return response()->json(['data' => $asset->present()], 201);
     }
@@ -149,6 +157,22 @@ class LibraryController extends Controller
         Storage::disk($asset->disk)->delete($old);
 
         return response()->json(['data' => $asset->fresh('category')->present(), 'archived_old' => false]);
+    }
+
+    /** Run the design-template checks again on one of the user's parts and store the report. */
+    public function validateAsset(Request $request, LibraryAsset $asset): JsonResponse
+    {
+        $this->own($request, $asset);
+        $asset->load('category');
+        if ($asset->category->kind !== 'part') {
+            return response()->json(['message' => 'Hanya bagian karakter yang divalidasi terhadap template.'], 422);
+        }
+        $report = (new \App\Services\Library\AssetValidator)->validate(Storage::disk($asset->disk)->get($asset->path), $asset->mime, $asset->width, $asset->height, $asset->category->slug, $asset->meta['view'] ?? 'front', \App\Services\Library\DesignTemplate::exists($asset->meta['template'] ?? '') ? \App\Services\Library\DesignTemplate::load($asset->meta['template']) : null, $asset->id, $asset->hash, $asset->meta['family'] ?? null);
+        $meta = $asset->meta ?? [];
+        $meta['validation'] = $report + (($meta['validation']['held'] ?? false) ? ['held' => true] : []);
+        $asset->update(['meta' => $meta]);
+
+        return response()->json(['data' => $asset->fresh('category')->present(), 'report' => $report]);
     }
 
     /** Own, editable copy of any visible asset (e.g. a system SVG you want to modify). */
@@ -225,6 +249,8 @@ class LibraryController extends Controller
         $data = $request->validate([
             'category' => 'required|string|exists:asset_categories,slug',
             'prompt' => 'required|string|min:3|max:400',
+            'view' => 'nullable|in:front,right,left,back',
+            'character' => 'nullable|string|max:200', // e.g. "male, teenager, slim"
         ]);
         if (in_array(AssetCategory::where('slug', $data['category'])->value('kind'), ['reference', 'prop'], true)) {
             return response()->json(['message' => 'Kategori referensi (pose/ekspresi) dan properti tidak dibuat oleh AI; unggah gambarnya.'], 422);
@@ -247,7 +273,7 @@ class LibraryController extends Controller
             return response()->json(['message' => 'Buat minimal satu project dulu.'], 422);
         }
         $job = AiJob::create(['project_id' => $project->id, 'user_id' => $uid, 'type' => 'library_asset', 'status' => 'queued',
-            'input' => ['category' => $data['category'], 'prompt' => $data['prompt']]]);
+            'input' => ['category' => $data['category'], 'prompt' => $data['prompt'], 'view' => $data['view'] ?? 'front', 'character' => $data['character'] ?? null]]);
         ProcessLibraryAsset::dispatch($job->id);
 
         return response()->json(['data' => ['id' => $job->id, 'status' => $job->status, 'type' => $job->type]], 202);
@@ -264,7 +290,8 @@ class LibraryController extends Controller
         if (! Upscaler::available()) {
             return response()->json(['message' => Upscaler::unavailableReason(), 'code' => 'upscaler_unavailable'], 503);
         }
-        if (max($asset->width, $asset->height) > 1100) {
+        // a part on the standard canvas is mostly transparent: only its artwork is upscaled (see ProcessLibraryUpscale), which the worker limits itself
+        if (! \App\Services\Library\SlotTemplate::isFullCanvas($asset->width, $asset->height) && max($asset->width, $asset->height) > 1100) {
             return response()->json(['message' => 'Gambar terlalu besar untuk upscale AI (maks. 1100 px sisi terpanjang).'], 422);
         }
         if (max($asset->width, $asset->height) * (float) $data['factor'] > 4096) {
@@ -288,6 +315,25 @@ class LibraryController extends Controller
     /** Shared by upload, AI and the seeder. */
     public static function persistAsset(?int $userId, AssetCategory $category, string $name, array $tags, string $source, string $status, string $content, string $mime, string $ext, int $w, int $h, bool $tint, ?string $key = null, array $meta = []): LibraryAsset
     {
+        // every body part is stored in the standard part format (one shared canvas, fixed place per slot): see SlotTemplate
+        if ($category->kind === 'part' && ($c = \App\Services\Library\SlotTemplate::conform($category->slug, $content, $mime, $w, $h))) {
+            ['content' => $content, 'mime' => $mime, 'ext' => $ext, 'width' => $w, 'height' => $h] = $c;
+            $meta['conformed'] = true;
+        }
+        // an uploaded or generated part is checked against the design template; one that breaks a rule is NOT approved automatically
+        if ($userId !== null && $category->kind === 'part' && \App\Services\Library\DesignTemplate::load()->hasSlot($category->slug)) {
+            $meta['family'] ??= \App\Services\Library\DesignFamily::infer($name, $key);
+            $tplId = \App\Services\Library\DesignTemplate::exists($meta['template'] ?? '') ? $meta['template'] : \App\Services\Library\DesignTemplate::DEFAULT;
+            $report = (new \App\Services\Library\AssetValidator)->validate($content, $mime, $w, $h, $category->slug, $meta['view'] ?? 'front', \App\Services\Library\DesignTemplate::load($tplId), null, hash('sha256', $content), $meta['family']);
+            $meta['validation'] = $report;
+            if ($mime !== 'image/svg+xml' && ($found = \App\Services\Library\AnchorExtractor::extract($content, $category->slug))) {
+                $meta['anchors'] = $found; // named attachment points of this part (canvas units)
+            }
+            if (! $report['ok'] && $status === 'approved') {
+                $status = 'pending';
+                $meta['validation']['held'] = true; // waits for the author's decision in the review list
+            }
+        }
         $path = 'library/'.($userId ? 'u'.$userId : 'system').'/'.Str::uuid().'.'.$ext;
         Storage::disk('local')->put($path, $content);
 

@@ -1,0 +1,11 @@
+{
+  "name": "vrm-import",
+  "private": true,
+  "type": "module",
+  "description": "Render a VRM avatar into standard-format 2D body parts (4 views, expressions) for the Character Builder library",
+  "dependencies": {
+    "@pixiv/three-vrm": "3.4.2",
+    "three": "0.170.0",
+    "puppeteer-core": "24.2.0"
+  }
+}

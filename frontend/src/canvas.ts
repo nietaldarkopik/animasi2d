@@ -12,6 +12,8 @@ export interface CanvasCallbacks {
   onCommit: (id: string, patch: Partial<Layer>) => void
   /** group move / resize / rotate: one entry per layer that changed */
   onCommitMany: (patches: Record<string, Partial<Layer>>) => void
+  /** how many images the open scene is still waiting for (0 = everything is on screen) */
+  onLoading?: (pending: number) => void
 }
 
 type Gesture =
@@ -37,6 +39,30 @@ const hex = (c: string) => parseInt(c.replace('#', ''), 16)
 const deg = (r: number) => (r * 180) / Math.PI
 const round = (n: number, p = 100) => Math.round(n * p) / p
 const BONE_COLOR = 0xffb020
+
+/**
+ * Blob -> something Pixi can use as a texture. Raster files go through createImageBitmap; SVG files (a location from the
+ * library, or a project made by another tool) cannot be decoded that way, so they are drawn onto a canvas at the asset's size.
+ */
+export async function decodeImage(blob: Blob, asset: Pick<Asset, 'width' | 'height' | 'mime'>): Promise<ImageBitmap | HTMLCanvasElement> {
+  const svg = asset.mime === 'image/svg+xml' || blob.type === 'image/svg+xml'
+  if (!svg) {
+    try { return await createImageBitmap(blob) } catch { /* maybe an SVG served with a wrong type: fall through */ }
+  }
+  const url = URL.createObjectURL(blob.type === 'image/svg+xml' ? blob : new Blob([blob], { type: 'image/svg+xml' }))
+  try {
+    const im = new Image()
+    await new Promise<void>((res, rej) => { im.onload = () => res(); im.onerror = () => rej(new Error('Gambar tidak bisa didekode.')); im.src = url })
+    const w = Math.max(1, Math.round(asset.width || im.naturalWidth || 1024)), h = Math.max(1, Math.round(asset.height || im.naturalHeight || 1024))
+    const cv = document.createElement('canvas')
+    cv.width = w
+    cv.height = h
+    cv.getContext('2d')!.drawImage(im, 0, 0, w, h)
+    return cv
+  } finally {
+    URL.revokeObjectURL(url)
+  }
+}
 
 /** deterministic pseudo-random in [0,1): effects look the same in the editor and in every export */
 const rnd = (n: number) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x) }
@@ -127,6 +153,8 @@ export class StudioCanvas {
   private fx = new Container()
   private fade = new Graphics()
   private ready_tex = new Map<number, Texture>()
+  /** images the visible scene is waiting for (background preloads of other scenes are not counted) */
+  private pending = new Set<number>()
   private overlay = new Container()
   private frame = new Graphics()
   private holders = new Map<string, Container>()
@@ -439,7 +467,9 @@ export class StudioCanvas {
       if (ready) {
         content.texture = ready // already decoded: swap in the same frame (no one-frame lag when keyed images change)
       } else if (asset) {
-        void this.texture(asset).then((t) => {
+        const loading = this.texture(asset)
+        this.track(asset.id, loading)
+        void loading.then((t) => {
           if (!content.destroyed && this.layers.get(l.id)?.assetId === l.assetId) {
             content.texture = t
             this.drawOverlay()
@@ -467,6 +497,24 @@ export class StudioCanvas {
     }
   }
 
+  /**
+   * Count an image the scene is waiting for. While any is missing the bones stay hidden: bones are drawn on top of everything,
+   * and next to half-loaded pictures they looked like "only the bones appear".
+   */
+  private track(id: number, p: Promise<unknown>) {
+    if (this.pending.has(id)) return
+    this.pending.add(id)
+    this.announceLoading()
+    const done = () => { this.pending.delete(id); this.announceLoading() }
+    p.then(done, done)
+  }
+
+  private announceLoading() {
+    if (this.destroyed) return
+    this.boneLayer.visible = this.pending.size === 0
+    this.cb.onLoading?.(this.pending.size)
+  }
+
   private texture(asset: Asset): Promise<Texture> {
     let p = this.textures.get(asset.id)
     if (!p) {
@@ -475,8 +523,8 @@ export class StudioCanvas {
           if (!r.ok) throw new Error(`HTTP ${r.status}`)
           return r.blob()
         })
-        .then((b) => createImageBitmap(b))
-        .then((bmp) => Texture.from(bmp))
+        .then((b) => decodeImage(b, asset))
+        .then((src) => Texture.from(src))
         .then((t) => { this.ready_tex.set(asset.id, t); return t })
       p.catch(() => this.textures.delete(asset.id))
       this.textures.set(asset.id, p)

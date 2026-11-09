@@ -1,4 +1,5 @@
-import type { BuilderDetail, BuilderSummary, CharacterConfig, LibAsset, LibCategory } from './builder/types'
+import type { SeriesInput, StoryEpisode, StoryScript, StorySeries } from './story/types'
+import type { AssetValidation, DesignTemplateInfo, BuilderDetail, BuilderSummary, CharacterConfig, Facing, LibAsset, LibCategory } from './builder/types'
 import type { Layer, AiJobInfo, AiStatus, Asset, EnhanceModeId, EnhanceModeInfo, EnhanceOptions, ExportInfo, Geometry, ImageOp, Project, ProjectDoc, ProjectSummary, VersionInfo } from './types'
 
 export const BASE = import.meta.env.VITE_API_URL ?? '/api'
@@ -92,12 +93,14 @@ export const api = {
     Object.entries(q).forEach(([k, v]) => v !== undefined && v !== '' && p.set(k, v === true ? '1' : String(v)))
     return req<{ data: LibAsset[] }>(`/library/assets?${p}`).then((r) => r.data)
   },
-  libUpload: (file: File, category: string, name: string, tags: string) => {
+  libUpload: (file: File, category: string, name: string, tags: string, view: Facing = 'front', family = '') => {
     const fd = new FormData()
     fd.append('file', file, file.name)
     fd.append('category', category)
     fd.append('name', name)
     if (tags) fd.append('tags', tags)
+    if (view !== 'front') fd.append('view', view)
+    if (family) fd.append('family', family)
     return req<{ data: LibAsset }>('/library/assets', { method: 'POST', body: fd }).then((r) => r.data)
   },
   libUpdate: (id: number, patch: { name?: string; tags?: string; status?: 'approved' | 'rejected'; category?: string }) => req<{ data: LibAsset }>(`/library/assets/${id}`, json('PATCH', patch)).then((r) => r.data),
@@ -106,10 +109,26 @@ export const api = {
     fd.append('file', file, filename)
     return req<{ data: LibAsset; archived_old: boolean; replaced_id?: number }>(`/library/assets/${id}/file`, { method: 'POST', body: fd })
   },
+  designTemplates: () => req<{ data: { id: string; label: string; preset: string | null }[] }>('/design/templates').then((r) => r.data),
+  designTemplate: () => req<{ data: DesignTemplateInfo }>('/design/template').then((r) => r.data),
+  libValidate: (id: number) => req<{ data: LibAsset; report: AssetValidation }>(`/library/assets/${id}/validate`, json('POST', {})),
   libDuplicate: (id: number) => req<{ data: LibAsset }>(`/library/assets/${id}/duplicate`, json('POST', {})).then((r) => r.data),
   libDelete: (id: number) => req<{ ok: boolean; archived: boolean }>(`/library/assets/${id}`, json('DELETE')),
   libUpscale: (id: number, factor: number) => req<{ data: { id: number; status: string } }>(`/library/assets/${id}/upscale`, json('POST', { factor })).then((r) => r.data),
-  libGenerate: (category: string, prompt: string) => req<{ data: { id: number; status: string } }>('/library/ai/generate', json('POST', { category, prompt })).then((r) => r.data),
+  libGenerate: (category: string, prompt: string, view: Facing = 'front', character?: string) => req<{ data: { id: number; status: string } }>('/library/ai/generate', json('POST', { category, prompt, view, ...(character ? { character } : {}) })).then((r) => r.data),
+
+  // story series
+  storyList: () => req<{ data: StorySeries[] }>('/story/series').then((r) => r.data),
+  storyCreate: (body: SeriesInput) => req<{ data: StorySeries }>('/story/series', json('POST', body)).then((r) => r.data),
+  storyGet: (id: number) => req<{ data: StorySeries }>(`/story/series/${id}`).then((r) => r.data),
+  storyUpdate: (id: number, body: SeriesInput) => req<{ data: StorySeries }>(`/story/series/${id}`, json('PATCH', body)).then((r) => r.data),
+  storyDelete: (id: number) => req<{ ok: boolean }>(`/story/series/${id}`, json('DELETE')),
+  storyGenerate: (id: number, mode: 'outline' | 'scripts' | 'all', count?: number) => req<{ data: StorySeries }>(`/story/series/${id}/generate`, json('POST', { mode, ...(count ? { count } : {}) })).then((r) => r.data),
+  storyAddEpisode: (id: number, body: { title: string; synopsis?: string }) => req<{ data: StoryEpisode }>(`/story/series/${id}/episodes`, json('POST', body)).then((r) => r.data),
+  storyEpisodeUpdate: (id: number, body: { title?: string; synopsis?: string | null; script?: StoryScript | null; scheduled_at?: string | null; publish?: boolean }) => req<{ data: StoryEpisode }>(`/story/episodes/${id}`, json('PATCH', body)).then((r) => r.data),
+  storyEpisodeDelete: (id: number) => req<{ ok: boolean }>(`/story/episodes/${id}`, json('DELETE')),
+  storyEpisodeWrite: (id: number) => req<{ data: StorySeries }>(`/story/episodes/${id}/script`, json('POST', {})).then((r) => r.data),
+  storyEpisodeProduce: (id: number, publish = false) => req<{ data: StoryEpisode }>(`/story/episodes/${id}/produce`, json('POST', { publish })).then((r) => r.data),
 
   builderList: () => req<{ data: BuilderSummary[] }>('/builder/characters').then((r) => r.data),
   builderGet: (id: number, version?: number) => req<{ data: BuilderDetail }>(`/builder/characters/${id}${version ? `?version=${version}` : ''}`).then((r) => r.data),

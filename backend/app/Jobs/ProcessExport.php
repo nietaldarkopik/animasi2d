@@ -166,7 +166,8 @@ class ProcessExport implements ShouldQueue
         $out = [];
         foreach ($e->audio ?? [] as $clip) {
             $asset = Asset::where('project_id', $e->project_id)->where('mime', 'like', 'audio/%')->find($clip['asset_id'] ?? 0);
-            if ($asset) {
+            // an audio asset whose file is gone (a failed text-to-speech run, a cleaned disk) is skipped, never fatal for the whole film
+            if ($asset && Storage::disk($asset->disk)->exists($asset->path) && Storage::disk($asset->disk)->size($asset->path) > 0) {
                 $out[] = ['path' => Storage::disk($asset->disk)->path($asset->path), 'start' => (float) $clip['start'], 'volume' => (float) $clip['volume'], 'fade_in' => (float) ($clip['fade_in'] ?? 0), 'fade_out' => (float) ($clip['fade_out'] ?? 0), 'duration' => (float) ($asset->duration ?? 0)];
             }
         }

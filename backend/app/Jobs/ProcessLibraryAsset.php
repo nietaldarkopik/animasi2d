@@ -31,13 +31,13 @@ class ProcessLibraryAsset implements ShouldQueue
             $category = AssetCategory::where('slug', $job->input['category'])->firstOrFail();
             $prompt = $job->input['prompt'];
             if (RasterAssetGenerator::available()) { // image model: same look as the uploaded anime assets
-                $r = (new RasterAssetGenerator)->generate($category, $prompt);
+                $r = (new RasterAssetGenerator)->generate($category, $prompt, $job->input['view'] ?? 'front', $job->input['character'] ?? null);
                 $asset = LibraryController::persistAsset($job->user_id, $category, Str::limit($prompt, 60, '…'), ['ai'], 'ai', 'pending',
-                    $r['png'], 'image/png', 'png', $r['width'], $r['height'], false, null, ['prompt' => $prompt, 'model' => $r['model'], 'raster' => true]);
+                    $r['png'], 'image/png', 'png', $r['width'], $r['height'], false, null, ['prompt' => $prompt, 'model' => $r['model'], 'raster' => true] + (($job->input['view'] ?? 'front') === 'front' ? [] : ['view' => $job->input['view']]));
             } else {
                 $r = $gen->generate($category, $prompt);
                 $asset = LibraryController::persistAsset($job->user_id, $category, Str::limit($prompt, 60, '…'), ['ai'], 'ai', 'pending',
-                    $r['svg'], 'image/svg+xml', 'svg', $r['width'], $r['height'], $r['tintable'], null, ['prompt' => $prompt, 'model' => $r['model']]);
+                    $r['svg'], 'image/svg+xml', 'svg', $r['width'], $r['height'], $r['tintable'], null, ['prompt' => $prompt, 'model' => $r['model']] + (($job->input['view'] ?? 'front') === 'front' ? [] : ['view' => $job->input['view']]));
             }
             $job->update(['status' => 'done', 'result' => ['asset' => $asset->present()]]);
         } catch (\Throwable $e) {

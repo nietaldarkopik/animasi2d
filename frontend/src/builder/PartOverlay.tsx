@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import type { AlphaInfo } from './render'
+import { infoForSlot, type AlphaInfo } from './render'
 import { boxesOf, centerOf, marqueeHits, moveItems, normBox, rotateItems, scaleItems, toggle, unionBox, type Item } from './selection'
-import { hitsPart, normDeg, orientedCorners, placement, rotv, type Box, type PartXform } from './spec'
+import { hitsPart, normDeg, effectiveZ, orientedCorners, placement, rotv, type Box, type PartXform } from './spec'
 import type { CharacterConfig, LibAsset } from './types'
 import type { Rect } from './viewport'
 
@@ -59,7 +59,7 @@ export function PartOverlay({ config, assets, infos, selected, primary, zOf, vie
   const itemOf = (slot: string): Item | null => {
     const part = config.parts[slot]
     const a = part && assets[part.assetId]
-    const info = part && infos[part.assetId]
+    const info = part && infos[part.assetId] && infoForSlot(infos[part.assetId], slot)
     return a && info ? { slot, pl: placement(slot, a, part), frac: info.frac } : null
   }
   const allItems = Object.keys(config.parts).map(itemOf).filter(Boolean) as Item[]
@@ -81,9 +81,9 @@ export function PartOverlay({ config, assets, infos, selected, primary, zOf, vie
     return { x: stage.x + ((e.clientX - r.left) / r.width) * stage.w, y: stage.y + ((e.clientY - r.top) / r.height) * stage.h }
   }
   const topmostHit = (p: { x: number; y: number }): string | null => {
-    const order = [...allItems].sort((a, b) => (config.parts[b.slot].z ?? zOf(b.slot)) - (config.parts[a.slot].z ?? zOf(a.slot)))
+    const order = [...allItems].sort((a, b) => effectiveZ(config, b.slot, zOf) - effectiveZ(config, a.slot, zOf))
     for (const i of order) {
-      const info = infos[config.parts[i.slot].assetId]
+      const info = infos[config.parts[i.slot].assetId] && infoForSlot(infos[config.parts[i.slot].assetId], i.slot)
       if (info && hitsPart(i.pl, info.mask, p)) return i.slot
     }
     return null

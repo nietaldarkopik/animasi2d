@@ -49,7 +49,12 @@ class LibraryEditTest extends TestCase
 
     private function upload(User $u, UploadedFile $f, string $category = 'hat', string $name = 'Topi'): array
     {
-        return $this->post('/api/library/assets', ['file' => $f, 'category' => $category, 'name' => $name], $this->h($u))->assertCreated()->json('data');
+        $a = $this->post('/api/library/assets', ['file' => $f, 'category' => $category, 'name' => $name], $this->h($u))->assertCreated()->json('data');
+        if ($a['status'] === 'pending') { // these fixtures are plain colour blocks: the template check holds them, and the author approves (not what these tests are about)
+            $a = $this->patchJson("/api/library/assets/{$a['id']}", ['status' => 'approved'], $this->h($u))->assertOk()->json('data');
+        }
+
+        return $a;
     }
 
     private function config(array $parts): array
@@ -135,7 +140,7 @@ class LibraryEditTest extends TestCase
         $this->post("/api/library/assets/{$a['id']}/file", ['file' => $this->png(10, 10)], $this->h($other))->assertNotFound();
         $this->post("/api/library/assets/{$sys->id}/file", ['file' => $this->png(10, 10)], $this->h($u))->assertNotFound(); // system assets are read-only
         $this->postJson("/api/library/assets/{$a['id']}/duplicate", [], $this->h($other))->assertNotFound();               // someone else's private asset
-        $this->assertSame(40, LibraryAsset::find($a['id'])->width);
+        $this->assertSame(800, LibraryAsset::find($a['id'])->width); // the 40px upload was conformed to the standard part canvas
     }
 
     public function test_duplicate_makes_an_editable_copy_of_a_system_asset(): void
@@ -207,7 +212,7 @@ class LibraryEditTest extends TestCase
         $this->assertSame([400, 800, true], [$legs['width'], $legs['height'], $legs['tintable']]);
 
         // a character can be built from the kit slots (torso + both arms + legs-only body)
-        $mk = fn (string $slot) => $this->post('/api/library/assets', ['file' => $this->png(800, 1600), 'category' => $slot, 'name' => $slot], $this->h($u))->assertCreated()->json('data.id');
+        $mk = fn (string $slot) => $this->upload($u, $this->png(800, 1600), $slot, $slot)['id'];
         $parts = ['body' => ['assetId' => LibraryAsset::where('key', 'body_legs')->value('id')], 'face' => ['assetId' => LibraryAsset::where('key', 'face_round')->value('id')],
             'torso' => ['assetId' => $mk('torso')], 'arm_l' => ['assetId' => $mk('arm_l')], 'arm_r' => ['assetId' => $mk('arm_r')]];
         $this->postJson('/api/builder/characters', ['name' => 'Kit', 'config' => $this->config($parts)], $this->h($u))->assertCreated();

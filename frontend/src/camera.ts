@@ -41,6 +41,6 @@ export function camShake(cam: SceneCamera, f0: number, frames: number, amp: numb
 /** Camera key frames that exist (sorted, unique) for the key list in the UI. */
 export function camKeyFrames(cam: SceneCamera | undefined): number[] {
   const set = new Set<number>()
-  for (const list of Object.values(cam ?? {})) for (const k of list ?? []) set.add(k.f)
+  for (const list of Object.values(cam ?? {})) if (Array.isArray(list)) for (const k of list) set.add(k.f)
   return [...set].sort((a, b) => a - b)
 }

@@ -1,0 +1,428 @@
+{
+ "source": "AvatarSample_M.vrm",
+ "avatar": {
+  "name": "AvatarSample_M",
+  "authors": [
+   "pixiv VRoid Project"
+  ],
+  "licenseUrl": "https://vrm.dev/licenses/1.0/",
+  "avatarPermission": "onlyAuthor",
+  "commercialUsage": "personalNonProfit",
+  "modification": "prohibited",
+  "allowRedistribution": false,
+  "creditNotation": "required",
+  "version": "1"
+ },
+ "rendered_at": "2026-10-22T01:18:16.706Z",
+ "arm_degrees": 72,
+ "items": [
+  {
+   "slot": "face",
+   "view": "front",
+   "file": "front-face.png",
+   "label": null
+  },
+  {
+   "slot": "eyes",
+   "view": "front",
+   "file": "front-eyes.png",
+   "label": null
+  },
+  {
+   "slot": "brows",
+   "view": "front",
+   "file": "front-brows.png",
+   "label": null
+  },
+  {
+   "slot": "mouth",
+   "view": "front",
+   "file": "front-mouth.png",
+   "label": null
+  },
+  {
+   "slot": "hair_front",
+   "view": "front",
+   "file": "front-hair_front.png",
+   "label": null
+  },
+  {
+   "slot": "hair_back",
+   "view": "front",
+   "file": "front-hair_back.png",
+   "label": null
+  },
+  {
+   "slot": "torso",
+   "view": "front",
+   "file": "front-torso.png",
+   "label": null
+  },
+  {
+   "slot": "arm_l",
+   "view": "front",
+   "file": "front-arm_l.png",
+   "label": null
+  },
+  {
+   "slot": "arm_r",
+   "view": "front",
+   "file": "front-arm_r.png",
+   "label": null
+  },
+  {
+   "slot": "body",
+   "view": "front",
+   "file": "front-body.png",
+   "label": null
+  },
+  {
+   "slot": "top",
+   "view": "front",
+   "file": "front-top.png",
+   "label": null
+  },
+  {
+   "slot": "bottom",
+   "view": "front",
+   "file": "front-bottom.png",
+   "label": null
+  },
+  {
+   "slot": "shoes",
+   "view": "front",
+   "file": "front-shoes.png",
+   "label": null
+  },
+  {
+   "slot": "face",
+   "view": "right",
+   "file": "right-face.png",
+   "label": null
+  },
+  {
+   "slot": "eyes",
+   "view": "right",
+   "file": "right-eyes.png",
+   "label": null
+  },
+  {
+   "slot": "brows",
+   "view": "right",
+   "file": "right-brows.png",
+   "label": null
+  },
+  {
+   "slot": "mouth",
+   "view": "right",
+   "file": "right-mouth.png",
+   "label": null
+  },
+  {
+   "slot": "hair_front",
+   "view": "right",
+   "file": "right-hair_front.png",
+   "label": null
+  },
+  {
+   "slot": "hair_back",
+   "view": "right",
+   "file": "right-hair_back.png",
+   "label": null
+  },
+  {
+   "slot": "torso",
+   "view": "right",
+   "file": "right-torso.png",
+   "label": null
+  },
+  {
+   "slot": "arm_l",
+   "view": "right",
+   "file": "right-arm_l.png",
+   "label": null
+  },
+  {
+   "slot": "arm_r",
+   "view": "right",
+   "file": "right-arm_r.png",
+   "label": null
+  },
+  {
+   "slot": "body",
+   "view": "right",
+   "file": "right-body.png",
+   "label": null
+  },
+  {
+   "slot": "top",
+   "view": "right",
+   "file": "right-top.png",
+   "label": null
+  },
+  {
+   "slot": "bottom",
+   "view": "right",
+   "file": "right-bottom.png",
+   "label": null
+  },
+  {
+   "slot": "shoes",
+   "view": "right",
+   "file": "right-shoes.png",
+   "label": null
+  },
+  {
+   "slot": "face",
+   "view": "left",
+   "file": "left-face.png",
+   "label": null
+  },
+  {
+   "slot": "eyes",
+   "view": "left",
+   "file": "left-eyes.png",
+   "label": null
+  },
+  {
+   "slot": "brows",
+   "view": "left",
+   "file": "left-brows.png",
+   "label": null
+  },
+  {
+   "slot": "mouth",
+   "view": "left",
+   "file": "left-mouth.png",
+   "label": null
+  },
+  {
+   "slot": "hair_front",
+   "view": "left",
+   "file": "left-hair_front.png",
+   "label": null
+  },
+  {
+   "slot": "hair_back",
+   "view": "left",
+   "file": "left-hair_back.png",
+   "label": null
+  },
+  {
+   "slot": "torso",
+   "view": "left",
+   "file": "left-torso.png",
+   "label": null
+  },
+  {
+   "slot": "arm_l",
+   "view": "left",
+   "file": "left-arm_l.png",
+   "label": null
+  },
+  {
+   "slot": "arm_r",
+   "view": "left",
+   "file": "left-arm_r.png",
+   "label": null
+  },
+  {
+   "slot": "body",
+   "view": "left",
+   "file": "left-body.png",
+   "label": null
+  },
+  {
+   "slot": "top",
+   "view": "left",
+   "file": "left-top.png",
+   "label": null
+  },
+  {
+   "slot": "bottom",
+   "view": "left",
+   "file": "left-bottom.png",
+   "label": null
+  },
+  {
+   "slot": "shoes",
+   "view": "left",
+   "file": "left-shoes.png",
+   "label": null
+  },
+  {
+   "slot": "hair_front",
+   "view": "back",
+   "file": "back-hair_front.png",
+   "label": null
+  },
+  {
+   "slot": "hair_back",
+   "view": "back",
+   "file": "back-hair_back.png",
+   "label": null
+  },
+  {
+   "slot": "torso",
+   "view": "back",
+   "file": "back-torso.png",
+   "label": null
+  },
+  {
+   "slot": "arm_l",
+   "view": "back",
+   "file": "back-arm_l.png",
+   "label": null
+  },
+  {
+   "slot": "arm_r",
+   "view": "back",
+   "file": "back-arm_r.png",
+   "label": null
+  },
+  {
+   "slot": "body",
+   "view": "back",
+   "file": "back-body.png",
+   "label": null
+  },
+  {
+   "slot": "top",
+   "view": "back",
+   "file": "back-top.png",
+   "label": null
+  },
+  {
+   "slot": "bottom",
+   "view": "back",
+   "file": "back-bottom.png",
+   "label": null
+  },
+  {
+   "slot": "shoes",
+   "view": "back",
+   "file": "back-shoes.png",
+   "label": null
+  },
+  {
+   "slot": "mouth",
+   "view": "front",
+   "file": "expr-mouth-aa.png",
+   "label": "A"
+  },
+  {
+   "slot": "mouth",
+   "view": "front",
+   "file": "expr-mouth-ih.png",
+   "label": "I"
+  },
+  {
+   "slot": "mouth",
+   "view": "front",
+   "file": "expr-mouth-ou.png",
+   "label": "U"
+  },
+  {
+   "slot": "mouth",
+   "view": "front",
+   "file": "expr-mouth-ee.png",
+   "label": "E"
+  },
+  {
+   "slot": "mouth",
+   "view": "front",
+   "file": "expr-mouth-oh.png",
+   "label": "O"
+  },
+  {
+   "slot": "mouth",
+   "view": "front",
+   "file": "expr-mouth-happy.png",
+   "label": "Senang"
+  },
+  {
+   "slot": "mouth",
+   "view": "front",
+   "file": "expr-mouth-sad.png",
+   "label": "Sedih"
+  },
+  {
+   "slot": "mouth",
+   "view": "front",
+   "file": "expr-mouth-angry.png",
+   "label": "Marah"
+  },
+  {
+   "slot": "mouth",
+   "view": "front",
+   "file": "expr-mouth-surprised.png",
+   "label": "Kaget"
+  },
+  {
+   "slot": "mouth",
+   "view": "front",
+   "file": "expr-mouth-relaxed.png",
+   "label": "Santai"
+  },
+  {
+   "slot": "eyes",
+   "view": "front",
+   "file": "expr-eyes-blink.png",
+   "label": "Kedip"
+  },
+  {
+   "slot": "eyes",
+   "view": "front",
+   "file": "expr-eyes-happy.png",
+   "label": "Senang"
+  },
+  {
+   "slot": "eyes",
+   "view": "front",
+   "file": "expr-eyes-sad.png",
+   "label": "Sedih"
+  },
+  {
+   "slot": "eyes",
+   "view": "front",
+   "file": "expr-eyes-angry.png",
+   "label": "Marah"
+  },
+  {
+   "slot": "eyes",
+   "view": "front",
+   "file": "expr-eyes-surprised.png",
+   "label": "Kaget"
+  },
+  {
+   "slot": "eyes",
+   "view": "front",
+   "file": "expr-eyes-relaxed.png",
+   "label": "Santai"
+  },
+  {
+   "slot": "brows",
+   "view": "front",
+   "file": "expr-brows-happy.png",
+   "label": "Senang"
+  },
+  {
+   "slot": "brows",
+   "view": "front",
+   "file": "expr-brows-sad.png",
+   "label": "Sedih"
+  },
+  {
+   "slot": "brows",
+   "view": "front",
+   "file": "expr-brows-angry.png",
+   "label": "Marah"
+  },
+  {
+   "slot": "brows",
+   "view": "front",
+   "file": "expr-brows-surprised.png",
+   "label": "Kaget"
+  }
+ ]
+}

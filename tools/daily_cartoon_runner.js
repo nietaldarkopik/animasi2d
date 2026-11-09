@@ -63,7 +63,7 @@ async function main() {
   // If no projectId was passed, generate a new daily cartoon project first
   if (!projectId) {
     console.log('Menghasilkan naskah dan audio kartun harian baru...');
-    const res = await fetch('http://127.0.0.1:8000/api/cartoon/generate', {
+    const res = await fetch('http://127.0.0.1:8010/api/cartoon/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -83,6 +83,8 @@ async function main() {
   const browser = await puppeteer.launch({
     executablePath: browserPath,
     headless: true,
+    // the default (180 s) is shorter than a long film: rig preparation + real-time recording + encoding can take 10+ minutes
+    protocolTimeout: 0,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -94,6 +96,9 @@ async function main() {
 
   try {
     const page = await browser.newPage();
+    // errors of the page (a failed save of the directed film, a script error...) go to this log: otherwise a film can come out empty, silently
+    page.on('console', (m) => { if (m.type() === 'error') console.error('[halaman] ' + m.text().slice(0, 300)); });
+    page.on('pageerror', (e) => console.error('[halaman] ' + String(e).slice(0, 300)));
     await page.setViewport({ width: 1366, height: 768 });
 
     // Pre-set token in localStorage
@@ -105,8 +110,8 @@ async function main() {
     // Open project in editor with auto_export=1
     console.log(`Menavigasi ke editor http://localhost:5173/projects/${projectId}?auto_export=1`);
     await page.goto(`http://localhost:5173/projects/${projectId}?auto_export=1`, {
-      waitUntil: 'networkidle2',
-      timeout: 60000,
+      waitUntil: 'domcontentloaded', // a film with many images never goes network-idle; the wait below watches the export itself
+      timeout: 0,
     });
 
     console.log('Menunggu proses perekaman canvas dan encode FFmpeg selesai...');
@@ -116,7 +121,7 @@ async function main() {
         if (window.__EXPORT_FAILED__) return { status: 'failed', error: window.__EXPORT_FAILED__ };
         return false;
       },
-      { polling: 1000, timeout: 600000 } // up to 10 minutes timeout
+      { polling: 1000, timeout: 2400000 } // up to 40 minutes: staging a long film in the editor (a few minutes) + recording it in real time + encoding
     );
 
     const exportData = await result.jsonValue();
@@ -133,7 +138,7 @@ async function main() {
     const targetFile = path.join(outputDir, mp4FileName);
 
     console.log(`Mengunduh video MP4 ke: ${targetFile}`);
-    const downloadRes = await fetch(`http://127.0.0.1:8000/api/exports/${exportId}/download`, {
+    const downloadRes = await fetch(`http://127.0.0.1:8010/api/exports/${exportId}/download`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (!downloadRes.ok) {

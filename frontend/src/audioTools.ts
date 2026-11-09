@@ -43,6 +43,17 @@ export const SFX: SfxDef[] = [
   { id: 'bruk', label: 'Bruk (jatuh/benturan)', seconds: 0.6 },
 ]
 
+const SFX_WORDS: Record<string, string[]> = {
+  ding: ['ding', 'notifikasi'], pop: ['pop'], klik: ['klik'], ketuk: ['ketuk', 'pintu'], langkah: ['langkah', 'kaki'], whoosh: ['whoosh', 'wus', 'lewat'],
+  bel: ['bel'], tada: ['tada', 'berhasil', 'hore'], sedih: ['sedih'], bruk: ['bruk', 'jatuh', 'benturan', 'tabrakan'],
+}
+
+/** The sound effect a script means ("bel sekolah", "ketuk pintu"); null when there is none like it. */
+export function pickSfx(text: string): string | null {
+  const t = text.toLowerCase()
+  return SFX.find((s) => SFX_WORDS[s.id].some((w) => new RegExp(`\\b${w}\\b`).test(t)))?.id ?? null
+}
+
 const TAU = Math.PI * 2
 /** deterministic noise in -1..1 */
 const noise = (n: number) => { const x = Math.sin(n * 12.9898 + 78.233) * 43758.5453; return (x - Math.floor(x)) * 2 - 1 }
