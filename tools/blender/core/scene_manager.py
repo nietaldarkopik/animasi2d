@@ -58,7 +58,9 @@ def _build_shot_cameras(sc, scene_data, plan, actors, positions, f0, f1):
             # shots use the center of the acting area.
             target = (0.0, 2.0, 1.15) if shot.get("focus") == "environment" else (0.0, 1.2, 1.05)
         else:
-            target = (target[0], target[1], 1.05)
+            # Aim close-ups at the face; medium shots retain upper-body context.
+            face_focused = shot.get("shot_size") in ("close_up", "extreme_close_up", "medium_close_up")
+            target = (target[0], target[1], 1.34 if face_focused else 1.12)
 
         info = create_cinematic_camera(
             sc,
@@ -174,8 +176,10 @@ def build_scene_from_plan(
                 emotion, pose = "takut", "pelipis"
             elif any(word in text_line for word in ("marah", "berani", "cukup")):
                 emotion, pose = "marah", "pinggang"
-            elif any(word in text_line for word in ("lihat", "perhatikan", "itu")):
+            elif any(word in text_line for word in ("periksa", "cek", "papan tulis", "belakang", "lihat", "perhatikan", "itu", "coba kita")):
                 emotion, pose = "bingung", "tunjuk"
+            elif any(word in text_line for word in ("tenang", "ikuti aku", "sebentar")):
+                emotion, pose = "netral", "angkat"
             else:
                 emotion, pose = "netral", "diam"
 
