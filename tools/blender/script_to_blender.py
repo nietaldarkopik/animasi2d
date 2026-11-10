@@ -95,12 +95,11 @@ def process_naskah_or_prompt(
         "for eng in ('BLENDER_EEVEE_NEXT', 'BLENDER_EEVEE'):",
         "    try: sc.render.engine = eng; break",
         "    except Exception: pass",
-        "sc.view_settings.view_transform = 'Standard'",
         "",
         "# Load Plan & Build Scene",
         f"plan_data = json.loads({repr(plan_json_esc)})",
         "from core.scene_manager import build_scene_from_plan",
-        f"res_build = build_scene_from_plan(sc, plan_data, scene_idx={scene_idx})",
+        f"res_build = build_scene_from_plan(sc, plan_data, scene_idx={scene_idx}, quality={'final' if render_video else 'preview'!r})",
         "",
     ]
 
