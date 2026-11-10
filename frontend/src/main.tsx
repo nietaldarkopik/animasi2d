@@ -7,10 +7,12 @@ import { AuthPage } from './pages/AuthPage'
 import { ProjectsPage } from './pages/ProjectsPage'
 import { EditorPage } from './pages/EditorPage'
 import { BuilderListPage } from './pages/BuilderListPage'
+import { CardCharacterPage } from './pages/CardCharacterPage'
 import { BuilderPage } from './pages/BuilderPage'
 import { LibraryPage } from './pages/LibraryPage'
 import { StoriesPage } from './pages/StoriesPage'
 import { StoryPage } from './pages/StoryPage'
+import { BlenderPage } from './pages/BlenderPage'
 import { ErrorBoundary } from './components/ErrorBoundary'
 
 function Guard({ children }: { children: React.ReactElement }) {
@@ -25,10 +27,12 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/login" element={<AuthPage />} />
         <Route path="/" element={<Guard><ProjectsPage /></Guard>} />
         <Route path="/builder" element={<Guard><BuilderListPage /></Guard>} />
+        <Route path="/builder/card/:id" element={<Guard><CardCharacterPage /></Guard>} />
         <Route path="/builder/:id" element={<Guard><BuilderPage /></Guard>} />
         <Route path="/library" element={<Guard><LibraryPage /></Guard>} />
         <Route path="/stories" element={<Guard><StoriesPage /></Guard>} />
         <Route path="/stories/:id" element={<Guard><StoryPage /></Guard>} />
+        <Route path="/blender" element={<Guard><BlenderPage /></Guard>} />
         <Route path="/projects/:id" element={<Guard><EditorPage /></Guard>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

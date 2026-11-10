@@ -1,4 +1,5 @@
 import type { SeriesInput, StoryEpisode, StoryScript, StorySeries } from './story/types'
+import type { CardAvailable, CardDetail, CardSummary } from './builder/card'
 import type { AssetValidation, DesignTemplateInfo, BuilderDetail, BuilderSummary, CharacterConfig, Facing, LibAsset, LibCategory } from './builder/types'
 import type { Layer, AiJobInfo, AiStatus, Asset, EnhanceModeId, EnhanceModeInfo, EnhanceOptions, ExportInfo, Geometry, ImageOp, Project, ProjectDoc, ProjectSummary, VersionInfo } from './types'
 
@@ -143,6 +144,17 @@ export const api = {
   builderRename: (id: number, name: string) => req(`/builder/characters/${id}`, json('PATCH', { name })),
   builderDuplicate: (id: number) => req<{ data: BuilderDetail }>(`/builder/characters/${id}/duplicate`, json('POST', {})).then((r) => r.data),
   builderDelete: (id: number) => req(`/builder/characters/${id}`, json('DELETE')),
+  // 2.5D card characters (PNG cards from the karakter/ folder)
+  cardList: () => req<{ data: CardSummary[] }>('/builder/cards').then((r) => r.data),
+  /** every character a story or the auto-director may cast: Character Builder rigs and 2.5D cards (ids share one table) */
+  castList: () => Promise.all([api.builderList(), api.cardList().catch(() => [] as CardSummary[])]).then(([b, c]) => [...b, ...c]),
+  cardAvailable: () => req<{ data: CardAvailable[] }>('/builder/cards/available').then((r) => r.data),
+  cardImport: (slug: string, name?: string) => req<{ data: CardDetail }>('/builder/cards', json('POST', { slug, ...(name ? { name } : {}) })).then((r) => r.data),
+  cardGet: (id: number, version?: number) => req<{ data: CardDetail }>(`/builder/cards/${id}${version ? `?version=${version}` : ''}`).then((r) => r.data),
+  cardRefresh: (id: number) => req<{ data: CardDetail }>(`/builder/cards/${id}/refresh`, json('POST', {})).then((r) => r.data),
+  cardRename: (id: number, name: string) => req(`/builder/cards/${id}`, json('PATCH', { name })),
+  cardDuplicate: (id: number) => req<{ data: CardDetail }>(`/builder/cards/${id}/duplicate`, json('POST', {})).then((r) => r.data),
+  cardDelete: (id: number) => req(`/builder/cards/${id}`, json('DELETE')),
   uploadAudio: (id: number, file: File) => {
     const fd = new FormData()
     fd.append('file', file, file.name)
@@ -180,5 +192,53 @@ export const api = {
   }>('/cartoon/status'),
   generateCartoon: (data: { topic?: string; characters?: string[] }) =>
     req<{ data: { project_id: number; title: string; theme: string; duration: number; scenes_count: number; audio_count: number; script: any } }>('/cartoon/generate', json('POST', data)).then((r) => r.data),
+  blenderStatus: () => req<{
+    mcp_online: boolean
+    cli_available: boolean
+    host: string
+    port: number
+    blender_version: string
+    blender_path: string
+  }>('/blender/status'),
+  blenderCharacters: () => req<{
+    characters: Array<{
+      id: string
+      name: string
+      style: string
+      poses: string[]
+      expressions: string[]
+      has_blink: boolean
+      has_mouth: boolean
+    }>
+  }>('/blender/characters'),
+  blenderScripts: () => req<{
+    scripts: Array<{
+      file: string
+      title: string
+      theme: string
+      scenes_count: number
+      content: any
+    }>
+  }>('/blender/scripts'),
+  blenderAnimate: (data: {
+    mode: 'prompt' | 'script'
+    prompt?: string
+    script_file?: string
+    render_video?: boolean
+  }) => req<{
+    status: string
+    outputs: { blend?: string; preview?: string; video?: string }
+    stdout?: string
+    stderr?: string
+  }>('/blender/animate', json('POST', data)),
+  blenderOutputs: () => req<{
+    outputs: Array<{
+      filename: string
+      type: 'image' | 'video' | 'blend' | 'file'
+      size: number
+      created_at: string
+      url: string
+    }>
+  }>('/blender/outputs'),
 }
 

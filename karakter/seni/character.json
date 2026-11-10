@@ -1,0 +1,122 @@
+{
+ "name": "seni",
+ "style": "japanese-anime cel-shade, rambut hitam bob sebahu, seragam SMA kerah pelaut abu-putih; 540p (badan/mulut/kelopak sama dengan Arum, hanya kepala berbeda)",
+ "source": "Google Flow, diproses dari _mentah (kunci hijau, potong grid, skala)",
+ "body": {
+  "canvas": [
+   800,
+   1400
+  ],
+  "feet_y": 1375,
+  "center_x": 400,
+  "hair_top_y_when_headed": 75,
+  "char_height_px": 1300,
+  "poses": [
+   "diam",
+   "tunjuk",
+   "angkat",
+   "lambai",
+   "pinggang",
+   "pelipis",
+   "dagu",
+   "jempol",
+   "silang"
+  ],
+  "file": "seni_badan_<pose>.png",
+  "head_dx": {
+   "diam": 0,
+   "tunjuk": 1,
+   "angkat": 0,
+   "lambai": 0,
+   "pinggang": 0,
+   "pelipis": -1,
+   "dagu": -2,
+   "jempol": -1,
+   "silang": 0
+  }
+ },
+ "head": {
+  "canvas": [
+   400,
+   500
+  ],
+  "paste_on_body": [
+   200,
+   0
+  ],
+  "chin_y": 284,
+  "expressions": [
+   "netral",
+   "senang",
+   "kaget",
+   "sinis",
+   "sedih",
+   "marah",
+   "bingung",
+   "mengantuk",
+   "sombong",
+   "malu"
+  ],
+  "file": "seni_kepala_<ekspresi>.png",
+  "note": "kepala UTUH termasuk leher+kerah dari sheet (menyatu dengan badan); bukan hair-only"
+ },
+ "mouth": {
+  "canvas": [
+   120,
+   80
+  ],
+  "center_on_head": [
+   199,
+   258
+  ],
+  "paste_on_head_topleft": [
+   139,
+   218
+  ],
+  "shapes": [
+   "a",
+   "i",
+   "u",
+   "e",
+   "o"
+  ],
+  "file": "seni_mulut_<bentuk>.png",
+  "note": "tutup = mulut bawaan kepala; a/i/u/e/o ditimpa saat bicara"
+ },
+ "blink": {
+  "file": "seni_kelopak.png",
+  "canvas": [
+   400,
+   500
+  ],
+  "paste_on_head_topleft": [
+   0,
+   0
+  ],
+  "eyes_on_head": [
+   [
+    163,
+    215
+   ],
+   [
+    232,
+    215
+   ]
+  ],
+  "blink_ok": [
+   "netral",
+   "senang",
+   "kaget",
+   "sedih",
+   "marah",
+   "bingung"
+  ],
+  "skip": [
+   "mengantuk",
+   "sinis",
+   "sombong",
+   "malu"
+  ]
+ },
+ "blender_card": "bidang 800x1400 px; kepala/mulut/kelopak = bidang anak yang ditempel pada koordinat di atas (z sedikit di depan badan)"
+}

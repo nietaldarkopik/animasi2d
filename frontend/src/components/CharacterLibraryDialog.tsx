@@ -6,6 +6,8 @@ import type { BuilderSummary } from '../builder/types'
 import { uid, useEditor } from '../store'
 import type { Layer } from '../types'
 import { Link } from 'react-router-dom'
+import { cardLayers, type CardSummary, type PreparedCard } from '../builder/card'
+import { prepareCard } from '../builder/insertCard'
 
 export interface CharacterInfo { id: number; name: string; method: 'rig' | 'frame_by_frame'; parts: number }
 
@@ -24,6 +26,9 @@ export function CharacterLibraryDialog({ projectId, onClose }: { projectId: numb
   const s = useEditor()
   const [list, setList] = useState<CharacterInfo[]>([])
   const [built, setBuilt] = useState<BuilderSummary[]>([])
+  const [cards, setCards] = useState<CardSummary[]>([])
+  /** cards already uploaded to this project in this session: inserting again (another scene) reuses the assets */
+  const [preparedCards, setPreparedCards] = useState<Record<number, PreparedCard>>({})
   const [name, setName] = useState('')
   const [method, setMethod] = useState<'rig' | 'frame_by_frame'>('rig')
   const [busy, setBusy] = useState(false)
@@ -32,7 +37,7 @@ export function CharacterLibraryDialog({ projectId, onClose }: { projectId: numb
   const [progress, setProgress] = useState('')
 
   const load = () => api.characters().then(setList).catch((e) => setError((e as Error).message))
-  useEffect(() => { void load(); api.builderList().then(setBuilt).catch(() => {}) }, [])
+  useEffect(() => { void load(); api.builderList().then(setBuilt).catch(() => {}); api.cardList().then(setCards).catch(() => {}) }, [])
 
   const ids = s.doc && s.selectedId ? characterTree(s.doc.layers, s.selectedId) : []
 
@@ -113,6 +118,26 @@ export function CharacterLibraryDialog({ projectId, onClose }: { projectId: numb
     }
   }
 
+  /** Inserts a 2.5D card character: root bone → body (pose swaps) → head (expression swaps) → mouth + eyelid overlays. */
+  async function insertCard(c: CardSummary) {
+    if (!s.doc) return
+    setBusy(true); setError(''); setNote(''); setProgress('Menyiapkan…')
+    try {
+      const prepared = preparedCards[c.id] ?? await prepareCard(projectId, c, setProgress)
+      setPreparedCards((m) => ({ ...m, [c.id]: prepared }))
+      const others = s.doc.layers.filter((l) => l.rig?.role === 'bone:root').length
+      const layers = cardLayers(prepared, s.doc.settings, uid, { xFrac: [0.5, 0.3, 0.7, 0.15, 0.85][others % 5] })
+      useEditor.getState().edit((doc) => { doc.layers.push(...layers) })
+      useEditor.getState().select(layers[0].id)
+      const m = prepared.meta
+      setNote(`"${prepared.name}" (2.5D) disisipkan: ${m.body.poses.length} pose, ${m.head.expressions.length} ekspresi${m.mouth ? `, mulut ${m.mouth.shapes.join('/')}` : ''}${prepared.assets.blink ? ', kedip otomatis' : ''}. Pilih karakternya lalu pakai Alat film → Karakter untuk mengganti pose, ekspresi, dan lip-sync.`)
+    } catch (e) {
+      setError((e as Error).message)
+    } finally {
+      setBusy(false); setProgress('')
+    }
+  }
+
   async function remove(c: CharacterInfo) {
     if (!confirm(`Hapus karakter "${c.name}" dari library? Layer di project tidak terpengaruh.`)) return
     try { await api.deleteCharacter(c.id); await load() } catch (e) { setError((e as Error).message) }
@@ -134,6 +159,18 @@ export function CharacterLibraryDialog({ projectId, onClose }: { projectId: numb
                   <button className="primary" disabled={busy} onClick={() => void insertRigged(c)} title="Bagian terpisah + tulang (bone): langsung bisa digerakkan, di-keyframe, dan diberi preset gerak">Sisipkan + bone</button>
                   <button disabled={busy} onClick={() => void insertBuilt(c)} title="Satu gambar utuh (tidak bisa digerakkan per bagian)">Gambar saja</button>
                 </span>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <h3>Karakter 2.5D</h3>
+        {cards.length === 0 ? <p className="muted small">Belum ada. Impor dari folder <code>karakter/</code> di <Link to="/builder">Character Builder</Link>.</p> : (
+          <ul className="plain">
+            {cards.map((c) => (
+              <li key={c.id} className="row between">
+                <span>{c.name} <span className="badge">2.5D</span> <span className="badge">v{c.current_version}</span></span>
+                <button className="primary" disabled={busy} onClick={() => void insertCard(c)} title="Kartu badan per pose + kepala per ekspresi + mulut lip-sync + kedip">{preparedCards[c.id] ? 'Sisipkan lagi' : 'Sisipkan 2.5D'}</button>
               </li>
             ))}
           </ul>

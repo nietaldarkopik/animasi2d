@@ -1,0 +1,121 @@
+{
+ "name": "uki",
+ "style": "japanese-anime cel-shade, ~6.5 kepala, dipakai di render 540p",
+ "source": "Google Flow, diproses dari _mentah (kunci hijau, potong grid, skala)",
+ "body": {
+  "canvas": [
+   800,
+   1400
+  ],
+  "feet_y": 1375,
+  "center_x": 400,
+  "hair_top_y_when_headed": 75,
+  "char_height_px": 1300,
+  "poses": [
+   "diam",
+   "tunjuk",
+   "angkat",
+   "lambai",
+   "pinggang",
+   "pelipis",
+   "dagu",
+   "jempol",
+   "silang"
+  ],
+  "file": "uki_badan_<pose>.png",
+  "head_dx": {
+   "diam": -36,
+   "tunjuk": -34,
+   "angkat": -34,
+   "lambai": -34,
+   "pinggang": -35,
+   "pelipis": -31,
+   "dagu": -33,
+   "jempol": -34,
+   "silang": -32
+  }
+ },
+ "head": {
+  "canvas": [
+   400,
+   400
+  ],
+  "paste_on_body": [
+   200,
+   0
+  ],
+  "chin_y": 275,
+  "expressions": [
+   "netral",
+   "senang",
+   "kaget",
+   "sinis",
+   "sedih",
+   "marah",
+   "bingung",
+   "mengantuk",
+   "sombong",
+   "malu"
+  ],
+  "file": "uki_kepala_<ekspresi>.png"
+ },
+ "mouth": {
+  "canvas": [
+   120,
+   80
+  ],
+  "center_on_head": [
+   198,
+   244
+  ],
+  "paste_on_head_topleft": [
+   138,
+   204
+  ],
+  "shapes": [
+   "a",
+   "i",
+   "u",
+   "e",
+   "o"
+  ],
+  "file": "uki_mulut_<bentuk>.png",
+  "note": "tutup = mulut bawaan kepala; a/i/u/e/o ditimpa saat bicara"
+ },
+ "blink": {
+  "file": "uki_kelopak.png",
+  "canvas": [
+   400,
+   400
+  ],
+  "paste_on_head_topleft": [
+   0,
+   0
+  ],
+  "eyes_on_head": [
+   [
+    171,
+    199
+   ],
+   [
+    234,
+    199
+   ]
+  ],
+  "blink_ok": [
+   "netral",
+   "senang",
+   "kaget",
+   "sedih",
+   "marah",
+   "bingung"
+  ],
+  "skip": [
+   "mengantuk",
+   "sinis",
+   "sombong",
+   "malu"
+  ]
+ },
+ "blender_card": "bidang 800x1400 px; kepala/mulut/kelopak = bidang anak yang ditempel pada koordinat di atas (z sedikit di depan badan)"
+}

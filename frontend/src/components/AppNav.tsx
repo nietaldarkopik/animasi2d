@@ -4,6 +4,7 @@ const LINKS = [
   { to: '/', label: 'Project' },
   { to: '/builder', label: 'Character Builder' },
   { to: '/stories', label: 'Cerita' },
+  { to: '/blender', label: '🎬 Blender 2.5D' },
   { to: '/library', label: 'Library Aset' },
 ]
 

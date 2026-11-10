@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react'
 import { api } from '../api'
 import { backgroundPng } from '../builder/render'
 import { prepareRig, rigLayers, type PreparedRig } from '../builder/insertRig'
+import { prepareCard } from '../builder/insertCard'
+import { cardLayers, type PreparedCard } from '../builder/card'
+
+type Placed = { kind: 'rig'; pr: PreparedRig } | { kind: 'card'; pc: PreparedCard }
 import type { BuilderSummary, LibAsset } from '../builder/types'
 import { boardFromScript, parseScript, pickBackground, sceneSecondsFor, spreadX, subtitlesFromDialog } from '../filmTools'
 import { sceneUid } from '../movie'
@@ -32,7 +36,7 @@ export function StoryboardDialog({ projectId, onClose, onOpenScene }: { projectI
   const [error, setError] = useState('')
   const [notes, setNotes] = useState<string[]>([])
   const [builders, setBuilders] = useState<BuilderSummary[]>([])
-  useEffect(() => { api.builderList().then(setBuilders).catch(() => {}) }, [])
+  useEffect(() => { api.castList().then(setBuilders).catch(() => {}) }, [])
   if (!p) return null
 
   const patchBoard = (sceneId: string, fn: (b: SceneBoard) => SceneBoard) => {
@@ -57,7 +61,7 @@ export function StoryboardDialog({ projectId, onClose, onOpenScene }: { projectI
       const { width: W, height: H } = p!.settings
       const bgs = useBg ? await api.libAssets({ kind: 'background' }) : []
       const bgAssets = new Map<number, number>() // library bg id -> project asset id (uploaded once)
-      const prepared = new Map<string, PreparedRig | null>()
+      const prepared = new Map<string, Placed | null>()
       const out: Scene[] = []
       for (const [i, ps] of parsed.entries()) {
         setProgress(`Scene ${i + 1}/${parsed.length}: ${ps.name}`)
@@ -73,20 +77,25 @@ export function StoryboardDialog({ projectId, onClose, onOpenScene }: { projectI
             layers.push({ id: uid(), type: 'image', name: `Latar: ${bg.name}`, assetId: bgAssets.get(bg.id)!, x: W / 2, y: H / 2, scaleX: 1, scaleY: 1, rotation: 0, opacity: 1, visible: true, locked: true })
           } else warn.push(`Scene "${ps.name}": tidak ada latar yang cocok dengan "${ps.location}" (latar dikosongkan; pasang manual lewat tombol Latar).`)
         }
-        const here: PreparedRig[] = []
+        const here: Placed[] = []
         if (useChars) {
           for (const who of ps.characters) {
             const key = who.toLowerCase()
             if (!prepared.has(key)) {
               const b = builders.find((x) => x.name.toLowerCase() === key)
-              prepared.set(key, b ? await prepareRig(projectId, b, setProgress) : null)
+              // (a 2.5D card character has kind 'card'; Character Builder rigs have no kind)
+              prepared.set(key, !b ? null : 'kind' in b && b.kind === 'card'
+                ? { kind: 'card', pc: await prepareCard(projectId, b, setProgress) }
+                : { kind: 'rig', pr: await prepareRig(projectId, b, setProgress) })
               if (!b) warn.push(`Tokoh "${who}" belum ada di Character Builder, jadi tidak ditempatkan (dialognya tetap tercatat).`)
             }
             const pr = prepared.get(key)
             if (pr) here.push(pr)
           }
           const xs = spreadX(here.length)
-          here.forEach((pr, j) => layers.push(...rigLayers(pr, { width: W, height: H }, { xFrac: xs[j], scale: here.length > 2 ? 0.8 : 1 })))
+          here.forEach((p, j) => layers.push(...(p.kind === 'rig'
+            ? rigLayers(p.pr, { width: W, height: H }, { xFrac: xs[j], scale: here.length > 2 ? 0.8 : 1 })
+            : cardLayers(p.pc, { width: W, height: H, duration: sceneSecondsFor(ps), fps: p!.settings.fps }, uid, { xFrac: xs[j], height: here.length > 2 ? 0.62 : 0.78 }))))
         }
         const duration = sceneSecondsFor(ps)
         out.push({

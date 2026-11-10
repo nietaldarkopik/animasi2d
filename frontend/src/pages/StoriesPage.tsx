@@ -15,7 +15,7 @@ export function StoriesPage() {
   async function create() {
     setError('')
     try {
-      const chars = await api.builderList()
+      const chars = await api.castList()
       if (chars.length === 0) return setError('Buat dulu minimal satu karakter di Character Builder: karakter cerita diambil dari sana.')
       const s = await api.storyCreate({
         title: 'Cerita baru',

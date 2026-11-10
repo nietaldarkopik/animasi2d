@@ -1,0 +1,16 @@
+build 0.14s objs=27 blinks=[37] mouthticks=39
+mouth_plan [(9, 'a'), (11, 'e'), (13, 'i'), (15, 'a'), (17, 'o'), (19, 'e'), (21, 'a'), (23, 'a'), (25, 'o'), (27, 'a'), (31, None), (33, 'o'), (35, 'a'), (37, 'i')]
+m01_netral_diam f5 21.27s
+m02_bicara_f15 f15 1.65s
+m03_bicara_f19 f19 1.55s
+m04_bicara_f23 f23 1.58s
+m05_kedip f38 1.61s
+m06_pop_tunjuk f31 1.57s
+m07_kaget_angkat f64 1.66s
+m11_pinggang_medium f95 1.71s
+m12_tunjuk_medium f35 1.68s
+m13_silang_medium f112 1.56s
+f08_penuh_silang f95 1.61s
+f09_penuh_siluet f35 1.63s
+c10_closeup_mengantuk f112 1.50s
+SELESAI

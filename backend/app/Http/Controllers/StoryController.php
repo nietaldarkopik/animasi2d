@@ -86,12 +86,12 @@ class StoryController extends Controller
         ]);
         if (isset($d['characters'])) {
             // a character that speaks must exist in the user's Character Builder (the film maker draws it from there)
-            $all = Character::where('user_id', $request->user()->id)->where('kind', 'builder')->pluck('name');
+            $all = Character::where('user_id', $request->user()->id)->whereIn('kind', ['builder', 'card'])->pluck('name');
             $mine = $all->reverse()->mapWithKeys(fn ($n) => [mb_strtolower($n) => $n]); // (several with the same name: the first one wins, and the spelling typed wins if it exists)
             $seen = [];
             foreach ($d['characters'] as $i => $c) {
                 // an explicit id (picked in the editor) says which of several same-named characters is meant
-                $byId = ! empty($c['id']) ? Character::where('user_id', $request->user()->id)->where('kind', 'builder')->find($c['id']) : null;
+                $byId = ! empty($c['id']) ? Character::where('user_id', $request->user()->id)->whereIn('kind', ['builder', 'card'])->find($c['id']) : null;
                 $typed = trim($byId?->name ?? $c['name']);
                 $canon = $byId ? $byId->name : ($all->contains($typed) ? $typed : ($mine[mb_strtolower($typed)] ?? null));
                 if ($canon === null) {
@@ -104,7 +104,7 @@ class StoryController extends Controller
                     return response()->json(['message' => 'Nama "Narator" dipakai untuk narasi, pakai nama lain.', 'errors' => ['characters' => ['Nama Narator dipakai untuk narasi.']]], 422);
                 }
                 $seen[mb_strtolower($canon)] = true;
-                $id = $byId?->id ?? Character::where('user_id', $request->user()->id)->where('kind', 'builder')->where('name', $canon)->orderBy('id')->value('id');
+                $id = $byId?->id ?? Character::where('user_id', $request->user()->id)->whereIn('kind', ['builder', 'card'])->where('name', $canon)->orderBy('id')->value('id');
                 $d['characters'][$i] = ['id' => $id, 'name' => $canon, 'role' => $c['role'] ?? null, 'traits' => $c['traits'] ?? null, 'voice' => $c['voice'] ?? null];
             }
         }

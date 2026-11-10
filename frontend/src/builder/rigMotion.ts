@@ -196,7 +196,8 @@ export function applyRigMotion(doc: SceneDocument, rig: RigRef, id: string, star
 
 // ---- expressions ---------------------------------------------------------------------
 
-export const EXPR_SLOTS = ['eyes', 'brows', 'mouth'] as const
+/** card_head: the whole head image of a 2.5D card character (one image per expression) */
+export const EXPR_SLOTS = ['eyes', 'brows', 'mouth', 'card_head'] as const
 
 /** Expression ids this character has image variants for ('default' = the images it was inserted with). */
 export function rigExpressions(rig: RigRef): string[] {

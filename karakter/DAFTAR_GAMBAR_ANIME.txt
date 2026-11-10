@@ -1,0 +1,22 @@
+DAFTAR GAMBAR KARAKTER - GAYA JAPANESE ANIME (dipasang di render 540p)
+=====================================================================
+Format: PNG, LATAR TRANSPARAN. Template: karakter\_template_anime\ (panduan_* = garis bantu, kosong_* = kanvas siap gambar, contoh_susunan_anime.png).
+Satu folder per karakter: karakter\<nama>\  (mis. karakter\uki\).  Mentah dari generator: karakter\<nama>\_mentah\
+
+UKURAN & POSISI
+Badan   600 x 1400  telapak kaki y=1375, tengah x=300, bahu y~310. Tanpa kepala. Garis tepi >= 8 px (mengecil jadi ~2 px di 540p).
+Kepala  400 x 400   ditempel di (100,0) kanvas badan. Mata y=190 (x=135 & 265), dagu y=330. Sudah termasuk rambut + mulut tertutup.
+Mulut   120 x 80    ditempel di (140,222) kanvas kepala (pusat 200,262). 5 bentuk vokal: a, i, u, e, o.
+Kelopak 400 x 400   overlay kedip (hanya kelopak tertutup), tempel di (0,0) kepala.
+
+FILE PER KARAKTER (22): nama_kepala_<ekspresi>.png (10: netral, senang, kaget, sinis, sedih, marah, bingung, mengantuk, sombong, malu)
+ nama_badan_<pose>.png (9: diam, tunjuk, angkat, lambai, pinggang, pelipis, dagu, jempol, silang)
+ nama_mulut_a|i|u|e|o.png (5)  nama_kelopak.png (1)  -> total 25 file
+Minimum cepat: kepala netral/senang/kaget/sedih, badan diam/tunjuk/pinggang, mulut a & o, kelopak.
+Pose duduk/lari/dinamis tidak didukung (satu pose = satu gambar diam). Gaya, proporsi, warna HARUS sama di semua file.
+Tanpa wajah/nama tokoh nyata, logo merek, atau meniru karakter anime yang sudah ada.
+
+CATATAN UKURAN SEBENARNYA (setelah karakter Uki diproses, 2026-11-08)
+Badan 800 x 1400 (bukan 600): lengan terangkat/menunjuk butuh ruang. Tengah x=400, kaki y=1375, leher teratas y~250.
+Kepala 400 x 400 ditempel di (200,0) kanvas badan; mulut 120x80 (pusat 198,244 di kepala); kelopak 400x400 di (0,0) kepala.
+Rincian & posisi mata: karakter\uki\character.json. Template gambar-tangan lama (600x1400) tetap benar hanya untuk karakter yang digambar manual.

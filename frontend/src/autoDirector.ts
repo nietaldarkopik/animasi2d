@@ -14,6 +14,13 @@ import { applyExpression, applyPose, applyRigMotion, findRigs, POSES, rigExpress
 import { applyLipSync, envelope, mouthKeys, openings } from './lipsync'
 import { sceneStart } from './movie'
 import type { BuilderSummary } from './builder/types'
+import { applyCardLipSync, applyCardPose, CARD_ROLES, cardExpression, cardLayers, type CardSummary, type PreparedCard } from './builder/card'
+import { prepareCard, prepareCardFlat } from './builder/insertCard'
+
+/** A character on stage: a Character Builder rig, or a 2.5D card character (body per pose, head per expression). */
+type Cast = { kind: 'rig'; name: string; pr: PreparedRig } | { kind: 'card'; name: string; pc: PreparedCard }
+/** the head expressions of a card rig, under the card's own names */
+const cardExprs = (rig: ReturnType<typeof findRigs>[number]) => Object.keys(rig.pieces[CARD_ROLES.head]?.expr ?? {}).filter((k) => k !== 'default')
 import type { Asset, AudioClip, Keyframe, Layer, ProjectDoc, Scene, SceneDocument } from './types'
 
 /** the document allows this many audio clips: one effect too many would make the whole film unsaveable */
@@ -29,10 +36,14 @@ function applyAction(doc: SceneDocument, rig: ReturnType<typeof findRigs>[number
   const f = Math.round(at * fps)
   const room = Math.max(0.5, duration - at)
   const backAt = Math.round(Math.min(at + HOLD_SECONDS, duration) * fps)
+  const cardBody = rig.pieces[CARD_ROLES.body] && doc.layers.find((l) => l.id === rig.pieces[CARD_ROLES.body].id)
   if (e.kind === 'expression') {
-    if (!rigExpressions(rig).includes(e.id)) return
-    applyExpression(doc, rig, e.id, f)
+    const id = cardBody ? cardExpression(e.id, cardExprs(rig)) : e.id
+    if (!id || !rigExpressions(rig).includes(id)) return
+    applyExpression(doc, rig, id, f)
     applyExpression(doc, rig, 'default', backAt)
+  } else if (e.kind === 'pose' && cardBody) {
+    if (applyCardPose(cardBody, e.id, f) && backAt > f + 4) applyCardPose(cardBody, 'berdiri', backAt)
   } else if (e.kind === 'pose') {
     const pose = POSES.find((p) => p.id === e.id)
     const stand = POSES.find((p) => p.id === 'berdiri')
@@ -61,15 +72,24 @@ export async function directCartoonProject(
   onProgress?: (msg: string) => void
 ): Promise<ProjectDoc> {
   const builders = await api.builderList().catch(() => [] as BuilderSummary[])
-  if (!builders.length) {
+  const cards = await api.cardList().catch(() => [] as CardSummary[])
+  if (!builders.length && !cards.length) {
     onProgress?.('Tidak ada karakter di Character Builder.')
     return doc
+  }
+  type Member = { kind: 'rig'; c: BuilderSummary } | { kind: 'card'; c: CardSummary }
+  const roster: Member[] = [...builders.map((c) => ({ kind: 'rig' as const, c })), ...cards.map((c) => ({ kind: 'card' as const, c }))]
+  /** the character a name stands for: the id the film pinned (builder and card ids share one table), else by name */
+  const memberOf = (name: string): Member | undefined => {
+    const key = name.toLowerCase()
+    const id = ((doc as any).character_ids ?? {})[key]
+    return roster.find((m) => m.c.id === id) ?? roster.find((m) => m.c.name.toLowerCase() === key)
   }
 
   const W = doc.settings.width
   const H = doc.settings.height
   const fps = doc.settings.fps
-  const preparedCache = new Map<string, PreparedRig | null>()
+  const preparedCache = new Map<string, Cast | null>()
   const flatCache = new Map<string, FlatFigure | null>()
   const projectAssets = new Map<number, Asset>((await api.assets(projectId).catch(() => [] as Asset[])).map((a) => [a.id, a]))
   const decoded = new Map<number, { mono: Float32Array; rate: number; seconds: number } | null>()
@@ -106,7 +126,7 @@ export async function directCartoonProject(
     )
     // what the script says happens without words; whoever is named in an action needs a full rig, even without a line to speak
     const beats = sc.board?.beats ?? []
-    const names = [...speakers, ...(sc.board?.cast ?? []), ...knownNames, ...builders.map((b) => b.name)]
+    const names = [...speakers, ...(sc.board?.cast ?? []), ...knownNames, ...roster.map((m) => m.c.name)]
     const actions = beats.filter((b) => b.action).map((b) => ({ at: b.at, ...parseAction(b.action!, names) })).filter((a) => a.effects.length)
     const speaking = speakers.map((n) => n.toLowerCase())
     const actors = actions.flatMap((a) => a.who.map((n) => n.trim())).filter((n, i, all) => !speaking.includes(n.toLowerCase()) && !/^narr?ator$/i.test(n) && all.findIndex((x) => x.toLowerCase() === n.toLowerCase()) === i)
@@ -114,19 +134,21 @@ export async function directCartoonProject(
     const targetChars: string[] = onStage.length > 0 ? onStage : (doc as any).characters ?? ['Sekar', 'Uki']
 
     /** the rig of a character by name (prepared once per project); `strict` = no stand-in when no character has that name */
-    const rigOf = async (name: string, strict = false): Promise<PreparedRig | null> => {
+    const rigOf = async (name: string, strict = false): Promise<Cast | null> => {
       const key = name.toLowerCase()
       if (!preparedCache.has(key)) {
-        const b = builders.find((x) => x.id === ((doc as any).character_ids ?? {})[key]) ?? builders.find((x) => x.name.toLowerCase() === key) ?? (strict ? undefined : builders[0])
-        if (!b) return null
-        onProgress?.(`Mempersiapkan karakter 3D/2D rig: ${b.name}…`)
-        const pr = await prepareRig(projectId, b, onProgress).catch(() => null)
-        preparedCache.set(key, pr)
+        const m = memberOf(name) ?? (strict ? undefined : roster[0])
+        if (!m) return null
+        onProgress?.(`Mempersiapkan karakter ${m.kind === 'card' ? '2.5D' : 'rig'}: ${m.c.name}…`)
+        const cast: Cast | null = m.kind === 'card'
+          ? await prepareCard(projectId, m.c, onProgress).then((pc) => ({ kind: 'card' as const, name: pc.name, pc })).catch(() => null)
+          : await prepareRig(projectId, m.c, onProgress).then((pr) => ({ kind: 'rig' as const, name: pr.name, pr })).catch(() => null)
+        preparedCache.set(key, cast)
       }
       return preparedCache.get(key) ?? null
     }
-    const rigsInScene: PreparedRig[] = []
-    const rigByName = new Map<string, PreparedRig>()
+    const rigsInScene: Cast[] = []
+    const rigByName = new Map<string, Cast>()
     for (const name of targetChars) {
       const found = await rigOf(name, actors.includes(name)) // (only a speaker may have a stand-in: someone named in an action must really be that character)
       if (found) { rigsInScene.push(found); rigByName.set(name.toLowerCase(), found) }
@@ -137,9 +159,9 @@ export async function directCartoonProject(
     for (const name of silentCast(sc.board?.cast, targetChars)) {
       const key = name.toLowerCase()
       if (!flatCache.has(key)) {
-        const b = builders.find((x) => x.id === ((doc as any).character_ids ?? {})[key]) ?? builders.find((x) => x.name.toLowerCase() === key)
-        onProgress?.(`Menyiapkan pemeran latar: ${b?.name ?? name}…`)
-        flatCache.set(key, b ? await prepareFlat(projectId, b).catch(() => null) : null)
+        const m = memberOf(name)
+        onProgress?.(`Menyiapkan pemeran latar: ${m?.c.name ?? name}…`)
+        flatCache.set(key, m ? await (m.kind === 'card' ? prepareCardFlat(projectId, m.c) : prepareFlat(projectId, m.c)).catch(() => null) : null)
       }
       const f = flatCache.get(key)
       if (f && !crowd.includes(f)) crowd.push(f)
@@ -156,17 +178,22 @@ export async function directCartoonProject(
     const spots = new Map<string, { x: number; headTop: number; follow?: Keyframe[] }>() // speaker -> where the head is (for the balloons); follow = x keys when it moves
 
     const speakerScale: { height: number; footY: number }[] = [] // how tall the speakers are on screen and where they stand: the crowd is sized from them
-    for (const [idx, pr] of rigsInScene.entries()) {
+    for (const [idx, cast] of rigsInScene.entries()) {
+      const pr = cast // (its name)
       const xFrac = xFracs[idx] ?? 0.5
-      const ext = figureExtent(pr)
+      // figure height in its own units: rig canvas units, or card pixels (hair top to feet)
+      const units = cast.kind === 'rig' ? figureExtent(cast.pr).bottom - figureExtent(cast.pr).top : (cast.pc.meta.body.char_height_px ?? cast.pc.meta.body.canvas[1])
       const baseFrac = rigsInScene.length === 1 ? 0.58 : 0.52
-      const footY0 = standingOn(H, floorY, baseFrac, fitScale(H), ext.bottom - ext.top).footY
+      const footY0 = standingOn(H, floorY, baseFrac, fitScale(H), units).footY
       const tallestBalloon = Math.max(0, ...sc.layers.filter((l) => l.type === 'balloon').map((b) => balloonSize(b.text ?? '', b.fontSize ?? 28).height))
       // leave room above the head for the biggest balloon of this scene (a tall figure in a room with a low ceiling would hide behind it)
-      const stand = standingOn(H, floorY, figureFracWithHeadroom(H, footY0, tallestBalloon, baseFrac), fitScale(H), ext.bottom - ext.top)
-      const layers = rigLayers(pr, { width: W, height: H }, { xFrac, scale: stand.scale, footY: stand.footY })
-      speakerScale.push({ height: fitScale(H) * stand.scale * (ext.bottom - ext.top), footY: stand.footY })
-      spots.set(pr.name.toLowerCase(), { x: xFrac * W, headTop: stand.footY - (ext.bottom - ext.top) * fitScale(H) * stand.scale })
+      const stand = standingOn(H, floorY, figureFracWithHeadroom(H, footY0, tallestBalloon, baseFrac), fitScale(H), units)
+      const figPx = fitScale(H) * stand.scale * units
+      const layers = cast.kind === 'rig'
+        ? rigLayers(cast.pr, { width: W, height: H }, { xFrac, scale: stand.scale, footY: stand.footY })
+        : cardLayers(cast.pc, { width: W, height: H, duration: sc.duration, fps }, uid, { xFrac, footY: stand.footY, height: figPx / H })
+      speakerScale.push({ height: figPx, footY: stand.footY })
+      spots.set(pr.name.toLowerCase(), { x: xFrac * W, headTop: stand.footY - figPx })
 
       // ---- acting: breathing or running, a face and pose per line, the mouth following the real voice
       const tmp: SceneDocument = { schema: 1, settings: { width: W, height: H, fps, duration: sc.duration, background: '#ffffff' }, layers }
@@ -181,22 +208,32 @@ export async function directCartoonProject(
             applyRigMotion(tmp, rig, 'run', 0, { duration: sc.duration, distance: W * 0.55, dir: 1 })
             if (root?.keyframes?.x) spots.get(pr.name.toLowerCase())!.follow = root.keyframes.x
           } else {
-            const torso = layers.find((l) => l.id === rig.bones.torso?.id)
-            if (torso) applyPreset(torso, 'breathe', { duration: sc.duration, amount: 1.4, cycles: Math.max(1, Math.round(sc.duration / 2.4)), phase: 0 }, 0, fps, evalLayer(torso, 0))
+            // a card has no torso bone: it breathes from the feet (its root)
+            const torso = layers.find((l) => l.id === (cast.kind === 'card' ? rig.bones.root?.id : rig.bones.torso?.id))
+            if (torso) applyPreset(torso, 'breathe', { duration: sc.duration, amount: cast.kind === 'card' ? 0.8 : 1.4, cycles: Math.max(1, Math.round(sc.duration / 2.4)), phase: 0 }, 0, fps, evalLayer(torso, 0))
           }
 
           const exprs = rigExpressions(rig)
+          const cardBody = cast.kind === 'card' ? layers.find((l) => l.id === rig.pieces[CARD_ROLES.body]?.id) : undefined
           const stand = POSES.find((p) => p.id === 'berdiri')!
           const plan = planActing(myLines, fps)
           plan.forEach((step, i) => {
             const next = plan[i + 1]
-            if (step.emotion !== 'netral' && exprs.includes(step.emotion)) {
-              applyExpression(tmp, rig, step.emotion, step.start)
+            const emotion = cardBody ? cardExpression(step.emotion, cardExprs(rig)) ?? 'netral' : step.emotion
+            if (step.emotion !== 'netral' && emotion !== 'netral' && exprs.includes(emotion)) {
+              applyExpression(tmp, rig, emotion, step.start)
               const back = Math.min(step.end + 4, next ? next.start - 1 : Infinity)
               if (back > step.start) applyExpression(tmp, rig, 'default', back) // relax the face (unless the next line starts right away)
             }
+            if (cardBody && step.pose && !running) {
+              if (applyCardPose(cardBody, step.pose, step.start + 2)) {
+                const back = Math.min(step.end + EASE_OUT, next ? next.start - 1 : Infinity)
+                if (back > step.start + 4) applyCardPose(cardBody, 'berdiri', back)
+              }
+              return
+            }
             const pose = POSES.find((p) => p.id === step.pose)
-            if (pose && !running) {
+            if (pose && !running && !cardBody) {
               if (step.start - EASE_IN > 0) applyPose(tmp, rig, stand, step.start - EASE_IN)
               applyPose(tmp, rig, pose, step.start + 2)
               const back = Math.min(step.end + EASE_OUT, next ? next.start - EASE_IN - 1 : Infinity)
@@ -206,19 +243,22 @@ export async function directCartoonProject(
 
           // what the script says this character does (after the acting above: an action replaces the keys in its range)
           for (const a of actions) {
-            if (!a.all && !a.who.some((n) => rigByName.get(n.trim().toLowerCase()) === pr)) continue
+            if (!a.all && !a.who.some((n) => rigByName.get(n.trim().toLowerCase()) === cast)) continue
             for (const e of a.effects) applyAction(tmp, rig, e, a.at, W, rigsInScene.map((_, i) => (xFracs[i] ?? 0.5) * W).filter((_, i) => i !== idx), (x) => { spots.get(pr.name.toLowerCase())!.follow = x })
           }
 
           // the mouth follows the loudness of the real voice of each of this character's lines
-          const mouth = layers.find((l) => l.id === rig.pieces.mouth?.id)
+          const mouth = layers.find((l) => l.id === (rig.pieces.mouth ?? rig.pieces[CARD_ROLES.mouth])?.id)
+          const cardMouth = !!mouth && mouth.rig?.role === `piece:${CARD_ROLES.mouth}`
           if (mouth) {
             for (const clip of doc.audio.filter((c) => c.name.toLowerCase().startsWith(`${pr.name.toLowerCase()}: `))) {
               const t0 = clip.start - sStart
               if (t0 < -0.01 || t0 >= sc.duration || !clip.assetId) continue
               const v = await decodeVoice(clip.assetId)
               if (!v) continue
-              const keys = mouthKeys(openings(envelope(v.mono, v.rate, fps, 0, Math.min(v.seconds, sc.duration - t0))), Math.round(t0 * fps), mouth.scaleY)
+              const open = openings(envelope(v.mono, v.rate, fps, 0, Math.min(v.seconds, sc.duration - t0)))
+              if (cardMouth) { applyCardLipSync(mouth, open, Math.round(t0 * fps)); continue }
+              const keys = mouthKeys(open, Math.round(t0 * fps), mouth.scaleY)
               applyLipSync(mouth, keys)
             }
           }

@@ -1,0 +1,52 @@
+PROMPT PEMBUAT ASET KARAKTER - jalankan BERURUTAN dalam SATU percakapan (Gemini / ChatGPT)
+Upload dulu: contoh_susunan.png dan panduan_badan_600x1000.png, panduan_kepala_600x600.png (dari folder _template).
+Ganti bagian [DALAM KURUNG SIKU]. Kalau hasil tahap tidak pas, minta ulang tahap itu saja sebelum lanjut.
+Semua tahap memakai latar hijau murni #00FF00 (bukan transparan) agar mudah dihapus otomatis.
+
+=== TAHAP 0 : PERAN & ATURAN (kirim pertama) ===
+You are a 2D cartoon character asset artist. I will ask you for several image sheets of ONE character, step by step.
+Strict global rules for EVERY image:
+- Style: flat 2D cartoon, "bean-head" (large oval head, small body), flat solid colors, NO gradients, NO soft shading, NO textures, NO realistic detail.
+- Thick uniform dark plum outline (#34 1C 3A, about 6 px at 600 px height) around every shape.
+- Background: solid pure green #00FF00, completely flat, no shadow, no floor, no ground line, no text, no labels, no watermark. Never use green on the character.
+- The character faces the camera, same proportions, same colors, same outfit in every image. Keep the design 100% consistent.
+- Do not imitate any existing cartoon character, mascot, brand or real person.
+- Layout: images are a clean GRID of equal-size cells, each cell contains exactly one item, centered, fully inside the cell with margin, cells separated by empty green space. No overlap, no cut-off.
+Reply only "siap" and wait for the character brief.
+
+=== TAHAP 1 : DESAIN KARAKTER (acuan) ===
+Character brief:
+- Name: [NAMA, mis. Budi]   Role: [PERAN, mis. pekerja kantor]   Age look: [mis. 30-an]
+- Skin: [WARNA/HEX]   Hair: [MODEL & WARNA]   Outfit: [BAJU, CELANA, SEPATU, WARNA]   Accessory: [KACAMATA/TOPI/dll atau tidak ada]
+- Personality (affects expressions): [mis. pelupa, optimis berlebihan]
+Create ONE reference image: full body, standing, arms hanging relaxed, neutral expression, mouth closed, feet flat on an invisible line, on green #00FF00. Proportions: head about 38% of total height, body small. Show it large and clean. This is the master design; all later sheets must match it exactly.
+
+=== TAHAP 2 : KEPALA / EKSPRESI (10) ===
+Using the exact master design, create ONE sheet: 5 columns x 2 rows grid of 10 HEAD-ONLY images (head, ears, hair, face, short neck stub; no body), each in a square cell, same head size and same position in every cell, on green #00FF00.
+Expressions, left to right, top row then bottom row, MOUTH CLOSED OR NATURAL SMALL MOUTH (no wide open mouth):
+1 netral, 2 senang (smile), 3 kaget (wide eyes, small round mouth), 4 sinis (half-lidded smirk), 5 sedih,
+6 marah, 7 bingung (one eyebrow up, tilted), 8 mengantuk (heavy eyelids), 9 sombong (proud, chin up), 10 malu (blush, eyes aside).
+Eyes OPEN in all of them (blinking is a separate asset). Do not draw any label text.
+
+=== TAHAP 3 : BADAN / POSE (9) ===
+Using the exact master design, create ONE sheet: 3 columns x 3 rows grid of 9 BODY-ONLY images: NO HEAD (stop at the neck / shoulders line), body + both arms + hands + legs + shoes. Same body size, same feet baseline (feet touch the same horizontal level) and same horizontal center in every cell. Arms may extend beyond the torso but must stay inside the cell.
+Poses, left to right, top row first:
+1 diam (arms hanging), 2 tunjuk (right arm pointing to the side-up, index finger extended),
+3 angkat (both hands raised up), 4 lambai (right hand waving, raised near head height),
+5 pinggang (both hands on hips), 6 pelipis (right hand touching temple level near shoulder-top),
+7 dagu (right hand at chin level, left arm across stomach), 8 jempol (right thumbs-up), 9 silang (arms crossed over chest).
+
+=== TAHAP 4 : MULUT & KEDIP ===
+4a. Using the master design (same skin tone and lip color), create ONE sheet: 1 row x 2 cells, MOUTH-ONLY close-ups on green #00FF00 (no face, no head): cell 1 = mouth half open (small dark opening, hint of teeth), cell 2 = mouth wide open (dark red inside, tongue, upper teeth). Same size and same center in both.
+4b. Create ONE image: the character's two closed eyelids only (skin-colored eyelid shapes with a curved lash line), as they would sit over the open eyes, same eye spacing and size as in the master head, side by side, on green #00FF00. No head, no other facial parts.
+
+=== SETELAH SELESAI ===
+Simpan tiap lembar hasil sebagai file PNG/JPG terpisah dengan nama:
+ [nama]_lembar_kepala.png, [nama]_lembar_badan.png, [nama]_lembar_mulut.png, [nama]_lembar_kelopak.png, [nama]_acuan.png
+Taruh di folder  C:\Videos\BututDesign\karakter\[nama]\_mentah\  lalu minta Claude: "proses aset karakter [nama]"
+(Claude akan memotong grid, menghapus latar hijau, meluruskan posisi & ukuran ke 600x1000 / 600x600 / 160x120, dan menamai file sesuai DAFTAR_GAMBAR.txt.)
+
+TIPS KONSISTENSI
+- Kalau hasil tahap 2-4 mulai berbeda dari acuan, tulis: "Match the master reference image exactly: same colors, outline thickness, head shape, outfit."
+- Generator sering menaruh teks/label dan bayangan; minta: "Remove all text and shadows, flat green background only."
+- Kalau grid berantakan, minta satu baris per gambar (5 gambar atau 3 gambar per permintaan) lalu gabungkan.

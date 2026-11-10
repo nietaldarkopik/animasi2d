@@ -36,7 +36,7 @@ export function StoryPage() {
     } catch (e) { if (alive.current) setError((e as Error).message) }
   }, [sid])
 
-  useEffect(() => { alive.current = true; void refresh(true); api.builderList().then(setBuilders).catch(() => {}); return () => { alive.current = false } }, [refresh])
+  useEffect(() => { alive.current = true; void refresh(true); api.castList().then(setBuilders).catch(() => {}); return () => { alive.current = false } }, [refresh])
   useEffect(() => { if (series) document.title = `${series.title} — Cerita` }, [series?.title]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // while the AI writes or a film is being made, look again every few seconds

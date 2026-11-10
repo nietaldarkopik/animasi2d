@@ -1,0 +1,41 @@
+DAFTAR GAMBAR KARAKTER CUSTOM - channel "Ternyata Begini"
+=========================================================
+Semua file: PNG, LATAR TRANSPARAN, warna datar + outline tegas (detail halus hilang saat render 540p).
+Template ada di folder _template\ :
+  panduan_*.png  = garis bantu (pakai sebagai layer bawah di aplikasi gambar, JANGAN ikut disimpan)
+  kosong_*.png   = kanvas transparan siap gambar, ukuran sudah benar
+  contoh_susunan.png = cara potongan-potongan digabung
+
+Satu folder per karakter:  karakter\<nama>\   (nama huruf kecil tanpa spasi, mis. budi, sari, pakrt)
+Disarankan minimal 4 karakter (tokoh utama, teman, "ahli", figuran).
+
+UKURAN & POSISI
+---------------
+Badan    600 x 1000 px  telapak kaki tepat di y=975, tengah badan x=300, leher/bahu y~560.
+                        Area kepala (y 0-560) jangan digambar kepala; tangan yang diangkat/menunjuk boleh masuk area itu.
+Kepala   600 x 600 px   ditempel di titik (0,0) kanvas badan. Mata y~300, dagu y~560.
+                        Kepala SUDAH termasuk mulut tertutup sesuai ekspresinya.
+Mulut    160 x 120 px   ditempel di (220,375) kepala -> pusat mulut (300,435).
+Kelopak  600 x 600 px   overlay kedip: hanya kelopak tertutup di area mata, sisanya transparan.
+
+DAFTAR FILE PER KARAKTER (contoh nama: budi)
+--------------------------------------------
+A. Kepala / ekspresi (10)  -> budi_kepala_<ekspresi>.png
+   netral, senang, kaget, sinis, sedih, marah, bingung, mengantuk, sombong, malu
+B. Badan / pose (9)        -> budi_badan_<pose>.png
+   diam (tangan menggantung), tunjuk, angkat (dua tangan), lambai, pinggang (berkacak pinggang),
+   pelipis (pegang pelipis), dagu (pegang dagu), jempol, silang (tangan menyilang)
+C. Mulut bicara (2)        -> budi_mulut_setengah.png, budi_mulut_buka.png
+D. Kedip (1)               -> budi_kelopak.png
+   Total: 22 file per karakter.
+
+Minimum kalau mau cepat: kepala netral/senang/kaget/sedih, badan diam/tunjuk/pinggang, mulut_buka, kelopak (9 file).
+Satu gambar utuh saja juga bisa dipakai (budi_utuh.png 600x1000), tapi tanpa ganti ekspresi & gerak mulut.
+
+TIPS
+----
+- Arah hadap: menghadap kamera atau sedikit 3/4; semua pose arah yang sama (sistem bisa membalik kiri-kanan).
+- Jaga proporsi kepala & warna kostum SAMA di semua file.
+- Tangan yang menunjuk/melambai boleh keluar dari siluet badan, asal tetap di dalam kanvas.
+- Jangan pakai wajah/nama tokoh nyata yang masih hidup, logo merek, atau maskot terkenal.
+- Opsional: profil.txt per karakter (nama, peran, sifat) agar naskah memakai karakter itu dengan konsisten.

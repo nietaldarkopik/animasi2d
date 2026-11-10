@@ -41,7 +41,7 @@ class DailyCartoonController extends Controller
             });
 
         $characters = Character::where('user_id', $user->id)
-            ->where('kind', 'builder')
+            ->whereIn('kind', ['builder', 'card'])
             ->pluck('name')
             ->unique()
             ->values();

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { api, setToken } from '../api'
 import { AppNav } from '../components/AppNav'
 import { DailyCartoonDialog } from '../components/DailyCartoonDialog'
+import { BlenderStudioDialog } from '../components/BlenderStudioDialog'
 import { sampleCharacter } from '../templates'
 import type { ProjectSummary } from '../types'
 
@@ -12,6 +13,7 @@ export function ProjectsPage() {
   const [name, setName] = useState('')
   const [error, setError] = useState('')
   const [showDailyModal, setShowDailyModal] = useState(false)
+  const [showBlenderModal, setShowBlenderModal] = useState(false)
 
   const refresh = () => api.projects().then(setProjects).catch((e) => setError(e.message))
   useEffect(() => void refresh(), [])
@@ -75,8 +77,10 @@ export function ProjectsPage() {
           <button className="primary">Buat project</button>
           <button type="button" onClick={() => void createSample()} title="Karakter ber-rig yang melambai: contoh hierarki, bone, dan keyframe yang bisa diedit">Coba contoh karakter</button>
           <button type="button" onClick={() => setShowDailyModal(true)} style={{ background: 'linear-gradient(135deg, #4f46e5, #7c3aed)', color: '#fff', border: 'none', fontWeight: 600 }}>🎬 Kartun Harian (Auto)</button>
+          <button type="button" onClick={() => setShowBlenderModal(true)} style={{ background: 'linear-gradient(135deg, #ea580c, #f97316)', color: '#fff', border: 'none', fontWeight: 600 }}>🎨 Blender 2.5D Studio</button>
         </form>
         {showDailyModal && <DailyCartoonDialog onClose={() => { setShowDailyModal(false); refresh(); }} />}
+        {showBlenderModal && <BlenderStudioDialog onClose={() => setShowBlenderModal(false)} />}
         {error && <div className="error" role="alert">{error}</div>}
         {projects === null ? (
           <p className="muted">Memuat…</p>

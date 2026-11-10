@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { api } from '../api'
-import { evalCamera, removeCamKey, setCamKey, worldPoint } from '../anim'
+import { evalCamera, removeCamKey, removeSwap, setCamKey, setSwap, worldPoint } from '../anim'
 import { camFocus, camKeyFrames, camPan, camShake, camZoom } from '../camera'
 import { canvasRef } from '../canvas'
 import { absUrl, assetPng } from '../builder/render'
@@ -8,6 +8,7 @@ import type { LibAsset } from '../builder/types'
 import { applyExpression, applyPose, applyRigMotion, clearExpression, MOTIONS, POSES, rigExpressions, rigOf } from '../builder/rigMotion'
 import { addEffect, EFFECT_LABEL, makeBalloon, makeShadow, makeTitle, propPlacement, setTimeOfDay, TIME_PRESETS, timeOfDay } from '../filmTools'
 import { applyLipSync, envelope, mouthKeys, openings } from '../lipsync'
+import { applyCardLipSync, CARD_ROLES } from '../builder/card'
 import { sceneStart } from '../movie'
 import { uid, useEditor } from '../store'
 import type { CameraProp, EffectKind, Layer } from '../types'
@@ -66,7 +67,11 @@ function CharacterTab() {
     return <p className="muted small">Pilih bagian karakter yang disisipkan <strong>dengan bone</strong> (Karakter → Sisipkan + bone). Jika ada beberapa karakter di scene, klik salah satunya dulu.</p>
   }
   const exprs = rigExpressions(rig)
-  const mouth = rig.pieces.mouth
+  // a 2.5D card character: body image per pose, head image per expression, mouth overlay with shapes a/i/u/e/o
+  const cardBody = rig.pieces[CARD_ROLES.body]
+  const cardMouth = rig.pieces[CARD_ROLES.mouth]
+  const cardPoses = cardBody ? Object.keys(cardBody.expr ?? {}).filter((k) => k !== 'default') : []
+  const mouth = rig.pieces.mouth ?? cardMouth
   const voice = project.audio.filter((c) => s.assets[c.assetId])
 
   const growTo = (d: typeof doc, endFrame: number) => { const need = endFrame / d.settings.fps; if (need > d.settings.duration) d.settings.duration = Math.min(600, Math.ceil(need * 2) / 2) }
@@ -87,8 +92,16 @@ function CharacterTab() {
       const mono = new Float32Array(audio.length)
       for (let c = 0; c < audio.numberOfChannels; c++) { const ch = audio.getChannelData(c); for (let i = 0; i < mono.length; i++) mono[i] += ch[i] / audio.numberOfChannels }
       const open = openings(envelope(mono, audio.sampleRate, fps, from, to))
+      const f0 = Math.round((t0 + from) * fps)
+      if (mouth === cardMouth) {
+        if (!open.some((x) => x > 0)) throw new Error('Tidak ada suara yang terdeteksi pada klip ini.')
+        let n = 0
+        s.edit((d) => { n = applyCardLipSync(d.layers.find((l) => l.id === mouth.id)!, open, f0) })
+        setMsg(`Mulut 2.5D mengikuti suara: ${n} pergantian bentuk/tampil (frame ${f0}–${f0 + open.length}). Bisa diedit di timeline.`)
+        return
+      }
       const layer = doc.layers.find((l) => l.id === mouth.id)!
-      const keys = mouthKeys(open, Math.round((t0 + from) * fps), layer.scaleY)
+      const keys = mouthKeys(open, f0, layer.scaleY)
       if (keys.length === 0) throw new Error('Tidak ada suara yang terdeteksi pada klip ini.')
       s.edit((d) => { applyLipSync(d.layers.find((l) => l.id === mouth.id)!, keys) })
       setMsg(`Mulut digerakkan mengikuti volume suara: ${keys.length} keyframe (frame ${keys[0].f}–${keys[keys.length - 1].f}). Bisa diedit di timeline.`)
@@ -103,13 +116,24 @@ function CharacterTab() {
     <div style={{ display: 'grid', gap: 10 }}>
       <p className="small" style={{ margin: 0 }}>Karakter: <strong>{rig.name}</strong> · frame {frame}</p>
 
-      <div>
-        <h4 className="small" style={{ margin: '0 0 4px' }}>Pose (di frame ini)</h4>
-        <div className="row" style={{ gap: 4, flexWrap: 'wrap' }}>
-          {POSES.map((p) => <button key={p.id} onClick={() => s.edit((d) => { applyPose(d, rig, p, frame) })} title="Memasang keyframe rotasi di semua bone pada frame ini">{p.label}</button>)}
+      {cardBody ? (
+        <div>
+          <h4 className="small" style={{ margin: '0 0 4px' }}>Pose 2.5D (mulai frame ini)</h4>
+          <div className="row" style={{ gap: 4, flexWrap: 'wrap' }}>
+            {cardPoses.map((p) => <button key={p} onClick={() => s.edit((d) => { const l = d.layers.find((x) => x.id === cardBody.id); if (l?.expr?.[p]) setSwap(l, frame, l.expr[p]) })} title={`Ganti gambar badan ke pose "${p}" mulai frame ${frame}`}>{p}</button>)}
+          </div>
+          <button style={{ marginTop: 4 }} onClick={() => s.edit((d) => { const l = d.layers.find((x) => x.id === cardBody.id); if (l) removeSwap(l, frame) })}>Hapus pergantian pose di frame ini</button>
+          <p className="muted small" style={{ margin: '4px 0 0' }}>Karakter 2.5D berganti gambar badan per pose (tidak ada tulang lengan/kaki). Gerakan siap pakai di bawah menggerakkan seluruh badan.</p>
         </div>
-        <p className="muted small" style={{ margin: '4px 0 0' }}>Pindahkan playhead ke frame lain lalu pilih pose lain: gerakan di antaranya dihaluskan otomatis.</p>
-      </div>
+      ) : (
+        <div>
+          <h4 className="small" style={{ margin: '0 0 4px' }}>Pose (di frame ini)</h4>
+          <div className="row" style={{ gap: 4, flexWrap: 'wrap' }}>
+            {POSES.map((p) => <button key={p.id} onClick={() => s.edit((d) => { applyPose(d, rig, p, frame) })} title="Memasang keyframe rotasi di semua bone pada frame ini">{p.label}</button>)}
+          </div>
+          <p className="muted small" style={{ margin: '4px 0 0' }}>Pindahkan playhead ke frame lain lalu pilih pose lain: gerakan di antaranya dihaluskan otomatis.</p>
+        </div>
+      )}
 
       <div>
         <h4 className="small" style={{ margin: '0 0 4px' }}>Gerakan siap pakai</h4>

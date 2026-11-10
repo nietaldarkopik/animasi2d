@@ -1,0 +1,38 @@
+{
+ "diam": {
+  "h": 591,
+  "neck": 0
+ },
+ "tunjuk": {
+  "h": 591,
+  "neck": 0
+ },
+ "angkat": {
+  "h": 647,
+  "neck": 55
+ },
+ "lambai": {
+  "h": 607,
+  "neck": 21
+ },
+ "pinggang": {
+  "h": 589,
+  "neck": 2
+ },
+ "pelipis": {
+  "h": 637,
+  "neck": 51
+ },
+ "dagu": {
+  "h": 702,
+  "neck": 0
+ },
+ "jempol": {
+  "h": 701,
+  "neck": 0
+ },
+ "silang": {
+  "h": 702,
+  "neck": 0
+ }
+}

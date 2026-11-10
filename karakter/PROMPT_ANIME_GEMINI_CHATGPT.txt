@@ -1,0 +1,43 @@
+PROMPT ASET KARAKTER GAYA JAPANESE ANIME - jalankan BERURUTAN dalam SATU percakapan (Gemini / ChatGPT)
+Upload dulu: lembar "Uki" (acuan desain) + karakter\_template_anime\contoh_susunan_anime.png.
+Setiap permintaan = SATU gambar. Resolusi setinggi mungkin (minta 2048 px+). Kalau hasil tidak pas, ulang tahap itu saja.
+
+=== TAHAP 0 (kirim pertama) ===
+You are a 2D character asset artist. I will request several image sheets of ONE character, step by step.
+Global rules for EVERY image:
+- Style: clean modern Japanese anime, 2D cel-shading, soft flat shadows with max 2 tone levels, dark-brown outline that is thin but CLEAR and uniform (readable when the image is shrunk to 1/3), large expressive eyes with highlights, realistic proportions about 6.5 heads tall (NOT chibi, NOT bean-head, NOT 3D render).
+- Do not imitate any existing anime character, series or real person.
+- Background: solid pure #00FF00 everywhere, flat, no shadow, no floor, no gradients. Never use green on the character.
+- NO text, NO labels, NO numbers, NO cell boxes or panels, no watermark. Items are separated only by empty green space.
+- Same design, colors, proportions and line weight in every image. Facing the camera (slight 3/4 allowed only if I ask).
+- Grid layouts: equal-size cells, each item centered, fully inside its cell with margin, same size and same position in every cell.
+Reply only "siap".
+
+=== TAHAP 1 : ACUAN ===
+Character: Uki, 15-year-old vocational high school boy (SMK year 1). Personality: cool, kind, smart.
+Skin light warm beige. Hair black, short, side-swept fringe over forehead. Black rectangular glasses. Short-sleeve white button shirt with a small invented emblem on the chest pocket (NOT any real school logo), black belt, grey-blue trousers, black-and-white sneakers, black wristwatch on left wrist.
+Redraw him using the uploaded sheet only as design reference, in the style rules above. ONE full-body image, standing, arms relaxed, neutral expression, mouth closed, facing camera, large and clean. This is the master design.
+
+=== TAHAP 2 : KEPALA / EKSPRESI (10) ===
+Master design exactly. ONE image: grid 5 columns x 2 rows, 10 HEAD-ONLY items (head, ears, hair, glasses, face, short neck stub), square cells, identical head size/position, eyes OPEN, mouth closed or small natural mouth.
+Order: netral, senang (gentle smile), kaget (wide eyes, small round mouth), sinis (smirk, one brow raised), sedih, marah, bingung (tilted brow, wavy mouth), mengantuk (heavy half-closed lids), sombong (proud, chin up), malu (blush, eyes looking aside).
+Make sinis and mengantuk clearly different from each other.
+
+=== TAHAP 3 : BADAN / POSE (9) - kirim 3 permintaan, masing-masing 3 pose ===
+Master design exactly. ONE image per request: 3 columns x 1 row, each cell a tall portrait (3:7). BODY-ONLY: NO HEAD, stop at the neck base/collar; shoulders, torso, both arms, hands, legs, shoes. Feet on the same horizontal level, same body size and horizontal center in each cell. Hands drawn clearly (5 fingers, no extra/missing).
+Request A: diam (arms relaxed), tunjuk (right arm pointing up-sideways, index finger extended), angkat (both hands raised).
+Request B: lambai (right hand waving at head height), pinggang (both hands on hips), pelipis (right hand touching temple side - show hand beside the neck/shoulder top).
+Request C: dagu (right hand at chin level, left arm across stomach), jempol (right thumbs-up), silang (arms crossed over chest).
+No sitting, no running, no dynamic poses.
+
+=== TAHAP 4a : MULUT (5 bentuk vokal) ===
+Master design (same lip/skin colors). ONE image: 1 row x 5 cells, MOUTH-ONLY close-ups (no face): shape for vowels A (wide open), I (flat wide, teeth showing), U (small round pucker), E (medium open), O (round open). Same size and same center in all cells. Anime-simple: dark opening, small teeth hint, tongue only in A.
+
+=== TAHAP 4b : KELOPAK ===
+ONE image: only the character's two closed eyelids (skin-colored lids with a curved lash line), as if laid over open eyes, same eye spacing/size as the master head, side by side, NO glasses, NO head, NO other face parts.
+
+=== SETELAH SELESAI ===
+Simpan: uki_acuan.png, uki_lembar_kepala.png, uki_badan_A.png, uki_badan_B.png, uki_badan_C.png, uki_lembar_mulut.png, uki_lembar_kelopak.png
+di C:\Videos\BututDesign\karakter\uki\_mentah\  lalu minta Claude: "proses aset karakter uki"
+(saya potong grid, hapus hijau, sesuaikan ke 600x1400 / 400x400 / 120x80, beri nama sesuai DAFTAR_GAMBAR_ANIME.txt)
+TIPS: bila desain melenceng tulis "Match the master reference exactly: colors, outline weight, face shape, outfit."

@@ -19,7 +19,10 @@ Route::post('/auth/login', [AuthController::class, 'login'])->middleware('thrott
 Route::get('/assets/{asset}/file', [AssetController::class, 'file'])->name('assets.file')->middleware('signed');
 
 Route::get('/library/assets/{asset}/file', [LibraryController::class, 'file'])->name('library.file')->middleware('signed:relative');
+Route::get('/builder/cards/versions/{version}/file/{name}', [\App\Http\Controllers\CardCharacterController::class, 'file'])->name('cards.file')->middleware('signed:relative');
 Route::get('/builder/versions/{version}/thumbnail', [BuilderCharacterController::class, 'thumbnail'])->name('builder.thumbnail')->middleware('signed:relative');
+Route::get('/blender/character-face/{name}', [\App\Http\Controllers\BlenderController::class, 'characterFace']);
+Route::get('/blender/file/{filename}', [\App\Http\Controllers\BlenderController::class, 'file']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/design/templates', [\App\Http\Controllers\DesignController::class, 'templates']);
@@ -35,6 +38,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/library/assets/{asset}/upscale', [LibraryController::class, 'upscale'])->middleware('throttle:10,1');
     Route::post('/library/ai/generate', [LibraryController::class, 'generate'])->middleware('throttle:10,1');
 
+    Route::get('/builder/cards', [\App\Http\Controllers\CardCharacterController::class, 'index']);
+    Route::get('/builder/cards/available', [\App\Http\Controllers\CardCharacterController::class, 'available']);
+    Route::post('/builder/cards', [\App\Http\Controllers\CardCharacterController::class, 'import'])->middleware('throttle:30,1');
+    Route::get('/builder/cards/{character}', [\App\Http\Controllers\CardCharacterController::class, 'show']);
+    Route::patch('/builder/cards/{character}', [\App\Http\Controllers\CardCharacterController::class, 'rename']);
+    Route::post('/builder/cards/{character}/refresh', [\App\Http\Controllers\CardCharacterController::class, 'refresh'])->middleware('throttle:30,1');
+    Route::post('/builder/cards/{character}/duplicate', [\App\Http\Controllers\CardCharacterController::class, 'duplicate']);
+    Route::delete('/builder/cards/{character}', [\App\Http\Controllers\CardCharacterController::class, 'destroy']);
     Route::get('/builder/characters', [BuilderCharacterController::class, 'index']);
     Route::post('/builder/characters', [BuilderCharacterController::class, 'store'])->middleware('throttle:60,1');
     Route::get('/builder/characters/{character}', [BuilderCharacterController::class, 'show']);
@@ -95,5 +106,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/story/episodes/{episode}/produce', [\App\Http\Controllers\StoryController::class, 'produce'])->middleware('throttle:20,1');
     Route::get('/cartoon/status', [\App\Http\Controllers\DailyCartoonController::class, 'status']);
     Route::post('/cartoon/generate', [\App\Http\Controllers\DailyCartoonController::class, 'generate'])->middleware('throttle:10,1');
+
+    Route::get('/blender/status', [\App\Http\Controllers\BlenderController::class, 'status']);
+    Route::get('/blender/characters', [\App\Http\Controllers\BlenderController::class, 'characters']);
+    Route::get('/blender/scripts', [\App\Http\Controllers\BlenderController::class, 'scripts']);
+    Route::post('/blender/animate', [\App\Http\Controllers\BlenderController::class, 'animate'])->middleware('throttle:10,1');
+    Route::get('/blender/outputs', [\App\Http\Controllers\BlenderController::class, 'outputs']);
 });
 
