@@ -98,8 +98,16 @@ def process_naskah_or_prompt(
         "",
         "# Load Plan & Build Scene",
         f"plan_data = json.loads({repr(plan_json_esc)})",
-        "from core.scene_manager import build_scene_from_plan",
-        f"res_build = build_scene_from_plan(sc, plan_data, scene_idx={scene_idx}, quality={'final' if render_video else 'preview'!r})",
+        "# Reload scene_manager: Blender MCP is persistent and may cache an older module version",
+        "import importlib, inspect",
+        "import core.scene_manager as scene_manager",
+        "scene_manager = importlib.reload(scene_manager)",
+        "build_scene_from_plan = scene_manager.build_scene_from_plan",
+        "print('[Blender] scene_manager loaded from:', scene_manager.__file__)",
+        "print('[Blender] build_scene_from_plan signature:', inspect.signature(build_scene_from_plan))",
+        f"_build_kwargs = {{'scene_idx': {scene_idx}}}",
+        f"if 'quality' in inspect.signature(build_scene_from_plan).parameters: _build_kwargs['quality'] = {'final' if render_video else 'preview'!r}",
+        "res_build = build_scene_from_plan(sc, plan_data, **_build_kwargs)",
         "",
     ]
 
