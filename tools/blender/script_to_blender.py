@@ -121,6 +121,7 @@ def process_naskah_or_prompt(
                 "try: sc.render.image_settings.media_type = 'VIDEO'",
                 "except Exception: pass",
                 "sc.render.image_settings.file_format = 'FFMPEG'",
+                "sc.render.image_settings.color_mode = 'RGB'",
                 "sc.render.ffmpeg.format = 'MPEG4'",
                 "sc.render.ffmpeg.codec = 'H264'",
                 "sc.render.ffmpeg.constant_rate_factor = 'MEDIUM'",
@@ -146,6 +147,7 @@ def process_naskah_or_prompt(
             lines.extend([
                 "sc.frame_set(sc.frame_start + 15)",
                 "sc.render.image_settings.file_format = 'JPEG'",
+                "sc.render.image_settings.color_mode = 'RGB'",
                 "sc.render.image_settings.quality = 90",
                 f"rend_target = r'{rend_esc}'",
                 "sc.render.filepath = rend_target",
