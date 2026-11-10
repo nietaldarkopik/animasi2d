@@ -188,6 +188,9 @@ def build_scene_from_plan(
             exprs.append((end_f + 4, "netral"))
             poses.append((end_f + 4, "diam"))
 
+        # _at() in char_lib expects chronologically ordered expression keys.
+        exprs.sort(key=lambda item: item[0])
+        poses.sort(key=lambda item: item[0])
         location = positions.get(actor, (0.0, 0.65, 0.0))
         if clean_name in known_chars:
             char_dir = os.path.join(KARAKTER_ROOT, clean_name)
