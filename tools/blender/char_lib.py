@@ -306,9 +306,11 @@ def make_character(
     me_sh.from_pydata(sh_verts, [], [list(range(32))])
     sh = bpy.data.objects.new(f'CHAR_shadow_{char_id}_{tag}', me_sh)
     sc.collection.objects.link(sh)
-    sh.scale = (0.75, 0.42, 1)
+    # Keep the contact shadow horizontal in world space. Parenting it to the
+    # camera-facing character root would billboard the floor ellipse vertically.
+    sh.location = (loc[0], loc[1], 0.008)
+    sh.scale = (0.75 * scale, 0.42 * scale, 1)
     sh.data.materials.append(_shadowmat())
-    sh.parent = root
 
     B = _empty(sc, f'CHAR_B_{char_id}_{tag}', (0, 0, 0), root)
     body_c = (0, 0, (feet - bh / 2) * S)
