@@ -100,13 +100,13 @@ class SceneDirector:
                 "shot_size": "wide",
                 "angle": "eye_level",
                 "movement": "dolly_in",
-                "duration_frames": 48, # 2 seconds
+                "duration_frames": 36, # 1.5 seconds
                 "target": actors[0] if actors else "center",
                 "focus": "environment",
                 "start_f": global_frame,
                 "end_f": global_frame + 48,
             })
-            global_frame += 48
+            global_frame += 36
 
             # Shots for dialogue exchanges
             for d_idx, d in enumerate(dialogue_list):
@@ -130,6 +130,10 @@ class SceneDirector:
                     shot_size = "medium_close_up"
                     angle = "eye_level"
                     movement = "dolly_in"
+                elif any(w in line for w in ("periksa", "cek", "coba kita", "ikuti aku", "lihat ke")):
+                    shot_size = "medium"
+                    angle = "over_the_shoulder"
+                    movement = "tracking"
                 elif question:
                     shot_size = "medium"
                     angle = "over_the_shoulder" if d_idx > 0 else "eye_level"
