@@ -171,11 +171,15 @@ def process_naskah_or_prompt(
         else:
             lines.extend([
                 "# Preview the first dialogue reaction rather than the opening establishing shot.",
-                "_dialogue_shots = [shot for shot in plan_data['scenes'][scene_idx].get('shots', []) if shot.get('speaker')]",
+                f"_preview_scene_idx = max(0, min({scene_idx}, len(plan_data.get('scenes', [])) - 1))",
+                "_preview_scene = plan_data['scenes'][_preview_scene_idx] if plan_data.get('scenes') else {}",
+                "_dialogue_shots = [shot for shot in _preview_scene.get('shots', []) if shot.get('speaker')]",
                 "if _dialogue_shots:",
                 "    _first_dialogue = _dialogue_shots[0]",
-                "    _dialogue_len = max(1, int(_first_dialogue.get('end_f', _first_dialogue['start_f'] + 1)) - int(_first_dialogue['start_f']))",
-                "    _preview_frame = int(_first_dialogue['start_f']) + min(8, max(2, _dialogue_len // 3))",
+                "    _dialogue_start = int(_first_dialogue.get('start_f', sc.frame_start))",
+                "    _dialogue_end = int(_first_dialogue.get('end_f', _dialogue_start + 1))",
+                "    _dialogue_len = max(1, _dialogue_end - _dialogue_start)",
+                "    _preview_frame = _dialogue_start + min(8, max(2, _dialogue_len // 3))",
                 "else:",
                 "    _preview_frame = sc.frame_start + max(1, (sc.frame_end - sc.frame_start) // 2)",
                 "_preview_frame = min(sc.frame_end, max(sc.frame_start, _preview_frame))",
