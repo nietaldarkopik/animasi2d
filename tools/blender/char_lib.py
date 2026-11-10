@@ -128,7 +128,7 @@ def _rim_plane(sc, name, image_path, wpx, hpx, loc, parent, S, color):
     """Slightly enlarged alpha silhouette behind a sprite card for a restrained rim edge."""
     obj = _plane(sc, name, _silmat(image_path, color), wpx, hpx, loc, parent, S)
     obj.location.y += 0.012
-    obj.scale = (1.018, 1.018, 1.0)
+    obj.scale = (1.009, 1.009, 1.0)
     return obj
 
 
@@ -334,7 +334,7 @@ def make_character(
     }
     # A very thin cool silhouette behind each pose creates a readable rim edge
     # while leaving the original PNG artwork and its colors untouched.
-    rim_color = (0.20, 0.34, 0.62)
+    rim_color = (0.12, 0.22, 0.40)
     rim_bodies = {
         p: _rim_plane(sc, f'CHAR_{tag}_rim_b_{p}', P(PFX + 'badan_' + p),
                       bw, bh, body_c, B, S, rim_color)
