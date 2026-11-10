@@ -27,9 +27,9 @@ LIGHTING_CONFIGS: Dict[str, Dict[str, Any]] = {
         "key_power": 390.0, "fill_power": 65.0, "rim_power": 520.0,
     },
     "mystery": {
-        "world": (0.008, 0.014, 0.045, 1.0), "world_strength": 0.055,
+        "world": (0.008, 0.014, 0.045, 1.0), "world_strength": 0.025,
         "key": (0.38, 0.55, 1.0), "fill": (0.12, 0.18, 0.38), "rim": (0.58, 0.24, 1.0),
-        "key_power": 470.0, "fill_power": 55.0, "rim_power": 680.0,
+        "key_power": 300.0, "fill_power": 35.0, "rim_power": 450.0,
     },
 }
 
