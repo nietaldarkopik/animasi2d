@@ -13,7 +13,9 @@ from typing import Dict, Any, Optional, Tuple
 
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 9876
-DEFAULT_TIMEOUT = 1200.0
+# Video rendering can take much longer than a still preview.
+# Override with BLENDER_MCP_TIMEOUT (seconds) when needed.
+DEFAULT_TIMEOUT = float(os.environ.get("BLENDER_MCP_TIMEOUT", "7200"))
 BLENDER_EXE = os.environ.get(
     "BLENDER_EXE",
     r"C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"
