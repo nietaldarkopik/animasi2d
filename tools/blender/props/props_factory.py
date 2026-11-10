@@ -327,21 +327,21 @@ def create_classroom_props(sc: bpy.types.Scene) -> Dict[str, Any]:
         return obj
 
     board_title = add_board_text(
-        "Board_Title", "FISIKA  /  MATEMATIKA", -1.3, 1.99, 0.17, ink_blue
+        "Board_Title", "FISIKA  /  MATEMATIKA", -1.3, 2.48, 0.17, ink_blue
     )
     board_formula_1 = add_board_text(
-        "Board_Formula_1", "v = s / t", -1.82, 1.68, 0.20, ink_blue
+        "Board_Formula_1", "v = s / t", -1.82, 2.15, 0.20, ink_blue
     )
     board_formula_2 = add_board_text(
-        "Board_Formula_2", "F = m x a", -0.88, 1.68, 0.20, ink_red
+        "Board_Formula_2", "F = m x a", -0.88, 2.15, 0.20, ink_red
     )
     board_formula_3 = add_board_text(
-        "Board_Formula_3", "x² + y² = r²", -1.3, 1.38, 0.18, ink_blue
+        "Board_Formula_3", "x^2 + y^2 = r^2", -1.3, 1.82, 0.18, ink_blue
     )
 
     # A slim marker rail and two markers add small, useful classroom details.
     marker_rail = _create_box_mesh("WhiteboardMarkerRail", 1.15, 0.10, 0.055)
-    marker_rail.location = (-1.3, 4.56, 0.99)
+    marker_rail.location = (-1.3, 4.56, 1.50)
     marker_rail.data.materials.append(frame_mat)
     sc.collection.objects.link(marker_rail)
     marker_rail.parent = root
@@ -351,7 +351,7 @@ def create_classroom_props(sc: bpy.types.Scene) -> Dict[str, Any]:
     )
     for idx, (mx, marker_mat) in enumerate(((-1.62, ink_blue), (-1.28, ink_red))):
         marker = _create_box_mesh(f"WhiteboardMarker_{idx}", 0.055, 0.055, 0.22)
-        marker.location = (mx, 4.52, 1.13)
+        marker.location = (mx, 4.52, 1.63)
         marker.rotation_euler[1] = math.radians(90)
         marker.data.materials.append(marker_white)
         sc.collection.objects.link(marker)
