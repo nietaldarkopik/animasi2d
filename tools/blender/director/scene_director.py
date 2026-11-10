@@ -104,7 +104,7 @@ class SceneDirector:
                 "target": actors[0] if actors else "center",
                 "focus": "environment",
                 "start_f": global_frame,
-                "end_f": global_frame + 48,
+                "end_f": global_frame + 36,
             })
             global_frame += 36
 
