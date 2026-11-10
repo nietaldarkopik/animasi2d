@@ -512,3 +512,12 @@ if __name__ == "__main__":
             value = res["execution"].get(key)
             if value:
                 print(f"EXECUTION {key.upper()}:\n", str(value)[-8000:])
+    if "encoding" in res:
+        enc = res["encoding"]
+        print("\n[FFmpeg Encoding]", enc.get("status"))
+        if enc.get("status") == "ok":
+            print("  Output:", enc.get("output"))
+            print("  Frames:", enc.get("frames"), "| FPS:", enc.get("fps"))
+            print("  Size:", enc.get("size_bytes"), "bytes")
+        else:
+            print("  Error:", enc.get("message"))
