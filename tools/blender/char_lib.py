@@ -64,8 +64,10 @@ def _cardmat(path):
     L(df.outputs[0], s2r.inputs[0])
     rp = N('ShaderNodeValToRGB')
     rp.color_ramp.interpolation = 'CONSTANT'
-    rp.color_ramp.elements[0].color = (0.80, 0.78, 0.92, 1)
-    rp.color_ramp.elements[1].position = 0.06
+    # Cool lavender shadow keeps anime sprites dimensional without muddying skin.
+    rp.color_ramp.elements[0].color = (0.72, 0.70, 0.84, 1)
+    # Raise the toon threshold so key/fill lighting creates readable form shadows.
+    rp.color_ramp.elements[1].position = 0.18
     rp.color_ramp.elements[1].color = (1, 1, 1, 1)
     L(s2r.outputs[0], rp.inputs[0])
     mul = N('ShaderNodeMix')
