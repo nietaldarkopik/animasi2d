@@ -23,7 +23,19 @@ def _create_box_mesh(name: str, width: float, depth: float, height: float, cente
     ]
     me = bpy.data.meshes.new(f"Mesh_{name}")
     me.from_pydata(verts, [], faces)
+    me.update()
     obj = bpy.data.objects.new(name, me)
+
+    # Small bevels catch highlights and remove the overly sharp primitive look.
+    bevel = obj.modifiers.new("Soft_Edges", "BEVEL")
+    bevel.width = min(0.025, max(0.004, min(width, depth, height) * 0.06))
+    bevel.segments = 2
+    bevel.limit_method = "ANGLE"
+    try:
+        normal = obj.modifiers.new("Weighted_Normals", "WEIGHTED_NORMAL")
+        normal.keep_sharp = True
+    except (AttributeError, TypeError):
+        pass
     return obj
 
 def build_interior_room(
@@ -58,6 +70,10 @@ def build_interior_room(
         floor_mat = create_wood_material("LivingFloor", color=(0.58, 0.42, 0.28, 1.0))
         wall_mat = create_toon_material("LivingWall", base_color=(0.92, 0.90, 0.84, 1.0))
         trim_mat = create_wood_material("LivingTrim", color=(0.38, 0.24, 0.14, 1.0))
+    elif room_type == "classroom":
+        floor_mat = create_tile_material("ClassroomFloor", color=(0.66, 0.69, 0.66, 1.0))
+        wall_mat = create_toon_material("ClassroomWall", base_color=(0.86, 0.90, 0.84, 1.0))
+        trim_mat = create_wood_material("ClassroomTrim", color=(0.34, 0.24, 0.16, 1.0))
     else: # bedroom
         floor_mat = create_wood_material("BedFloor", color=(0.60, 0.45, 0.30, 1.0))
         wall_mat = create_toon_material("BedWall", base_color=(0.88, 0.90, 0.94, 1.0))
