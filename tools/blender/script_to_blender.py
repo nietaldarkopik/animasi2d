@@ -187,15 +187,27 @@ def process_naskah_or_prompt(
                 "        _img.save_render(filepath=_frame_path, scene=sc)",
                 "        if not os.path.isfile(_frame_path) or os.path.getsize(_frame_path) < 1024:",
                 "            continue",
-                "        _w, _h = _img.size",
-                "        _px = _img.pixels",
-                "        _count = max(1, _w * _h)",
-                "        _stride = max(1, _count // 5000)",
-                "        _samples = []",
-                "        for _p in range(0, _count, _stride):",
-                "            _i = _p * 4",
-                "            _samples.append(0.2126 * _px[_i] + 0.7152 * _px[_i + 1] + 0.0722 * _px[_i + 2])",
-                "        _mean = sum(_samples) / max(1, len(_samples))",
+                "        _qc_img = None",
+                "        try:",
+                "            _qc_img = bpy.data.images.load(_frame_path, check_existing=False)",
+                "            _w, _h = _qc_img.size",
+                "            _px = _qc_img.pixels",
+                "            _count = max(1, _w * _h)",
+                "            _stride = max(1, _count // 5000)",
+                "            _samples = []",
+                "            if len(_px) < _count * 4: raise RuntimeError('PNG pixel buffer is incomplete')",
+                "            for _p in range(0, _count, _stride):",
+                "                _i = _p * 4",
+                "                _samples.append(0.2126 * _px[_i] + 0.7152 * _px[_i + 1] + 0.0722 * _px[_i + 2])",
+                "            _mean = sum(_samples) / max(1, len(_samples))",
+                "        except Exception as _qc_error:",
+                "            print('[QC] Cannot inspect saved PNG:', _qc_error, flush=True)",
+                "            _mean, _var, _max = 0.0, 0.0, 0.0",
+                "            _samples = []",
+                "        finally:",
+                "            if _qc_img is not None: bpy.data.images.remove(_qc_img)",
+                "        _var = sum((_v - _mean) ** 2 for _v in _samples) / max(1, len(_samples)) if _samples else 0.0",
+                "        _max = max(_samples) if _samples else 0.0",
                 "        _var = sum((_v - _mean) ** 2 for _v in _samples) / max(1, len(_samples))",
                 "        _max = max(_samples) if _samples else 0.0",
                 "        _black = (_mean < 0.002 and _max < 0.01)",
@@ -268,6 +280,9 @@ def process_naskah_or_prompt(
         result["execution"] = exec_res
         if render_video and exec_res.get("status") == "ok" and output_render:
             try:
+                expected_frames_dir = os.path.splitext(os.path.abspath(output_render))[0] + "_frames"
+                if not os.path.isfile(os.path.join(expected_frames_dir, "qc_report.json")):
+                    raise RuntimeError("Blender execution returned without a completed QC report; FFmpeg encoding skipped.")
                 scene_data = plan.get("scenes", [])[scene_idx]
                 fps = int(plan.get("fps", 24))
                 frame_start = int(scene_data.get("start_frame", 1))
