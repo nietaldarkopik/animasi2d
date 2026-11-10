@@ -1,0 +1,27 @@
+{
+  "title": "Suara di Kamar Mandi",
+  "theme": "Rasa ingin tahu dan misteri di rumah tua",
+  "scenes": [
+    {
+      "name": "Koridor Menuju Kamar Mandi",
+      "location": "Koridor",
+      "time": "malam",
+      "dialog": [
+        { "who": "Seni", "text": "Malam-malam begini, kok ada suara gemericik air dari kamar mandi ya?" },
+        { "who": "Seni", "text": "Rumah ini kan cuma ada aku sama Arum. Aku harus cek ke sana." }
+      ]
+    },
+    {
+      "name": "Misteri di Balik Pintu Kamar Mandi",
+      "location": "Kamar mandi",
+      "time": "malam",
+      "dialog": [
+        { "who": "Seni", "text": "Pintu kamar mandinya sedikit terbuka... (Seni mengamati wastafel dan cermin)" },
+        { "who": "Arum", "text": "Hah?! Seni, kamu ngapain ngintip di depan pintu?!" },
+        { "who": "Seni", "text": "Astaga, Arum! Kamu lagi nyuci ember malam-malam begini?!" },
+        { "who": "Arum", "text": "Iya, embernya tadi bocor kena gayung. Lampunya juga kedap-kedip bikin kaget aja!" }
+      ]
+    }
+  ]
+}
+

@@ -1,0 +1,213 @@
+{
+    "theme": "Rasa penasaran yang berlebihan sering berujung pada jawaban yang mengecewakan sekaligus menggelikan",
+    "title": "Les Vokal Gaib",
+    "scenes": [
+        {
+            "name": "Misi Balik ke Rumah Tua",
+            "time": "pagi",
+            "dialog": [
+                {
+                    "who": "Seni",
+                    "text": "Rum, ayo balik ke rumah tua kamu. Aku mau ketemu si hantu penyanyi itu."
+                },
+                {
+                    "who": "Arum",
+                    "text": "Kamu gila?! Semalam hampir dimakan hantu, sekarang mau balik?!"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Tenang, aku bawa mikrofon mini. Siapa tahu hantunya mau diajak duet."
+                },
+                {
+                    "who": "Arum",
+                    "text": "Duet?! Kamu pikir ini audisi Indonesian Idol versi alam gaib?!"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Kalau suaranya bagus, kita viral. Kalau jelek, ya kita kasih les vokal gratis."
+                },
+                {
+                    "who": "Arum",
+                    "text": "Aku bawa jimat aja deh. Satu koper penuh. Biar aman."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Terserah. Yang penting kunci rumahnya jangan ketinggalan di celana aku lagi."
+                }
+            ],
+            "location": "Kamar tidur"
+        },
+        {
+            "name": "Persiapan Jimat dan Mikrofon",
+            "time": "siang",
+            "dialog": [
+                {
+                    "who": "Arum",
+                    "text": "Oke, aku bawa jimat dari tujuh sumber berbeda. Lengkap."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Rum, itu bukan jimat. Itu bungkus permen karet dari tas sekolah kamu."
+                },
+                {
+                    "who": "Arum",
+                    "text": "Oh iya. Pantas wanginya strawberry, bukan kemenyan."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Sudahlah. Aku udah siapin mikrofon, speaker kecil, sama playlist dangdut buat pancingan."
+                },
+                {
+                    "who": "Arum",
+                    "text": "Kamu mau mancing hantu pakai dangdut? Emang hantu suka Rhoma Irama?"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Semalam suaranya mendayu-dayu. Jelas selera dangdut, Rum."
+                }
+            ],
+            "location": "Ruang tamu"
+        },
+        {
+            "name": "Masuk Kamar Mandi Misterius",
+            "time": "sore",
+            "dialog": [
+                {
+                    "who": "Seni",
+                    "text": "Kita lewat dapur dulu. Kamar mandinya di ujung sana, kan?"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Iya. Sen, lututku udah gemeteran dari tadi."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Pegang mikrofon ini. Kalau ada suara, langsung rekam."
+                },
+                {
+                    "who": "Arum",
+                    "text": "Aku pegang jimat aja. Mikrofon buat kamu."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Rum, jimat kamu itu cuma kertas bertuliskan 'tolong jangan ganggu' pakai spidol pink."
+                },
+                {
+                    "who": "Arum",
+                    "text": "Setidaknya sopan! Hantu juga perlu dihargai, Sen!"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Ssst! Dengar nggak? Suaranya mulai terdengar lagi!"
+                }
+            ],
+            "location": "Dapur"
+        },
+        {
+            "name": "Duet dengan Suara Misterius",
+            "time": "sore",
+            "dialog": [
+                {
+                    "who": "Arum",
+                    "text": "Ya Allah, itu suara yang semalam! Mendayu-dayu gitu!"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Bagus! Aku nyalain mikrofon ya. Halo, saudara hantu, mau duet nggak?"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Sen, kamu ngajak kenalan hantu kayak ngajak kenalan di kantin!"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Eh, suaranya makin keras. Kayaknya dia antusias diajak duet!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Atau dia marah karena kamu ganggu konsernya!"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Tunggu deh. Kok lagunya familiar banget? Ini kan lagu dangdut yang lagi hits!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Hantu jaman sekarang update juga ya soal musik?"
+                }
+            ],
+            "location": "Kamar tidur"
+        },
+        {
+            "name": "Misteri Terkuak dari Ventilasi",
+            "time": "sore",
+            "dialog": [
+                {
+                    "who": "Seni",
+                    "text": "Rum, suaranya bukan dari kamar mandi. Dari lubang ventilasi di atas!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Hah? Ventilasi? Maksudnya hantu tinggal di ventilasi?!"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Bukan, bodoh! Ini saluran udara yang nyambung ke rumah tetangga sebelah!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Jadi... suara semalam itu..."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Radio dangdut tetangga kamu, Rum. Siaran tengah malam. Bukan hantu."
+                },
+                {
+                    "who": "Arum",
+                    "text": "Aku hampir mati ketakutan gara-gara radio dangdut Pak Hadi?!"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Jimat kamu yang satu koper itu buat nangkal radio, ternyata."
+                }
+            ],
+            "location": "Dapur"
+        },
+        {
+            "name": "Penutup dan Misteri Baru",
+            "time": "malam",
+            "dialog": [
+                {
+                    "who": "Arum",
+                    "text": "Syukurlah bukan hantu. Aku lega banget, Sen."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Tapi aku kecewa. Padahal udah siap duet. Mikrofon udah di tangan."
+                },
+                {
+                    "who": "Arum",
+                    "text": "Kamu emang perlu diperiksakan ke dokter, bukan ke dukun."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Eh, tapi Rum. Tulisan di cermin semalam itu gimana? Radio nggak bisa nulis di cermin."
+                },
+                {
+                    "who": "Arum",
+                    "text": "..."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Rum? Kok diam?"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Sen, aku baru ingat. Cermin di kamar mandi itu... udah dibuang tiga tahun lalu."
+                }
+            ],
+            "location": "Taman"
+        }
+    ],
+    "source": "custom"
+}

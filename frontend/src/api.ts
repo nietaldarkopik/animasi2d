@@ -240,5 +240,15 @@ export const api = {
       url: string
     }>
   }>('/blender/outputs'),
+  clipwizeStatus: () => req<{
+    status: 'connected' | 'token_ready' | 'not_configured'
+    api_base: string
+    user?: {
+      id: number
+      name: string
+      email: string
+      role: string
+    }
+  }>('/clipwize/status'),
 }
 

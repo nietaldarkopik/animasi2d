@@ -112,5 +112,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/blender/scripts', [\App\Http\Controllers\BlenderController::class, 'scripts']);
     Route::post('/blender/animate', [\App\Http\Controllers\BlenderController::class, 'animate'])->middleware('throttle:10,1');
     Route::get('/blender/outputs', [\App\Http\Controllers\BlenderController::class, 'outputs']);
+    Route::get('/clipwize/status', [\App\Http\Controllers\BlenderController::class, 'clipwizeStatus']);
 });
 

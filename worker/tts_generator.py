@@ -10,6 +10,7 @@ import json
 import os
 import subprocess
 import sys
+from typing import Optional
 
 # Preset character voice map for Indonesian characters
 VOICE_MAP = {
@@ -87,6 +88,41 @@ async def synthesize_one(text: str, voice: str, out_path: str, rate: str = "+0%"
     await communicate.save(out_path)
 
 
+def synthesize_clipwize(text: str, voice: str, out_path: str) -> Optional[float]:
+    """Synthesize voice using ClipWize 9router TTS service CLI."""
+    clipwize_cli = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "skills", "clipwize", "scripts", "clipwize.py"
+    )
+    if not os.path.isfile(clipwize_cli):
+        clipwize_cli = r"C:\wamp64\www\FaktaUnik\skills\clipwize\scripts\clipwize.py"
+
+    if not os.path.isfile(clipwize_cli):
+        return None
+
+    cmd = [sys.executable, clipwize_cli, "tts", text, out_path]
+    if voice:
+        cmd.extend(["--voice", voice])
+
+    try:
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=90)
+        if res.returncode == 0 and os.path.exists(out_path) and os.path.getsize(out_path) > 0:
+            try:
+                out_info = json.loads(res.stdout.strip())
+                if out_info.get("duration_seconds"):
+                    return float(out_info["duration_seconds"])
+            except Exception:
+                pass
+            return get_audio_duration(out_path)
+        else:
+            if res.stderr:
+                print(f"[tts_generator] ClipWize stderr: {res.stderr[:200]}", file=sys.stderr)
+            return None
+    except Exception as e:
+        print(f"[tts_generator] ClipWize error: {e}", file=sys.stderr)
+        return None
+
+
 def process_item(item: dict) -> dict:
     text = item.get('text', '').strip()
     if not text:
@@ -102,15 +138,29 @@ def process_item(item: dict) -> dict:
     rate = item.get('rate', '+0%')
     pitch = item.get('pitch', '+0Hz')
     
-    asyncio.run(synthesize_one(text, voice, out_path, rate=rate, pitch=pitch))
-    duration = get_audio_duration(out_path)
+    # 1. Primary: ClipWize 9router TTS
+    provider = "clipwize"
+    duration = synthesize_clipwize(text, voice, out_path)
+
+    # 2. Fallback: Edge-TTS
+    if duration is None or not os.path.exists(out_path) or os.path.getsize(out_path) == 0:
+        provider = "edge-tts"
+        try:
+            asyncio.run(synthesize_one(text, voice, out_path, rate=rate, pitch=pitch))
+            duration = get_audio_duration(out_path)
+        except Exception as e:
+            print(f"[tts_generator] Edge-TTS error: {e}", file=sys.stderr)
+            duration = max(1.5, round(len(text) * 0.07 + 0.6, 2))
+
+    is_ok = bool(os.path.exists(out_path) and os.path.getsize(out_path) > 0)
     return {
         'who': who,
         'text': text,
         'voice': voice,
         'out_path': out_path,
         'duration': duration,
-        'status': 'ok'
+        'provider': provider,
+        'status': 'ok' if is_ok else 'failed'
     }
 
 

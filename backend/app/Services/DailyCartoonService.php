@@ -251,7 +251,7 @@ class DailyCartoonService
             }
             $voice = $this->voices[mb_strtolower($who)] ?? null;
             $process = new Process([$pythonBin, $scriptPath, '--text', $text, '--who', $who, '--out', $fullPath, ...($voice ? ['--voice', $voice] : [])]);
-            $process->setTimeout(60);
+            $process->setTimeout(240);
             $process->run();
             if ($process->isSuccessful() && File::exists($fullPath) && File::size($fullPath) > 0) {
                 $out = json_decode($process->getOutput(), true);

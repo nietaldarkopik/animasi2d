@@ -13,7 +13,7 @@ from typing import Dict, Any, Optional, Tuple
 
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 9876
-DEFAULT_TIMEOUT = 120.0
+DEFAULT_TIMEOUT = 1200.0
 BLENDER_EXE = os.environ.get(
     "BLENDER_EXE",
     r"C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"

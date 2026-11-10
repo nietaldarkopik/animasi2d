@@ -25,6 +25,8 @@ export function StoryPage() {
   const [error, setError] = useState('')
   const [note, setNote] = useState('')
   const [editing, setEditing] = useState<StoryEpisode | null>(null)
+  const [viewingVideo, setViewingVideo] = useState<string | null>(null)
+  const [viewingPlan, setViewingPlan] = useState<StoryEpisode | null>(null)
   const alive = useRef(true)
 
   const refresh = useCallback(async (initial = false) => {
@@ -168,11 +170,68 @@ export function StoryPage() {
           <div style={{ display: 'grid', gap: 10 }}>
             {episodes.map((e) => (
               <EpisodeCard key={e.id} ep={e} aiOn={!!caps?.ai} canPublish={!!caps?.publish} sid={sid}
-                onChange={(fn, ok) => void act(fn, ok)} onEdit={() => setEditing(e)} />
+                onChange={(fn, ok) => void act(fn, ok)} onEdit={() => setEditing(e)}
+                onViewVideo={(p) => setViewingVideo(p)} onViewPlan={(ep) => setViewingPlan(ep)} />
             ))}
           </div>
         </section>
       </main>
+
+      {viewingVideo && (
+        <div role="dialog" aria-modal="true" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', display: 'grid', placeItems: 'center', zIndex: 1200 }} onClick={() => setViewingVideo(null)}>
+          <div className="card" onClick={(e) => e.stopPropagation()} style={{ width: 'min(920px, 94vw)', background: '#181825', padding: 20, borderRadius: 12 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <strong>🎬 Pemutar Film Kartun (Hasil Blender MCP / 3D Scene)</strong>
+              <button onClick={() => setViewingVideo(null)}>✕</button>
+            </div>
+            <video controls autoPlay src={`/api/blender/file/${viewingVideo.split(/[/\\\\]/).pop()}`} style={{ width: '100%', maxHeight: '72vh', background: '#000', borderRadius: 8 }} />
+            <div style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="muted small">File: {viewingVideo}</span>
+              <a href={`/api/blender/file/${viewingVideo.split(/[/\\\\]/).pop()}`} download className="primary" style={{ padding: '6px 14px', borderRadius: 6, textDecoration: 'none', fontWeight: 600 }}>⬇ Unduh Video MP4</a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {viewingPlan && (
+        <div role="dialog" aria-modal="true" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', display: 'grid', placeItems: 'center', zIndex: 1200 }} onClick={() => setViewingPlan(null)}>
+          <div className="card" onClick={(e) => e.stopPropagation()} style={{ width: 'min(900px, 94vw)', maxHeight: '88vh', overflowY: 'auto', background: '#1e1e2e', padding: 22, borderRadius: 12 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <div>
+                <strong style={{ fontSize: 18 }}>🏛 Rencana Produksi 3D: {viewingPlan.title}</strong>
+                <div style={{ fontSize: 12, opacity: 0.7 }}>AI Director: Environment 3D, Props, Pencahayaan & Sinematografi Kamera</div>
+              </div>
+              <button onClick={() => setViewingPlan(null)}>✕</button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {viewingPlan.script?.scenes?.map((sc: any, idx: number) => (
+                <div key={idx} style={{ padding: 14, borderRadius: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                    <strong>Scene {idx + 1}: {sc.name}</strong>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 4, background: '#4f46e5', color: '#fff' }}>Lokasi: {sc.location}</span>
+                      <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 4, background: '#059669', color: '#fff' }}>Waktu: {sc.time}</span>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 12, opacity: 0.85, marginBottom: 8 }}>
+                    <strong>Environment 3D:</strong> {sc.location.toLowerCase().includes('kamar mandi') ? 'Interior Kamar Mandi (Ubin porselen, wastafel, cermin, shower, ember, gayung)' : sc.location.toLowerCase().includes('dapur') ? 'Interior Dapur (Kitchen counter, kompor, wajan, kulkas, ventilasi)' : sc.location.toLowerCase().includes('kamar') ? 'Interior Kamar Tidur (Tempat tidur, bantal, selimut, lemari pakaian)' : sc.location.toLowerCase().includes('taman') ? 'Eksterior Taman (Tanah berumput, jalan setapak, pepohonan 3D)' : 'Interior Ruang Tamu (Sofa santai, meja tamu)'}
+                  </div>
+                  <div style={{ fontSize: 12, opacity: 0.75 }}>
+                    <strong>Dialog ({sc.dialog?.length || 0} line):</strong>
+                    <div style={{ marginTop: 4, paddingLeft: 8 }}>
+                      {sc.dialog?.slice(0, 3).map((d: any, dIdx: number) => (
+                        <div key={dIdx}>• <em>{d.who}:</em> "{d.text}"</div>
+                      ))}
+                      {(sc.dialog?.length || 0) > 3 && <div className="muted small">... dan {sc.dialog.length - 3} dialog lainnya</div>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {editing && <ScriptDialog ep={editing} people={builders.map((b) => b.name)} cast={[...(draft.characters ?? []).map((c) => c.name), ...(draft.use_narrator ? ['Narator'] : [])]} onClose={() => setEditing(null)}
         onSave={async (text) => { try { await api.storyEpisodeUpdate(editing.id, { script: parseScript(text) }); setEditing(null); await refresh(); setNote('Naskah disimpan.') } catch (e) { return (e as Error).message } return null }} />}
@@ -180,7 +239,7 @@ export function StoryPage() {
   )
 }
 
-function EpisodeCard({ ep, aiOn, canPublish, onChange, onEdit }: { ep: StoryEpisode; aiOn: boolean; canPublish: boolean; sid: number; onChange: (fn: () => Promise<unknown>, ok?: string) => void; onEdit: () => void }) {
+function EpisodeCard({ ep, aiOn, canPublish, onChange, onEdit, onViewVideo, onViewPlan }: { ep: StoryEpisode; aiOn: boolean; canPublish: boolean; sid: number; onChange: (fn: () => Promise<unknown>, ok?: string) => void; onEdit: () => void; onViewVideo?: (path: string) => void; onViewPlan?: (ep: StoryEpisode) => void }) {
   const [title, setTitle] = useState(ep.title)
   const [syn, setSyn] = useState(ep.synopsis ?? '')
   const running = ep.status === 'queued' || ep.status === 'producing'
@@ -209,6 +268,12 @@ function EpisodeCard({ ep, aiOn, canPublish, onChange, onEdit }: { ep: StoryEpis
         </label>
         {ep.project_id && <Link to={`/projects/${ep.project_id}`}>Buka project</Link>}
         {ep.output_path && <span className="muted small" title="Folder daily_output di komputer ini">📁 {ep.output_path}</span>}
+        {ep.status === 'done' && ep.output_path && onViewVideo && (
+          <button onClick={() => onViewVideo(ep.output_path as string)} title="Tonton hasil film di video player">▶ Tonton Film</button>
+        )}
+        {ep.script && onViewPlan && (
+          <button onClick={() => onViewPlan(ep)} title="Lihat rencana 3D scene AI Director untuk episode ini">🏛 Rencana 3D</button>
+        )}
         {ep.published && <span className="badge">terunggah</span>}
         <span className="spacer" />
         <button disabled={running} aria-label={`Hapus episode ${ep.number}`} onClick={() => { if (confirm(`Hapus episode ${ep.number}?`)) onChange(() => api.storyEpisodeDelete(ep.id)) }}>🗑</button>

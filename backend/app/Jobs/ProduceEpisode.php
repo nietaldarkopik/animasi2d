@@ -44,7 +44,7 @@ class ProduceEpisode implements ShouldQueue
             $res = $film->createDailyCartoon($series->user_id, null, array_values(array_filter($series->characterNames(), fn ($n) => ! DailyCartoonService::isNarrator($n))), $ep->script, $series->characterIds());
             $ep->update(['project_id' => $res['project_id']]);
 
-            $file = $pipeline->export($res['project_id'], $series->user_id);
+            $file = $pipeline->export($res['project_id'], $series->user_id, null, 3600, $ep->script);
             if (! $file) {
                 throw new \RuntimeException('Perekaman film gagal: '.($pipeline->lastOutput ?: 'tanpa keterangan').' (Project #'.$res['project_id'].' tetap bisa dibuka di editor.)');
             }

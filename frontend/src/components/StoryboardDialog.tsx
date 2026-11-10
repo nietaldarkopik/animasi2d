@@ -93,9 +93,9 @@ export function StoryboardDialog({ projectId, onClose, onOpenScene }: { projectI
             if (pr) here.push(pr)
           }
           const xs = spreadX(here.length)
-          here.forEach((p, j) => layers.push(...(p.kind === 'rig'
-            ? rigLayers(p.pr, { width: W, height: H }, { xFrac: xs[j], scale: here.length > 2 ? 0.8 : 1 })
-            : cardLayers(p.pc, { width: W, height: H, duration: sceneSecondsFor(ps), fps: p!.settings.fps }, uid, { xFrac: xs[j], height: here.length > 2 ? 0.62 : 0.78 }))))
+          here.forEach((placed, j) => layers.push(...(placed.kind === 'rig'
+            ? rigLayers(placed.pr, { width: W, height: H }, { xFrac: xs[j], scale: here.length > 2 ? 0.8 : 1 })
+            : cardLayers(placed.pc, { width: W, height: H, duration: sceneSecondsFor(ps), fps: p!.settings.fps }, uid, { xFrac: xs[j], height: here.length > 2 ? 0.62 : 0.78 }))))
         }
         const duration = sceneSecondsFor(ps)
         out.push({

@@ -27,9 +27,17 @@ interface OutputItem {
   url: string
 }
 
+interface ClipwizeStatusInfo {
+  status: 'connected' | 'token_ready' | 'not_configured' | 'error'
+  api_base?: string
+  user?: string
+  message?: string
+}
+
 export function BlenderStudioDialog({ onClose }: { onClose: () => void }) {
   const [tab, setTab] = useState<'generate' | 'characters' | 'gallery'>('generate')
   const [mcpStatus, setMcpStatus] = useState<{ mcp_online: boolean; cli_available: boolean; blender_version: string } | null>(null)
+  const [clipwizeStatus, setClipwizeStatus] = useState<ClipwizeStatusInfo | null>(null)
   const [characters, setCharacters] = useState<CharacterInfo[]>([])
   const [scripts, setScripts] = useState<ScriptInfo[]>([])
   const [outputs, setOutputs] = useState<OutputItem[]>([])
@@ -68,6 +76,13 @@ export function BlenderStudioDialog({ onClose }: { onClose: () => void }) {
       setOutputs(out.outputs)
     } catch (e: any) {
       setError(e.message || 'Gagal memuat status Blender.')
+    }
+    // Load ClipWize TTS status separately (non-critical)
+    try {
+      const cwStatus = await api.clipwizeStatus()
+      setClipwizeStatus(cwStatus as ClipwizeStatusInfo)
+    } catch {
+      setClipwizeStatus({ status: 'error', message: 'Tidak dapat memeriksa status ClipWize TTS' })
     }
   }
 
@@ -181,6 +196,31 @@ export function BlenderStudioDialog({ onClose }: { onClose: () => void }) {
                 {mcpStatus.mcp_online ? 'Blender MCP Online (:9876)' : 'Blender Headless CLI Ready'}
               </div>
             )}
+            {/* ClipWize TTS status badge */}
+            {clipwizeStatus && (() => {
+              const isOk = clipwizeStatus.status === 'connected' || clipwizeStatus.status === 'token_ready'
+              const isWarn = clipwizeStatus.status === 'not_configured'
+              const color = isOk ? '#22c55e' : isWarn ? '#eab308' : '#ef4444'
+              const bg = isOk ? 'rgba(34,197,94,0.12)' : isWarn ? 'rgba(234,179,8,0.12)' : 'rgba(239,68,68,0.12)'
+              const border = isOk ? 'rgba(34,197,94,0.4)' : isWarn ? 'rgba(234,179,8,0.4)' : 'rgba(239,68,68,0.4)'
+              const label = isOk
+                ? `🎙 TTS ClipWize${clipwizeStatus.user ? ' (' + clipwizeStatus.user + ')' : ''}`
+                : isWarn
+                  ? '🎙 TTS edge-tts (fallback)'
+                  : '🎙 TTS error'
+              const tip = clipwizeStatus.api_base
+                ? `ClipWize API: ${clipwizeStatus.api_base} | Status: ${clipwizeStatus.status}`
+                : clipwizeStatus.message || clipwizeStatus.status
+              return (
+                <div
+                  style={{ display:'flex', alignItems:'center', gap:6, padding:'4px 10px', borderRadius:20, fontSize:12, fontWeight:600, background:bg, color, border:`1px solid ${border}` }}
+                  title={tip}
+                >
+                  <span style={{ fontSize:10 }}>●</span>
+                  {label}
+                </div>
+              )
+            })()}
             <button
               onClick={onClose}
               style={{

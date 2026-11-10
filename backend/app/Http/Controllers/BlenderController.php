@@ -234,7 +234,12 @@ class BlenderController extends Controller
         $path = $this->outputDir . DIRECTORY_SEPARATOR . $clean;
 
         if (!file_exists($path)) {
-            abort(404, 'File output tidak ditemukan.');
+            $dailyPath = base_path('../daily_output') . DIRECTORY_SEPARATOR . $clean;
+            if (file_exists($dailyPath)) {
+                $path = $dailyPath;
+            } else {
+                abort(404, 'File output tidak ditemukan: ' . $clean);
+            }
         }
 
         $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
@@ -264,6 +269,32 @@ class BlenderController extends Controller
         return response()->file($path, [
             'Content-Type' => 'image/png',
             'Cache-Control' => 'public, max-age=86400',
+        ]);
+    }
+
+    public function clipwizeStatus(): JsonResponse
+    {
+        $tokenFile = base_path('../.clipwize_token');
+        $userProfile = getenv('USERPROFILE') ?: getenv('HOME');
+        $hasToken = is_file($tokenFile) || ($userProfile && is_file($userProfile . DIRECTORY_SEPARATOR . '.clipwize_token'));
+
+        $script = base_path('../skills/clipwize/scripts/clipwize.py');
+        $python = config('services.python.bin', 'python');
+
+        $user = null;
+        if ($hasToken && is_file($script)) {
+            $p = new Process([$python, $script, 'me'], base_path('..'));
+            $p->setTimeout(15);
+            $p->run();
+            if ($p->isSuccessful()) {
+                $user = json_decode($p->getOutput(), true);
+            }
+        }
+
+        return response()->json([
+            'status' => $user ? 'connected' : ($hasToken ? 'token_ready' : 'not_configured'),
+            'api_base' => 'https://existcode.excoder.site/api',
+            'user' => $user,
         ]);
     }
 }
