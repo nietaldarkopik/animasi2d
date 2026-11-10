@@ -124,6 +124,14 @@ def _silmat(path, color):
     _mat[k] = m
     return m
 
+def _rim_plane(sc, name, image_path, wpx, hpx, loc, parent, S, color):
+    """Slightly enlarged alpha silhouette behind a sprite card for a restrained rim edge."""
+    obj = _plane(sc, name, _silmat(image_path, color), wpx, hpx, loc, parent, S)
+    obj.location.y += 0.012
+    obj.scale = (1.018, 1.018, 1.0)
+    return obj
+
+
 def _shadowmat():
     if 'shadow' in _mat:
         return _mat['shadow']
@@ -319,16 +327,31 @@ def make_character(
 
     B = _empty(sc, f'CHAR_B_{char_id}_{tag}', (0, 0, 0), root)
     body_c = (0, 0, (feet - bh / 2) * S)
+    body_poses = sorted({n for _, n in poses})
     bodies = {
         p: _plane(sc, f'CHAR_{tag}_b_{p}', _cardmat(P(PFX + 'badan_' + p)), bw, bh, body_c, B, S)
-        for p in sorted({n for _, n in poses})
+        for p in body_poses
+    }
+    # A very thin cool silhouette behind each pose creates a readable rim edge
+    # while leaving the original PNG artwork and its colors untouched.
+    rim_color = (0.20, 0.34, 0.62)
+    rim_bodies = {
+        p: _rim_plane(sc, f'CHAR_{tag}_rim_b_{p}', P(PFX + 'badan_' + p),
+                      bw, bh, body_c, B, S, rim_color)
+        for p in body_poses
     }
 
     HP = _empty(sc, f'CHAR_HP_{char_id}_{tag}', ((hx + hw / 2 - cxb) * S, 0, (feet - chin) * S), B)
     head_c = (0, -0.010, (chin - hh / 2) * S)
+    head_exprs = sorted({n for _, n in exprs})
     heads = {
         x: _plane(sc, f'CHAR_{tag}_h_{x}', _cardmat(P(PFX + 'kepala_' + x)), hw, hh, head_c, HP, S)
-        for x in sorted({n for _, n in exprs})
+        for x in head_exprs
+    }
+    rim_heads = {
+        x: _rim_plane(sc, f'CHAR_{tag}_rim_h_{x}', P(PFX + 'kepala_' + x),
+                      hw, hh, head_c, HP, S, rim_color)
+        for x in head_exprs
     }
 
     lids = _plane(
@@ -349,7 +372,9 @@ def make_character(
     }
 
     _schedule(bodies, poses)
+    _schedule(rim_bodies, poses)
     _schedule(heads, exprs)
+    _schedule(rim_heads, exprs)
 
     # Pop scaling on pose/expression transitions
     B.scale = (1, 1, 1)
