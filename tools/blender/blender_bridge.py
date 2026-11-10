@@ -83,12 +83,63 @@ def run_blender_cli(code: str, blend_file: Optional[str] = None, timeout: float 
     cmd.extend(["--python", script_path])
 
     try:
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        # Stream Blender output live so frame-by-frame progress is visible in the
+        # user's terminal instead of being hidden until subprocess.run completes.
+        import queue
+        import threading
+
+        proc = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            bufsize=1,
+        )
+        output_lines = []
+        output_queue = queue.Queue()
+
+        def _read_output():
+            try:
+                for _line in proc.stdout:
+                    output_queue.put(_line)
+            finally:
+                output_queue.put(None)
+
+        reader = threading.Thread(target=_read_output, daemon=True)
+        reader.start()
+        started_at = time.monotonic()
+        stream_closed = False
+
+        while True:
+            try:
+                item = output_queue.get(timeout=0.2)
+                if item is None:
+                    stream_closed = True
+                else:
+                    output_lines.append(item)
+                    print(item, end="", flush=True)
+            except queue.Empty:
+                pass
+
+            if stream_closed and proc.poll() is not None:
+                break
+
+            if time.monotonic() - started_at > timeout and proc.poll() is None:
+                proc.kill()
+                proc.wait()
+                raise subprocess.TimeoutExpired(
+                    cmd, timeout, output="".join(output_lines)
+                )
+
+        return_code = proc.wait()
+        output_text = "".join(output_lines)
         return {
-            "status": "ok" if proc.returncode == 0 else "error",
-            "returncode": proc.returncode,
-            "stdout": proc.stdout,
-            "stderr": proc.stderr,
+            "status": "ok" if return_code == 0 else "error",
+            "returncode": return_code,
+            "stdout": output_text,
+            "stderr": "",
         }
     finally:
         if os.path.exists(script_path):
