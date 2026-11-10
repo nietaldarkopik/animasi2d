@@ -86,7 +86,7 @@ class SceneDirector:
 
             # Collect characters
             dialogue_list = sc.get("dialog", [])
-            actors = list(dict.fromkeys([d.get("who", "Uki").strip() for d in dialogue_list]))
+            actors = list(dict.fromkeys([str(d.get("who") or "Uki").strip() for d in dialogue_list]))
             if not actors:
                 actors = ["Uki"]
 
@@ -134,7 +134,7 @@ class SceneDirector:
                     shot_size = "medium"
                     angle = "over_the_shoulder" if d_idx > 0 else "eye_level"
                     movement = "static"
-                elif d_idx > 0 and dialogue_list[d_idx - 1].get("who", "").strip().lower() != speaker.strip().lower():
+                elif d_idx > 0 and str(dialogue_list[d_idx - 1].get("who") or "").strip().lower() != str(speaker or "").strip().lower():
                     shot_size = "over_the_shoulder"
                     angle = "eye_level"
                     movement = "static"
