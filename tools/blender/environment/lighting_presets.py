@@ -100,7 +100,10 @@ def apply_lighting(
         data = bpy.data.lights.new("CINE_LIGHT_Practical", "POINT")
         data.color = (1.0, 0.48, 0.18) if flicker else (0.28, 0.42, 1.0)
         data.energy = 180.0 if flicker else 90.0
-        data.shadow_soft_size = 0.35
+        try:
+            data.shadow_soft_size = 0.35
+        except (AttributeError, TypeError):
+            pass
         practical = bpy.data.objects.new("CINE_LIGHT_Practical", data)
         sc.collection.objects.link(practical)
         practical.location = (1.7, 1.6, 2.1)
