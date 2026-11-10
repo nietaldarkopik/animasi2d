@@ -9,9 +9,9 @@ SHOT_CONFIGS = {
     "medium_wide": {"dist": 3.8, "height": 1.45, "lens": 42, "dutch": 0.0},
     "two_shot": {"dist": 3.4, "height": 1.40, "lens": 45, "dutch": 0.0},
     "medium": {"dist": 2.7, "height": 1.38, "lens": 50, "dutch": 0.0},
-    "medium_close_up": {"dist": 2.0, "height": 1.45, "lens": 65, "dutch": 0.0},
-    "close_up": {"dist": 1.4, "height": 1.50, "lens": 85, "dutch": 0.0},
-    "extreme_close_up": {"dist": 1.0, "height": 1.52, "lens": 105, "dutch": 0.0},
+    "medium_close_up": {"dist": 2.8, "height": 1.55, "lens": 55, "dutch": 0.0},
+    "close_up": {"dist": 2.5, "height": 1.60, "lens": 65, "dutch": 0.0},
+    "extreme_close_up": {"dist": 1.9, "height": 1.62, "lens": 85, "dutch": 0.0},
     "over_the_shoulder": {"dist": 2.4, "height": 1.48, "lens": 55, "dutch": 0.0},
 }
 
