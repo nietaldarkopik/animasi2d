@@ -1,7 +1,7 @@
 # camera_rig.py — Autonomous Cinematography & Camera Rig for Blender 5.2
 import bpy, math
 from typing import Dict, Any, Tuple, Optional
-from mathutils import Vector
+from mathutils import Vector, Quaternion
 
 SHOT_CONFIGS = {
     "extreme_wide": {"dist": 6.8, "height": 1.9, "lens": 28, "dutch": 0.0},
@@ -38,11 +38,11 @@ def create_cinematic_camera(
     if aspect_ratio == "9:16":
         sc.render.resolution_x = 1080
         sc.render.resolution_y = 1920
-        # Portrait needs slightly wider lens or slightly further dist to frame figures
+        # Portrait needs slightly more distance to keep two characters in frame.
         dist *= 1.25
     else:
-        sc.render.resolution_x = 1280
-        sc.render.resolution_y = 720
+        sc.render.resolution_x = 1920
+        sc.render.resolution_y = 1080
 
     # Angle height modifiers
     tgt_x, tgt_y, tgt_z = target_pos
@@ -78,9 +78,9 @@ def create_cinematic_camera(
         obj.location = loc
         dir_vec = Vector(target) - Vector(loc)
         rot_quat = dir_vec.to_track_quat("-Z", "Y")
-        euler = rot_quat.to_euler()
-        euler.y += math.radians(roll)
-        obj.rotation_euler = euler
+        if abs(roll) > 0.001:
+            rot_quat = rot_quat @ Quaternion((0.0, 0.0, 1.0), math.radians(roll))
+        obj.rotation_euler = rot_quat.to_euler()
 
     roll_deg = dutch_degrees if abs(dutch_degrees) > 0.01 else (4.0 if angle == "dutch" else 0.0)
     look_at(cam_obj, (cam_start_x, cam_start_y, cam_start_z), target_pos, roll_deg)
