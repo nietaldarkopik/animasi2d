@@ -64,11 +64,16 @@ def _cardmat(path):
     L(df.outputs[0], s2r.inputs[0])
     rp = N('ShaderNodeValToRGB')
     rp.color_ramp.interpolation = 'CONSTANT'
-    # Cool lavender shadow keeps anime sprites dimensional without muddying skin.
-    rp.color_ramp.elements[0].color = (0.58, 0.55, 0.72, 1)
-    # Raise the toon threshold so key/fill lighting creates readable form shadows.
-    rp.color_ramp.elements[1].position = 0.28
-    rp.color_ramp.elements[1].color = (1, 1, 1, 1)
+    # Three-step cel shading: cool shadow, soft midtone, clean key-lit highlight.
+    # The diffuse response is evaluated against the scene lights, so sprite cards
+    # pick up the same key/fill direction as the 3D classroom.
+    ramp = rp.color_ramp
+    ramp.elements[0].position = 0.0
+    ramp.elements[0].color = (0.56, 0.55, 0.72, 1)
+    ramp.elements[1].position = 0.52
+    ramp.elements[1].color = (1.0, 1.0, 1.0, 1)
+    mid = ramp.elements.new(0.22)
+    mid.color = (0.80, 0.79, 0.91, 1)
     L(s2r.outputs[0], rp.inputs[0])
     mul = N('ShaderNodeMix')
     mul.data_type = 'RGBA'
