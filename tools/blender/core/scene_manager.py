@@ -60,7 +60,9 @@ def _build_shot_cameras(sc, scene_data, plan, actors, positions, f0, f1):
         else:
             # Aim close-ups at the face; medium shots retain upper-body context.
             face_focused = shot.get("shot_size") in ("close_up", "extreme_close_up", "medium_close_up")
-            target = (target[0], target[1], 1.34 if face_focused else 1.12)
+            # Character cards are 1.9m tall; metadata places the head center near z=1.65m.
+            # Aim at the actual face center so close-ups do not crop the head.
+            target = (target[0], target[1], 1.66 if face_focused else 1.12)
 
         info = create_cinematic_camera(
             sc,
