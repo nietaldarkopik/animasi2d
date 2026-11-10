@@ -15,6 +15,20 @@ SHOT_CONFIGS = {
     "over_the_shoulder": {"dist": 2.4, "height": 1.48, "lens": 55, "dutch": 0.0},
 }
 
+def _smooth_camera_curves(camera_obj):
+    """Use eased Bezier motion for cinematic camera moves, avoiding mechanical starts/stops."""
+    animation = camera_obj.animation_data
+    action = animation.action if animation else None
+    if not action:
+        return
+    for fcurve in action.fcurves:
+        if fcurve.data_path not in {"location", "rotation_euler"}:
+            continue
+        for point in fcurve.keyframe_points:
+            point.interpolation = "BEZIER"
+            point.handle_left_type = "AUTO_CLAMPED"
+            point.handle_right_type = "AUTO_CLAMPED"
+
 def create_cinematic_camera(
     sc: bpy.types.Scene,
     target_pos: Tuple[float, float, float] = (0, 0, 1.4),
@@ -110,14 +124,20 @@ def create_cinematic_camera(
         cam_obj.keyframe_insert("location", frame=f1)
         cam_obj.keyframe_insert("rotation_euler", frame=f1)
     elif movement == "shake":
-        # Sudden shock camera shake
+        # Short impact shake that decays and returns to the original camera pose.
         import random
         rnd = random.Random(7)
-        for f in range(f0, min(f1, f0 + 15), 2):
-            dx = rnd.uniform(-0.04, 0.04)
-            dz = rnd.uniform(-0.04, 0.04)
+        shake_end = min(f1, f0 + 14)
+        for f in range(f0 + 1, shake_end, 2):
+            decay = max(0.0, 1.0 - (f - f0) / max(1, shake_end - f0))
+            dx = rnd.uniform(-0.04, 0.04) * decay
+            dz = rnd.uniform(-0.04, 0.04) * decay
             cam_obj.location = (cam_start_x + dx, cam_start_y, cam_start_z + dz)
             cam_obj.keyframe_insert("location", frame=f)
+        cam_obj.location = (cam_start_x, cam_start_y, cam_start_z)
+        cam_obj.keyframe_insert("location", frame=shake_end)
+
+    _smooth_camera_curves(cam_obj)
 
     return {
         "camera": cam_obj,
