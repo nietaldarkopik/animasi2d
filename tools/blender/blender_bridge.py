@@ -66,7 +66,9 @@ def send_to_mcp(code: str, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT, t
     except Exception as e:
         return {"status": "error", "message": f"Failed to parse JSON response: {e}", "raw": buf.decode("utf-8", errors="replace")}
 
-def run_blender_cli(code: str, blend_file: Optional[str] = None, timeout: float = 300.0) -> Dict[str, Any]:
+CLI_TIMEOUT = float(os.environ.get("BLENDER_CLI_TIMEOUT", "7200"))
+
+def run_blender_cli(code: str, blend_file: Optional[str] = None, timeout: float = CLI_TIMEOUT) -> Dict[str, Any]:
     """Execute Python code in headless Blender background mode."""
     if not os.path.exists(BLENDER_EXE):
         raise FileNotFoundError(f"Blender executable not found at: {BLENDER_EXE}")
@@ -102,6 +104,9 @@ def execute_blender_code(code: str, fallback_cli: bool = True, host: str = DEFAU
     """
     if is_blender_mcp_running(host, port):
         print(f"[*] Connected to active Blender MCP server on {host}:{port}")
+        # Never launch a second Blender process when an MCP request fails or times out:
+        # the original render may still be running inside the interactive Blender.
+        # A blind CLI fallback can duplicate a long render and exhaust CPU/GPU/RAM.
         return send_to_mcp(code, host=host, port=port)
     elif fallback_cli:
         print("[*] Blender MCP socket not detected. Executing via Blender Background CLI...")
