@@ -122,11 +122,69 @@ def build_interior_room(
         sc.collection.objects.link(win_frame)
         win_frame.parent = root
 
-        win_glass = _create_box_mesh("Window_Glass", 1.6, 0.02, 1.2)
+        win_glass = _create_box_mesh("Window_Glass", 1.6, 0.025, 1.2)
         win_glass.location = (width * 0.22, depth - 1.0 - 0.14, 1.3)
-        win_glass.data.materials.append(create_glass_material("WindowGlass"))
+        # Use an opaque stylized pane instead of a transparent shader. This is
+        # more reliable in the legacy EEVEE engine exposed by Blender MCP.
+        if room_type == "classroom":
+            glass_mat = create_toon_material(
+                "ClassroomWindowGlass",
+                base_color=(0.30, 0.58, 0.76, 1.0),
+                shadow_color=(0.12, 0.29, 0.48, 1.0),
+                emission=0.08,
+            )
+        else:
+            glass_mat = create_glass_material("WindowGlass")
+        win_glass.data.materials.append(glass_mat)
         sc.collection.objects.link(win_glass)
         win_glass.parent = root
+
+        # Window mullions give the opening readable architectural scale.
+        if room_type == "classroom":
+            wx = width * 0.22
+            wy = depth - 1.0 - 0.18
+            for idx, dx in enumerate((-0.27, 0.27)):
+                mullion = _create_box_mesh(f"Window_Mullion_V_{idx}", 0.035, 0.045, 1.18)
+                mullion.location = (wx + dx, wy, 1.3)
+                mullion.data.materials.append(trim_mat)
+                sc.collection.objects.link(mullion)
+                mullion.parent = root
+            crossbar = _create_box_mesh("Window_Mullion_H", 1.58, 0.045, 0.035)
+            crossbar.location = (wx, wy, 1.3)
+            crossbar.data.materials.append(trim_mat)
+            sc.collection.objects.link(crossbar)
+            crossbar.parent = root
+
+    if room_type == "classroom":
+        # A wall clock and notice panel make the classroom read as a lived-in
+        # school space even in wide establishing shots.
+        clock_frame = _create_box_mesh("Classroom_WallClock_Frame", 0.42, 0.08, 0.42)
+        clock_frame.location = (1.55, depth - 1.0 - 0.16, 2.55)
+        clock_frame.data.materials.append(trim_mat)
+        sc.collection.objects.link(clock_frame)
+        clock_frame.parent = root
+
+        clock_face = _create_box_mesh("Classroom_WallClock_Face", 0.34, 0.025, 0.34)
+        clock_face.location = (1.55, depth - 1.0 - 0.215, 2.55)
+        clock_face.data.materials.append(create_toon_material(
+            "ClassroomClockFace", base_color=(0.94, 0.92, 0.82, 1.0)
+        ))
+        sc.collection.objects.link(clock_face)
+        clock_face.parent = root
+
+        notice_frame = _create_box_mesh("Classroom_Notice_Frame", 0.72, 0.07, 0.82)
+        notice_frame.location = (-3.02, depth - 1.0 - 0.15, 1.85)
+        notice_frame.data.materials.append(trim_mat)
+        sc.collection.objects.link(notice_frame)
+        notice_frame.parent = root
+
+        notice_board = _create_box_mesh("Classroom_Notice_Board", 0.62, 0.025, 0.72)
+        notice_board.location = (-3.02, depth - 1.0 - 0.20, 1.85)
+        notice_board.data.materials.append(create_toon_material(
+            "ClassroomNoticeBoard", base_color=(0.68, 0.38, 0.28, 1.0)
+        ))
+        sc.collection.objects.link(notice_board)
+        notice_board.parent = root
 
     # 7. Interior Door (on Left or Right Wall)
     door_frame = _create_box_mesh("Door_Frame", 0.12, 1.1, 2.2)
