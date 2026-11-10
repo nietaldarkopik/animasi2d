@@ -21,9 +21,9 @@ def configure_cinematic_render(
     quality_key = str(quality).strip().lower()
     preview = quality_key in ("preview", "draft", "low")
 
-    # Blender MCP may be connected to a runtime exposing a different engine
-    # enum than the desktop installation. Select only an engine accepted by
-    # this exact scene/runtime instead of assuming EEVEE Next exists.
+    # Blender MCP may expose legacy EEVEE even when the desktop app is newer.
+    # Prefer the engine confirmed by this runtime; legacy EEVEE is first because
+    # this MCP runtime reports BLENDER_EEVEE, not BLENDER_EEVEE_NEXT.
     available_engines = []
     try:
         engine_prop = scene.render.bl_rna.properties.get("engine")
@@ -33,7 +33,7 @@ def configure_cinematic_render(
         pass
 
     selected_engine = None
-    for candidate in ("BLENDER_EEVEE_NEXT", "BLENDER_EEVEE", "CYCLES", "BLENDER_WORKBENCH"):
+    for candidate in ("BLENDER_EEVEE", "BLENDER_EEVEE_NEXT", "CYCLES", "BLENDER_WORKBENCH"):
         if available_engines and candidate not in available_engines:
             continue
         try:
