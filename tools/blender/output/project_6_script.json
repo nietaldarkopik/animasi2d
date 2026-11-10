@@ -1,0 +1,150 @@
+{
+    "theme": "Ketakutan yang berujung konyol, dan pentingnya komunikasi (atau kunci)",
+    "title": "Suara di kamar mandi",
+    "scenes": [
+        {
+            "name": "Kamar Tidur - Realisasi Horor",
+            "time": "malam",
+            "dialog": [
+                {
+                    "who": "Seni",
+                    "text": "Rum! Kamu di mana?!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Sen, aku di rumah. Kamu di mana?"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Aku di rumah kamu! Tadi kita di kamar mandi!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Aku pulang sore. Kamu sendirian, Sen."
+                },
+                {
+                    "who": "Seni",
+                    "text": "APA?! Jadi... siapa yang di sampingku tadi?!"
+                }
+            ],
+            "location": "Kamar tidur"
+        },
+        {
+            "name": "Ruang Tamu - Misi Pelarian",
+            "time": "malam",
+            "dialog": [
+                {
+                    "who": "Seni",
+                    "text": "Rum, tolong! Aku takut banget!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Tenang, Sen. Coba cari pintu depan."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Gelap banget, Rum. Aku nggak bisa lihat."
+                },
+                {
+                    "who": "Arum",
+                    "text": "Pelan-pelan aja, Sen. Aku tunggu di luar."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Ada bayangan hitam di sana!"
+                }
+            ],
+            "location": "Ruang tamu"
+        },
+        {
+            "name": "Ruang Tamu - Serangan Gayung",
+            "time": "malam",
+            "dialog": [
+                {
+                    "who": "Seni",
+                    "text": "Hii! Jangan dekat-dekat!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Ada apa lagi, Sen?"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Aku lempar pakai gayung ini!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Gayung? Kamu bawa gayung?"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Astaga! Itu cuma jemuran basah!"
+                }
+            ],
+            "location": "Ruang tamu"
+        },
+        {
+            "name": "Jalan Raya - Kunci Kebebasan (dan Konyol)",
+            "time": "malam",
+            "dialog": [
+                {
+                    "who": "Seni",
+                    "text": "Rum! Akhirnya kamu!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Sen! Kamu nggak apa-apa?"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Aku pikir aku bakal mati di sana!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Syukurlah kamu keluar. Kunciku di kamu, kan?"
+                },
+                {
+                    "who": "Seni",
+                    "text": "Kunci? Kamu ke sini cuma ambil kunci?"
+                }
+            ],
+            "location": "Jalan raya"
+        },
+        {
+            "name": "Jalan Raya - Dilema Terkunci",
+            "time": "malam",
+            "dialog": [
+                {
+                    "who": "Arum",
+                    "text": "Iya, penting banget. Aku nggak bisa masuk."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Tapi aku hampir jantungan di dalam!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Ya udah, sini kuncinya."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Terus hantunya gimana?!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Dia kan di dalam. Kamu kan di luar."
+                },
+                {
+                    "who": "Seni",
+                    "text": "Tapi... aku nggak mau balik lagi!"
+                },
+                {
+                    "who": "Arum",
+                    "text": "Lalu kita tidur di mana malam ini?"
+                }
+            ],
+            "location": "Jalan raya"
+        }
+    ],
+    "source": "custom"
+}
