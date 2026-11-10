@@ -170,7 +170,17 @@ def process_naskah_or_prompt(
             ])
         else:
             lines.extend([
-                "sc.frame_set(sc.frame_start + 15)",
+                "# Preview the first dialogue reaction rather than the opening establishing shot.",
+                "_dialogue_shots = [shot for shot in plan_data['scenes'][scene_idx].get('shots', []) if shot.get('speaker')]",
+                "if _dialogue_shots:",
+                "    _first_dialogue = _dialogue_shots[0]",
+                "    _dialogue_len = max(1, int(_first_dialogue.get('end_f', _first_dialogue['start_f'] + 1)) - int(_first_dialogue['start_f']))",
+                "    _preview_frame = int(_first_dialogue['start_f']) + min(8, max(2, _dialogue_len // 3))",
+                "else:",
+                "    _preview_frame = sc.frame_start + max(1, (sc.frame_end - sc.frame_start) // 2)",
+                "_preview_frame = min(sc.frame_end, max(sc.frame_start, _preview_frame))",
+                "sc.frame_set(_preview_frame)",
+                "print('[Blender] Still preview frame:', _preview_frame)",
                 "sc.render.image_settings.file_format = 'JPEG'",
                 "sc.render.image_settings.color_mode = 'RGB'",
                 "sc.render.image_settings.quality = 90",
