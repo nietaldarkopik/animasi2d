@@ -15,19 +15,6 @@ SHOT_CONFIGS = {
     "over_the_shoulder": {"dist": 2.4, "height": 1.48, "lens": 55, "dutch": 0.0},
 }
 
-def _smooth_camera_curves(camera_obj):
-    """Use eased Bezier motion for cinematic camera moves, avoiding mechanical starts/stops."""
-    animation = camera_obj.animation_data
-    action = animation.action if animation else None
-    if not action:
-        return
-    for fcurve in action.fcurves:
-        if fcurve.data_path not in {"location", "rotation_euler"}:
-            continue
-        for point in fcurve.keyframe_points:
-            point.interpolation = "BEZIER"
-            point.handle_left_type = "AUTO_CLAMPED"
-            point.handle_right_type = "AUTO_CLAMPED"
 
 def create_cinematic_camera(
     sc: bpy.types.Scene,
@@ -137,7 +124,7 @@ def create_cinematic_camera(
         cam_obj.location = (cam_start_x, cam_start_y, cam_start_z)
         cam_obj.keyframe_insert("location", frame=shake_end)
 
-    _smooth_camera_curves(cam_obj)
+    # Blender creates Bezier keyframes by default; avoid legacy Action.fcurves API.
 
     return {
         "camera": cam_obj,
