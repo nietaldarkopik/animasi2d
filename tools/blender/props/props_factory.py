@@ -330,13 +330,13 @@ def create_classroom_props(sc: bpy.types.Scene) -> Dict[str, Any]:
         "Board_Title", "FISIKA  /  MATEMATIKA", -1.3, 2.48, 0.17, ink_blue
     )
     board_formula_1 = add_board_text(
-        "Board_Formula_1", "v = s / t", -2.48, 2.12, 0.15, ink_blue, align="LEFT"
+        "Board_Formula_1", "v = s / t", -2.48, 2.12, 0.12, ink_blue, align="LEFT"
     )
     board_formula_2 = add_board_text(
-        "Board_Formula_2", "F = m x a", -2.48, 1.88, 0.15, ink_red, align="LEFT"
+        "Board_Formula_2", "F = m x a", -2.48, 1.88, 0.11, ink_red, align="LEFT"
     )
     board_formula_3 = add_board_text(
-        "Board_Formula_3", "x^2 + y^2 = r^2", -2.48, 1.64, 0.13, ink_blue, align="LEFT"
+        "Board_Formula_3", "x² + y² = r²", -2.48, 1.64, 0.085, ink_blue, align="LEFT"
     )
 
     # A slim marker rail and two markers add small, useful classroom details.
