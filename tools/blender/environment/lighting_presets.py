@@ -1,54 +1,62 @@
-# lighting_presets.py — Cinematic & Toon Lighting Presets
-import bpy, math
-from typing import Dict, Any, Tuple
+# lighting_presets.py — Cinematic Three-Point Toon Lighting for Blender 5.2
+import bpy
+import math
+import random
+from typing import Dict, Any
+
 
 LIGHTING_CONFIGS: Dict[str, Dict[str, Any]] = {
     "pagi": {
-        "sky_color": (0.68, 0.82, 1.0, 1.0),
-        "sky_energy": 0.9,
-        "sun_color": (1.0, 0.92, 0.80),
-        "sun_energy": 3.2,
-        "sun_rot": (math.radians(35), 0, math.radians(-30)),
-        "fill_color": (0.50, 0.65, 0.85),
-        "fill_energy": 1.2,
+        "world": (0.38, 0.52, 0.72, 1.0), "world_strength": 0.38,
+        "key": (1.0, 0.78, 0.55), "fill": (0.48, 0.66, 1.0), "rim": (1.0, 0.88, 0.68),
+        "key_power": 520.0, "fill_power": 210.0, "rim_power": 420.0,
     },
     "siang": {
-        "sky_color": (0.58, 0.78, 1.0, 1.0),
-        "sky_energy": 1.0,
-        "sun_color": (1.0, 0.98, 0.92),
-        "sun_energy": 3.8,
-        "sun_rot": (math.radians(58), 0, math.radians(-25)),
-        "fill_color": (0.60, 0.70, 0.85),
-        "fill_energy": 1.5,
+        "world": (0.48, 0.60, 0.76, 1.0), "world_strength": 0.42,
+        "key": (1.0, 0.92, 0.78), "fill": (0.62, 0.76, 1.0), "rim": (1.0, 0.96, 0.86),
+        "key_power": 600.0, "fill_power": 240.0, "rim_power": 480.0,
     },
     "sore": {
-        "sky_color": (0.92, 0.58, 0.40, 1.0),
-        "sky_energy": 0.85,
-        "sun_color": (1.0, 0.55, 0.25),
-        "sun_energy": 3.5,
-        "sun_rot": (math.radians(22), 0, math.radians(-45)),
-        "fill_color": (0.55, 0.38, 0.65),
-        "fill_energy": 1.2,
+        "world": (0.42, 0.25, 0.30, 1.0), "world_strength": 0.30,
+        "key": (1.0, 0.43, 0.20), "fill": (0.50, 0.35, 0.72), "rim": (1.0, 0.62, 0.32),
+        "key_power": 560.0, "fill_power": 170.0, "rim_power": 500.0,
     },
     "malam": {
-        "sky_color": (0.08, 0.10, 0.20, 1.0),
-        "sky_energy": 0.4,
-        "sun_color": (0.45, 0.60, 0.85),
-        "sun_energy": 1.2,
-        "sun_rot": (math.radians(45), 0, math.radians(60)),
-        "fill_color": (0.15, 0.18, 0.35),
-        "fill_energy": 0.6,
+        "world": (0.035, 0.055, 0.12, 1.0), "world_strength": 0.16,
+        "key": (0.36, 0.52, 1.0), "fill": (0.24, 0.32, 0.62), "rim": (0.48, 0.66, 1.0),
+        "key_power": 360.0, "fill_power": 110.0, "rim_power": 320.0,
     },
     "mystery": {
-        "sky_color": (0.05, 0.07, 0.14, 1.0),
-        "sky_energy": 0.25,
-        "sun_color": (0.40, 0.55, 0.80),
-        "sun_energy": 1.0,
-        "sun_rot": (math.radians(30), 0, math.radians(70)),
-        "fill_color": (0.12, 0.14, 0.28),
-        "fill_energy": 0.4,
+        "world": (0.012, 0.018, 0.055, 1.0), "world_strength": 0.10,
+        "key": (0.22, 0.42, 0.92), "fill": (0.12, 0.18, 0.40), "rim": (0.45, 0.20, 0.72),
+        "key_power": 300.0, "fill_power": 70.0, "rim_power": 360.0,
     },
 }
+
+
+def _remove_previous_cinematic_lights(sc):
+    for obj in list(sc.objects):
+        if obj.name.startswith("CINE_LIGHT_"):
+            data = obj.data if obj.type == "LIGHT" else None
+            bpy.data.objects.remove(obj, do_unlink=True)
+            if data and data.users == 0:
+                bpy.data.lights.remove(data)
+
+
+def _area_light(sc, name, color, power, location, target, size):
+    data = bpy.data.lights.new(name, "AREA")
+    data.energy = power
+    data.color = color
+    data.shape = "DISK"
+    data.size = size
+    obj = bpy.data.objects.new(name, data)
+    sc.collection.objects.link(obj)
+    obj.location = location
+    direction = (target[0] - location[0], target[1] - location[1], target[2] - location[2])
+    from mathutils import Vector
+    obj.rotation_euler = Vector(direction).to_track_quat("-Z", "Y").to_euler()
+    return obj
+
 
 def apply_lighting(
     sc: bpy.types.Scene,
@@ -58,58 +66,56 @@ def apply_lighting(
     f0: int = 1,
     f1: int = 100,
 ) -> Dict[str, Any]:
-    """Sets up world background, sun key light, and ambient fill for the scene."""
-    cfg_key = "mystery" if mood == "mystery" else time_of_day.lower()
-    cfg = LIGHTING_CONFIGS.get(cfg_key, LIGHTING_CONFIGS["siang"])
+    """Create motivated key, fill, rim and optional practical/flickering lights."""
+    _remove_previous_cinematic_lights(sc)
 
-    # Setup world
-    w = bpy.data.worlds.new(f"World_{cfg_key}")
-    sc.world = w
-    w.use_nodes = True
-    bg = w.node_tree.nodes.get("Background")
-    if bg:
-        bg.inputs[0].default_value = cfg["sky_color"]
-        bg.inputs[1].default_value = cfg["sky_energy"]
+    preset = "mystery" if mood == "mystery" else str(time_of_day).lower()
+    cfg = LIGHTING_CONFIGS.get(preset, LIGHTING_CONFIGS["siang"])
 
-    # Sun Key Light
-    ld_sun = bpy.data.lights.new(f"Sun_{cfg_key}", "SUN")
-    ld_sun.color = cfg["sun_color"]
-    ld_sun.energy = cfg["sun_energy"]
-    lo_sun = bpy.data.objects.new(f"Sun_{cfg_key}", ld_sun)
-    sc.collection.objects.link(lo_sun)
-    lo_sun.rotation_euler = cfg["sun_rot"]
+    world = bpy.data.worlds.new("CINE_World_" + preset)
+    world.use_nodes = True
+    background = world.node_tree.nodes.get("Background")
+    if background:
+        background.inputs["Color"].default_value = cfg["world"]
+        background.inputs["Strength"].default_value = cfg["world_strength"]
+    sc.world = world
 
-    # Soft Fill Light
-    ld_fill = bpy.data.lights.new(f"Fill_{cfg_key}", "SUN")
-    ld_fill.color = cfg["fill_color"]
-    ld_fill.energy = cfg["fill_energy"]
-    lo_fill = bpy.data.objects.new(f"Fill_{cfg_key}", ld_fill)
-    sc.collection.objects.link(lo_fill)
-    lo_fill.rotation_euler = (math.radians(30), 0, math.radians(135))
+    # Character action area is staged around x=0, y=0.65, z=1.0.
+    target = (0.0, 0.8, 1.05)
+    key = _area_light(
+        sc, "CINE_LIGHT_Key", cfg["key"], cfg["key_power"],
+        (-3.5, -3.8, 4.8), target, 4.0,
+    )
+    fill = _area_light(
+        sc, "CINE_LIGHT_Fill", cfg["fill"], cfg["fill_power"],
+        (3.8, -2.6, 2.8), target, 5.0,
+    )
+    rim = _area_light(
+        sc, "CINE_LIGHT_Rim", cfg["rim"], cfg["rim_power"],
+        (0.0, 4.0, 4.2), target, 3.0,
+    )
 
-    # Optional Flickering Light (for mystery or broken lamp scenes)
-    lamp_obj = None
-    if flicker:
-        ld_point = bpy.data.lights.new("FlickerLamp", "POINT")
-        ld_point.color = (1.0, 0.85, 0.65)
-        ld_point.energy = 80.0
-        lamp_obj = bpy.data.objects.new("FlickerLamp", ld_point)
-        lamp_obj.location = (0, 1.0, 2.2)
-        sc.collection.objects.link(lamp_obj)
+    practical = None
+    if flicker or mood == "mystery":
+        data = bpy.data.lights.new("CINE_LIGHT_Practical", "POINT")
+        data.color = (1.0, 0.48, 0.18) if flicker else (0.28, 0.42, 1.0)
+        data.energy = 180.0 if flicker else 90.0
+        data.shadow_soft_size = 0.35
+        practical = bpy.data.objects.new("CINE_LIGHT_Practical", data)
+        sc.collection.objects.link(practical)
+        practical.location = (1.7, 1.6, 2.1)
 
-        # Animate flicker keyframes
-        import random
-        rnd = random.Random(42)
-        for f in range(f0, f1 + 1, 3):
-            # Sudden dips in energy
-            val = 80.0 if rnd.random() > 0.3 else rnd.choice([0.0, 15.0, 40.0])
-            ld_point.energy = val
-            ld_point.keyframe_insert("energy", frame=f)
+        if flicker:
+            rng = random.Random(42)
+            for frame in range(max(1, int(f0)), int(f1) + 1, 3):
+                data.energy = rng.choice((0.0, 18.0, 70.0, 180.0))
+                data.keyframe_insert("energy", frame=frame)
 
     return {
-        "world": w,
-        "sun": lo_sun,
-        "fill": lo_fill,
-        "flicker_lamp": lamp_obj,
+        "world": world,
+        "key": key,
+        "fill": fill,
+        "rim": rim,
+        "practical": practical,
+        "preset": preset,
     }
-
