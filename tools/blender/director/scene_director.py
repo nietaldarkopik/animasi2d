@@ -81,6 +81,8 @@ class SceneDirector:
                 props.extend(["kitchen_set"]) # counter, stove, pan, fridge, vent, radio
             elif loc_type == "living_room":
                 props.extend(["living_set"]) # sofa, table
+            elif loc_type == "classroom":
+                props.extend(["classroom_set"]) # whiteboard, teacher desk, student desks and chairs
 
             # Collect characters
             dialogue_list = sc.get("dialog", [])
@@ -113,19 +115,33 @@ class SceneDirector:
                 dur_sec = max(1.8, len(text) / 14.0)
                 dur_frames = int(dur_sec * self.fps)
 
-                # Alternate cinematography rhythm
-                if "kaget" in text.lower() or "hah" in text.lower() or "astaga" in text.lower():
+                # Choose coverage from the dramatic beat, not dialogue index alone.
+                line = text.lower()
+                startled = any(w in line for w in ("hah", "astaga", "serius?!", "apa?!", "tidak mungkin"))
+                emotional = any(w in line for w in ("takut", "sedih", "marah", "jangan", "tolong", "rahasia"))
+                reveal = any(w in line for w in ("ternyata", "sebenarnya", "ketahuan", "rahasia", "bukan"))
+                question = "?" in text
+
+                if startled:
                     shot_size = "close_up"
                     angle = "dutch"
-                    movement = "shake"
-                elif d_idx % 2 == 0:
+                    movement = "push_in"
+                elif reveal or emotional:
+                    shot_size = "medium_close_up"
+                    angle = "eye_level"
+                    movement = "dolly_in"
+                elif question:
                     shot_size = "medium"
+                    angle = "over_the_shoulder" if d_idx > 0 else "eye_level"
+                    movement = "static"
+                elif d_idx > 0 and dialogue_list[d_idx - 1].get("who", "").strip().lower() != speaker.strip().lower():
+                    shot_size = "over_the_shoulder"
                     angle = "eye_level"
                     movement = "static"
                 else:
-                    shot_size = "over_the_shoulder"
+                    shot_size = "medium"
                     angle = "eye_level"
-                    movement = "push_in"
+                    movement = "static"
 
                 shots.append({
                     "shot_id": f"sc{s_idx + 1}_sh{d_idx + 2}_dlg",
