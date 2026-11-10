@@ -51,7 +51,7 @@ def _build_shot_cameras(sc, scene_data, plan, actors, positions, f0, f1):
         shot_start = max(f0, int(shot.get("start_f", f0)))
         shot_end = min(f1, max(shot_start + 1, int(shot.get("end_f", f1))))
         target_name = shot.get("speaker") or shot.get("target") or "center"
-        target = _actor_position(target_name, actors, positions)
+        target = None if shot.get("focus") == "environment" else _actor_position(target_name, actors, positions)
 
         if target is None:
             # Establishing/environment shots frame the room; other untargeted
@@ -185,8 +185,9 @@ def build_scene_from_plan(
             exprs.append((start_f, emotion if emotion in valid_exprs else "netral"))
             poses.append((start_f, pose if pose in valid_poses else "diam"))
             speak.append((start_f + 2, max(start_f + 2, end_f - 2)))
-            exprs.append((end_f + 4, "netral"))
-            poses.append((end_f + 4, "diam"))
+            reset_frame = max(start_f, end_f - 1)
+            exprs.append((reset_frame, "netral"))
+            poses.append((reset_frame, "diam"))
 
         # _at() in char_lib expects chronologically ordered expression keys.
         exprs.sort(key=lambda item: item[0])
