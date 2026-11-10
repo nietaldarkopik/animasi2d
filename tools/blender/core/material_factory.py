@@ -15,8 +15,12 @@ def create_toon_material(
     roughness: float = 0.6,
     emission: float = 0.0,
 ) -> bpy.types.Material:
-    """Create a 2-step toon shaded material with crisp light/shadow transition."""
-    key = f"TOON_{name}_{base_color}_{shadow_color}_{emission}"
+    """Create a softly stylized, physically lit material for EEVEE.
+
+    Room and prop surfaces must receive real key/fill/rim lighting. The former
+    emission-only ShaderToRGB output looked flat because it bypassed scene lights.
+    """
+    key = f"TOON_{name}_{base_color}_{shadow_color}_{emission}_{roughness}"
     if key in _MAT_CACHE:
         try:
             m = _MAT_CACHE[key]
@@ -25,47 +29,24 @@ def create_toon_material(
         except ReferenceError:
             pass
 
-    if shadow_color is None:
-        shadow_color = (
-            base_color[0] * 0.65,
-            base_color[1] * 0.68,
-            base_color[2] * 0.85,
-            base_color[3],
-        )
-
     mat = bpy.data.materials.new(name)
     mat.use_nodes = True
     nt = mat.node_tree
     nt.nodes.clear()
-    N = nt.nodes.new
-    L = nt.links.new
-
-    # Diffuse -> ShaderToRGB -> ColorRamp -> Multiply with Base -> Output
-    df = N('ShaderNodeBsdfDiffuse')
-    s2r = N('ShaderNodeShaderToRGB')
-    L(df.outputs[0], s2r.inputs[0])
-
-    ramp = N('ShaderNodeValToRGB')
-    ramp.color_ramp.interpolation = 'CONSTANT'
-    ramp.color_ramp.elements[0].color = shadow_color
-    ramp.color_ramp.elements[1].position = 0.12
-    ramp.color_ramp.elements[1].color = base_color
-    L(s2r.outputs[0], ramp.inputs[0])
-
-    mix = N('ShaderNodeMix')
-    mix.data_type = 'RGBA'
-    mix.blend_type = 'MIX'
-    mix.inputs[0].default_value = 1.0
-    L(ramp.outputs['Color'], mix.inputs[6])
-    L(ramp.outputs['Color'], mix.inputs[7])
-
-    em = N('ShaderNodeEmission')
-    L(mix.outputs[2], em.inputs['Color'])
-    em.inputs['Strength'].default_value = 1.0 + emission
-
-    out = N('ShaderNodeOutputMaterial')
-    L(em.outputs['Emission'], out.inputs['Surface'])
-
+    bsdf = nt.nodes.new("ShaderNodeBsdfPrincipled")
+    bsdf.inputs["Base Color"].default_value = base_color
+    bsdf.inputs["Roughness"].default_value = max(0.05, min(1.0, roughness))
+    if "Metallic" in bsdf.inputs:
+        bsdf.inputs["Metallic"].default_value = max(0.0, min(1.0, specular * 0.15))
+    if emission > 0:
+        emission_socket = bsdf.inputs.get("Emission Color") or bsdf.inputs.get("Emission")
+        if emission_socket:
+            emission_socket.default_value = base_color
+        strength_socket = bsdf.inputs.get("Emission Strength")
+        if strength_socket:
+            strength_socket.default_value = emission
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
     _MAT_CACHE[key] = mat
     return mat
 
