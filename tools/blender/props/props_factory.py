@@ -286,14 +286,14 @@ def create_classroom_props(sc: bpy.types.Scene) -> Dict[str, Any]:
     chair_mat = create_toon_material("ClassroomChair", base_color=(0.18, 0.38, 0.62, 1.0))
 
     # Whiteboard sits on the back wall and faces the camera.
-    board_frame = _create_box_mesh("ClassroomWhiteboardFrame", 3.8, 0.12, 1.35)
-    board_frame.location = (0.0, 4.72, 1.55)
+    board_frame = _create_box_mesh("ClassroomWhiteboardFrame", 2.8, 0.12, 1.35)
+    board_frame.location = (-1.3, 4.72, 1.55)
     board_frame.data.materials.append(frame_mat)
     sc.collection.objects.link(board_frame)
     board_frame.parent = root
 
-    board = _create_box_mesh("ClassroomWhiteboard", 3.58, 0.035, 1.13)
-    board.location = (0.0, 4.645, 1.58)
+    board = _create_box_mesh("ClassroomWhiteboard", 2.6, 0.035, 1.13)
+    board.location = (-1.3, 4.645, 1.58)
     board.data.materials.append(board_mat)
     sc.collection.objects.link(board)
     board.parent = root
@@ -336,6 +336,14 @@ def create_classroom_props(sc: bpy.types.Scene) -> Dict[str, Any]:
             sc.collection.objects.link(chair_seat)
             chair_seat.parent = root
             student_chairs.append(chair_seat)
+
+            for leg_x in (-0.18, 0.18):
+                for leg_y in (-0.16, 0.16):
+                    chair_leg = _create_box_mesh(f"ChairLeg_{row}_{col}_{leg_x}_{leg_y}", 0.035, 0.035, 0.42)
+                    chair_leg.location = (x + leg_x, y - 0.58 + leg_y, 0.0)
+                    chair_leg.data.materials.append(metal_mat)
+                    sc.collection.objects.link(chair_leg)
+                    chair_leg.parent = root
 
             chair_back = _create_box_mesh(f"ChairBack_{row}_{col}", 0.48, 0.08, 0.52)
             chair_back.location = (x, y - 0.78, 0.70)
