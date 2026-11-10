@@ -49,7 +49,7 @@ def _new_mat(name):
     return m, nt
 
 def _cardmat(path):
-    """Toon 2-step lighting card material with PNG alpha."""
+    """Three-step scene-lit toon card material with PNG alpha."""
     k = ('c', path)
     if k in _mat:
         return _mat[k]
@@ -69,11 +69,11 @@ def _cardmat(path):
     # pick up the same key/fill direction as the 3D classroom.
     ramp = rp.color_ramp
     ramp.elements[0].position = 0.0
-    ramp.elements[0].color = (0.56, 0.55, 0.72, 1)
-    ramp.elements[1].position = 0.52
+    ramp.elements[0].color = (0.48, 0.46, 0.66, 1)
+    ramp.elements[1].position = 0.48
     ramp.elements[1].color = (1.0, 1.0, 1.0, 1)
-    mid = ramp.elements.new(0.22)
-    mid.color = (0.80, 0.79, 0.91, 1)
+    mid = ramp.elements.new(0.20)
+    mid.color = (0.72, 0.70, 0.85, 1)
     L(s2r.outputs[0], rp.inputs[0])
     mul = N('ShaderNodeMix')
     mul.data_type = 'RGBA'
