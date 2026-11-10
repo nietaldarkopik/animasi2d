@@ -361,4 +361,9 @@ if __name__ == "__main__":
         if res["execution"].get("stdout"):
             print("STDOUT:\n", res["execution"]["stdout"][-800:])
         if res["execution"].get("stderr"):
-            print("STDERR:\n", res["execution"]["stderr"][-800:])
+            print("STDERR:\n", res["execution"]["stderr"][-4000:])
+        # MCP may return diagnostics under message/raw rather than stderr.
+        for key in ("message", "error", "traceback", "raw"):
+            value = res["execution"].get(key)
+            if value:
+                print(f"EXECUTION {key.upper()}:\n", str(value)[-8000:])
