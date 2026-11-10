@@ -21,7 +21,35 @@ def configure_cinematic_render(
     quality_key = str(quality).strip().lower()
     preview = quality_key in ("preview", "draft", "low")
 
-    scene.render.engine = "BLENDER_EEVEE_NEXT"
+    # Blender MCP may be connected to a runtime exposing a different engine
+    # enum than the desktop installation. Select only an engine accepted by
+    # this exact scene/runtime instead of assuming EEVEE Next exists.
+    available_engines = []
+    try:
+        engine_prop = scene.render.bl_rna.properties.get("engine")
+        if engine_prop:
+            available_engines = [item.identifier for item in engine_prop.enum_items]
+    except Exception:
+        pass
+
+    selected_engine = None
+    for candidate in ("BLENDER_EEVEE_NEXT", "BLENDER_EEVEE", "CYCLES", "BLENDER_WORKBENCH"):
+        if available_engines and candidate not in available_engines:
+            continue
+        try:
+            scene.render.engine = candidate
+            selected_engine = candidate
+            break
+        except (TypeError, ValueError):
+            continue
+
+    if selected_engine is None:
+        raise RuntimeError(
+            "No supported Blender render engine found. "
+            f"Available engines: {available_engines or 'could not be queried'}"
+        )
+
+    print(f"[Blender] Selected render engine: {selected_engine}")
     scene.render.resolution_x = 1080 if portrait else 1920
     scene.render.resolution_y = 1920 if portrait else 1080
     scene.render.resolution_percentage = 55 if preview else 100
@@ -33,7 +61,7 @@ def configure_cinematic_render(
     scene.render.film_transparent = False
     scene.render.use_file_extension = True
 
-    # Blender 5.x uses EEVEE Next. Keep the sample setting version-safe.
+    # EEVEE sample settings differ by Blender version; keep this optional.
     try:
         eevee = scene.eevee
         if hasattr(eevee, "taa_render_samples"):
