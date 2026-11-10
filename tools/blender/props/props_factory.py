@@ -272,3 +272,81 @@ def create_living_props(sc: bpy.types.Scene) -> Dict[str, Any]:
 
     return {"root": root, "sofa": sofa_base, "table": table}
 
+
+
+def create_classroom_props(sc: bpy.types.Scene) -> Dict[str, Any]:
+    """Build a recognizable classroom set: whiteboard, teacher desk, student desks and chairs."""
+    root = bpy.data.objects.new("Prop_ClassroomSet", None)
+    sc.collection.objects.link(root)
+
+    desk_mat = create_wood_material("ClassroomDesk", color=(0.58, 0.38, 0.22, 1.0))
+    metal_mat = create_metal_material("ClassroomLegs", color=(0.32, 0.36, 0.42, 1.0))
+    board_mat = create_toon_material("WhiteboardSurface", base_color=(0.91, 0.94, 0.92, 1.0))
+    frame_mat = create_wood_material("WhiteboardFrame", color=(0.35, 0.24, 0.16, 1.0))
+    chair_mat = create_toon_material("ClassroomChair", base_color=(0.18, 0.38, 0.62, 1.0))
+
+    # Whiteboard sits on the back wall and faces the camera.
+    board_frame = _create_box_mesh("ClassroomWhiteboardFrame", 3.8, 0.12, 1.35)
+    board_frame.location = (0.0, 4.72, 1.55)
+    board_frame.data.materials.append(frame_mat)
+    sc.collection.objects.link(board_frame)
+    board_frame.parent = root
+
+    board = _create_box_mesh("ClassroomWhiteboard", 3.58, 0.035, 1.13)
+    board.location = (0.0, 4.645, 1.58)
+    board.data.materials.append(board_mat)
+    sc.collection.objects.link(board)
+    board.parent = root
+
+    # Teacher desk, kept to one side so the main acting area remains clear.
+    teacher_desk = _create_box_mesh("TeacherDeskTop", 1.55, 0.72, 0.12)
+    teacher_desk.location = (-2.15, 3.55, 0.82)
+    teacher_desk.data.materials.append(desk_mat)
+    sc.collection.objects.link(teacher_desk)
+    teacher_desk.parent = root
+
+    teacher_front = _create_box_mesh("TeacherDeskFront", 1.42, 0.08, 0.62)
+    teacher_front.location = (-2.15, 3.86, 0.36)
+    teacher_front.data.materials.append(desk_mat)
+    sc.collection.objects.link(teacher_front)
+    teacher_front.parent = root
+
+    student_desks = []
+    student_chairs = []
+    for row, y in enumerate((2.65, 3.75)):
+        for col, x in enumerate((-1.65, 0.0, 1.65)):
+            desk_top = _create_box_mesh(f"StudentDeskTop_{row}_{col}", 1.05, 0.58, 0.10)
+            desk_top.location = (x, y, 0.76)
+            desk_top.data.materials.append(desk_mat)
+            sc.collection.objects.link(desk_top)
+            desk_top.parent = root
+            student_desks.append(desk_top)
+
+            for leg_x in (-0.43, 0.43):
+                for leg_y in (-0.22, 0.22):
+                    leg = _create_box_mesh(f"DeskLeg_{row}_{col}_{leg_x}_{leg_y}", 0.045, 0.045, 0.72)
+                    leg.location = (x + leg_x, y + leg_y, 0.0)
+                    leg.data.materials.append(metal_mat)
+                    sc.collection.objects.link(leg)
+                    leg.parent = root
+
+            chair_seat = _create_box_mesh(f"ChairSeat_{row}_{col}", 0.48, 0.46, 0.09)
+            chair_seat.location = (x, y - 0.58, 0.43)
+            chair_seat.data.materials.append(chair_mat)
+            sc.collection.objects.link(chair_seat)
+            chair_seat.parent = root
+            student_chairs.append(chair_seat)
+
+            chair_back = _create_box_mesh(f"ChairBack_{row}_{col}", 0.48, 0.08, 0.52)
+            chair_back.location = (x, y - 0.78, 0.70)
+            chair_back.data.materials.append(chair_mat)
+            sc.collection.objects.link(chair_back)
+            chair_back.parent = root
+
+    return {
+        "root": root,
+        "whiteboard": board,
+        "teacher_desk": teacher_desk,
+        "student_desks": student_desks,
+        "student_chairs": student_chairs,
+    }
