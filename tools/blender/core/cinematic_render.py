@@ -61,25 +61,41 @@ def configure_cinematic_render(
     scene.render.film_transparent = False
     scene.render.use_file_extension = True
 
-    # EEVEE sample settings differ by Blender version; keep this optional.
+    # Enable legacy EEVEE quality features only when exposed by this runtime.
     try:
         eevee = scene.eevee
         if hasattr(eevee, "taa_render_samples"):
             eevee.taa_render_samples = 16 if preview else 64
-    except (AttributeError, TypeError):
+        if hasattr(eevee, "use_gtao"):
+            eevee.use_gtao = True
+        if hasattr(eevee, "gtao_distance"):
+            eevee.gtao_distance = 3.0
+        if hasattr(eevee, "gtao_factor"):
+            eevee.gtao_factor = 1.25
+        if hasattr(eevee, "use_soft_shadows"):
+            eevee.use_soft_shadows = True
+        if hasattr(eevee, "use_shadow_high_bitdepth"):
+            eevee.use_shadow_high_bitdepth = True
+    except (AttributeError, TypeError, ValueError):
         pass
 
-    # AgX gives a more filmic highlight roll-off than the default Standard view.
+    # Select the best available contrast transform instead of assuming AgX
+    # exists in the engine/runtime exposed through Blender MCP.
     try:
-        scene.view_settings.view_transform = "AgX"
+        transform_prop = scene.view_settings.bl_rna.properties.get("view_transform")
+        transforms = {item.identifier for item in transform_prop.enum_items} if transform_prop else set()
+        for candidate in ("AgX", "Filmic", "Standard"):
+            if candidate in transforms:
+                scene.view_settings.view_transform = candidate
+                break
+
         look_prop = scene.view_settings.bl_rna.properties.get("look")
-        if look_prop:
-            available = {item.identifier for item in look_prop.enum_items}
-            for candidate in ("AgX - Medium High Contrast", "AgX - Medium High Contrast"):
-                if candidate in available:
-                    scene.view_settings.look = candidate
-                    break
-    except (AttributeError, TypeError):
+        looks = {item.identifier for item in look_prop.enum_items} if look_prop else set()
+        for candidate in ("AgX - Medium High Contrast", "Medium High Contrast", "High Contrast"):
+            if candidate in looks:
+                scene.view_settings.look = candidate
+                break
+    except (AttributeError, TypeError, ValueError):
         pass
 
     scene.render.image_settings.color_mode = "RGBA"
