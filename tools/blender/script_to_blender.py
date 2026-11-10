@@ -152,31 +152,58 @@ def process_naskah_or_prompt(
         rend_esc = os.path.abspath(output_render).replace("\\", "\\\\")
         lines.append(f"os.makedirs(os.path.dirname(r'{rend_esc}'), exist_ok=True)")
         if render_video:
+            frames_dir = os.path.splitext(os.path.abspath(output_render))[0] + "_frames"
+            frames_esc = frames_dir.replace("\\", "\\\\")
             lines.extend([
-                "try: sc.render.image_settings.media_type = 'VIDEO'",
-                "except Exception: pass",
-                "sc.render.image_settings.file_format = 'FFMPEG'",
-                "sc.render.image_settings.color_mode = 'RGB'",
-                "sc.render.ffmpeg.format = 'MPEG4'",
-                "sc.render.ffmpeg.codec = 'H264'",
-                "sc.render.ffmpeg.constant_rate_factor = 'MEDIUM'",
-                f"rend_target = r'{rend_esc}'",
-                "sc.render.filepath = rend_target",
-                "print('[*] Rendering full animation video...')",
-                "bpy.ops.render.render(animation=True)",
-                "# Handle frame number suffix if Blender appends it",
-                "if not os.path.exists(rend_target):",
-                "    out_d = os.path.dirname(rend_target)",
-                "    base_no_ext = os.path.splitext(os.path.basename(rend_target))[0]",
-                "    for f in os.listdir(out_d):",
-                "        if f.startswith(base_no_ext) and f.endswith('.mp4') and f != os.path.basename(rend_target):",
-                "            cand_p = os.path.join(out_d, f)",
-                "            try:",
-                "                if os.path.exists(rend_target): os.remove(rend_target)",
-                "                os.rename(cand_p, rend_target)",
-                "                break",
-                "            except Exception: pass",
-                f"print('[✓] Animation video finished: {rend_esc}')",
+                f"frames_dir = r'{frames_esc}'",
+                "os.makedirs(frames_dir, exist_ok=True)",
+                "sc.render.image_settings.file_format = 'PNG'",
+                "sc.render.image_settings.color_mode = 'RGBA'",
+                "sc.render.image_settings.color_depth = '8'",
+                "sc.render.use_file_extension = True",
+                "qc_report = {'total_frames': sc.frame_end - sc.frame_start + 1, 'passed': [], 'failed': []}",
+                "print('[*] Frame render started:', qc_report['total_frames'], 'frames', flush=True)",
+                "for _frame in range(sc.frame_start, sc.frame_end + 1):",
+                "    sc.frame_set(_frame)",
+                "    _frame_path = os.path.join(frames_dir, 'frame_{:06d}.png'.format(_frame))",
+                "    _passed = False",
+                "    for _attempt in range(1, 3):",
+                "        print('[Render] Frame {}/{} attempt {}'.format(_frame - sc.frame_start + 1, qc_report['total_frames'], _attempt), flush=True)",
+                "        bpy.ops.render.render()",
+                "        _img = bpy.data.images.get('Render Result')",
+                "        if _img is None:",
+                "            continue",
+                "        _img.save_render(filepath=_frame_path, scene=sc)",
+                "        if not os.path.isfile(_frame_path) or os.path.getsize(_frame_path) < 1024:",
+                "            continue",
+                "        _w, _h = _img.size",
+                "        _px = _img.pixels",
+                "        _count = max(1, _w * _h)",
+                "        _stride = max(1, _count // 5000)",
+                "        _samples = []",
+                "        for _p in range(0, _count, _stride):",
+                "            _i = _p * 4",
+                "            _samples.append(0.2126 * _px[_i] + 0.7152 * _px[_i + 1] + 0.0722 * _px[_i + 2])",
+                "        _mean = sum(_samples) / max(1, len(_samples))",
+                "        _var = sum((_v - _mean) ** 2 for _v in _samples) / max(1, len(_samples))",
+                "        _max = max(_samples) if _samples else 0.0",
+                "        _black = (_mean < 0.002 and _max < 0.01)",
+                "        _blank = (_var < 0.000001)",
+                "        if not _black and not _blank:",
+                "            _passed = True",
+                "            break",
+                "        print('[QC] Frame {} suspicious: mean={:.5f}, variance={:.8f}; retrying'.format(_frame, _mean, _var), flush=True)",
+                "    if _passed:",
+                "        qc_report['passed'].append(_frame)",
+                "    else:",
+                "        qc_report['failed'].append(_frame)",
+                "        print('[QC] FAILED frame:', _frame, flush=True)",
+                "    with open(os.path.join(frames_dir, 'qc_report.json'), 'w', encoding='utf-8') as _qf:",
+                "        json.dump(qc_report, _qf, indent=2)",
+                "if qc_report['failed']:",
+                "    raise RuntimeError('Frame QC failed: {}'.format(qc_report['failed']))",
+                "print('[✓] All frame QC passed. Ready for FFmpeg encoding.', flush=True)",
+                f"print('[Frames] {frames_esc}')",
             ])
         else:
             lines.extend([
@@ -228,8 +255,66 @@ def process_naskah_or_prompt(
     if execute_via_bridge:
         exec_res = execute_blender_code(py_code, fallback_cli=True)
         result["execution"] = exec_res
+        if render_video and exec_res.get("status") == "ok" and output_render:
+            try:
+                scene_data = plan.get("scenes", [])[scene_idx]
+                fps = int(plan.get("fps", 24))
+                frame_start = int(scene_data.get("start_frame", 1))
+                frame_end = int(scene_data.get("end_frame", frame_start + 100))
+                frames_dir = os.path.splitext(os.path.abspath(output_render))[0] + "_frames"
+                encode_result = _encode_frames_ffmpeg(
+                    frames_dir, os.path.abspath(output_render), fps, frame_start, frame_end
+                )
+                result["encoding"] = encode_result
+            except Exception as encode_error:
+                result["encoding"] = {"status": "error", "message": str(encode_error)}
+                print("[✗] FFmpeg encoding failed:", encode_error)
 
     return result
+
+def _encode_frames_ffmpeg(
+    frames_dir: str, output_path: str, fps: int, frame_start: int, frame_end: int
+) -> Dict[str, Any]:
+    """Encode QC-passed PNG frames into H.264 MP4."""
+    import shutil
+    import subprocess
+
+    qc_path = os.path.join(frames_dir, "qc_report.json")
+    if not os.path.isfile(qc_path):
+        raise FileNotFoundError("QC report not found: " + qc_path)
+    with open(qc_path, "r", encoding="utf-8") as qf:
+        qc = json.load(qf)
+    expected = frame_end - frame_start + 1
+    if qc.get("failed") or len(qc.get("passed", [])) != expected:
+        raise RuntimeError("Frame QC incomplete; encoding cancelled.")
+
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        try:
+            import imageio_ffmpeg
+            ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+        except Exception:
+            raise FileNotFoundError("FFmpeg not found in PATH. Install FFmpeg or add it to PATH.")
+
+    input_pattern = os.path.join(frames_dir, "frame_%06d.png")
+    cmd = [
+        ffmpeg, "-y", "-framerate", str(fps),
+        "-start_number", str(frame_start), "-i", input_pattern,
+        "-frames:v", str(expected), "-c:v", "libx264",
+        "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
+        "-movflags", "+faststart", output_path
+    ]
+    print("[*] FFmpeg encoding:", expected, "QC-passed frames")
+    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
+    if proc.returncode != 0 or not os.path.isfile(output_path) or os.path.getsize(output_path) < 1024:
+        raise RuntimeError("FFmpeg failed: " + (proc.stderr or proc.stdout)[-3000:])
+    return {
+        "status": "ok",
+        "output": output_path,
+        "size_bytes": os.path.getsize(output_path),
+        "frames": expected,
+        "fps": fps,
+    }
 
 def _ffmpeg_concat(clip_paths: List[str], output_path: str) -> bool:
     """Concatenate MP4 clips with FFmpeg into a single output file."""
