@@ -283,8 +283,8 @@ def create_classroom_props(sc: bpy.types.Scene) -> Dict[str, Any]:
     metal_mat = create_metal_material("ClassroomLegs", color=(0.32, 0.36, 0.42, 1.0))
     board_mat = create_toon_material(
         "WhiteboardSurface",
-        base_color=(0.76, 0.80, 0.79, 1.0),
-        shadow_color=(0.42, 0.48, 0.50, 1.0),
+        base_color=(0.58, 0.63, 0.62, 1.0),
+        shadow_color=(0.30, 0.36, 0.39, 1.0),
     )
     frame_mat = create_wood_material("WhiteboardFrame", color=(0.35, 0.24, 0.16, 1.0))
     chair_mat = create_toon_material("ClassroomChair", base_color=(0.18, 0.38, 0.62, 1.0))
