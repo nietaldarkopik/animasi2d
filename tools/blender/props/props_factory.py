@@ -302,6 +302,61 @@ def create_classroom_props(sc: bpy.types.Scene) -> Dict[str, Any]:
     sc.collection.objects.link(board)
     board.parent = root
 
+    # Readable academic writing gives the board visual purpose in medium and
+    # wide shots. Text lies just in front of the board and faces the room.
+    ink_blue = create_toon_material(
+        "WhiteboardInkBlue", base_color=(0.035, 0.12, 0.22, 1.0)
+    )
+    ink_red = create_toon_material(
+        "WhiteboardInkRed", base_color=(0.58, 0.12, 0.16, 1.0)
+    )
+
+    def add_board_text(name, body, x, z, size, material, align="CENTER"):
+        curve = bpy.data.curves.new(name, type="FONT")
+        curve.body = body
+        curve.size = size
+        curve.align_x = align
+        curve.align_y = "CENTER"
+        curve.extrude = 0.001
+        obj = bpy.data.objects.new(name, curve)
+        sc.collection.objects.link(obj)
+        obj.location = (x, 4.615, z)
+        obj.rotation_euler = (math.radians(90), 0, 0)
+        obj.data.materials.append(material)
+        obj.parent = root
+        return obj
+
+    board_title = add_board_text(
+        "Board_Title", "FISIKA  /  MATEMATIKA", -1.3, 1.99, 0.17, ink_blue
+    )
+    board_formula_1 = add_board_text(
+        "Board_Formula_1", "v = s / t", -1.82, 1.68, 0.20, ink_blue
+    )
+    board_formula_2 = add_board_text(
+        "Board_Formula_2", "F = m x a", -0.88, 1.68, 0.20, ink_red
+    )
+    board_formula_3 = add_board_text(
+        "Board_Formula_3", "x² + y² = r²", -1.3, 1.38, 0.18, ink_blue
+    )
+
+    # A slim marker rail and two markers add small, useful classroom details.
+    marker_rail = _create_box_mesh("WhiteboardMarkerRail", 1.15, 0.10, 0.055)
+    marker_rail.location = (-1.3, 4.56, 0.99)
+    marker_rail.data.materials.append(frame_mat)
+    sc.collection.objects.link(marker_rail)
+    marker_rail.parent = root
+
+    marker_white = create_toon_material(
+        "WhiteboardMarkerBody", base_color=(0.88, 0.88, 0.82, 1.0)
+    )
+    for idx, (mx, marker_mat) in enumerate(((-1.62, ink_blue), (-1.28, ink_red))):
+        marker = _create_box_mesh(f"WhiteboardMarker_{idx}", 0.055, 0.055, 0.22)
+        marker.location = (mx, 4.52, 1.13)
+        marker.rotation_euler[1] = math.radians(90)
+        marker.data.materials.append(marker_white)
+        sc.collection.objects.link(marker)
+        marker.parent = root
+
     # Teacher desk, kept to one side so the main acting area remains clear.
     teacher_desk = _create_box_mesh("TeacherDeskTop", 1.55, 0.72, 0.12)
     teacher_desk.location = (-2.15, 3.55, 0.82)
