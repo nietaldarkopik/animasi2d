@@ -8,19 +8,55 @@
       "view": "front",
       "angle_degrees": 0,
       "image": "uki_front_f000080.png",
-      "size_bytes": 1473629
+      "size_bytes": 1473629,
+      "billboard_facing_angle_degrees": 0.02,
+      "billboard_facing_dot": 1.0,
+      "card_normal_world": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "camera_direction_horizontal": [
+        0.0,
+        -1.0,
+        0.0
+      ]
     },
     {
       "view": "oblique_45",
       "angle_degrees": 45,
       "image": "uki_oblique_45_f000080.png",
-      "size_bytes": 1468524
+      "size_bytes": 1468524,
+      "billboard_facing_angle_degrees": 0.02,
+      "billboard_facing_dot": 1.0,
+      "card_normal_world": [
+        0.707107,
+        -0.707107,
+        0.0
+      ],
+      "camera_direction_horizontal": [
+        0.707107,
+        -0.707107,
+        0.0
+      ]
     },
     {
       "view": "near_side_75",
       "angle_degrees": 75,
       "image": "uki_near_side_75_f000080.png",
-      "size_bytes": 1444227
+      "size_bytes": 1444227,
+      "billboard_facing_angle_degrees": 0.016,
+      "billboard_facing_dot": 1.0,
+      "card_normal_world": [
+        0.965926,
+        -0.258819,
+        0.0
+      ],
+      "camera_direction_horizontal": [
+        0.965926,
+        -0.258819,
+        0.0
+      ]
     }
   ]
 }
