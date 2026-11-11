@@ -8,6 +8,44 @@
       "index": 1,
       "frame": 1,
       "camera": "Camera_sc1_sh1_establish",
+      "camera_info": {
+        "location": [
+          0.0,
+          -2.8,
+          1.6
+        ],
+        "rotation_euler": [
+          1.47732,
+          -0.0,
+          0.0
+        ],
+        "lens_mm": 35.0,
+        "clip_start": 0.10000000149011612,
+        "clip_end": 1000.0
+      },
+      "actor_bounds_normalized": {
+        "uki": {
+          "x_min": 0.3,
+          "x_max": 0.908,
+          "y_min": -0.8395,
+          "y_max": 0.8828,
+          "behind_camera_points": 0
+        },
+        "arum": {
+          "x_min": 0.0944,
+          "x_max": 0.7,
+          "y_min": -0.8395,
+          "y_max": 0.8763,
+          "behind_camera_points": 0
+        }
+      },
+      "active_shot_markers": [
+        {
+          "name": "SHOT_01",
+          "frame": 1,
+          "camera": "Camera_sc1_sh1_establish"
+        }
+      ],
       "file": "motion_01_f000001.jpg",
       "size_bytes": 79879
     },
@@ -15,6 +53,44 @@
       "index": 2,
       "frame": 25,
       "camera": "Camera_sc1_sh1_establish",
+      "camera_info": {
+        "location": [
+          0.0,
+          -2.69333,
+          1.63704
+        ],
+        "rotation_euler": [
+          1.46732,
+          -0.0,
+          0.0
+        ],
+        "lens_mm": 35.0,
+        "clip_start": 0.10000000149011612,
+        "clip_end": 1000.0
+      },
+      "actor_bounds_normalized": {
+        "uki": {
+          "x_min": 0.2927,
+          "x_max": 0.9097,
+          "y_min": -0.8855,
+          "y_max": 0.891,
+          "behind_camera_points": 0
+        },
+        "arum": {
+          "x_min": 0.0787,
+          "x_max": 0.7073,
+          "y_min": -0.8855,
+          "y_max": 0.8853,
+          "behind_camera_points": 0
+        }
+      },
+      "active_shot_markers": [
+        {
+          "name": "SHOT_01",
+          "frame": 1,
+          "camera": "Camera_sc1_sh1_establish"
+        }
+      ],
       "file": "motion_02_f000025.jpg",
       "size_bytes": 80888
     },
@@ -22,6 +98,49 @@
       "index": 3,
       "frame": 49,
       "camera": "Camera_sc1_sh2_dlg",
+      "camera_info": {
+        "location": [
+          -0.78,
+          -1.84522,
+          1.60319
+        ],
+        "rotation_euler": [
+          1.64168,
+          -0.06964,
+          -0.00494
+        ],
+        "lens_mm": 65.0,
+        "clip_start": 0.10000000149011612,
+        "clip_end": 1000.0
+      },
+      "actor_bounds_normalized": {
+        "uki": {
+          "x_min": 0.5034,
+          "x_max": 2.1297,
+          "y_min": -5.0052,
+          "y_max": 0.6867,
+          "behind_camera_points": 0
+        },
+        "arum": {
+          "x_min": -0.0624,
+          "x_max": 1.5036,
+          "y_min": -3.5818,
+          "y_max": 0.8906,
+          "behind_camera_points": 0
+        }
+      },
+      "active_shot_markers": [
+        {
+          "name": "SHOT_01",
+          "frame": 1,
+          "camera": "Camera_sc1_sh1_establish"
+        },
+        {
+          "name": "SHOT_02",
+          "frame": 37,
+          "camera": "Camera_sc1_sh2_dlg"
+        }
+      ],
       "file": "motion_03_f000049.jpg",
       "size_bytes": 63995
     },
@@ -29,6 +148,49 @@
       "index": 4,
       "frame": 73,
       "camera": "Camera_sc1_sh2_dlg",
+      "camera_info": {
+        "location": [
+          -0.78,
+          -1.81682,
+          1.62212
+        ],
+        "rotation_euler": [
+          1.63472,
+          -0.06967,
+          -0.00446
+        ],
+        "lens_mm": 65.0,
+        "clip_start": 0.10000000149011612,
+        "clip_end": 1000.0
+      },
+      "actor_bounds_normalized": {
+        "uki": {
+          "x_min": 0.503,
+          "x_max": 2.1548,
+          "y_min": -5.0511,
+          "y_max": 0.6788,
+          "behind_camera_points": 0
+        },
+        "arum": {
+          "x_min": -0.0675,
+          "x_max": 1.5149,
+          "y_min": -3.6282,
+          "y_max": 0.8808,
+          "behind_camera_points": 0
+        }
+      },
+      "active_shot_markers": [
+        {
+          "name": "SHOT_01",
+          "frame": 1,
+          "camera": "Camera_sc1_sh1_establish"
+        },
+        {
+          "name": "SHOT_02",
+          "frame": 37,
+          "camera": "Camera_sc1_sh2_dlg"
+        }
+      ],
       "file": "motion_04_f000073.jpg",
       "size_bytes": 63726
     },
@@ -36,6 +198,49 @@
       "index": 5,
       "frame": 96,
       "camera": "Camera_sc1_sh2_dlg",
+      "camera_info": {
+        "location": [
+          -0.78,
+          -1.78618,
+          1.64254
+        ],
+        "rotation_euler": [
+          1.62722,
+          -0.0697,
+          -0.00393
+        ],
+        "lens_mm": 65.0,
+        "clip_start": 0.10000000149011612,
+        "clip_end": 1000.0
+      },
+      "actor_bounds_normalized": {
+        "uki": {
+          "x_min": 0.5025,
+          "x_max": 2.146,
+          "y_min": -5.1014,
+          "y_max": 0.6793,
+          "behind_camera_points": 0
+        },
+        "arum": {
+          "x_min": -0.0724,
+          "x_max": 1.5272,
+          "y_min": -3.6794,
+          "y_max": 0.8848,
+          "behind_camera_points": 0
+        }
+      },
+      "active_shot_markers": [
+        {
+          "name": "SHOT_01",
+          "frame": 1,
+          "camera": "Camera_sc1_sh1_establish"
+        },
+        {
+          "name": "SHOT_02",
+          "frame": 37,
+          "camera": "Camera_sc1_sh2_dlg"
+        }
+      ],
       "file": "motion_05_f000096.jpg",
       "size_bytes": 64170
     },
@@ -43,6 +248,54 @@
       "index": 6,
       "frame": 120,
       "camera": "Camera_sc1_sh3_dlg",
+      "camera_info": {
+        "location": [
+          1.14501,
+          -2.05,
+          1.45
+        ],
+        "rotation_euler": [
+          1.54512,
+          0.0,
+          0.13415
+        ],
+        "lens_mm": 50.0,
+        "clip_start": 0.10000000149011612,
+        "clip_end": 1000.0
+      },
+      "actor_bounds_normalized": {
+        "uki": {
+          "x_min": -0.2091,
+          "x_max": 0.8135,
+          "y_min": -1.4019,
+          "y_max": 1.1193,
+          "behind_camera_points": 0
+        },
+        "arum": {
+          "x_min": -0.5389,
+          "x_max": 0.1382,
+          "y_min": -1.4826,
+          "y_max": 1.0475,
+          "behind_camera_points": 0
+        }
+      },
+      "active_shot_markers": [
+        {
+          "name": "SHOT_01",
+          "frame": 1,
+          "camera": "Camera_sc1_sh1_establish"
+        },
+        {
+          "name": "SHOT_02",
+          "frame": 37,
+          "camera": "Camera_sc1_sh2_dlg"
+        },
+        {
+          "name": "SHOT_03",
+          "frame": 115,
+          "camera": "Camera_sc1_sh3_dlg"
+        }
+      ],
       "file": "motion_06_f000120.jpg",
       "size_bytes": 71093
     },
@@ -50,6 +303,54 @@
       "index": 7,
       "frame": 144,
       "camera": "Camera_sc1_sh3_dlg",
+      "camera_info": {
+        "location": [
+          1.47233,
+          -2.05,
+          1.45
+        ],
+        "rotation_euler": [
+          1.54581,
+          0.0,
+          0.24839
+        ],
+        "lens_mm": 50.0,
+        "clip_start": 0.10000000149011612,
+        "clip_end": 1000.0
+      },
+      "actor_bounds_normalized": {
+        "uki": {
+          "x_min": -0.1842,
+          "x_max": 0.7946,
+          "y_min": -1.2932,
+          "y_max": 1.117,
+          "behind_camera_points": 0
+        },
+        "arum": {
+          "x_min": -0.4301,
+          "x_max": 0.1173,
+          "y_min": -1.3694,
+          "y_max": 1.0099,
+          "behind_camera_points": 0
+        }
+      },
+      "active_shot_markers": [
+        {
+          "name": "SHOT_01",
+          "frame": 1,
+          "camera": "Camera_sc1_sh1_establish"
+        },
+        {
+          "name": "SHOT_02",
+          "frame": 37,
+          "camera": "Camera_sc1_sh2_dlg"
+        },
+        {
+          "name": "SHOT_03",
+          "frame": 115,
+          "camera": "Camera_sc1_sh3_dlg"
+        }
+      ],
       "file": "motion_07_f000144.jpg",
       "size_bytes": 76248
     },
@@ -57,6 +358,54 @@
       "index": 8,
       "frame": 168,
       "camera": "Camera_sc1_sh3_dlg",
+      "camera_info": {
+        "location": [
+          1.73,
+          -2.05,
+          1.45
+        ],
+        "rotation_euler": [
+          1.54634,
+          0.0,
+          0.33832
+        ],
+        "lens_mm": 50.0,
+        "clip_start": 0.10000000149011612,
+        "clip_end": 1000.0
+      },
+      "actor_bounds_normalized": {
+        "uki": {
+          "x_min": -0.1475,
+          "x_max": 0.7852,
+          "y_min": -1.194,
+          "y_max": 1.2137,
+          "behind_camera_points": 0
+        },
+        "arum": {
+          "x_min": -0.336,
+          "x_max": 0.1353,
+          "y_min": -1.2663,
+          "y_max": 0.9862,
+          "behind_camera_points": 0
+        }
+      },
+      "active_shot_markers": [
+        {
+          "name": "SHOT_01",
+          "frame": 1,
+          "camera": "Camera_sc1_sh1_establish"
+        },
+        {
+          "name": "SHOT_02",
+          "frame": 37,
+          "camera": "Camera_sc1_sh2_dlg"
+        },
+        {
+          "name": "SHOT_03",
+          "frame": 115,
+          "camera": "Camera_sc1_sh3_dlg"
+        }
+      ],
       "file": "motion_08_f000168.jpg",
       "size_bytes": 78261
     }
