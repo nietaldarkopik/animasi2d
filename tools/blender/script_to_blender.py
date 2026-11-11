@@ -332,12 +332,13 @@ def _encode_frames_ffmpeg(
         "-start_number", str(frame_start), "-i", input_pattern,
         "-frames:v", str(expected), "-c:v", "libx264",
         "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
-        "-movflags", "+faststart", output_path
+        "-movflags", "+faststart"
     ]
     if upscale_size:
         width, height = upscale_size
         cmd.extend(["-vf", f"scale={width}:{height}:flags=lanczos"])
         print(f"[*] Upscaling frames to {width}x{height} with Lanczos")
+    cmd.append(output_path)
     print("[*] FFmpeg encoding:", expected, "QC-passed frames")
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
     if proc.returncode != 0 or not os.path.isfile(output_path) or os.path.getsize(output_path) < 1024:
