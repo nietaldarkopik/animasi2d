@@ -75,17 +75,12 @@ def main():
     tracked = []
     visibility_restore = []
     try:
-        # Isolate the requested actor: hide every other character root and its
-        # complete hierarchy so no neighboring actor can appear in the render.
-        actor_roots = [
-            obj for obj in scene.objects
-            if obj.type == "EMPTY" and obj.parent is None
-            and (obj.name.startswith("CHAR_") or obj.name.startswith("SIL_"))
-        ]
-        for other_root in actor_roots:
-            if other_root == root:
-                continue
-            for other_obj in [other_root] + list(other_root.children_recursive):
+        # Isolate by the selected root's actual descendant set, not by an
+        # assumed top-level hierarchy. Hide every other character-tagged object.
+        selected_objects = {root} | set(root.children_recursive)
+        selected_names = {obj.name for obj in selected_objects}
+        for other_obj in scene.objects:
+            if other_obj.name.startswith(("CHAR_", "SIL_")) and other_obj.name not in selected_names:
                 visibility_restore.append((other_obj, other_obj.hide_render, other_obj.hide_viewport))
                 other_obj.hide_render = True
                 other_obj.hide_viewport = True
@@ -120,7 +115,9 @@ def main():
         ortho_scale = distance * frame_width
 
         report = {"blend_file": bpy.data.filepath, "character": key,
-                  "root": root.name, "frame": frame,
+                  "root": root.name, "root_descendant_count": len(selected_objects),
+                  "root_descendant_names_sample": sorted(selected_names)[:40],
+                  "frame": frame,
                   "projection_modes": list(projections),
                   "orthographic_scale": round(ortho_scale, 6),
                   "camera_tests": []}
@@ -181,8 +178,20 @@ def main():
                     parent_matrix = parent_eval.matrix_world if parent_eval else None
                     parent_inverse = child.matrix_parent_inverse
                     basis_matrix = child.matrix_basis
+                    image_textures = []
+                    for material in child.data.materials:
+                        if not material or not material.use_nodes:
+                            continue
+                        for node in material.node_tree.nodes:
+                            if node.type == "TEX_IMAGE" and node.image:
+                                image_textures.append({
+                                    "image_name": node.image.name,
+                                    "filepath": bpy.path.abspath(node.image.filepath) if node.image.filepath else "",
+                                    "packed": bool(node.image.packed_file),
+                                })
                     projected_cards.append({
                         "object": child.name,
+                        "image_textures": image_textures,
                         "parent": child.parent.name if child.parent else None,
                         "matrix_parent_inverse": [[round(parent_inverse[r][c], 6) for c in range(4)] for r in range(4)],
                         "matrix_basis": [[round(basis_matrix[r][c], 6) for c in range(4)] for r in range(4)],
