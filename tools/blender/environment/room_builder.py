@@ -158,19 +158,41 @@ def build_interior_room(
     if room_type == "classroom":
         # A wall clock and notice panel make the classroom read as a lived-in
         # school space even in wide establishing shots.
+        clock_x = 3.02
+        clock_y = depth - 1.0 - 0.16
         clock_frame = _create_box_mesh("Classroom_WallClock_Frame", 0.42, 0.08, 0.42)
-        clock_frame.location = (1.55, depth - 1.0 - 0.16, 2.55)
+        clock_frame.location = (clock_x, clock_y, 2.55)
         clock_frame.data.materials.append(trim_mat)
         sc.collection.objects.link(clock_frame)
         clock_frame.parent = root
 
         clock_face = _create_box_mesh("Classroom_WallClock_Face", 0.34, 0.025, 0.34)
-        clock_face.location = (1.55, depth - 1.0 - 0.215, 2.55)
+        clock_face.location = (clock_x, clock_y - 0.055, 2.55)
         clock_face.data.materials.append(create_toon_material(
             "ClassroomClockFace", base_color=(0.94, 0.92, 0.82, 1.0)
         ))
         sc.collection.objects.link(clock_face)
         clock_face.parent = root
+
+        clock_ink = create_toon_material(
+            "ClassroomClockInk", base_color=(0.12, 0.16, 0.20, 1.0)
+        )
+        # Simple readable hands and center pin; all details stay inside the face.
+        for name, width, height, z, angle in (
+            ("HourHand", 0.025, 0.095, 2.575, -18),
+            ("MinuteHand", 0.018, 0.135, 2.595, 28),
+        ):
+            hand = _create_box_mesh("Classroom_WallClock_" + name, width, 0.018, height)
+            hand.location = (clock_x, clock_y - 0.075, z)
+            hand.rotation_euler[1] = math.radians(angle)
+            hand.data.materials.append(clock_ink)
+            sc.collection.objects.link(hand)
+            hand.parent = root
+        clock_pin = _create_box_mesh("Classroom_WallClock_Pin", 0.045, 0.02, 0.045)
+        clock_pin.location = (clock_x, clock_y - 0.088, 2.55)
+        clock_pin.data.materials.append(ink_red if "ink_red" in locals() else trim_mat)
+        sc.collection.objects.link(clock_pin)
+        clock_pin.parent = root
 
         notice_frame = _create_box_mesh("Classroom_Notice_Frame", 0.72, 0.07, 0.82)
         notice_frame.location = (-3.02, depth - 1.0 - 0.15, 1.85)
