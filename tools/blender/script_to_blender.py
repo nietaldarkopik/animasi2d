@@ -340,6 +340,53 @@ def process_naskah_or_prompt(
 
     return result
 
+
+def export_storyboard_plan(
+    script_path: str,
+    output_path: Optional[str] = None,
+    aspect_ratio: str = "16:9",
+    fps: int = 24,
+) -> Dict[str, Any]:
+    """
+    Analyze a structured script and export a reviewable shot-by-shot storyboard plan.
+    This stage does not start Blender or render any frames.
+    """
+    with open(script_path, "r", encoding="utf-8") as f:
+        script_data = json.load(f)
+
+    if not isinstance(script_data, dict):
+        raise ValueError("Script JSON root must be an object.")
+    if not script_data.get("scenes") and not script_data.get("dialog"):
+        raise ValueError("Script must contain 'scenes' or a top-level 'dialog' array.")
+
+    director = SceneDirector(fps=fps, aspect_ratio=aspect_ratio)
+    plan = director.analyze_script(script_data)
+    if not plan.get("scenes"):
+        raise ValueError("AI Director did not produce any scenes.")
+
+    if not output_path:
+        base, _ = os.path.splitext(os.path.abspath(script_path))
+        output_path = base + "_storyboard.json"
+
+    output_path = os.path.abspath(output_path)
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(plan, f, indent=2, ensure_ascii=False)
+
+    shot_count = sum(len(scene.get("shots", [])) for scene in plan["scenes"])
+    return {
+        "status": "ok",
+        "output": output_path,
+        "title": plan.get("title", "Film Kartun"),
+        "scenes": len(plan["scenes"]),
+        "shots": shot_count,
+        "total_frames": plan.get("total_frames", 0),
+        "fps": plan.get("fps", fps),
+        "aspect_ratio": plan.get("aspect_ratio", aspect_ratio),
+        "plan": plan,
+    }
+
+
 def _encode_frames_ffmpeg(
     frames_dir: str, output_path: str, fps: int, frame_start: int, frame_end: int,
     upscale_size: Optional[Tuple[int, int]] = None,
@@ -516,6 +563,8 @@ def produce_all_scenes(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Autonomous Cartoon Production Generator")
     parser.add_argument("--script", type=str, help="Path to JSON naskah file")
+    parser.add_argument("--plan-only", action="store_true", help="Analyze script and export storyboard JSON without starting Blender")
+    parser.add_argument("--storyboard-output", type=str, help="Optional output path for storyboard JSON (used with --plan-only)")
     parser.add_argument("--prompt", type=str, help="Text prompt to animate")
     parser.add_argument("--scene-idx", type=int, default=0, help="Index of scene to build (default 0, or use --all-scenes)")
     parser.add_argument("--all-scenes", action="store_true", help="Render ALL scenes and FFmpeg-concat into one MP4")
@@ -527,6 +576,28 @@ if __name__ == "__main__":
     parser.add_argument("--aspect-ratio", type=str, default="16:9", choices=["16:9", "9:16"])
     parser.add_argument("--no-exec", action="store_true", help="Only output generated Python code, don't execute")
     args = parser.parse_args()
+
+    if args.plan_only:
+        if not args.script:
+            parser.error("--plan-only currently requires --script with a structured JSON naskah.")
+        try:
+            storyboard = export_storyboard_plan(
+                script_path=args.script,
+                output_path=args.storyboard_output,
+                aspect_ratio=args.aspect_ratio,
+            )
+            print("\\n[Storyboard Plan]")
+            print("Title:", storyboard["title"])
+            print("Scenes:", storyboard["scenes"], "| Shots:", storyboard["shots"])
+            print("Duration:", round(storyboard["total_frames"] / max(1, storyboard["fps"]), 2), "seconds")
+            print("Format:", storyboard["aspect_ratio"], "| FPS:", storyboard["fps"])
+            print("Saved:", storyboard["output"])
+            for scene in storyboard["plan"]["scenes"]:
+                print("  -", scene.get("name"), "|", scene.get("environment_type"), "|", len(scene.get("shots", [])), "shots")
+            sys.exit(0)
+        except Exception as exc:
+            print("[Storyboard Error]", str(exc))
+            sys.exit(1)
 
     target = args.script or args.prompt
     if not target:
