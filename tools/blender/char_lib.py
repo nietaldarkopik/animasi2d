@@ -407,11 +407,17 @@ def make_character(
         HP.rotation_euler = (0, 0.035 * math.sin(f * 0.13 + blink_seed * 2), 0)
         HP.keyframe_insert('rotation_euler', frame=f)
 
-    # Apply subtle Director motion on a separate pivot, preserving body/head animation.
+    # Director motion uses the sprite's local screen plane:
+    # local X = horizontal, local Z = vertical, local Y = camera depth.
+    # Avoid rotating around local Y: that turns a flat sprite edge-on.
     motion_keys = {}
-    def _motion_key(frame, y=0.0, z=0.0, tilt=0.0):
+    def _motion_key(frame, x=0.0, y=0.0, z=0.0, lean=0.0, roll=0.0, scale_value=1.0):
         frame = max(int(f0), min(int(f1), int(frame)))
-        motion_keys[frame] = ((0.0, float(y), float(z)), (0.0, float(tilt), 0.0))
+        motion_keys[frame] = (
+            (float(x), float(y), float(z)),
+            (float(lean), 0.0, float(roll)),
+            float(scale_value),
+        )
 
     _motion_key(f0)
     for cue in sorted(actions or [], key=lambda item: int(item.get('start_frame', f0))):
@@ -419,35 +425,42 @@ def make_character(
         a = max(f0, int(cue.get('start_frame', f0)))
         b = min(f1, max(a, int(cue.get('end_frame', a + 1)) - 1))
         if action == 'quick_recoil':
+            # Quick backward flinch, then a short recovery.
             _motion_key(a)
-            _motion_key(a + 2, y=0.075, z=0.025, tilt=-0.075)
-            _motion_key(a + 7, y=0.035, z=0.010, tilt=-0.030)
+            _motion_key(a + 2, y=0.055, z=0.035, lean=-0.055, scale_value=0.975)
+            _motion_key(a + 7, y=0.025, z=0.012, lean=-0.020, scale_value=0.990)
             _motion_key(min(b, a + 12))
         elif action == 'lean_forward':
+            # A readable upper-body lean without turning the sprite sideways.
             _motion_key(a)
-            _motion_key(min(b, a + 4), y=-0.055, z=0.010, tilt=0.045)
-            _motion_key(max(a, b - 3), y=-0.055, z=0.010, tilt=0.045)
+            _motion_key(min(b, a + 5), y=-0.035, z=0.025, lean=0.045, scale_value=1.015)
+            _motion_key(max(a, b - 4), y=-0.035, z=0.025, lean=0.045, scale_value=1.015)
             _motion_key(b)
         elif action == 'step_forward':
+            # Sprite characters cannot take articulated leg steps yet; simulate
+            # a controlled approach with depth, slight rise, and perspective scale.
             _motion_key(a)
-            _motion_key(min(b, a + 5), y=-0.12, tilt=0.015)
-            _motion_key(max(a, b - 3), y=-0.12, tilt=0.015)
+            _motion_key(min(b, a + 6), y=-0.075, z=0.018, lean=0.025, scale_value=1.035)
+            _motion_key(max(a, b - 4), y=-0.075, z=0.018, lean=0.025, scale_value=1.035)
             _motion_key(b)
         elif action == 'subtle_gesture':
             _motion_key(a)
-            _motion_key(min(b, a + 4), z=0.025, tilt=0.025)
-            _motion_key(max(a, b - 3), z=0.025, tilt=0.025)
+            _motion_key(min(b, a + 5), z=0.035, roll=0.025, scale_value=1.010)
+            _motion_key(max(a, b - 4), z=0.035, roll=0.025, scale_value=1.010)
             _motion_key(b)
         else:
             _motion_key(a)
             _motion_key(b)
 
+    _interp('BEZIER')
     for frame in sorted(motion_keys):
-        location, rotation = motion_keys[frame]
+        location, rotation, motion_scale = motion_keys[frame]
         motion.location = location
         motion.rotation_euler = rotation
+        motion.scale = (motion_scale,) * 3
         motion.keyframe_insert('location', frame=frame)
         motion.keyframe_insert('rotation_euler', frame=frame)
+        motion.keyframe_insert('scale', frame=frame)
 
     # Automatic natural blinking
     rnd = random.Random(blink_seed)
