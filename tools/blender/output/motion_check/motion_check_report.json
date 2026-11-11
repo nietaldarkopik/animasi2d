@@ -1,0 +1,64 @@
+{
+  "blend_file": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\cinematic_draft.blend",
+  "frame_start": 1,
+  "frame_end": 168,
+  "resolution_percentage": 50,
+  "samples": [
+    {
+      "index": 1,
+      "frame": 1,
+      "camera": "Camera_sc1_sh1_establish",
+      "file": "motion_01_f000001.jpg",
+      "size_bytes": 80008
+    },
+    {
+      "index": 2,
+      "frame": 25,
+      "camera": "Camera_sc1_sh1_establish",
+      "file": "motion_02_f000025.jpg",
+      "size_bytes": 84944
+    },
+    {
+      "index": 3,
+      "frame": 49,
+      "camera": "Camera_sc1_sh2_dlg",
+      "file": "motion_03_f000049.jpg",
+      "size_bytes": 69108
+    },
+    {
+      "index": 4,
+      "frame": 73,
+      "camera": "Camera_sc1_sh2_dlg",
+      "file": "motion_04_f000073.jpg",
+      "size_bytes": 69573
+    },
+    {
+      "index": 5,
+      "frame": 96,
+      "camera": "Camera_sc1_sh2_dlg",
+      "file": "motion_05_f000096.jpg",
+      "size_bytes": 70993
+    },
+    {
+      "index": 6,
+      "frame": 120,
+      "camera": "Camera_sc1_sh3_dlg",
+      "file": "motion_06_f000120.jpg",
+      "size_bytes": 79766
+    },
+    {
+      "index": 7,
+      "frame": 144,
+      "camera": "Camera_sc1_sh3_dlg",
+      "file": "motion_07_f000144.jpg",
+      "size_bytes": 72827
+    },
+    {
+      "index": 8,
+      "frame": 168,
+      "camera": "Camera_sc1_sh3_dlg",
+      "file": "motion_08_f000168.jpg",
+      "size_bytes": 69562
+    }
+  ]
+}
