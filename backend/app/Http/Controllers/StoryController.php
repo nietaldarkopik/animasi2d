@@ -184,6 +184,8 @@ class StoryController extends Controller
         try {
             // Save the original source before AI processing so it survives generation failures.
             $series->update(['master_script' => $d['prompt']]);
+            // Persist the source document before asking AI; it remains available even if generation fails.
+            $series->update(['master_script' => $d['prompt']]);
             $result = app(StoryWriter::class)->fromPrompt($series, $d['prompt'], (int) ($d['count'] ?? 1));
             $series->update(['title' => $result['title'], 'premise' => $result['premise'], 'genre' => $result['genre'], 'tone' => $result['tone']]);
             $next = ($series->episodes()->max('number') ?? 0) + 1;
