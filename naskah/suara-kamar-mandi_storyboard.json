@@ -1,0 +1,168 @@
+{
+  "title": "Suara di Kamar Mandi",
+  "theme": "Rasa ingin tahu dan misteri di rumah tua",
+  "fps": 24,
+  "aspect_ratio": "9:16",
+  "total_frames": 762,
+  "scenes": [
+    {
+      "scene_index": 0,
+      "name": "Koridor Menuju Kamar Mandi",
+      "location_raw": "Koridor",
+      "environment_type": "corridor",
+      "time_of_day": "malam",
+      "mood": "mystery",
+      "flicker_lighting": true,
+      "props": [],
+      "actors": [
+        "Seni"
+      ],
+      "dialogue": [
+        {
+          "who": "Seni",
+          "text": "Malam-malam begini, kok ada suara gemericik air dari kamar mandi ya?"
+        },
+        {
+          "who": "Seni",
+          "text": "Rumah ini kan cuma ada aku sama Arum. Aku harus cek ke sana."
+        }
+      ],
+      "shots": [
+        {
+          "shot_id": "sc1_sh1_establish",
+          "shot_size": "wide",
+          "angle": "eye_level",
+          "movement": "dolly_in",
+          "duration_frames": 36,
+          "target": "Seni",
+          "focus": "environment",
+          "start_f": 1,
+          "end_f": 37
+        },
+        {
+          "shot_id": "sc1_sh2_dlg",
+          "shot_size": "medium",
+          "angle": "eye_level",
+          "movement": "static",
+          "duration_frames": 116,
+          "speaker": "Seni",
+          "text": "Malam-malam begini, kok ada suara gemericik air dari kamar mandi ya?",
+          "target": "Seni",
+          "start_f": 37,
+          "end_f": 153
+        },
+        {
+          "shot_id": "sc1_sh3_dlg",
+          "shot_size": "medium",
+          "angle": "over_the_shoulder",
+          "movement": "tracking",
+          "duration_frames": 102,
+          "speaker": "Seni",
+          "text": "Rumah ini kan cuma ada aku sama Arum. Aku harus cek ke sana.",
+          "target": "Seni",
+          "start_f": 153,
+          "end_f": 255
+        }
+      ],
+      "start_frame": 1,
+      "end_frame": 255
+    },
+    {
+      "scene_index": 1,
+      "name": "Misteri di Balik Pintu Kamar Mandi",
+      "location_raw": "Kamar mandi",
+      "environment_type": "bathroom",
+      "time_of_day": "malam",
+      "mood": "mystery",
+      "flicker_lighting": true,
+      "props": [
+        "bathroom_set"
+      ],
+      "actors": [
+        "Seni",
+        "Arum"
+      ],
+      "dialogue": [
+        {
+          "who": "Seni",
+          "text": "Pintu kamar mandinya sedikit terbuka... (Seni mengamati wastafel dan cermin)"
+        },
+        {
+          "who": "Arum",
+          "text": "Hah?! Seni, kamu ngapain ngintip di depan pintu?!"
+        },
+        {
+          "who": "Seni",
+          "text": "Astaga, Arum! Kamu lagi nyuci ember malam-malam begini?!"
+        },
+        {
+          "who": "Arum",
+          "text": "Iya, embernya tadi bocor kena gayung. Lampunya juga kedap-kedip bikin kaget aja!"
+        }
+      ],
+      "shots": [
+        {
+          "shot_id": "sc2_sh1_establish",
+          "shot_size": "wide",
+          "angle": "eye_level",
+          "movement": "dolly_in",
+          "duration_frames": 36,
+          "target": "Seni",
+          "focus": "environment",
+          "start_f": 255,
+          "end_f": 291
+        },
+        {
+          "shot_id": "sc2_sh2_dlg",
+          "shot_size": "medium",
+          "angle": "eye_level",
+          "movement": "static",
+          "duration_frames": 130,
+          "speaker": "Seni",
+          "text": "Pintu kamar mandinya sedikit terbuka... (Seni mengamati wastafel dan cermin)",
+          "target": "Seni",
+          "start_f": 291,
+          "end_f": 421
+        },
+        {
+          "shot_id": "sc2_sh3_dlg",
+          "shot_size": "close_up",
+          "angle": "dutch",
+          "movement": "push_in",
+          "duration_frames": 84,
+          "speaker": "Arum",
+          "text": "Hah?! Seni, kamu ngapain ngintip di depan pintu?!",
+          "target": "Arum",
+          "start_f": 421,
+          "end_f": 505
+        },
+        {
+          "shot_id": "sc2_sh4_dlg",
+          "shot_size": "close_up",
+          "angle": "dutch",
+          "movement": "push_in",
+          "duration_frames": 96,
+          "speaker": "Seni",
+          "text": "Astaga, Arum! Kamu lagi nyuci ember malam-malam begini?!",
+          "target": "Seni",
+          "start_f": 505,
+          "end_f": 601
+        },
+        {
+          "shot_id": "sc2_sh5_dlg",
+          "shot_size": "over_the_shoulder",
+          "angle": "eye_level",
+          "movement": "static",
+          "duration_frames": 137,
+          "speaker": "Arum",
+          "text": "Iya, embernya tadi bocor kena gayung. Lampunya juga kedap-kedip bikin kaget aja!",
+          "target": "Arum",
+          "start_f": 601,
+          "end_f": 738
+        }
+      ],
+      "start_frame": 255,
+      "end_frame": 738
+    }
+  ]
+}
