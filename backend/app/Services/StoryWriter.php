@@ -146,7 +146,7 @@ class StoryWriter
             ."SERI SAAT INI: {$series->title}\nKARAKTER YANG BOLEH BERBICARA: ".json_encode($cast, JSON_UNESCAPED_UNICODE)."\n"
             ."Hanya gunakan karakter di daftar tersebut".($series->use_narrator ? ' dan Narator' : '').". Dialog natural Bahasa Indonesia. Jangan ciptakan karakter baru. "
             ."Setiap episode berisi 3-7 scene, tiap scene 2-6 dialog, lokasi harus salah satu dari: ".implode(', ', self::LOCATIONS).". "
-            ."Setiap scene wajib berisi name, location, time (pagi/siang/sore/malam), visual (deskripsi visual konkret), camera (ukuran shot, angle, movement), lighting (sumber, arah, warna, mood), dialog [{who,text}], after (aksi opsional). "
+            ."Setiap scene wajib berisi name, location, time (pagi/siang/sore/malam), visual (deskripsi visual konkret), camera berupa objek {shot_size,angle,movement}; shot_size harus salah satu extreme_wide/wide/medium_wide/two_shot/medium/medium_close_up/close_up/extreme_close_up/over_the_shoulder; angle harus eye_level/low_angle/high_angle/birds_eye/over_the_shoulder/dutch; movement harus static/dolly_in/dolly_out/push_in/pull_out/tracking/shake. lighting berupa objek {mood,source,direction,color,notes}; mood boleh mystery/normal/cheerful. dialog [{who,text}], after (aksi opsional). "
             ."Balas JSON: {title,premise,genre,tone,episodes:[{title,synopsis,script:{title,theme,scenes:[{name,location,time,visual,camera,lighting,dialog:[{who,text}],after:[]}]}}]}";
         $data = $this->ask($system, $user, 0.55);
         $episodes = [];
