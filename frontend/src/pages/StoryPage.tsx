@@ -22,6 +22,8 @@ export function StoryPage() {
   const [dirty, setDirty] = useState(false)
   const [builders, setBuilders] = useState<BuilderSummary[]>([])
   const [count, setCount] = useState(5)
+  const [promptText, setPromptText] = useState('')
+  const [promptBusy, setPromptBusy] = useState(false)
   const [error, setError] = useState('')
   const [note, setNote] = useState('')
   const [editing, setEditing] = useState<StoryEpisode | null>(null)
@@ -84,6 +86,21 @@ export function StoryPage() {
         </div>
         {error && <div className="error" role="alert">{error}</div>}
         {note && <p className="small" style={{ color: 'var(--ok)', margin: 0 }}>{note}</p>}
+
+        <section className="card" style={{ border: '1px solid var(--accent, #777)' }}>
+          <h2 style={{ marginTop: 0 }}>✨ Generate dari naskah / prompt</h2>
+          <p className="muted small">Tempel naskah atau tulis ide. AI menyusun premis, episode, dialog, visual, kamera, dan lighting berdasarkan karakter yang dipilih di bawah.</p>
+          <label className="field"><span>Naskah atau prompt</span><textarea rows={6} value={promptText} maxLength={20000} onChange={(e) => setPromptText(e.target.value)} placeholder="Tempel naskah lengkap atau tulis arahan film yang ingin dibuat…" /></label>
+          <label className="field"><span>Atau unggah file (.txt / .md)</span><input type="file" accept=".txt,.md,text/plain,text/markdown" onChange={async (e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 1024 * 1024) { setError('Ukuran file maksimal 1 MB.'); return } setPromptText(await file.text()); setNote('Naskah berhasil dimuat. Periksa isinya sebelum generate.'); e.target.value = '' }} /></label>
+          <div className="row" style={{ gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+            <label className="row small" style={{ gap: 6 }}>Jumlah episode <input type="number" min={1} max={10} value={Math.min(count, 10)} onChange={(e) => setCount(Math.max(1, Math.min(10, Number(e.target.value) || 1)))} style={{ width: 70 }} /></label>
+            <button className="primary" disabled={!caps?.ai || promptBusy || busy || promptText.trim().length < 20 || (draft.characters ?? []).length === 0}
+              onClick={async () => { setError(''); setNote(''); setPromptBusy(true); try { if (dirty && !(await save())) return; const s = await api.storyGenerateFromPrompt(sid, promptText.trim(), Math.min(count, 10)); setSeries(s); setDraft({ title: s.title, premise: s.premise, genre: s.genre, tone: s.tone, narration_style: s.narration_style, use_narrator: s.use_narrator, narrator_voice: s.narrator_voice, characters: s.characters, notes: s.notes, episodes_planned: s.episodes_planned, auto_run: s.auto_run, schedule_time: s.schedule_time, auto_publish: s.auto_publish }); setDirty(false); setNote('Draft cerita dan naskah episode berhasil dibuat. Periksa lalu edit sebelum produksi.') } catch (e) { setError((e as Error).message) } finally { setPromptBusy(false) } }}>
+              {promptBusy ? '⏳ AI sedang menyusun cerita…' : '✨ Generate dan isi form'}
+            </button>
+          </div>
+          <p className="muted small" style={{ marginBottom: 0 }}>AI hanya memakai karakter yang sudah dipilih di bagian Karakter. Maksimal 10 episode per proses. Generate tidak memulai render film.</p>
+        </section>
 
         <section className="card">
           <h2 style={{ marginTop: 0 }}>1. Ide cerita</h2>
