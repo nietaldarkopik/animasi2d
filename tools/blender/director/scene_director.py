@@ -153,9 +153,9 @@ class SceneDirector:
             establish_end = establish_start + 36
             establish_shot = {
                 "shot_id": f"sc{s_idx + 1}_sh1_establish",
-                "shot_size": "wide",
-                "angle": "eye_level",
-                "movement": "dolly_in",
+                "shot_size": requested_size if requested_size in valid_sizes else "wide",
+                "angle": requested_angle if requested_angle in valid_angles else "eye_level",
+                "movement": requested_move if requested_move in valid_moves else "dolly_in",
                 "duration_frames": 36,
                 "target": actors[0] if actors else "center",
                 "focus": "environment",
