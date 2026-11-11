@@ -319,7 +319,7 @@ def process_naskah_or_prompt(
                 scene_data = plan.get("scenes", [])[scene_idx]
                 fps = int(plan.get("fps", 24))
                 frame_start = int(scene_data.get("start_frame", 1))
-                frame_end = int(scene_data.get("end_frame", frame_start + 100))
+                frame_end = int(scene_data.get("end_frame", frame_start + 100)) - 1  # storyboard end_frame is exclusive; FFmpeg range is inclusive
                 frames_dir = os.path.splitext(os.path.abspath(output_render))[0] + "_frames"
                 encode_result = _encode_frames_ffmpeg(
                     frames_dir, os.path.abspath(output_render), fps, frame_start, frame_end,
