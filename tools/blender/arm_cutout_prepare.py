@@ -66,21 +66,22 @@ def main():
     # The cut line intentionally follows the sleeve/torso seam; inspect the
     # diagnostic outputs before building any production rig from these masks.
     masks = {
+        # Broad, overlapping shoulder masks retain fabric under the torso edge.
         "left": [
-            (278, 319), (300, 326), (320, 350), (329, 390),
-            (319, 445), (303, 500), (286, 558), (270, 620),
-            (256, 680), (250, 718), (244, 746), (238, 778),
-            (230, 810), (218, 807), (207, 785), (205, 750),
-            (207, 718), (211, 680), (218, 635), (226, 585),
-            (235, 530), (244, 475), (252, 420), (260, 365)
+            (270, 305), (305, 310), (337, 335), (350, 385),
+            (345, 435), (330, 490), (315, 545), (300, 600),
+            (285, 655), (270, 710), (260, 755), (250, 795),
+            (238, 830), (205, 825), (190, 795), (190, 750),
+            (195, 700), (202, 650), (210, 595), (220, 540),
+            (232, 485), (242, 430), (250, 375), (258, 330)
         ],
         "right": [
-            (522, 319), (500, 326), (480, 350), (471, 390),
-            (481, 445), (497, 500), (514, 558), (530, 620),
-            (544, 680), (550, 718), (556, 746), (562, 778),
-            (570, 810), (582, 807), (593, 785), (595, 750),
-            (593, 718), (589, 680), (582, 635), (574, 585),
-            (565, 530), (556, 475), (548, 420), (540, 365)
+            (530, 305), (495, 310), (463, 335), (450, 385),
+            (455, 435), (470, 490), (485, 545), (500, 600),
+            (515, 655), (530, 710), (540, 755), (550, 795),
+            (562, 830), (595, 825), (610, 795), (610, 750),
+            (605, 700), (598, 650), (590, 595), (580, 540),
+            (568, 485), (558, 430), (550, 375), (542, 330)
         ]
     }
 
@@ -116,10 +117,29 @@ def main():
             # Clear only the arm mask from the static torso layer.
             base_pixels[idx + 3] = 0.0
 
+    # Rebuild a neutral composite from the extracted layers for visual QC.
+    composite = array('f', base_pixels)
+    for side in ("left", "right"):
+        layer = arm_pixels[side]
+        for i in range(0, len(composite), 4):
+            sa = layer[i + 3]
+            if sa <= 0.001:
+                continue
+            da = composite[i + 3]
+            out_a = sa + da * (1.0 - sa)
+            if out_a > 1e-8:
+                for channel in range(3):
+                    composite[i + channel] = (
+                        layer[i + channel] * sa +
+                        composite[i + channel] * da * (1.0 - sa)
+                    ) / out_a
+            composite[i + 3] = out_a
+
     outputs = [
         ("arum_body_clean.png", "ARUM_BODY_CLEAN", base_pixels),
         ("arum_arm_left.png", "ARUM_ARM_LEFT_CUTOUT", arm_pixels["left"]),
         ("arum_arm_right.png", "ARUM_ARM_RIGHT_CUTOUT", arm_pixels["right"]),
+        ("arum_cutout_composite.png", "ARUM_CUTOUT_COMPOSITE", composite),
     ]
     for filename, name, pixels in outputs:
         save_rgba(name, width, height, pixels, os.path.join(out_dir, filename))
@@ -127,8 +147,9 @@ def main():
 
     print("[Cutout] Source:", source_path)
     print("[Cutout] Canvas:", width, "x", height)
+    print("[Cutout] Neutral composite:", os.path.join(out_dir, "arum_cutout_composite.png"))
     print("[Cutout] No mesh deformation or production assets modified.")
-    print("[Cutout] Inspect body_clean + both arm layers before proceeding to pivots/rig.")
+    print("[Cutout] Compare composite against source; do not rig unless the silhouette is clean.")
 
 if __name__ == "__main__":
     main()
