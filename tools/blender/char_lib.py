@@ -3,7 +3,7 @@
 # Supports characters in: C:\wamp64\www\animasi2d\karakter\<nama>\ (character.json + PNGs)
 
 import bpy, json, math, os, random
-from typing import Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple, Optional
 
 # Default root folder for characters in animasi2d
 _this_dir = os.path.dirname(os.path.abspath(__file__)) if '__file__' in globals() else r"C:\wamp64\www\animasi2d\tools\blender"
