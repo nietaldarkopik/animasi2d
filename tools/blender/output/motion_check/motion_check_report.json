@@ -44,21 +44,21 @@
       "frame": 120,
       "camera": "Camera_sc1_sh3_dlg",
       "file": "motion_06_f000120.jpg",
-      "size_bytes": 79766
+      "size_bytes": 71249
     },
     {
       "index": 7,
       "frame": 144,
       "camera": "Camera_sc1_sh3_dlg",
       "file": "motion_07_f000144.jpg",
-      "size_bytes": 72827
+      "size_bytes": 76303
     },
     {
       "index": 8,
       "frame": 168,
       "camera": "Camera_sc1_sh3_dlg",
       "file": "motion_08_f000168.jpg",
-      "size_bytes": 69562
+      "size_bytes": 78461
     }
   ]
 }
