@@ -43,7 +43,7 @@ class StoryController extends Controller
 
     private function presentSeries(StorySeries $s, bool $withEpisodes = false): array
     {
-        $out = $s->only(['id', 'title', 'premise', 'genre', 'tone', 'narration_style', 'use_narrator', 'narrator_voice', 'characters', 'notes', 'episodes_planned', 'auto_run', 'schedule_time', 'auto_publish', 'ai_status', 'ai_message']);
+        $out = $s->only(['id', 'title', 'premise', 'master_script', 'genre', 'tone', 'narration_style', 'use_narrator', 'narrator_voice', 'characters', 'notes', 'episodes_planned', 'auto_run', 'schedule_time', 'auto_publish', 'ai_status', 'ai_message']);
         $out['last_auto_date'] = $s->last_auto_date?->toDateString();
         $out['episodes_count'] = $s->episodes()->count();
         $out['done_count'] = $s->episodes()->where('status', 'done')->count();
@@ -67,6 +67,7 @@ class StoryController extends Controller
         $d = $request->validate([
             'title' => "$required|string|max:120",
             'premise' => "$required|string|min:10|max:6000",
+            'master_script' => 'sometimes|nullable|string|max:20000',
             'genre' => 'nullable|string|max:60',
             'tone' => 'nullable|string|max:120',
             'narration_style' => 'nullable|string|max:600',
@@ -181,6 +182,8 @@ class StoryController extends Controller
         if (! StoryWriter::available()) return response()->json(['message' => 'AI tidak tersedia: nyalakan 9router dan periksa AI_API_KEY.'], 503);
         if ($series->ai_status === 'working' && $series->updated_at->gt(now()->subMinutes(45))) return response()->json(['message' => 'Masih ada proses AI yang berjalan untuk seri ini.'], 409);
         try {
+            // Save the original source before AI processing so it survives generation failures.
+            $series->update(['master_script' => $d['prompt']]);
             $result = app(StoryWriter::class)->fromPrompt($series, $d['prompt'], (int) ($d['count'] ?? 1));
             $series->update(['title' => $result['title'], 'premise' => $result['premise'], 'genre' => $result['genre'], 'tone' => $result['tone']]);
             $next = ($series->episodes()->max('number') ?? 0) + 1;
