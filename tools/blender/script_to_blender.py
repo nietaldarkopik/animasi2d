@@ -407,6 +407,7 @@ def process_naskah_or_prompt(
         else:
             exec_res = execute_blender_code(py_code, fallback_cli=True)
             result["execution"] = exec_res
+        exec_res = result.get("execution", {})
         if render_video and exec_res.get("status") == "ok" and output_render:
             try:
                 expected_frames_dir = os.path.splitext(os.path.abspath(output_render))[0] + "_frames"
