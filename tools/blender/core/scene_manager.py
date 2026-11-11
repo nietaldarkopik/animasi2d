@@ -63,7 +63,9 @@ def _build_shot_cameras(sc, scene_data, plan, actors, positions, f0, f1):
             # Keep dialogue framing around the face/upper torso. Over-the-shoulder
             # shots were aimed too low and cropped the speaker's head at 16:9.
             if shot_size in ("close_up", "extreme_close_up", "medium_close_up"):
-                target_z = 1.66
+                # Raise the look target so the actor sits slightly lower in frame,
+                # preserving visible headroom during close-up push-ins.
+                target_z = 1.78
             elif shot_size == "over_the_shoulder":
                 target_z = 1.48
             else:
