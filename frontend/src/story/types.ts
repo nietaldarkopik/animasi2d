@@ -35,6 +35,7 @@ export interface StorySeries {
   id: number
   title: string
   premise: string
+  master_script: string | null
   genre: string | null
   tone: string | null
   narration_style: string | null
