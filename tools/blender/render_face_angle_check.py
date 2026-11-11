@@ -13,6 +13,7 @@ import os
 import sys
 
 import bpy
+from bpy_extras.object_utils import world_to_camera_view
 from mathutils import Vector
 
 
@@ -113,6 +114,27 @@ def main():
             facing_dot = normal_horizontal.dot(to_camera)
             facing_angle = math.degrees(math.acos(max(-1.0, min(1.0, facing_dot))))
 
+            # Measure the actual projected dimensions of visible character cards.
+            projected_cards = []
+            for child in root.children_recursive:
+                if child.type != "MESH" or not any(token in child.name.lower() for token in ("_b_", "_h_", "_m_")):
+                    continue
+                child_eval = child.evaluated_get(depsgraph)
+                points = [
+                    world_to_camera_view(scene, diag_camera, child_eval.matrix_world @ Vector(corner))
+                    for corner in child_eval.bound_box
+                ]
+                xs = [p.x for p in points]
+                ys = [p.y for p in points]
+                width = max(xs) - min(xs)
+                height = max(ys) - min(ys)
+                projected_cards.append({
+                    "object": child.name,
+                    "projected_width": round(width, 6),
+                    "projected_height": round(height, 6),
+                    "width_height_ratio": round(width / height, 6) if height > 1e-9 else None,
+                })
+
             image_path = os.path.join(out_dir, "{}_{}_f{:06d}.png".format(key, label, frame))
             scene.render.filepath = image_path
             print("[Face Angle Check] {} ({} deg)".format(label, degrees), flush=True)
@@ -127,6 +149,7 @@ def main():
                 "billboard_facing_dot": round(facing_dot, 6),
                 "card_normal_world": [round(v, 6) for v in card_normal],
                 "camera_direction_horizontal": [round(v, 6) for v in to_camera],
+                "projected_cards": projected_cards,
             })
 
         report_path = os.path.join(out_dir, "face_angle_check_report.json")
