@@ -42,6 +42,40 @@ class SceneDirector:
                 return LOCATION_MAP[k]
         return "living_room" # sensible default
 
+    def infer_action(self, speaker: str, text: str, start_f: int, end_f: int) -> Dict[str, Any]:
+        """Create a deterministic, editable character action cue for one shot."""
+        line = str(text or "").lower()
+        startled = any(w in line for w in ("hah", "astaga", "kaget", "serius?!", "apa?!", "tidak mungkin"))
+        inspect = any(w in line for w in ("mengamati", "ngintip", "memeriksa", "periksa", "cek", "lihat", "mengintip"))
+        approach = any(w in line for w in ("harus cek", "ke sana", "mendekat", "ikuti aku", "ayo"))
+        explain = any(w in line for w in ("iya,", "karena", "soalnya", "tadi", "begini"))
+
+        if startled:
+            action, emotion, pose, gaze, movement = "startled_reaction", "kaget", "angkat", "speaker", "quick_recoil"
+        elif inspect:
+            action, emotion, pose, gaze, movement = "inspect_environment", "bingung", "pelipis", "story_target", "lean_forward"
+        elif approach:
+            action, emotion, pose, gaze, movement = "approach_target", "bingung", "tunjuk", "story_target", "step_forward"
+        elif explain:
+            action, emotion, pose, gaze, movement = "explain", "netral", "angkat", "listener", "subtle_gesture"
+        elif "?" in line:
+            action, emotion, pose, gaze, movement = "question", "bingung", "dagu", "listener", "hold"
+        else:
+            action, emotion, pose, gaze, movement = "speak", "netral", "diam", "camera", "hold"
+
+        return {
+            "actor": str(speaker or "Uki").strip(),
+            "action": action,
+            "emotion": emotion,
+            "pose": pose,
+            "gaze_target": gaze,
+            "movement": movement,
+            "start_frame": int(start_f),
+            "end_frame": int(end_f),
+            "speech": bool(text),
+            "dialogue_text": str(text or ""),
+        }
+
     def analyze_script(self, script_data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Translates raw script JSON into fully orchestrated 3D Scene Plans
@@ -92,21 +126,38 @@ class SceneDirector:
 
             # Plan shots for this scene
             shots = []
+            action_timeline = []
             scene_start_f = global_frame
 
             # Shot 1: Establishing Shot
-            shots.append({
+            establish_start = global_frame
+            establish_end = establish_start + 36
+            establish_shot = {
                 "shot_id": f"sc{s_idx + 1}_sh1_establish",
                 "shot_size": "wide",
                 "angle": "eye_level",
                 "movement": "dolly_in",
-                "duration_frames": 36, # 1.5 seconds
+                "duration_frames": 36,
                 "target": actors[0] if actors else "center",
                 "focus": "environment",
-                "start_f": global_frame,
-                "end_f": global_frame + 36,
-            })
-            global_frame += 36
+                "start_f": establish_start,
+                "end_f": establish_end,
+            }
+            establish_shot["action"] = {
+                "actor": actors[0] if actors else "Uki",
+                "action": "establish_presence",
+                "emotion": "netral",
+                "pose": "diam",
+                "gaze_target": "environment",
+                "movement": "hold",
+                "start_frame": establish_start,
+                "end_frame": establish_end,
+                "speech": False,
+                "dialogue_text": "",
+            }
+            shots.append(establish_shot)
+            action_timeline.append(establish_shot["action"])
+            global_frame = establish_end
 
             # Shots for dialogue exchanges
             for d_idx, d in enumerate(dialogue_list):
@@ -147,7 +198,9 @@ class SceneDirector:
                     angle = "eye_level"
                     movement = "static"
 
-                shots.append({
+                shot_start = global_frame
+                shot_end = shot_start + dur_frames
+                shot = {
                     "shot_id": f"sc{s_idx + 1}_sh{d_idx + 2}_dlg",
                     "shot_size": shot_size,
                     "angle": angle,
@@ -156,10 +209,13 @@ class SceneDirector:
                     "speaker": speaker,
                     "text": text,
                     "target": speaker,
-                    "start_f": global_frame,
-                    "end_f": global_frame + dur_frames,
-                })
-                global_frame += dur_frames
+                    "start_f": shot_start,
+                    "end_f": shot_end,
+                }
+                shot["action"] = self.infer_action(speaker, text, shot_start, shot_end)
+                shots.append(shot)
+                action_timeline.append(shot["action"])
+                global_frame = shot_end
 
             scene_end_f = global_frame
 
@@ -175,8 +231,10 @@ class SceneDirector:
                 "actors": actors,
                 "dialogue": dialogue_list,
                 "shots": shots,
+                "action_timeline": action_timeline,
                 "start_frame": scene_start_f,
                 "end_frame": scene_end_f,
+                "frame_count": scene_end_f - scene_start_f,
             })
 
         return {
@@ -184,6 +242,8 @@ class SceneDirector:
             "theme": theme,
             "fps": self.fps,
             "aspect_ratio": self.aspect_ratio,
-            "total_frames": global_frame + 24,
+            "total_frames": global_frame - 1,
+            "duration_seconds": round((global_frame - 1) / max(1, self.fps), 3),
+            "frame_range": {"start": 1, "end_exclusive": global_frame},
             "scenes": planned_scenes,
         }
