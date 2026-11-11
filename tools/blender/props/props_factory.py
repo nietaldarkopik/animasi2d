@@ -365,14 +365,14 @@ def create_classroom_props(sc: bpy.types.Scene) -> Dict[str, Any]:
     ]
     for idx, mat in enumerate(book_mats):
         book = _create_box_mesh(f"TeacherDesk_Book_{idx}", 0.22, 0.16, 0.035)
-        book.location = (-2.48 + idx * 0.025, 3.48 + idx * 0.015, 0.91 + idx * 0.04)
+        book.location = (-2.48 + idx * 0.025, 3.48 + idx * 0.015, 0.945 + idx * 0.04)
         book.rotation_euler[2] = math.radians(-8 + idx * 7)
         book.data.materials.append(mat)
         sc.collection.objects.link(book)
         book.parent = root
 
     notebook = _create_box_mesh("TeacherDesk_Notebook", 0.28, 0.22, 0.018)
-    notebook.location = (-1.72, 3.48, 0.91)
+    notebook.location = (-1.72, 3.48, 0.945)
     notebook.data.materials.append(create_toon_material(
         "ClassroomNotebook", base_color=(0.88, 0.84, 0.70, 1.0)
     ))
