@@ -24,6 +24,8 @@ def process_naskah_or_prompt(
     execute_via_bridge: bool = True,
     scene_idx: int = 0,
     aspect_ratio: str = "16:9",
+    render_quality: str = "final",
+    upscale_output: bool = False,
 ) -> Dict[str, Any]:
     """
     Main entry point: takes naskah JSON file or prompt text, analyzes story through AI Director,
@@ -133,7 +135,7 @@ def process_naskah_or_prompt(
         "print('[Blender] scene_manager loaded from:', scene_manager.__file__)",
         "print('[Blender] build_scene_from_plan signature:', inspect.signature(build_scene_from_plan))",
         f"_build_kwargs = {{'scene_idx': {scene_idx}}}",
-        f"if 'quality' in inspect.signature(build_scene_from_plan).parameters: _build_kwargs['quality'] = {'final' if render_video else 'preview'!r}",
+        f"if 'quality' in inspect.signature(build_scene_from_plan).parameters: _build_kwargs['quality'] = {render_quality if render_video else 'preview'!r}",
         "res_build = build_scene_from_plan(sc, plan_data, **_build_kwargs)",
         "",
     ]
@@ -289,7 +291,8 @@ def process_naskah_or_prompt(
                 frame_end = int(scene_data.get("end_frame", frame_start + 100))
                 frames_dir = os.path.splitext(os.path.abspath(output_render))[0] + "_frames"
                 encode_result = _encode_frames_ffmpeg(
-                    frames_dir, os.path.abspath(output_render), fps, frame_start, frame_end
+                    frames_dir, os.path.abspath(output_render), fps, frame_start, frame_end,
+                    upscale_size=((1080, 1920) if aspect_ratio == "9:16" else (1920, 1080)) if upscale_output else None,
                 )
                 result["encoding"] = encode_result
             except Exception as encode_error:
@@ -299,7 +302,8 @@ def process_naskah_or_prompt(
     return result
 
 def _encode_frames_ffmpeg(
-    frames_dir: str, output_path: str, fps: int, frame_start: int, frame_end: int
+    frames_dir: str, output_path: str, fps: int, frame_start: int, frame_end: int,
+    upscale_size: Optional[Tuple[int, int]] = None,
 ) -> Dict[str, Any]:
     """Encode QC-passed PNG frames into H.264 MP4."""
     import shutil
@@ -330,6 +334,10 @@ def _encode_frames_ffmpeg(
         "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
         "-movflags", "+faststart", output_path
     ]
+    if upscale_size:
+        width, height = upscale_size
+        cmd.extend(["-vf", f"scale={width}:{height}:flags=lanczos"])
+        print(f"[*] Upscaling frames to {width}x{height} with Lanczos")
     print("[*] FFmpeg encoding:", expected, "QC-passed frames")
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
     if proc.returncode != 0 or not os.path.isfile(output_path) or os.path.getsize(output_path) < 1024:
@@ -470,6 +478,8 @@ if __name__ == "__main__":
     parser.add_argument("--save-blend", type=str, help="Save resulting .blend file")
     parser.add_argument("--render-still", type=str, help="Render preview JPG (single scene only)")
     parser.add_argument("--render-video", type=str, help="Render full MP4 video")
+    parser.add_argument("--render-quality", choices=["draft", "standard", "final"], default="final", help="Video render quality preset (draft=50%, standard=75%, final=100%)")
+    parser.add_argument("--upscale", action="store_true", help="Upscale rendered frames to project resolution using FFmpeg Lanczos")
     parser.add_argument("--aspect-ratio", type=str, default="16:9", choices=["16:9", "9:16"])
     parser.add_argument("--no-exec", action="store_true", help="Only output generated Python code, don't execute")
     args = parser.parse_args()
@@ -509,6 +519,8 @@ if __name__ == "__main__":
         execute_via_bridge=not args.no_exec,
         scene_idx=args.scene_idx,
         aspect_ratio=args.aspect_ratio,
+        render_quality=args.render_quality,
+        upscale_output=args.upscale,
     )
 
     print("\n[AI Director Plan]")
