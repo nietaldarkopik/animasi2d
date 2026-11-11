@@ -138,9 +138,16 @@ def main():
                     [round(v, 6) for v in (world_matrix.to_3x3() @ axis)]
                     for axis in (Vector((1, 0, 0)), Vector((0, 1, 0)), Vector((0, 0, 1)))
                 ]
+                parent_eval = child.parent.evaluated_get(depsgraph) if child.parent else None
+                parent_matrix = parent_eval.matrix_world if parent_eval else None
+                parent_inverse = child.matrix_parent_inverse
+                basis_matrix = child.matrix_basis
                 projected_cards.append({
                     "object": child.name,
                     "parent": child.parent.name if child.parent else None,
+                    "matrix_parent_inverse": [[round(parent_inverse[r][c], 6) for c in range(4)] for r in range(4)],
+                    "matrix_basis": [[round(basis_matrix[r][c], 6) for c in range(4)] for r in range(4)],
+                    "parent_world_matrix": [[round(parent_matrix[r][c], 6) for c in range(4)] for r in range(4)] if parent_matrix else None,
                     "local_scale": [round(v, 6) for v in child_eval.scale],
                     "local_bounds_size": local_size,
                     "world_axis_vectors": world_axes,
