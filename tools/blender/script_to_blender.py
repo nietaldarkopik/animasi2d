@@ -631,7 +631,7 @@ if __name__ == "__main__":
     parser.add_argument("--render-video", type=str, help="Render full MP4 video")
     parser.add_argument("--render-quality", choices=["draft", "standard", "final"], default="final", help="Video render quality preset (draft=50%, standard=75%, final=100%)")
     parser.add_argument("--upscale", action="store_true", help="Upscale rendered frames to project resolution using FFmpeg Lanczos")
-    parser.add_argument("--motion-report", type=str, help="Export per-frame CHAR_MOTION_ transform diagnostics to CSV")
+    parser.add_argument("--motion-report", type=str, help="Export full character rig transforms and action timeline diagnostics to CSV/JSON")
     parser.add_argument("--aspect-ratio", type=str, default="16:9", choices=["16:9", "9:16"])
     parser.add_argument("--no-exec", action="store_true", help="Only output generated Python code, don't execute")
     args = parser.parse_args()
