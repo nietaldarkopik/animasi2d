@@ -136,7 +136,7 @@ class SceneDirector:
             if not actors:
                 actors = ["Uki"]
 
-            # Plan shots for this scene
+            # Plan shots for this scene. AI directions are preferred when they map to supported rig presets.
             shots = []
             action_timeline = []
             scene_start_f = global_frame
