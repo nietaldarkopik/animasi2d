@@ -25,6 +25,7 @@ def _args():
     p.add_argument("--character", default="uki")
     p.add_argument("--frame", type=int, default=0, help="0 = timeline midpoint")
     p.add_argument("--scale", type=int, default=70)
+    p.add_argument("--projection", choices=("both", "perspective", "orthographic"), default="both")
     return p.parse_args(argv)
 
 
