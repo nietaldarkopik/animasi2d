@@ -20,6 +20,7 @@ def configure_cinematic_render(
     portrait = str(aspect_ratio).strip() == "9:16"
     quality_key = str(quality).strip().lower()
     preview = quality_key in ("preview", "draft", "low")
+    standard = quality_key in ("standard", "medium")
 
     # Blender MCP may expose legacy EEVEE even when the desktop app is newer.
     # Prefer the engine confirmed by this runtime; legacy EEVEE is first because
@@ -52,7 +53,7 @@ def configure_cinematic_render(
     print(f"[Blender] Selected render engine: {selected_engine}")
     scene.render.resolution_x = 1080 if portrait else 1920
     scene.render.resolution_y = 1920 if portrait else 1080
-    scene.render.resolution_percentage = 55 if preview else 100
+    scene.render.resolution_percentage = 50 if preview else (75 if standard else 100)
     scene.render.fps = max(1, int(fps))
     scene.render.fps_base = 1.0
     scene.render.image_settings.file_format = "PNG"
@@ -65,7 +66,7 @@ def configure_cinematic_render(
     try:
         eevee = scene.eevee
         if hasattr(eevee, "taa_render_samples"):
-            eevee.taa_render_samples = 16 if preview else 64
+            eevee.taa_render_samples = 16 if preview else (32 if standard else 64)
         if hasattr(eevee, "use_gtao"):
             eevee.use_gtao = True
         if hasattr(eevee, "gtao_distance"):
@@ -105,5 +106,5 @@ def configure_cinematic_render(
         "resolution": (scene.render.resolution_x, scene.render.resolution_y),
         "percentage": scene.render.resolution_percentage,
         "fps": scene.render.fps,
-        "quality": "preview" if preview else "final",
+        "quality": "draft" if preview else ("standard" if standard else "final"),
     }
