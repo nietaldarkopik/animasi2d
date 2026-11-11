@@ -1,5 +1,5 @@
 # scene_manager.py — Master 2.5D Scene Builder for Blender 5.2
-import bpy, os, sys
+import bpy, os, sys, time
 from typing import Dict, Any, Tuple
 
 _BLENDER_TOOLS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -101,6 +101,16 @@ def build_scene_from_plan(
     quality: str = "final",
 ) -> Dict[str, Any]:
     """Build environment, lighting, props, per-shot cameras and 2.5D actors."""
+    profile = {}
+    _stage_started = time.perf_counter()
+
+    def _mark_stage(name):
+        nonlocal _stage_started
+        elapsed = time.perf_counter() - _stage_started
+        profile[name] = round(elapsed, 4)
+        print("[Profile] {}: {:.3f}s".format(name, elapsed), flush=True)
+        _stage_started = time.perf_counter()
+
     char_reset()
     scene_data = plan["scenes"][scene_idx]
     env_type = scene_data.get("environment_type", "living_room")
@@ -118,31 +128,56 @@ def build_scene_from_plan(
         quality=quality,
         fps=int(plan.get("fps", 24)),
     )
+    _mark_stage("render_configuration")
 
     lighting = apply_lighting(
         sc, time_of_day=time_of_day, mood=mood,
         flicker=flicker, f0=f0, f1=f1,
     )
+    _mark_stage("lighting")
 
     if env_type in ("street", "park", "school_yard"):
         env = build_exterior(sc, exterior_type=env_type)
     else:
         env = build_interior_room(sc, room_type=env_type)
+    _mark_stage("environment")
 
     props_created = {}
+    _props_started = time.perf_counter()
     props_needed = scene_data.get("props", [])
     if "bed" in props_needed:
+        _prop_started = time.perf_counter()
         props_created["bed"] = create_bed(sc, loc=(-2.0, 2.4, 0))
+        profile["prop_bed"] = round(time.perf_counter() - _prop_started, 4)
+        print("[Profile] prop_bed: {:.3f}s".format(profile["prop_bed"]), flush=True)
     if "wardrobe" in props_needed:
+        _prop_started = time.perf_counter()
         props_created["wardrobe"] = create_wardrobe(sc, loc=(2.0, 2.6, 0))
+        profile["prop_wardrobe"] = round(time.perf_counter() - _prop_started, 4)
+        print("[Profile] prop_wardrobe: {:.3f}s".format(profile["prop_wardrobe"]), flush=True)
     if "bathroom_set" in props_needed:
+        _prop_started = time.perf_counter()
         props_created["bathroom_set"] = create_bathroom_set(sc)
+        profile["prop_bathroom_set"] = round(time.perf_counter() - _prop_started, 4)
+        print("[Profile] prop_bathroom_set: {:.3f}s".format(profile["prop_bathroom_set"]), flush=True)
     if "kitchen_set" in props_needed:
+        _prop_started = time.perf_counter()
         props_created["kitchen_set"] = create_kitchen_props(sc)
+        profile["prop_kitchen_set"] = round(time.perf_counter() - _prop_started, 4)
+        print("[Profile] prop_kitchen_set: {:.3f}s".format(profile["prop_kitchen_set"]), flush=True)
     if "living_set" in props_needed:
+        _prop_started = time.perf_counter()
         props_created["living_set"] = create_living_props(sc)
+        profile["prop_living_set"] = round(time.perf_counter() - _prop_started, 4)
+        print("[Profile] prop_living_set: {:.3f}s".format(profile["prop_living_set"]), flush=True)
     if "classroom_set" in props_needed or env_type == "classroom":
+        _prop_started = time.perf_counter()
         props_created["classroom_set"] = create_classroom_props(sc)
+        profile["prop_classroom_set"] = round(time.perf_counter() - _prop_started, 4)
+        print("[Profile] prop_classroom_set: {:.3f}s".format(profile["prop_classroom_set"]), flush=True)
+
+    profile["props_total"] = round(time.perf_counter() - _props_started, 4)
+    _mark_stage("props_total")
 
     actors = scene_data.get("actors") or ["Uki"]
     num_actors = len(actors)
@@ -158,6 +193,7 @@ def build_scene_from_plan(
             positions[actor] = (x, 0.65, 0.0)
 
     camera_infos = _build_shot_cameras(sc, scene_data, plan, actors, positions, f0, f1)
+    _mark_stage("camera_rig")
     cam = camera_infos[0]["camera"] if camera_infos else sc.camera
 
     actor_objs = {}
@@ -165,6 +201,7 @@ def build_scene_from_plan(
     shots = scene_data.get("shots", [])
 
     for actor in actors:
+        _actor_started = time.perf_counter()
         clean_name = str(actor).lower().strip()
         exprs = [(f0, "netral")]
         poses = [(f0, "diam")]
@@ -219,8 +256,14 @@ def build_scene_from_plan(
                 sc, cam, os.path.join(KARAKTER_ROOT, "uki"),
                 clean_name, location, pose="diam",
             )
+        profile["actor_" + clean_name] = round(time.perf_counter() - _actor_started, 4)
+        print("[Profile] actor {}: {:.3f}s".format(clean_name, profile["actor_" + clean_name]), flush=True)
 
+    _mark_stage("actors_total")
     sc.frame_set(f0)
+    _mark_stage("initial_frame_evaluation")
+    profile["scene_build_total"] = round(sum(profile.values()), 4)
+    print("[Profile] scene_build_total (sum of stage timings): {:.3f}s".format(profile["scene_build_total"]), flush=True)
     return {
         "scene_name": scene_data.get("name", f"Scene {scene_idx + 1}"),
         "environment": env,
@@ -232,4 +275,5 @@ def build_scene_from_plan(
         "actors": actor_objs,
         "f0": f0,
         "f1": f1,
+        "profiling": profile,
     }
