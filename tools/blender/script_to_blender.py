@@ -679,7 +679,7 @@ if __name__ == "__main__":
         for sr in result['scene_results']:
             status_icon = '✓' if sr.get('clip') else '✗'
             print(f"  [{status_icon}] Scene {sr['idx']}: {sr['scene']} — {sr['status']}")
-        sys.exit(0 if result['status'] in ('done', 'partial') else 1)
+        sys.exit(0 if result['status'] == 'done' else 1)
 
     # --- SINGLE SCENE MODE ---
     rend = args.render_video or args.render_still
