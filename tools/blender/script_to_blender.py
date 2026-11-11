@@ -26,6 +26,7 @@ def process_naskah_or_prompt(
     aspect_ratio: str = "16:9",
     render_quality: str = "final",
     upscale_output: bool = False,
+    motion_report: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Main entry point: takes naskah JSON file or prompt text, analyzes story through AI Director,
@@ -144,6 +145,41 @@ def process_naskah_or_prompt(
         "_pipeline_profile = {'module_reload_and_setup': round(_module_reload_seconds, 4), 'scene_build': res_build.get('profiling', {}), 'frame_render': [], 'frame_qc': []}",
         "",
     ]
+
+    # Optional per-frame transform report for every Director motion pivot.
+    if motion_report:
+        report_esc = os.path.abspath(motion_report).replace("\\\\", "\\\\\\\\")
+        lines.extend([
+            "import csv, math",
+            f"_motion_report_path = r'{report_esc}'",
+            "os.makedirs(os.path.dirname(_motion_report_path), exist_ok=True)",
+            "_motion_objects = sorted([o for o in sc.objects if o.name.startswith('CHAR_MOTION_')], key=lambda o: o.name)",
+            "if not _motion_objects: print('[MotionDiag] WARNING: no CHAR_MOTION_ objects found')",
+            "_motion_rows = []",
+            "_motion_previous = {}",
+            "for _mf in range(sc.frame_start, sc.frame_end + 1):",
+            "    sc.frame_set(_mf)",
+            "    _depsgraph = bpy.context.evaluated_depsgraph_get()",
+            "    for _mo in _motion_objects:",
+            "        _ev = _mo.evaluated_get(_depsgraph)",
+            "        _loc = tuple(float(v) for v in _ev.location)",
+            "        _rot = tuple(float(v) for v in _ev.rotation_euler)",
+            "        _scale = tuple(float(v) for v in _ev.scale)",
+            "        _prev = _motion_previous.get(_mo.name)",
+            "        _delta = math.sqrt(sum((_loc[i] - _prev[0][i]) ** 2 for i in range(3))) if _prev else 0.0",
+            "        _rot_delta = math.sqrt(sum((_rot[i] - _prev[1][i]) ** 2 for i in range(3))) if _prev else 0.0",
+            "        _scale_delta = math.sqrt(sum((_scale[i] - _prev[2][i]) ** 2 for i in range(3))) if _prev else 0.0",
+            "        _motion_rows.append([_mf, _mo.name, *_loc, *_rot, *_scale, _delta, _rot_delta, _scale_delta])",
+            "        _motion_previous[_mo.name] = (_loc, _rot, _scale)",
+            "with open(_motion_report_path, 'w', newline='', encoding='utf-8-sig') as _csvf:",
+            "    _writer = csv.writer(_csvf)",
+            "    _writer.writerow(['frame','actor_pivot','loc_x','loc_y','loc_z','rot_x','rot_y','rot_z','scale_x','scale_y','scale_z','delta_location','delta_rotation','delta_scale'])",
+            "    _writer.writerows(_motion_rows)",
+            "print('[MotionDiag] Actors:', len(_motion_objects), '| Samples:', len(_motion_rows), '| CSV:', _motion_report_path)",
+            "for _row in sorted(_motion_rows, key=lambda r: r[11] + r[12] + r[13], reverse=True)[:12]: print('[MotionDiag] frame={} actor={} dLoc={:.5f} dRot={:.5f} dScale={:.5f}'.format(_row[0], _row[1], _row[11], _row[12], _row[13]))",
+            "sc.frame_set(sc.frame_start)",
+        ])
+
 
     # Save .blend file
     if output_blend:
@@ -573,6 +609,7 @@ if __name__ == "__main__":
     parser.add_argument("--render-video", type=str, help="Render full MP4 video")
     parser.add_argument("--render-quality", choices=["draft", "standard", "final"], default="final", help="Video render quality preset (draft=50%, standard=75%, final=100%)")
     parser.add_argument("--upscale", action="store_true", help="Upscale rendered frames to project resolution using FFmpeg Lanczos")
+    parser.add_argument("--motion-report", type=str, help="Export per-frame CHAR_MOTION_ transform diagnostics to CSV")
     parser.add_argument("--aspect-ratio", type=str, default="16:9", choices=["16:9", "9:16"])
     parser.add_argument("--no-exec", action="store_true", help="Only output generated Python code, don't execute")
     args = parser.parse_args()
@@ -636,6 +673,7 @@ if __name__ == "__main__":
         aspect_ratio=args.aspect_ratio,
         render_quality=args.render_quality,
         upscale_output=args.upscale,
+        motion_report=args.motion_report,
     )
 
     print("\n[AI Director Plan]")
