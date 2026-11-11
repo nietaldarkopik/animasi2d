@@ -1,5 +1,5 @@
 """
-Arum arm cutout v3 — duplicate one aligned neutral sprite, then partition it.
+Arum arm cutout v4 — full sleeve/hand mask coverage on one neutral sprite.
 
 The body and arm layers are pixel-aligned copies of the SAME neutral source.
 This guarantees the reconstructed neutral composite matches the source exactly.
@@ -48,20 +48,25 @@ def main():
     # Polygons follow the visible sleeves + hands in the neutral pose.
     # Screen-left/right are named by viewer perspective.
     # The upper inner corners extend into the shoulder seam for overlap.
+    # Full sleeve + hand silhouettes. The previous mask stopped too far
+    # toward the outside edge of the torso, leaving narrow sleeve/hand strips
+    # on the body layer. These contours extend to the visible inner sleeve edge.
     masks={
       "left":[
-        (270,312),(294,320),(315,342),(323,380),(318,430),
-        (305,485),(292,540),(279,595),(266,650),(253,700),
-        (248,740),(247,775),(240,810),(225,818),(211,800),
-        (205,770),(207,735),(211,695),(217,650),(224,600),
-        (232,545),(241,490),(250,435),(258,380),(263,340)
+        (292,300),(330,312),(360,340),(372,380),(368,425),
+        (355,475),(342,530),(328,585),(314,640),(300,690),
+        (286,735),(276,775),(263,812),(245,830),(222,822),
+        (207,800),(201,770),(202,735),(207,695),(213,650),
+        (220,600),(230,545),(241,490),(252,435),(265,380),
+        (278,335)
       ],
       "right":[
-        (530,312),(506,320),(485,342),(477,380),(482,430),
-        (495,485),(508,540),(521,595),(534,650),(547,700),
-        (552,740),(553,775),(560,810),(575,818),(589,800),
-        (595,770),(593,735),(589,695),(583,650),(576,600),
-        (568,545),(559,490),(550,435),(542,380),(537,340)
+        (508,300),(470,312),(440,340),(428,380),(432,425),
+        (445,475),(458,530),(472,585),(486,640),(500,690),
+        (514,735),(524,775),(537,812),(555,830),(578,822),
+        (593,800),(599,770),(598,735),(593,695),(587,650),
+        (580,600),(570,545),(559,490),(548,435),(535,380),
+        (522,335)
       ]
     }
 
