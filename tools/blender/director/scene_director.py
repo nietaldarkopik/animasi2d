@@ -141,6 +141,13 @@ class SceneDirector:
             action_timeline = []
             scene_start_f = global_frame
 
+            requested_size = str(camera_direction.get("shot_size", camera_direction.get("size", ""))).lower().replace(" ", "_")
+            requested_angle = str(camera_direction.get("angle", "")).lower().replace(" ", "_")
+            requested_move = str(camera_direction.get("movement", camera_direction.get("move", ""))).lower().replace(" ", "_")
+            valid_sizes = {"extreme_wide", "wide", "medium_wide", "two_shot", "medium", "medium_close_up", "close_up", "extreme_close_up", "over_the_shoulder"}
+            valid_angles = {"eye_level", "low_angle", "high_angle", "birds_eye", "over_the_shoulder", "dutch"}
+            valid_moves = {"static", "dolly_in", "dolly_out", "push_in", "pull_out", "tracking", "shake"}
+
             # Shot 1: Establishing Shot
             establish_start = global_frame
             establish_end = establish_start + 36
