@@ -91,8 +91,9 @@ def create_cinematic_camera(
     # Handle Camera Movement
     if movement in ("dolly_in", "push_in"):
         # Smoothly push in 20% closer
-        # Keep a gentler 10% push-in so the actor retains safe headroom at the end of the shot.
-        end_dist = dist * 0.90
+        # Use a restrained 3% push-in to preserve headroom on close dialogue shots.
+        # The camera still moves, but framing takes priority over aggressive zoom.
+        end_dist = dist * 0.97
         end_y = tgt_y - end_dist
         end_loc = (cam_start_x, end_y, cam_start_z + 0.05)
         look_at(cam_obj, end_loc, target_pos, roll_deg)
