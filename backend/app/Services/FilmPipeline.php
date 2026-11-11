@@ -118,9 +118,13 @@ class FilmPipeline
         $p->setTimeout($timeout);
         $p->run($out ? fn ($t, $b) => $out($b) : null);
 
-        $this->lastOutput = trim(mb_substr(trim($p->getOutput()."\n".$p->getErrorOutput()), -3000));
+        $combinedOutput = trim($p->getOutput()."\n".$p->getErrorOutput());
+        $diagnosticLog = $outputDir . DIRECTORY_SEPARATOR . "project_{$projectId}_blender.log";
+        @file_put_contents($diagnosticLog, $combinedOutput . PHP_EOL, LOCK_EX);
+        $this->lastOutput = trim(mb_substr($combinedOutput, -12000));
         if (! $p->isSuccessful()) {
-            $this->lastOutput = "Blender process exit code ".$p->getExitCode()."\n".$this->lastOutput;
+            $this->lastOutput = "Blender process exit code ".$p->getExitCode()."\n".$this->lastOutput
+                ."\n[Blender log lengkap: ".$diagnosticLog."]";
             return null;
         }
 
