@@ -116,12 +116,12 @@ def main():
 
     # Image-space joint positions (origin top-left); tuned to the neutral Arum sprite.
     joints = {
-        "ARM_L_UPPER": ((285, 365), (255, 555)),
-        "ARM_L_FORE":  ((255, 555), (238, 735)),
-        "ARM_L_HAND":  ((238, 735), (244, 790)),
-        "ARM_R_UPPER": ((515, 365), (545, 555)),
-        "ARM_R_FORE":  ((545, 555), (562, 735)),
-        "ARM_R_HAND":  ((562, 735), (556, 790)),
+        "ARM_L_UPPER": ((286, 350), (235, 650)),
+        "ARM_L_FORE":  ((235, 650), (230, 755)),
+        "ARM_L_HAND":  ((230, 755), (244, 805)),
+        "ARM_R_UPPER": ((514, 350), (565, 650)),
+        "ARM_R_FORE":  ((565, 650), (570, 755)),
+        "ARM_R_HAND":  ((570, 755), (556, 805)),
     }
     armature_data = bpy.data.armatures.new("ARUM_ARMATURE_DATA")
     armature = bpy.data.objects.new("ARUM_ARMATURE", armature_data)
@@ -134,6 +134,9 @@ def main():
         bone.head = ((head[0]-400)*scale, -0.005, (feet_y-head[1])*scale)
         bone.tail = ((tail[0]-400)*scale, -0.005, (feet_y-tail[1])*scale)
         bone.use_deform = True
+        # Sprite plane is XZ. Align local Z to world -Y so local-Z pose
+        # rotation bends the arm inside the image plane, not through it.
+        bone.align_roll(Vector((0.0, -1.0, 0.0)))
         if "FORE" in name:
             bone.parent = armature_data.edit_bones.get(name.replace("FORE", "UPPER"))
             bone.use_connect = False
@@ -180,12 +183,13 @@ def main():
         pb.rotation_mode = "XYZ"
         pb.rotation_euler = (0, 0, 0)
         pb.keyframe_insert(data_path="rotation_euler", frame=1)
-    # Opposite Y rotations create mirrored arm raises in the sprite plane.
+    # Local Z is aligned to the sprite-plane normal by align_roll().
+    # Larger opposing angles swing the hanging arms upward from rest.
     for frame, left_upper, left_fore, right_upper, right_fore in [
         (1, 0.0, 0.0, 0.0, 0.0),
-        (18, -0.32, -0.22, 0.32, 0.22),
-        (36, -0.55, -0.48, 0.55, 0.48),
-        (54, -0.55, -0.48, 0.55, 0.48),
+        (18, 0.95, 0.65, -0.95, -0.65),
+        (36, 1.75, 1.15, -1.75, -1.15),
+        (54, 1.75, 1.15, -1.75, -1.15),
         (72, 0.0, 0.0, 0.0, 0.0),
     ]:
         for name, value in [
