@@ -261,9 +261,16 @@ def build_scene_from_plan(
             poses.append((start_f, pose if pose in valid_poses else "diam"))
             if cue.get("speech", True):
                 speak.append((start_f + 2, max(start_f + 2, end_f - 2)))
+            # A startled reaction is a brief physical beat, not a pose held
+            # throughout the entire dialogue line. Let the recoil settle, then
+            # return the body sprite to neutral while keeping the expression
+            # active until the cue ends. Explanation gestures remain unchanged.
             reset_frame = max(start_f, end_f - 1)
             exprs.append((reset_frame, "netral"))
-            poses.append((reset_frame, "diam"))
+            pose_reset_frame = reset_frame
+            if cue.get("movement") == "quick_recoil":
+                pose_reset_frame = min(reset_frame, start_f + 18)
+            poses.append((pose_reset_frame, "diam"))
 
         # _at() in char_lib expects chronologically ordered expression keys.
         exprs.sort(key=lambda item: item[0])
