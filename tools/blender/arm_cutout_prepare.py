@@ -1,155 +1,118 @@
 """
-Prepare non-destructive 2D cutout layers for Arum's arm-rig prototype.
+Arum cutout v2: duplicate-source compositing.
 
-This is deliberately a PREPARATION step, not a deforming rig:
-- keeps the torso/skirt pixels rigid
-- extracts each complete arm as an independent transparent layer
-- clears the corresponding arm silhouette from the base layer
-- preserves the original 800x1400 canvas and pixel alignment
+Body base comes from the raised-arm pose (clear central torso).
+Both arm layers come from the neutral pose. The arm mask deliberately
+includes a shoulder cap so it overlaps the torso instead of meeting edge-to-edge.
 
-Run with Blender:
-  blender --background --python tools/blender/arm_cutout_prepare.py -- \
-    --character-root karakter/arum \
-    --output-dir tools/blender/output/arum_cutout
+This is an experimental alignment/compositing pass only. No production
+character assets are modified and no rig is created.
 """
-import bpy
-import os
-import sys
-import argparse
+import bpy, os, sys, argparse
 from array import array
 
-def parse_args():
-    argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+def args():
+    av = sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else []
     p = argparse.ArgumentParser()
     p.add_argument("--character-root", default="karakter/arum")
     p.add_argument("--output-dir", default="tools/blender/output/arum_cutout")
-    p.add_argument("--source", default="arum_badan_diam.png")
-    return p.parse_args(argv)
+    p.add_argument("--body-source", default="arum_badan_angkat.png")
+    p.add_argument("--arm-source", default="arum_badan_diam.png")
+    return p.parse_args(av)
 
-def inside_polygon(x, y, poly):
-    inside = False
-    j = len(poly) - 1
-    for i, (xi, yi) in enumerate(poly):
-        xj, yj = poly[j]
-        if ((yi > y) != (yj > y)):
-            cross = (xj - xi) * (y - yi) / ((yj - yi) or 1e-9) + xi
-            if x < cross:
-                inside = not inside
-        j = i
-    return inside
+def inside(x, y, poly):
+    hit, j = False, len(poly)-1
+    for i,(xi,yi) in enumerate(poly):
+        xj,yj=poly[j]
+        if (yi>y)!=(yj>y):
+            cross=(xj-xi)*(y-yi)/((yj-yi) or 1e-9)+xi
+            if x<cross: hit=not hit
+        j=i
+    return hit
 
-def save_rgba(name, width, height, pixels, filepath):
-    img = bpy.data.images.new(name, width=width, height=height, alpha=True)
-    img.pixels.foreach_set(pixels)
-    img.file_format = "PNG"
-    img.filepath_raw = filepath
-    img.save()
-    img.pack()
-    return img
+def load_pixels(path):
+    im=bpy.data.images.load(path, check_existing=False)
+    w,h=map(int, im.size)
+    px=array('f',[0.0])*(w*h*4)
+    im.pixels.foreach_get(px)
+    return w,h,px
+
+def save(name,w,h,px,path):
+    im=bpy.data.images.new(name,width=w,height=h,alpha=True)
+    im.pixels.foreach_set(px)
+    im.file_format="PNG"; im.filepath_raw=path; im.save(); im.pack()
 
 def main():
-    a = parse_args()
-    root = os.path.abspath(a.character_root)
-    out_dir = os.path.abspath(a.output_dir)
-    os.makedirs(out_dir, exist_ok=True)
-    source_path = os.path.join(root, a.source)
-    if not os.path.isfile(source_path):
-        raise FileNotFoundError(source_path)
+    a=args()
+    root=os.path.abspath(a.character_root); out=os.path.abspath(a.output_dir)
+    os.makedirs(out,exist_ok=True)
+    bw,bh,body=load_pixels(os.path.join(root,a.body_source))
+    aw,ah,arms=load_pixels(os.path.join(root,a.arm_source))
+    if (bw,bh)!=(aw,ah):
+        raise RuntimeError("Body and arm source canvases differ: %s vs %s"%((bw,bh),(aw,ah)))
+    w,h=bw,bh
+    if (w,h)!=(800,1400):
+        raise RuntimeError("Expected 800x1400 canvas, got %sx%s"%(w,h))
 
-    src = bpy.data.images.load(source_path, check_existing=False)
-    src_size = tuple(src.size)
-    width, height = src_size
-    if (width, height) != (800, 1400):
-        raise RuntimeError("Expected 800x1400 Arum body sprite; got %sx%s" % src_size)
-
-    # Coordinates are in source-image space, origin at top-left.
-    # The cut line intentionally follows the sleeve/torso seam; inspect the
-    # diagnostic outputs before building any production rig from these masks.
-    masks = {
-        # Broad, overlapping shoulder masks retain fabric under the torso edge.
-        "left": [
-            (270, 305), (305, 310), (337, 335), (350, 385),
-            (345, 435), (330, 490), (315, 545), (300, 600),
-            (285, 655), (270, 710), (260, 755), (250, 795),
-            (238, 830), (205, 825), (190, 795), (190, 750),
-            (195, 700), (202, 650), (210, 595), (220, 540),
-            (232, 485), (242, 430), (250, 375), (258, 330)
-        ],
-        "right": [
-            (530, 305), (495, 310), (463, 335), (450, 385),
-            (455, 435), (470, 490), (485, 545), (500, 600),
-            (515, 655), (530, 710), (540, 755), (550, 795),
-            (562, 830), (595, 825), (610, 795), (610, 750),
-            (605, 700), (598, 650), (590, 595), (580, 540),
-            (568, 485), (558, 430), (550, 375), (542, 330)
-        ]
+    # Polygons in top-left image coordinates.
+    # These remove the raised arms from the body donor image.
+    raised_arm_masks={
+      "left":[(75,155),(180,160),(245,245),(300,300),(365,365),(355,430),(300,470),(220,465),(150,430),(105,350)],
+      "right":[(725,155),(620,160),(555,245),(500,300),(435,365),(445,430),(500,470),(580,465),(650,430),(695,350)]
+    }
+    # Neutral-pose arm cutouts. Shoulder caps overlap into torso by design.
+    neutral_arm_masks={
+      "left":[(265,300),(305,310),(330,345),(330,405),(315,470),(300,535),(285,600),(270,665),(255,730),(250,775),(240,815),(215,820),(195,795),(195,750),(202,700),(210,640),(220,575),(232,510),(245,445),(252,375)],
+      "right":[(535,300),(495,310),(470,345),(470,405),(485,470),(500,535),(515,600),(530,665),(545,730),(550,775),(560,815),(585,820),(605,795),(605,750),(598,700),(590,640),(580,575),(568,510),(555,445),(548,375)]
     }
 
-    source_pixels = array('f', [0.0]) * (width * height * 4)
-    src.pixels.foreach_get(source_pixels)
-    base_pixels = array('f', source_pixels)
-    arm_pixels = {
-        side: array('f', [0.0]) * (width * height * 4)
-        for side in masks
-    }
+    body_clean=array('f',body)
+    arm_layers={s:array('f',[0.0])*(w*h*4) for s in ("left","right")}
+    # Remove raised arms from body donor.
+    for yt in range(h):
+      yb=h-1-yt
+      for x in range(w):
+        if any(inside(x+.5,yt+.5,p) for p in raised_arm_masks.values()):
+          k=(yb*w+x)*4
+          body_clean[k+3]=0.0
 
-    # Pixel centers are tested against the polygons. Source alpha is preserved.
-    # Blender stores pixel rows bottom-up; convert from top-left mask coordinates.
-    for y_top in range(height):
-        y_bl = height - 1 - y_top
-        for x in range(width):
-            side_hit = None
-            for side, poly in masks.items():
-                if inside_polygon(x + 0.5, y_top + 0.5, poly):
-                    side_hit = side
-                    break
-            if side_hit is None:
-                continue
-            idx = (y_bl * width + x) * 4
-            alpha = source_pixels[idx + 3]
-            if alpha <= 0.001:
-                continue
-            target = arm_pixels[side_hit]
-            target[idx] = source_pixels[idx]
-            target[idx + 1] = source_pixels[idx + 1]
-            target[idx + 2] = source_pixels[idx + 2]
-            target[idx + 3] = alpha
-            # Clear only the arm mask from the static torso layer.
-            base_pixels[idx + 3] = 0.0
+    # Extract neutral arms from a duplicated source; original source remains intact.
+    for yt in range(h):
+      yb=h-1-yt
+      for x in range(w):
+        side=next((s for s,p in neutral_arm_masks.items() if inside(x+.5,yt+.5,p)),None)
+        if side is None: continue
+        k=(yb*w+x)*4
+        if arms[k+3] <= 0.001: continue
+        dst=arm_layers[side]
+        dst[k:k+4]=arms[k:k+4]
 
-    # Rebuild a neutral composite from the extracted layers for visual QC.
-    composite = array('f', base_pixels)
-    for side in ("left", "right"):
-        layer = arm_pixels[side]
-        for i in range(0, len(composite), 4):
-            sa = layer[i + 3]
-            if sa <= 0.001:
-                continue
-            da = composite[i + 3]
-            out_a = sa + da * (1.0 - sa)
-            if out_a > 1e-8:
-                for channel in range(3):
-                    composite[i + channel] = (
-                        layer[i + channel] * sa +
-                        composite[i + channel] * da * (1.0 - sa)
-                    ) / out_a
-            composite[i + 3] = out_a
+    # Alpha composite: torso donor at back, neutral arms above it.
+    comp=array('f',body_clean)
+    for side in ("left","right"):
+      layer=arm_layers[side]
+      for k in range(0,len(comp),4):
+        sa=layer[k+3]
+        if sa<=0.001: continue
+        da=comp[k+3]; oa=sa+da*(1-sa)
+        if oa>1e-8:
+          for ch in range(3):
+            comp[k+ch]=(layer[k+ch]*sa+comp[k+ch]*da*(1-sa))/oa
+        comp[k+3]=oa
 
-    outputs = [
-        ("arum_body_clean.png", "ARUM_BODY_CLEAN", base_pixels),
-        ("arum_arm_left.png", "ARUM_ARM_LEFT_CUTOUT", arm_pixels["left"]),
-        ("arum_arm_right.png", "ARUM_ARM_RIGHT_CUTOUT", arm_pixels["right"]),
-        ("arum_cutout_composite.png", "ARUM_CUTOUT_COMPOSITE", composite),
+    files=[
+      ("arum_body_clean.png","ARUM_BODY_BASE",body_clean),
+      ("arum_arm_left.png","ARUM_ARM_LEFT",arm_layers["left"]),
+      ("arum_arm_right.png","ARUM_ARM_RIGHT",arm_layers["right"]),
+      ("arum_cutout_composite.png","ARUM_CUTOUT_COMPOSITE",comp),
+      ("arum_cutout_source_neutral.png","ARUM_SOURCE_NEUTRAL",arms)
     ]
-    for filename, name, pixels in outputs:
-        save_rgba(name, width, height, pixels, os.path.join(out_dir, filename))
-        print("[Cutout] Wrote:", os.path.join(out_dir, filename))
+    for fn,n,px in files:
+      save(n,w,h,px,os.path.join(out,fn))
+      print("[Cutout v2] Wrote",os.path.join(out,fn))
+    print("[Cutout v2] Body donor:",a.body_source)
+    print("[Cutout v2] Arm donor:",a.arm_source)
+    print("[Cutout v2] Shoulder overlap retained in arm layers.")
+    print("[Cutout v2] Experimental only; inspect composite before rigging.")
 
-    print("[Cutout] Source:", source_path)
-    print("[Cutout] Canvas:", width, "x", height)
-    print("[Cutout] Neutral composite:", os.path.join(out_dir, "arum_cutout_composite.png"))
-    print("[Cutout] No mesh deformation or production assets modified.")
-    print("[Cutout] Compare composite against source; do not rig unless the silhouette is clean.")
-
-if __name__ == "__main__":
-    main()
+if __name__=="__main__": main()
