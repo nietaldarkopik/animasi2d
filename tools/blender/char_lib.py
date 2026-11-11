@@ -232,6 +232,43 @@ def _pop(ob, frames, amp=1.012):
         ob.scale = (d[ff],) * 3
         ob.keyframe_insert('scale', frame=ff)
 
+
+def _pose_transition(ob, frames):
+    """Add a restrained anticipation/settle around hard sprite-pose swaps.
+
+    The pivot origin is at the character's feet, so scale changes stay anchored
+    to the floor. No vertical translation is introduced.
+    """
+    keys = {}
+    for index, frame in enumerate(sorted(set(int(f) for f in frames))):
+        direction = 1.0 if index % 2 == 0 else -1.0
+        samples = (
+            (frame - 3, (1.0, 1.0, 1.0), 0.0),
+            (frame - 1, (0.994, 1.0, 1.003), -0.004 * direction),
+            (frame + 2, (1.008, 1.0, 0.997), 0.006 * direction),
+            (frame + 6, (1.0, 1.0, 1.0), 0.0),
+        )
+        for f, scale, roll in samples:
+            if f >= 1:
+                keys[f] = (scale, roll)
+
+    for frame in sorted(keys):
+        scale, roll = keys[frame]
+        ob.scale = scale
+        ob.keyframe_insert('scale', frame=frame)
+        ob.rotation_euler = (0.0, 0.0, roll)
+        ob.keyframe_insert('rotation_euler', frame=frame)
+
+    try:
+        action = ob.animation_data.action if ob.animation_data else None
+        for curve in (action.fcurves if action else []):
+            for point in curve.keyframe_points:
+                point.handle_left_type = 'AUTO_CLAMPED'
+                point.handle_right_type = 'AUTO_CLAMPED'
+    except (AttributeError, RuntimeError):
+        pass
+
+
 def resolve_character_dir(name_or_path: str, base_root: str = DEFAULT_KARAKTER_ROOT) -> str:
     """Resolve character directory from name (e.g. 'uki') or path."""
     if os.path.isdir(name_or_path) and os.path.exists(os.path.join(name_or_path, 'character.json')):
@@ -380,13 +417,13 @@ def make_character(
     _schedule(heads, exprs)
     _schedule(rim_heads, exprs)
 
-    # Pop scaling on pose/expression transitions
+    # Subtle foot-anchored anticipation and settle on sprite pose changes.
     B.scale = (1, 1, 1)
     B.keyframe_insert('scale', frame=max(1, f0))
     HP.scale = (1, 1, 1)
     HP.keyframe_insert('scale', frame=max(1, f0))
     if len(poses) > 1:
-        _pop(B, [f for f, _ in poses[1:]])
+        _pose_transition(B, [f for f, _ in poses[1:]])
     if len(exprs) > 1:
         _pop(HP, [f for f, _ in exprs[1:]])
 
