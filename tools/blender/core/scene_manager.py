@@ -59,10 +59,16 @@ def _build_shot_cameras(sc, scene_data, plan, actors, positions, f0, f1):
             target = (0.0, 2.0, 1.15) if shot.get("focus") == "environment" else (0.0, 1.2, 1.05)
         else:
             # Aim close-ups at the face; medium shots retain upper-body context.
-            face_focused = shot.get("shot_size") in ("close_up", "extreme_close_up", "medium_close_up")
-            # Character cards are 1.9m tall; metadata places the head center near z=1.65m.
-            # Aim at the actual face center so close-ups do not crop the head.
-            target = (target[0], target[1], 1.66 if face_focused else 1.12)
+            shot_size = shot.get("shot_size")
+            # Keep dialogue framing around the face/upper torso. Over-the-shoulder
+            # shots were aimed too low and cropped the speaker's head at 16:9.
+            if shot_size in ("close_up", "extreme_close_up", "medium_close_up"):
+                target_z = 1.66
+            elif shot_size == "over_the_shoulder":
+                target_z = 1.48
+            else:
+                target_z = 1.38
+            target = (target[0], target[1], target_z)
 
         info = create_cinematic_camera(
             sc,
