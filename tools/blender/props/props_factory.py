@@ -357,6 +357,28 @@ def create_classroom_props(sc: bpy.types.Scene) -> Dict[str, Any]:
         sc.collection.objects.link(marker)
         marker.parent = root
 
+    # A few neatly arranged books and a notebook make the teacher desk feel used.
+    book_mats = [
+        create_toon_material("ClassroomBookNavy", base_color=(0.12, 0.22, 0.38, 1.0)),
+        create_toon_material("ClassroomBookRust", base_color=(0.62, 0.24, 0.16, 1.0)),
+        create_toon_material("ClassroomBookSage", base_color=(0.28, 0.43, 0.34, 1.0)),
+    ]
+    for idx, mat in enumerate(book_mats):
+        book = _create_box_mesh(f"TeacherDesk_Book_{idx}", 0.22, 0.16, 0.035)
+        book.location = (-2.48 + idx * 0.025, 3.48 + idx * 0.015, 0.91 + idx * 0.04)
+        book.rotation_euler[2] = math.radians(-8 + idx * 7)
+        book.data.materials.append(mat)
+        sc.collection.objects.link(book)
+        book.parent = root
+
+    notebook = _create_box_mesh("TeacherDesk_Notebook", 0.28, 0.22, 0.018)
+    notebook.location = (-1.72, 3.48, 0.91)
+    notebook.data.materials.append(create_toon_material(
+        "ClassroomNotebook", base_color=(0.88, 0.84, 0.70, 1.0)
+    ))
+    sc.collection.objects.link(notebook)
+    notebook.parent = root
+
     # Teacher desk, kept to one side so the main acting area remains clear.
     teacher_desk = _create_box_mesh("TeacherDeskTop", 1.55, 0.72, 0.12)
     teacher_desk.location = (-2.15, 3.55, 0.82)
