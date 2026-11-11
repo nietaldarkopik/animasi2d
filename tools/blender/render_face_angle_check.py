@@ -87,18 +87,31 @@ def main():
         scene.render.use_file_extension = True
 
         report = {"blend_file": bpy.data.filepath, "character": key,
-                  "root": root.name, "frame": frame, "camera_tests": []}
-        # 75 degrees is a near-side test. A strict 90-degree edge-on view is
-        # not representative because the character is intentionally a 2.5D card.
-        for label, degrees in (("front", 0), ("oblique_45", 45), ("near_side_75", 75)):
-            angle = math.radians(degrees)
-            diag_camera.location = (
-                origin.x + math.sin(angle) * distance,
-                origin.y - math.cos(angle) * distance,
-                target.z + 0.12,
-            )
-            diag_camera.rotation_euler = (target - diag_camera.location).to_track_quat("-Z", "Y").to_euler()
-            bpy.context.view_layer.update()
+                  "root": root.name, "frame": frame,
+                  "projection_modes": list(projections),
+                  "orthographic_scale": round(ortho_scale, 6),
+                  "camera_tests": []}
+        # Compare perspective and orthographic projection at identical angles.
+        # Orthographic scale is derived from the perspective frame at this distance.
+        projections = ("perspective", "orthographic") if args.projection == "both" else (args.projection,)
+        view_angles = (("front", 0), ("oblique_45", 45), ("near_side_75", 75))
+        frame_corners = diag_data.view_frame(scene=scene)
+        frame_width = max(v.x for v in frame_corners) - min(v.x for v in frame_corners)
+        ortho_scale = distance * frame_width
+
+        for projection in projections:
+            diag_data.type = "PERSP" if projection == "perspective" else "ORTHO"
+            if projection == "orthographic":
+                diag_data.ortho_scale = ortho_scale
+            for label, degrees in view_angles:
+                angle = math.radians(degrees)
+                diag_camera.location = (
+                    origin.x + math.sin(angle) * distance,
+                    origin.y - math.cos(angle) * distance,
+                    target.z + 0.12,
+                )
+                diag_camera.rotation_euler = (target - diag_camera.location).to_track_quat("-Z", "Y").to_euler()
+                bpy.context.view_layer.update()
 
             # Measure whether the evaluated character card normal actually faces
             # the diagnostic camera. The sprite plane's front normal is local -Y.
@@ -162,14 +175,14 @@ def main():
                     "width_height_ratio": round(width / height, 6) if height > 1e-9 else None,
                 })
 
-            image_path = os.path.join(out_dir, "{}_{}_f{:06d}.png".format(key, label, frame))
+            image_path = os.path.join(out_dir, "{}_{}_{}_f{:06d}.png".format(key, projection, label, frame))
             scene.render.filepath = image_path
             print("[Face Angle Check] {} ({} deg)".format(label, degrees), flush=True)
             bpy.ops.render.render(write_still=True)
             if not os.path.isfile(image_path) or os.path.getsize(image_path) < 1024:
                 raise RuntimeError("Render output missing or too small: " + image_path)
             report["camera_tests"].append({
-                "view": label, "angle_degrees": degrees,
+                "projection": projection, "view": label, "angle_degrees": degrees,
                 "image": os.path.basename(image_path),
                 "size_bytes": os.path.getsize(image_path),
                 "billboard_facing_angle_degrees": round(facing_angle, 3),
