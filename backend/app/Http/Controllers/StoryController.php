@@ -186,7 +186,7 @@ class StoryController extends Controller
             $next = ($series->episodes()->max('number') ?? 0) + 1;
             foreach ($result['episodes'] as $i => $ep) StoryEpisode::create(['series_id' => $series->id, 'number' => $next + $i, 'title' => $ep['title'], 'synopsis' => $ep['synopsis'], 'script' => $ep['script'], 'status' => 'scripted']);
             return response()->json(['data' => $this->presentSeries($series->fresh(), true)]);
-        } catch (\\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             return response()->json(['message' => $e->getMessage()], 422);
         }
     }
