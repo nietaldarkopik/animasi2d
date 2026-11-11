@@ -116,32 +116,38 @@ def apply_lighting(
         practical.location = (1.7, 1.6, 2.1)
 
         if flicker:
-            # Keep the practical light mostly steady. Trigger an occasional,
-            # brief voltage dip instead of randomizing it every few frames.
-            # At 24 FPS this produces roughly one flicker event every 2-3 seconds.
+            # The practical light stays steady for long intervals. Use only
+            # a few soft dips per scene to avoid a strobe-like effect.
             rng = random.Random(42)
+            first_frame = max(1, int(f0))
+            last_frame = int(f1)
             base_energy = 145.0
             data.energy = base_energy
-            data.keyframe_insert("energy", frame=max(1, int(f0)))
+            data.keyframe_insert("energy", frame=first_frame)
 
-            frame = max(1, int(f0)) + rng.randint(48, 72)
-            while frame <= int(f1):
-                # A short, restrained dip: slight dim, brief deeper dip, restore.
-                dip_energy = rng.choice((88.0, 102.0, 112.0))
-                data.energy = dip_energy
+            event_count = 0
+            frame = first_frame + rng.randint(120, 156)  # 5-6.5 seconds at 24 FPS
+            while frame < last_frame - 18:
+                # Fade down and back over about half a second.
+                data.energy = rng.choice((112.0, 120.0, 128.0))
                 data.keyframe_insert("energy", frame=frame)
 
-                data.energy = rng.choice((48.0, 62.0, 76.0))
-                data.keyframe_insert("energy", frame=min(frame + 2, int(f1)))
+                data.energy = rng.choice((78.0, 88.0, 98.0))
+                data.keyframe_insert("energy", frame=frame + 5)
 
                 data.energy = base_energy
-                data.keyframe_insert("energy", frame=min(frame + 5, int(f1)))
+                data.keyframe_insert("energy", frame=frame + 12)
+                event_count += 1
+                frame += rng.randint(144, 192)  # next event after 6-8 seconds
 
-                frame += rng.randint(60, 84)
-
-            # Keep the lamp steady at the end of the scene.
             data.energy = base_energy
-            data.keyframe_insert("energy", frame=int(f1))
+            data.keyframe_insert("energy", frame=last_frame)
+            print(
+                "[Lighting] Soft flicker enabled: {} events, frames {}-{}, base energy {}".format(
+                    event_count, first_frame, last_frame, base_energy
+                ),
+                flush=True,
+            )
 
     return {
         "world": world,
