@@ -405,7 +405,7 @@ class DailyCartoonService
             if (count($cast) > 16) {
                 throw new \InvalidArgumentException("Scene $n: paling banyak 16 pemeran latar (\"cast\").");
             }
-            $out['scenes'][] = ['name' => mb_substr(trim((string) ($sc['name'] ?? "Scene $n")), 0, 80) ?: "Scene $n", 'location' => (string) ($sc['location'] ?? ''), 'time' => $time, 'dialog' => $dialog] + ($cast ? ['cast' => $cast] : []) + ($after ? ['after' => $after] : []);
+            $out['scenes'][] = ['name' => mb_substr(trim((string) ($sc['name'] ?? "Scene $n")), 0, 80) ?: "Scene $n", 'location' => (string) ($sc['location'] ?? ''), 'time' => $time, 'dialog' => $dialog] + ($cast ? ['cast' => $cast] : []) + ($after ? ['after' => $after] : []) + ['visual' => mb_substr(trim((string) ($sc['visual'] ?? '')), 0, 1200), 'camera' => is_array($sc['camera'] ?? null) ? $sc['camera'] : [], 'lighting' => is_array($sc['lighting'] ?? null) ? $sc['lighting'] : []];
         }
 
         return $out;
