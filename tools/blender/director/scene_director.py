@@ -104,6 +104,9 @@ class SceneDirector:
             loc_raw = sc.get("location", "Ruang tamu")
             loc_type = self.map_location(loc_raw)
             time_of_day = sc.get("time", "siang").lower()
+            visual_direction = str(sc.get("visual", "") or "")
+            camera_direction = sc.get("camera", {}) if isinstance(sc.get("camera", {}), dict) else {}
+            lighting_direction = sc.get("lighting", {}) if isinstance(sc.get("lighting", {}), dict) else {}
 
             # Mood classification
             full_text = " ".join([d.get("text", "") for d in sc.get("dialog", [])]).lower()
