@@ -1,5 +1,5 @@
 """
-Arum arm cutout v7 — trim torso wedges from raised arm layers.
+Arum arm cutout v8 — remove full neutral-pose arm silhouettes.
 
 - Clean body: neutral pose with only the original down arms removed.
 - Arm layers: extracted from raised pose; torso/body pixels are excluded.
@@ -92,20 +92,18 @@ def main():
     # they deliberately avoid the broad torso area removed by v4.
     neutral_arm_masks={
       "left":[
-        (294,337),(278,350),(267,380),(259,420),(250,465),
-        (239,510),(228,555),(218,600),(211,645),(207,690),
-        (207,735),(212,770),(222,798),(237,814),(250,806),
-        (261,780),(268,745),(277,705),(286,660),(294,615),
-        (301,570),(306,525),(310,480),(313,435),(314,392),
-        (309,360)
+        (306,326),(286,338),(269,365),(257,405),(246,450),
+        (234,500),(222,550),(211,600),(201,650),(196,700),
+        (198,748),(209,790),(229,830),(250,840),(265,817),
+        (275,782),(282,744),(291,704),(300,660),(308,615),
+        (315,570),(320,525),(324,480),(326,435),(323,390)
       ],
       "right":[
-        (506,337),(522,350),(533,380),(541,420),(550,465),
-        (561,510),(572,555),(582,600),(589,645),(593,690),
-        (593,735),(588,770),(578,798),(563,814),(550,806),
-        (539,780),(532,745),(523,705),(514,660),(506,615),
-        (499,570),(494,525),(490,480),(487,435),(486,392),
-        (491,360)
+        (494,326),(514,338),(531,365),(543,405),(554,450),
+        (566,500),(578,550),(589,600),(599,650),(604,700),
+        (602,748),(591,790),(571,830),(550,840),(535,817),
+        (525,782),(518,744),(509,704),(500,660),(492,615),
+        (485,570),(480,525),(476,480),(474,435),(477,390)
       ]
     }
 
@@ -155,7 +153,7 @@ def main():
     ]
     for fn,name,pixels in outputs:
         save_image(name,w,h,pixels,os.path.join(out,fn))
-        print("[Cutout v7] Wrote",os.path.join(out,fn))
+        print("[Cutout v8] Wrote",os.path.join(out,fn))
     print("[Cutout v5] Body source:",body_path)
     print("[Cutout v5] Arm source:",arm_path)
     print("[Cutout v5] Preview combines neutral body with raised-pose arms.")
