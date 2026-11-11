@@ -10,7 +10,7 @@ class StorySeries extends Model
 {
     protected $table = 'story_series';
 
-    protected $fillable = ['user_id', 'title', 'premise', 'genre', 'tone', 'narration_style', 'use_narrator', 'narrator_voice', 'characters', 'notes', 'episodes_planned',
+    protected $fillable = ['user_id', 'title', 'premise', 'master_script', 'genre', 'tone', 'narration_style', 'use_narrator', 'narrator_voice', 'characters', 'notes', 'episodes_planned',
         'auto_run', 'schedule_time', 'auto_publish', 'last_auto_date', 'ai_status', 'ai_message'];
 
     protected function casts(): array
