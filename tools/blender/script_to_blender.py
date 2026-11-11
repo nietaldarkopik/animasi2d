@@ -167,6 +167,8 @@ def process_naskah_or_prompt(
                 "sc.render.image_settings.file_format = 'PNG'",
                 "sc.render.image_settings.color_mode = 'RGBA'",
                 "sc.render.image_settings.color_depth = '8'",
+                "# Favor faster temporary PNG writes; final MP4 quality is controlled by FFmpeg CRF.",
+                "sc.render.image_settings.compression = 5",
                 "sc.render.use_file_extension = True",
                 "qc_report = {'total_frames': sc.frame_end - sc.frame_start + 1, 'passed': [], 'failed': []}",
                 "_qc_path = os.path.join(frames_dir, 'qc_report.json')",
