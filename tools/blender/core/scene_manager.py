@@ -119,7 +119,7 @@ def build_scene_from_plan(
     mood = scene_data.get("mood", "normal")
     flicker = scene_data.get("flicker_lighting", False)
     f0 = int(scene_data.get("start_frame", 1))
-    f1 = max(f0 + 1, int(scene_data.get("end_frame", f0 + 100)))
+    f1 = max(f0, int(scene_data.get("end_frame", f0 + 100)) - 1)  # storyboard end_frame is exclusive; Blender frame_end is inclusive
     sc.frame_start = f0
     sc.frame_end = f1
 
@@ -207,16 +207,37 @@ def build_scene_from_plan(
         exprs = [(f0, "netral")]
         poses = [(f0, "diam")]
         speak = []
-        for shot in shots:
-            speaker = str(shot.get("speaker", "")).lower().strip()
+        # Prefer explicit Director action cues. Legacy storyboards still use
+        # the previous keyword heuristics as a backward-compatible fallback.
+        action_items = scene_data.get("action_timeline") or []
+        if not action_items:
+            action_items = [
+                {
+                    "actor": shot.get("speaker"),
+                    "emotion": shot.get("action", {}).get("emotion"),
+                    "pose": shot.get("action", {}).get("pose"),
+                    "start_frame": shot.get("start_f", f0),
+                    "end_frame": shot.get("end_f", f0 + 24),
+                    "speech": bool(shot.get("speaker")),
+                    "dialogue_text": shot.get("text", ""),
+                }
+                for shot in shots
+            ]
+
+        for cue in action_items:
+            speaker = str(cue.get("actor", "")).lower().strip()
             if speaker != clean_name:
                 continue
 
-            text_line = str(shot.get("text", "")).lower()
-            start_f = int(shot.get("start_f", f0))
-            end_f = int(shot.get("end_f", start_f + 24))
+            text_line = str(cue.get("dialogue_text", "")).lower()
+            start_f = int(cue.get("start_frame", f0))
+            end_f = int(cue.get("end_frame", start_f + 24))
+            planned_emotion = cue.get("emotion")
+            planned_pose = cue.get("pose")
 
-            if any(word in text_line for word in ("hah", "astaga", "kaget", "serius?!", "apa?!")):
+            if planned_emotion and planned_pose:
+                emotion, pose = planned_emotion, planned_pose
+            elif any(word in text_line for word in ("hah", "astaga", "kaget", "serius?!", "apa?!")):
                 emotion, pose = "kaget", "angkat"
             elif any(word in text_line for word in ("haha", "lucu", "berhasil", "senang", "hore")):
                 emotion, pose = "senang", "jempol"
@@ -236,7 +257,8 @@ def build_scene_from_plan(
             valid_poses = {"diam", "tunjuk", "angkat", "lambai", "pinggang", "pelipis", "dagu", "jempol", "silang"}
             exprs.append((start_f, emotion if emotion in valid_exprs else "netral"))
             poses.append((start_f, pose if pose in valid_poses else "diam"))
-            speak.append((start_f + 2, max(start_f + 2, end_f - 2)))
+            if cue.get("speech", True):
+                speak.append((start_f + 2, max(start_f + 2, end_f - 2)))
             reset_frame = max(start_f, end_f - 1)
             exprs.append((reset_frame, "netral"))
             poses.append((reset_frame, "diam"))
