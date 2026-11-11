@@ -55,4 +55,4 @@ export interface StorySeries {
   capabilities?: { ai: boolean; publish: boolean; privacy: string }
 }
 
-export type SeriesInput = Partial<Pick<StorySeries, 'title' | 'premise' | 'genre' | 'tone' | 'narration_style' | 'use_narrator' | 'narrator_voice' | 'characters' | 'notes' | 'episodes_planned' | 'auto_run' | 'schedule_time' | 'auto_publish'>>
+export type SeriesInput = Partial<Pick<StorySeries, 'title' | 'premise' | 'master_script' | 'genre' | 'tone' | 'narration_style' | 'use_narrator' | 'narrator_voice' | 'characters' | 'notes' | 'episodes_planned' | 'auto_run' | 'schedule_time' | 'auto_publish'>>
