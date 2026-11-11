@@ -99,6 +99,20 @@ def main():
             diag_camera.rotation_euler = (target - diag_camera.location).to_track_quat("-Z", "Y").to_euler()
             bpy.context.view_layer.update()
 
+            # Measure whether the evaluated character card normal actually faces
+            # the diagnostic camera. The sprite plane's front normal is local -Y.
+            depsgraph = bpy.context.evaluated_depsgraph_get()
+            root_eval = root.evaluated_get(depsgraph)
+            root_matrix = root_eval.matrix_world
+            root_origin = root_matrix.translation
+            card_normal = (root_matrix.to_3x3() @ Vector((0.0, -1.0, 0.0))).normalized()
+            to_camera = (diag_camera.matrix_world.translation - root_origin)
+            to_camera.z = 0.0
+            to_camera.normalize()
+            normal_horizontal = Vector((card_normal.x, card_normal.y, 0.0)).normalized()
+            facing_dot = normal_horizontal.dot(to_camera)
+            facing_angle = math.degrees(math.acos(max(-1.0, min(1.0, facing_dot))))
+
             image_path = os.path.join(out_dir, "{}_{}_f{:06d}.png".format(key, label, frame))
             scene.render.filepath = image_path
             print("[Face Angle Check] {} ({} deg)".format(label, degrees), flush=True)
@@ -109,6 +123,10 @@ def main():
                 "view": label, "angle_degrees": degrees,
                 "image": os.path.basename(image_path),
                 "size_bytes": os.path.getsize(image_path),
+                "billboard_facing_angle_degrees": round(facing_angle, 3),
+                "billboard_facing_dot": round(facing_dot, 6),
+                "card_normal_world": [round(v, 6) for v in card_normal],
+                "camera_direction_horizontal": [round(v, 6) for v in to_camera],
             })
 
         report_path = os.path.join(out_dir, "face_angle_check_report.json")
