@@ -364,7 +364,8 @@ def make_character(
         HP,
         S,
     )
-    mouth_c = ((mcx - hw / 2) * S, -0.024, (chin - hh / 2) * S - (mcy - hh / 2) * S)
+    # Keep the mouth just in front of the face card. Excessive Y separation creates visible parallax at oblique camera angles.
+    mouth_c = ((mcx - hw / 2) * S, -0.013, (chin - hh / 2) * S - (mcy - hh / 2) * S)
     mouth_shapes = J['mouth'].get('shapes', ['a', 'i', 'u', 'e', 'o'])
     mouths = {
         s: _plane(sc, f'CHAR_{tag}_m_{s}', _cardmat(P(PFX + 'mulut_' + s)), mw, mh, mouth_c, HP, S)
