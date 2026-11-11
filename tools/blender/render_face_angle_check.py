@@ -41,7 +41,15 @@ def main():
              and o.name.lower().startswith("char_" + key + "_")]
     if not roots:
         raise RuntimeError("No root character object found for: " + key)
-    root = roots[0]
+    # Prefer an exact character-id match and fail if the scene is ambiguous.
+    exact_roots = [o for o in roots if o.name.lower().startswith("char_" + key + "_")]
+    if len(exact_roots) != 1:
+        raise RuntimeError(
+            "Expected exactly one root for character '{}', found: {}".format(
+                key, [o.name for o in exact_roots]
+            )
+        )
+    root = exact_roots[0]
     original_camera = scene.camera
     if original_camera is None:
         raise RuntimeError("The scene has no active camera.")
@@ -65,7 +73,23 @@ def main():
     scene.collection.objects.link(diag_camera)
     diag_camera.matrix_world = original_camera.matrix_world.copy()
     tracked = []
+    visibility_restore = []
     try:
+        # Isolate the requested actor: hide every other character root and its
+        # complete hierarchy so no neighboring actor can appear in the render.
+        actor_roots = [
+            obj for obj in scene.objects
+            if obj.type == "EMPTY" and obj.parent is None
+            and (obj.name.startswith("CHAR_") or obj.name.startswith("SIL_"))
+        ]
+        for other_root in actor_roots:
+            if other_root == root:
+                continue
+            for other_obj in [other_root] + list(other_root.children_recursive):
+                visibility_restore.append((other_obj, other_obj.hide_render, other_obj.hide_viewport))
+                other_obj.hide_render = True
+                other_obj.hide_viewport = True
+
         for obj in scene.objects:
             if obj.type != "EMPTY" or not obj.name.startswith("CHAR_"):
                 continue
@@ -201,6 +225,10 @@ def main():
     finally:
         for con, previous_target in tracked:
             con.target = previous_target
+        for obj, was_hidden_render, was_hidden_viewport in visibility_restore:
+            if obj.name in bpy.data.objects:
+                obj.hide_render = was_hidden_render
+                obj.hide_viewport = was_hidden_viewport
         scene.camera = old["camera"]
         scene.frame_set(old["frame"])
         scene.render.resolution_percentage = old["percentage"]
