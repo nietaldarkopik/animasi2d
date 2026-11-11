@@ -214,9 +214,12 @@ def process_naskah_or_prompt(
                 "            _stride = max(1, _count // 5000)",
                 "            _samples = []",
                 "            if len(_px) < _count * 4: raise RuntimeError('PNG pixel buffer is incomplete')",
+                "            from array import array",
+                "            _pixel_buffer = array('f', [0.0]) * (_count * 4)",
+                "            _px.foreach_get(_pixel_buffer)",
                 "            for _p in range(0, _count, _stride):",
                 "                _i = _p * 4",
-                "                _samples.append(0.2126 * _px[_i] + 0.7152 * _px[_i + 1] + 0.0722 * _px[_i + 2])",
+                "                _samples.append(0.2126 * _pixel_buffer[_i] + 0.7152 * _pixel_buffer[_i + 1] + 0.0722 * _pixel_buffer[_i + 2])",
                 "            _mean = sum(_samples) / max(1, len(_samples))",
                 "        except Exception as _qc_error:",
                 "            print('[QC] Cannot inspect saved PNG:', _qc_error, flush=True)",
@@ -224,8 +227,6 @@ def process_naskah_or_prompt(
                 "            _samples = []",
                 "        finally:",
                 "            if _qc_img is not None: bpy.data.images.remove(_qc_img)",
-                "        _var = sum((_v - _mean) ** 2 for _v in _samples) / max(1, len(_samples)) if _samples else 0.0",
-                "        _max = max(_samples) if _samples else 0.0",
                 "        _var = sum((_v - _mean) ** 2 for _v in _samples) / max(1, len(_samples))",
                 "        _max = max(_samples) if _samples else 0.0",
                 "        _black = (_mean < 0.002 and _max < 0.01)",
@@ -344,6 +345,7 @@ def _encode_frames_ffmpeg(
     """Encode QC-passed PNG frames into H.264 MP4."""
     import shutil
     import subprocess
+    import time
 
     qc_path = os.path.join(frames_dir, "qc_report.json")
     if not os.path.isfile(qc_path):
