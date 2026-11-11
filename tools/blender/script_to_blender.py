@@ -391,7 +391,9 @@ def process_naskah_or_prompt(
 
     if execute_via_bridge:
         if render_video and output_render:
-            build_res = execute_blender_code(py_code, fallback_cli=True)
+            # Production renders must be deterministic and isolated from an interactive
+            # Blender MCP session. Always build the .blend in a dedicated background process.
+            build_res = run_blender_cli(py_code)
             result["build_execution"] = build_res
             if build_res.get("status") == "ok":
                 if not output_blend or not os.path.isfile(output_blend):
@@ -609,6 +611,16 @@ def produce_all_scenes(
         scene_name = plan['scenes'][idx].get('name', f'Scene_{idx}')
         clip_path = os.path.join(output_dir, f"{base_name}_scene{idx:02d}.mp4")
         blend_path = os.path.join(output_dir, f"{base_name}_scene{idx:02d}.blend") if output_blend else None
+        frames_dir = os.path.splitext(os.path.abspath(clip_path))[0] + "_frames"
+
+        # A scene clip is valid only if this invocation rendered it. Remove every
+        # artifact that could otherwise make a failed render look successful.
+        for stale_path in (clip_path, blend_path):
+            if stale_path and os.path.isfile(stale_path):
+                os.remove(stale_path)
+        if os.path.isdir(frames_dir):
+            import shutil
+            shutil.rmtree(frames_dir, ignore_errors=True)
 
         print(f"\n[Scene {idx+1}/{total_scenes}] Membangun: {scene_name}")
         try:
@@ -642,13 +654,17 @@ def produce_all_scenes(
             except Exception:
                 pass
 
-    # FFmpeg concat all scene clips → final video
+    # FFmpeg concat is allowed only when every scene rendered in this invocation.
+    # A partial montage must never be reported as a completed episode.
     final_ok = False
-    if output_video and scene_clips:
+    all_scenes_rendered = len(scene_clips) == total_scenes
+    if output_video and all_scenes_rendered:
+        if os.path.isfile(output_video):
+            os.remove(output_video)
         final_ok = _ffmpeg_concat(scene_clips, output_video)
 
     return {
-        'status': 'done' if final_ok else ('partial' if scene_clips else 'failed'),
+        'status': 'done' if final_ok and all_scenes_rendered else ('partial' if scene_clips else 'failed'),
         'total_scenes': total_scenes,
         'scene_clips': scene_clips,
         'final_video': output_video if final_ok else None,
