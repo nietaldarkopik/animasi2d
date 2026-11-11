@@ -99,6 +99,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/story/series/{series}', [\App\Http\Controllers\StoryController::class, 'update']);
     Route::delete('/story/series/{series}', [\App\Http\Controllers\StoryController::class, 'destroy']);
     Route::post('/story/series/{series}/generate', [\App\Http\Controllers\StoryController::class, 'generate'])->middleware('throttle:20,1');
+    Route::post('/story/series/{series}/generate-from-prompt', [\App\Http\Controllers\StoryController::class, 'generateFromPrompt'])->middleware('throttle:5,1');
     Route::post('/story/series/{series}/episodes', [\App\Http\Controllers\StoryController::class, 'addEpisode']);
     Route::patch('/story/episodes/{episode}', [\App\Http\Controllers\StoryController::class, 'updateEpisode']);
     Route::delete('/story/episodes/{episode}', [\App\Http\Controllers\StoryController::class, 'destroyEpisode']);
