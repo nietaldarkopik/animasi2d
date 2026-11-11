@@ -100,6 +100,8 @@ def process_naskah_or_prompt(
         "",
         "# Load Plan & Build Scene",
         f"plan_data = json.loads({repr(plan_json_esc)})",
+        "import time",
+        "_module_profile_started = time.perf_counter()",
         "# Reload scene_manager: Blender MCP is persistent and may cache an older module version",
         "import importlib, inspect",
         "# Reload material factory first; room_builder and props_factory import its functions by value.",
@@ -136,7 +138,10 @@ def process_naskah_or_prompt(
         "print('[Blender] build_scene_from_plan signature:', inspect.signature(build_scene_from_plan))",
         f"_build_kwargs = {{'scene_idx': {scene_idx}}}",
         f"if 'quality' in inspect.signature(build_scene_from_plan).parameters: _build_kwargs['quality'] = {render_quality if render_video else 'preview'!r}",
+        "_module_reload_seconds = time.perf_counter() - _module_profile_started",
+        "print('[Profile] module_reload_and_setup: {:.3f}s'.format(_module_reload_seconds), flush=True)",
         "res_build = build_scene_from_plan(sc, plan_data, **_build_kwargs)",
+        "_pipeline_profile = {'module_reload_and_setup': round(_module_reload_seconds, 4), 'scene_build': res_build.get('profiling', {}), 'frame_render': [], 'frame_qc': []}",
         "",
     ]
 
@@ -171,6 +176,7 @@ def process_naskah_or_prompt(
                 "        if _old_qc.get('total_frames') == qc_report['total_frames']: qc_report = _old_qc",
                 "    except Exception: pass",
                 "print('[*] Frame render started:', qc_report['total_frames'], 'frames; resume enabled', flush=True)",
+                "_frame_loop_started = time.perf_counter()",
                 "for _frame in range(sc.frame_start, sc.frame_end + 1):",
                 "    sc.frame_set(_frame)",
                 "    _frame_path = os.path.join(frames_dir, 'frame_{:06d}.png'.format(_frame))",
@@ -182,13 +188,18 @@ def process_naskah_or_prompt(
                 "    _passed = False",
                 "    for _attempt in range(1, 3):",
                 "        print('[Render] Frame {}/{} attempt {}'.format(_frame - sc.frame_start + 1, qc_report['total_frames'], _attempt), flush=True)",
+                "        _render_started = time.perf_counter()",
                 "        bpy.ops.render.render()",
+                "        _render_seconds = time.perf_counter() - _render_started",
+                "        _pipeline_profile['frame_render'].append({'frame': _frame, 'attempt': _attempt, 'seconds': round(_render_seconds, 4)})",
+                "        print('[Profile] frame_render {}: {:.3f}s'.format(_frame, _render_seconds), flush=True)",
                 "        _img = bpy.data.images.get('Render Result')",
                 "        if _img is None:",
                 "            continue",
                 "        _img.save_render(filepath=_frame_path, scene=sc)",
                 "        if not os.path.isfile(_frame_path) or os.path.getsize(_frame_path) < 1024:",
                 "            continue",
+                "        _qc_started = time.perf_counter()",
                 "        _qc_img = None",
                 "        try:",
                 "            _qc_img = bpy.data.images.load(_frame_path, check_existing=False)",
@@ -214,6 +225,8 @@ def process_naskah_or_prompt(
                 "        _max = max(_samples) if _samples else 0.0",
                 "        _black = (_mean < 0.002 and _max < 0.01)",
                 "        _blank = (_var < 0.000001)",
+                "        _qc_seconds = time.perf_counter() - _qc_started",
+                "        _pipeline_profile['frame_qc'].append({'frame': _frame, 'seconds': round(_qc_seconds, 4)})",
                 "        if not _black and not _blank:",
                 "            _passed = True",
                 "            break",
@@ -227,8 +240,16 @@ def process_naskah_or_prompt(
                 "        json.dump(qc_report, _qf, indent=2)",
                 "if qc_report['failed']:",
                 "    raise RuntimeError('Frame QC failed: {}'.format(qc_report['failed']))",
+                "_pipeline_profile['frame_loop_total_seconds'] = round(time.perf_counter() - _frame_loop_started, 4)",
+                "_pipeline_profile['frame_render_total_seconds'] = round(sum(x['seconds'] for x in _pipeline_profile['frame_render']), 4)",
+                "_pipeline_profile['frame_qc_total_seconds'] = round(sum(x['seconds'] for x in _pipeline_profile['frame_qc']), 4)",
+                "_pipeline_profile['frames_rendered'] = len(_pipeline_profile['frame_render'])",
+                "with open(os.path.join(frames_dir, 'profile_report.json'), 'w', encoding='utf-8') as _pf:",
+                "    json.dump(_pipeline_profile, _pf, indent=2, ensure_ascii=False)",
+                "print('[Profile] Frame render total: {:.3f}s; QC total: {:.3f}s'.format(_pipeline_profile['frame_render_total_seconds'], _pipeline_profile['frame_qc_total_seconds']), flush=True)",
                 "print('[✓] All frame QC passed. Ready for FFmpeg encoding.', flush=True)",
                 f"print('[Frames] {frames_esc}')",
+                f"print('[Profile] {frames_esc}\\\\profile_report.json')",
             ])
         else:
             lines.extend([
@@ -340,7 +361,9 @@ def _encode_frames_ffmpeg(
         print(f"[*] Upscaling frames to {width}x{height} with Lanczos")
     cmd.append(output_path)
     print("[*] FFmpeg encoding:", expected, "QC-passed frames")
+    encode_started = time.perf_counter()
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
+    encode_seconds = time.perf_counter() - encode_started
     if proc.returncode != 0 or not os.path.isfile(output_path) or os.path.getsize(output_path) < 1024:
         raise RuntimeError("FFmpeg failed: " + (proc.stderr or proc.stdout)[-3000:])
     return {
@@ -349,6 +372,7 @@ def _encode_frames_ffmpeg(
         "size_bytes": os.path.getsize(output_path),
         "frames": expected,
         "fps": fps,
+        "duration_seconds": round(encode_seconds, 4),
     }
 
 def _ffmpeg_concat(clip_paths: List[str], output_path: str) -> bool:
