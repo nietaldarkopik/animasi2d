@@ -43,7 +43,19 @@ Add-on Blender MCP (`mcp_to_blender_server.py`) mendengarkan di `localhost:9876`
 
 ---
 
-## 3. Spesifikasi Render & Optimasi GPU
+## 3. Pemisahan Scene Building dan Video Rendering
+
+Produksi video menggunakan dua tahap proses yang terpisah:
+
+1. **Blender MCP (interaktif):** Python mengirim instruksi untuk membersihkan scene, membangun environment/karakter/kamera/lighting, lalu menyimpan file `.blend`.
+2. **Blender Background (headless):** setelah file `.blend` berhasil disimpan, Python menjalankan proses Blender terpisah dengan file tersebut. Proses ini menangani render frame, QC, dan laporan profiling.
+3. **Python + FFmpeg:** Python memeriksa laporan QC dan meng-encode frame yang lolos menjadi MP4.
+
+Dengan pemisahan ini, render panjang tidak berjalan pada main thread Blender interaktif. Jika MCP tidak aktif, tahap pembangunan scene tetap dapat menggunakan Blender Background CLI sebagai fallback; tahap render video tetap dijalankan pada proses background terpisah.
+
+File frame dan laporan QC tetap berada di direktori `<output_video>_frames`, sehingga mekanisme resume frame yang sudah lolos QC tetap dapat digunakan.
+
+## 4. Spesifikasi Render & Optimasi GPU
 
 - **Resolusi Produksi:**
   - Short-form: 1080×1920 (9:16 portrait).
