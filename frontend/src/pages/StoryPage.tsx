@@ -234,6 +234,9 @@ export function StoryPage() {
                   <div style={{ fontSize: 12, opacity: 0.85, marginBottom: 8 }}>
                     <strong>Environment 3D:</strong> {sc.location.toLowerCase().includes('kamar mandi') ? 'Interior Kamar Mandi (Ubin porselen, wastafel, cermin, shower, ember, gayung)' : sc.location.toLowerCase().includes('dapur') ? 'Interior Dapur (Kitchen counter, kompor, wajan, kulkas, ventilasi)' : sc.location.toLowerCase().includes('kamar') ? 'Interior Kamar Tidur (Tempat tidur, bantal, selimut, lemari pakaian)' : sc.location.toLowerCase().includes('taman') ? 'Eksterior Taman (Tanah berumput, jalan setapak, pepohonan 3D)' : 'Interior Ruang Tamu (Sofa santai, meja tamu)'}
                   </div>
+                  {sc.visual && <div style={{ fontSize: 12, marginBottom: 7 }}><strong>Visual:</strong> {sc.visual}</div>}
+                  {sc.camera && Object.keys(sc.camera).length > 0 && <div style={{ fontSize: 12, marginBottom: 7 }}><strong>Kamera:</strong> {JSON.stringify(sc.camera)}</div>}
+                  {sc.lighting && Object.keys(sc.lighting).length > 0 && <div style={{ fontSize: 12, marginBottom: 7 }}><strong>Lighting:</strong> {JSON.stringify(sc.lighting)}</div>}
                   <div style={{ fontSize: 12, opacity: 0.75 }}>
                     <strong>Dialog ({sc.dialog?.length || 0} line):</strong>
                     <div style={{ marginTop: 4, paddingLeft: 8 }}>
