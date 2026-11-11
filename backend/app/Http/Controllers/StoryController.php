@@ -182,9 +182,7 @@ class StoryController extends Controller
         if (! StoryWriter::available()) return response()->json(['message' => 'AI tidak tersedia: nyalakan 9router dan periksa AI_API_KEY.'], 503);
         if ($series->ai_status === 'working' && $series->updated_at->gt(now()->subMinutes(45))) return response()->json(['message' => 'Masih ada proses AI yang berjalan untuk seri ini.'], 409);
         try {
-            // Save the original source before AI processing so it survives generation failures.
-            $series->update(['master_script' => $d['prompt']]);
-            // Persist the source document before asking AI; it remains available even if generation fails.
+            // Persist the original source before AI processing so it survives generation failures.
             $series->update(['master_script' => $d['prompt']]);
             $result = app(StoryWriter::class)->fromPrompt($series, $d['prompt'], (int) ($d['count'] ?? 1));
             $series->update(['title' => $result['title'], 'premise' => $result['premise'], 'genre' => $result['genre'], 'tone' => $result['tone']]);
