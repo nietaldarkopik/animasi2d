@@ -444,9 +444,18 @@ def make_character(
             _motion_key(max(a, b - 4), x=0.035, y=-0.160, z=0.035, lean=0.040, scale_value=1.070)
             _motion_key(b)
         elif action == 'subtle_gesture':
+            # Conversational emphasis: short, readable gesture pulses instead of
+            # holding one frozen pose for the entire dialogue line.
             _motion_key(a)
-            _motion_key(min(b, a + 5), x=0.025, z=0.065, roll=0.045, scale_value=1.020)
-            _motion_key(max(a, b - 4), x=0.025, z=0.065, roll=0.045, scale_value=1.020)
+            pulse_start = a + 5
+            pulse_index = 0
+            while pulse_start < b - 2:
+                direction = 1.0 if pulse_index % 2 == 0 else -1.0
+                _motion_key(pulse_start, x=0.035 * direction, z=0.075, roll=0.055 * direction, scale_value=1.025)
+                _motion_key(min(b, pulse_start + 4), x=0.012 * direction, z=0.025, roll=0.018 * direction, scale_value=1.010)
+                _motion_key(min(b, pulse_start + 8))
+                pulse_start += 24
+                pulse_index += 1
             _motion_key(b)
         else:
             _motion_key(a)
