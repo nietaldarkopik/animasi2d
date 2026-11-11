@@ -52,10 +52,10 @@ class SceneDirector:
 
         if startled:
             action, emotion, pose, gaze, movement = "startled_reaction", "kaget", "angkat", "speaker", "quick_recoil"
-        elif inspect:
-            action, emotion, pose, gaze, movement = "inspect_environment", "bingung", "pelipis", "story_target", "lean_forward"
         elif approach:
             action, emotion, pose, gaze, movement = "approach_target", "bingung", "tunjuk", "story_target", "step_forward"
+        elif inspect:
+            action, emotion, pose, gaze, movement = "inspect_environment", "bingung", "pelipis", "story_target", "lean_forward"
         elif explain:
             action, emotion, pose, gaze, movement = "explain", "netral", "angkat", "listener", "subtle_gesture"
         elif "?" in line:
