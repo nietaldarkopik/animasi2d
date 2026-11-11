@@ -142,7 +142,7 @@
         }
       ],
       "file": "motion_03_f000049.jpg",
-      "size_bytes": 63995
+      "size_bytes": 63991
     },
     {
       "index": 4,
@@ -192,7 +192,7 @@
         }
       ],
       "file": "motion_04_f000073.jpg",
-      "size_bytes": 63726
+      "size_bytes": 63733
     },
     {
       "index": 5,
@@ -242,7 +242,7 @@
         }
       ],
       "file": "motion_05_f000096.jpg",
-      "size_bytes": 64170
+      "size_bytes": 64201
     },
     {
       "index": 6,
@@ -297,7 +297,7 @@
         }
       ],
       "file": "motion_06_f000120.jpg",
-      "size_bytes": 71093
+      "size_bytes": 71059
     },
     {
       "index": 7,
@@ -352,7 +352,7 @@
         }
       ],
       "file": "motion_07_f000144.jpg",
-      "size_bytes": 76248
+      "size_bytes": 76251
     },
     {
       "index": 8,
@@ -407,7 +407,7 @@
         }
       ],
       "file": "motion_08_f000168.jpg",
-      "size_bytes": 78261
+      "size_bytes": 78271
     }
   ]
 }
