@@ -178,7 +178,9 @@ def process_naskah_or_prompt(
                 "print('[*] Frame render started:', qc_report['total_frames'], 'frames; resume enabled', flush=True)",
                 "_frame_loop_started = time.perf_counter()",
                 "for _frame in range(sc.frame_start, sc.frame_end + 1):",
+                "    _prepare_started = time.perf_counter()",
                 "    sc.frame_set(_frame)",
+                "    _pipeline_profile.setdefault('frame_prepare', []).append({'frame': _frame, 'seconds': round(time.perf_counter() - _prepare_started, 4)})",
                 "    _frame_path = os.path.join(frames_dir, 'frame_{:06d}.png'.format(_frame))",
                 "    if _frame in qc_report.get('passed', []) and os.path.isfile(_frame_path) and os.path.getsize(_frame_path) > 1024:",
                 "        print('[Resume] Existing QC-passed frame {}/{} skipped'.format(_frame - sc.frame_start + 1, qc_report['total_frames']), flush=True)",
@@ -196,7 +198,10 @@ def process_naskah_or_prompt(
                 "        _img = bpy.data.images.get('Render Result')",
                 "        if _img is None:",
                 "            continue",
+                "        _save_started = time.perf_counter()",
                 "        _img.save_render(filepath=_frame_path, scene=sc)",
+                "        _save_seconds = time.perf_counter() - _save_started",
+                "        _pipeline_profile.setdefault('frame_save', []).append({'frame': _frame, 'seconds': round(_save_seconds, 4)})",
                 "        if not os.path.isfile(_frame_path) or os.path.getsize(_frame_path) < 1024:",
                 "            continue",
                 "        _qc_started = time.perf_counter()",
@@ -243,6 +248,8 @@ def process_naskah_or_prompt(
                 "_pipeline_profile['frame_loop_total_seconds'] = round(time.perf_counter() - _frame_loop_started, 4)",
                 "_pipeline_profile['frame_render_total_seconds'] = round(sum(x['seconds'] for x in _pipeline_profile['frame_render']), 4)",
                 "_pipeline_profile['frame_qc_total_seconds'] = round(sum(x['seconds'] for x in _pipeline_profile['frame_qc']), 4)",
+                "_pipeline_profile['frame_prepare_total_seconds'] = round(sum(x['seconds'] for x in _pipeline_profile.get('frame_prepare', [])), 4)",
+                "_pipeline_profile['frame_save_total_seconds'] = round(sum(x['seconds'] for x in _pipeline_profile.get('frame_save', [])), 4)",
                 "_pipeline_profile['frames_rendered'] = len(_pipeline_profile['frame_render'])",
                 "with open(os.path.join(frames_dir, 'profile_report.json'), 'w', encoding='utf-8') as _pf:",
                 "    json.dump(_pipeline_profile, _pf, indent=2, ensure_ascii=False)",
@@ -316,6 +323,14 @@ def process_naskah_or_prompt(
                     upscale_size=((1080, 1920) if aspect_ratio == "9:16" else (1920, 1080)) if upscale_output else None,
                 )
                 result["encoding"] = encode_result
+                _profile_path = os.path.join(frames_dir, "profile_report.json")
+                if os.path.isfile(_profile_path):
+                    with open(_profile_path, "r", encoding="utf-8") as _pf:
+                        _saved_profile = json.load(_pf)
+                    _saved_profile["encoding"] = encode_result
+                    with open(_profile_path, "w", encoding="utf-8") as _pf:
+                        json.dump(_saved_profile, _pf, indent=2, ensure_ascii=False)
+                    print("[Profile] Complete report updated:", _profile_path)
             except Exception as encode_error:
                 result["encoding"] = {"status": "error", "message": str(encode_error)}
                 print("[✗] FFmpeg encoding failed:", encode_error)
