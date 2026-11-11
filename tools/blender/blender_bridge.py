@@ -66,7 +66,9 @@ def send_to_mcp(code: str, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT, t
     except Exception as e:
         return {"status": "error", "message": f"Failed to parse JSON response: {e}", "raw": buf.decode("utf-8", errors="replace")}
 
-CLI_TIMEOUT = float(os.environ.get("BLENDER_CLI_TIMEOUT", "7200"))
+# Long frame-by-frame renders may exceed several hours. Set BLENDER_CLI_TIMEOUT
+# to a positive number to enforce a limit; 0 (default) disables the CLI timeout.
+CLI_TIMEOUT = float(os.environ.get("BLENDER_CLI_TIMEOUT", "0"))
 
 def run_blender_cli(code: str, blend_file: Optional[str] = None, timeout: float = CLI_TIMEOUT) -> Dict[str, Any]:
     """Execute Python code in headless Blender background mode."""
@@ -126,7 +128,7 @@ def run_blender_cli(code: str, blend_file: Optional[str] = None, timeout: float 
             if stream_closed and proc.poll() is not None:
                 break
 
-            if time.monotonic() - started_at > timeout and proc.poll() is None:
+            if timeout > 0 and time.monotonic() - started_at > timeout and proc.poll() is None:
                 proc.kill()
                 proc.wait()
                 raise subprocess.TimeoutExpired(
