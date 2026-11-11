@@ -16,49 +16,49 @@
       "frame": 25,
       "camera": "Camera_sc1_sh1_establish",
       "file": "motion_02_f000025.jpg",
-      "size_bytes": 82876
+      "size_bytes": 80888
     },
     {
       "index": 3,
       "frame": 49,
       "camera": "Camera_sc1_sh2_dlg",
       "file": "motion_03_f000049.jpg",
-      "size_bytes": 69383
+      "size_bytes": 69578
     },
     {
       "index": 4,
       "frame": 73,
       "camera": "Camera_sc1_sh2_dlg",
       "file": "motion_04_f000073.jpg",
-      "size_bytes": 69777
+      "size_bytes": 69717
     },
     {
       "index": 5,
       "frame": 96,
       "camera": "Camera_sc1_sh2_dlg",
       "file": "motion_05_f000096.jpg",
-      "size_bytes": 70210
+      "size_bytes": 69832
     },
     {
       "index": 6,
       "frame": 120,
       "camera": "Camera_sc1_sh3_dlg",
       "file": "motion_06_f000120.jpg",
-      "size_bytes": 71201
+      "size_bytes": 71093
     },
     {
       "index": 7,
       "frame": 144,
       "camera": "Camera_sc1_sh3_dlg",
       "file": "motion_07_f000144.jpg",
-      "size_bytes": 76448
+      "size_bytes": 76248
     },
     {
       "index": 8,
       "frame": 168,
       "camera": "Camera_sc1_sh3_dlg",
       "file": "motion_08_f000168.jpg",
-      "size_bytes": 78365
+      "size_bytes": 78261
     }
   ]
 }
