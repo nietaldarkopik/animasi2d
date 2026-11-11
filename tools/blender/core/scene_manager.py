@@ -207,6 +207,7 @@ def build_scene_from_plan(
         exprs = [(f0, "netral")]
         poses = [(f0, "diam")]
         speak = []
+        actor_actions = []
         # Prefer explicit Director action cues. Legacy storyboards still use
         # the previous keyword heuristics as a backward-compatible fallback.
         action_items = scene_data.get("action_timeline") or []
@@ -232,6 +233,7 @@ def build_scene_from_plan(
             text_line = str(cue.get("dialogue_text", "")).lower()
             start_f = int(cue.get("start_frame", f0))
             end_f = int(cue.get("end_frame", start_f + 24))
+            actor_actions.append(cue)
             planned_emotion = cue.get("emotion")
             planned_pose = cue.get("pose")
 
@@ -271,7 +273,7 @@ def build_scene_from_plan(
             char_dir = os.path.join(KARAKTER_ROOT, clean_name)
             actor_objs[actor] = make_character(
                 sc, cam, char_dir, clean_name, location,
-                exprs=exprs, poses=poses, speak=speak,
+                exprs=exprs, poses=poses, speak=speak, actions=actor_actions,
                 f0=f0, f1=f1, blink_seed=sum(ord(ch) for ch in clean_name),
             )
         else:
