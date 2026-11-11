@@ -48,9 +48,14 @@ class FilmPipeline
             if ($blenderFile && is_file($blenderFile) && filesize($blenderFile) > 1000) {
                 return $blenderFile;
             }
+
+            // Story episodes must never silently fall back to the legacy Puppeteer recorder.
+            // A failed Blender render is a failed production; keep its diagnostics visible.
+            $this->lastOutput = trim($this->lastOutput."\n[FilmPipeline] Blender render gagal; fallback renderer lama dinonaktifkan untuk episode naskah.");
+            return null;
         }
 
-        // 2. Fallback to daily_cartoon_runner (Puppeteer) if Blender rendering was skipped or failed
+        // 2. Legacy daily-cartoon jobs without a structured story script may still use Puppeteer.
         $runner = base_path('../tools/daily_cartoon_runner.js');
         if (!file_exists($runner)) {
             return null;
@@ -93,6 +98,9 @@ class FilmPipeline
             "--save-blend={$blendPath}",
             "--render-video={$targetMp4}",
         ];
+
+        $aspectRatio = ($script['aspect_ratio'] ?? '9:16') === '16:9' ? '16:9' : '9:16';
+        $cmd[] = "--aspect-ratio={$aspectRatio}";
 
         if ($useAllScenes) {
             $cmd[] = '--all-scenes';
