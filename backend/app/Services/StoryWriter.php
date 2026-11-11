@@ -121,7 +121,7 @@ class StoryWriter
             if ($dialog || $after) {
                 $given = trim((string) ($sc['location'] ?? ''));
                 $loc = collect(self::LOCATIONS)->first(fn ($l) => mb_strtolower($l) === mb_strtolower($given)) ?? $given;
-                $scenes[] = ['name' => (string) ($sc['name'] ?? ''), 'location' => $loc, 'time' => (string) ($sc['time'] ?? 'siang'), 'dialog' => $dialog, 'cast' => $sc['cast'] ?? [], 'after' => $after];
+                $scenes[] = ['name' => (string) ($sc['name'] ?? ''), 'location' => $loc, 'time' => (string) ($sc['time'] ?? 'siang'), 'dialog' => $dialog, 'cast' => $sc['cast'] ?? [], 'after' => $after, 'visual' => mb_substr(trim((string) ($sc['visual'] ?? '')), 0, 1200), 'camera' => is_array($sc['camera'] ?? null) ? $sc['camera'] : [], 'lighting' => is_array($sc['lighting'] ?? null) ? $sc['lighting'] : []];
             }
         }
         if ($scenes === []) {
@@ -132,6 +132,31 @@ class StoryWriter
         } catch (InvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage());
         }
+    }
+
+    /** Generate a complete episode package from a free-form prompt. */
+    public function fromPrompt(StorySeries $series, string $prompt, int $count = 1): array
+    {
+        $count = max(1, min(10, $count));
+        $cast = collect($series->characters ?? [])->map(fn ($c) => ['name' => $c['name'], 'role' => $c['role'] ?? '', 'traits' => $c['traits'] ?? ''])->values()->all();
+        $allowed = $series->characterNames();
+        if ($series->use_narrator) $allowed[] = 'Narator';
+        $system = 'Kamu penulis skenario, storyboard artist, dan sutradara film animasi 2.5D. Balas HANYA JSON valid.';
+        $user = "BUAT {$count} EPISODE berdasarkan naskah/prompt berikut. Pertahankan inti cerita dan jangan mengarang fakta sejarah.\nPROMPT:\n{$prompt}\n\n"
+            ."SERI SAAT INI: {$series->title}\nKARAKTER YANG BOLEH BERBICARA: ".json_encode($cast, JSON_UNESCAPED_UNICODE)."\n"
+            ."Hanya gunakan karakter di daftar tersebut".($series->use_narrator ? ' dan Narator' : '').". Dialog natural Bahasa Indonesia. Jangan ciptakan karakter baru. "
+            ."Setiap episode berisi 3-7 scene, tiap scene 2-6 dialog, lokasi harus salah satu dari: ".implode(', ', self::LOCATIONS).". "
+            ."Setiap scene wajib berisi name, location, time (pagi/siang/sore/malam), visual (deskripsi visual konkret), camera (ukuran shot, angle, movement), lighting (sumber, arah, warna, mood), dialog [{who,text}], after (aksi opsional). "
+            ."Balas JSON: {title,premise,genre,tone,episodes:[{title,synopsis,script:{title,theme,scenes:[{name,location,time,visual,camera,lighting,dialog:[{who,text}],after:[]}]}}]}";
+        $data = $this->ask($system, $user, 0.55);
+        $episodes = [];
+        foreach (array_slice($data['episodes'] ?? [], 0, $count) as $ep) {
+            $title = trim((string) ($ep['title'] ?? ''));
+            if ($title === '' || !is_array($ep['script'] ?? null)) continue;
+            $episodes[] = ['title' => mb_substr($title, 0, 160), 'synopsis' => mb_substr(trim((string) ($ep['synopsis'] ?? '')), 0, 1500), 'script' => $this->clean($ep['script'], $allowed, $title)];
+        }
+        if (!$episodes) throw new RuntimeException('AI tidak menghasilkan episode dengan naskah yang valid. Coba perjelas prompt.');
+        return ['title' => mb_substr(trim((string) ($data['title'] ?? $series->title)), 0, 120), 'premise' => mb_substr(trim((string) ($data['premise'] ?? $prompt)), 0, 6000), 'genre' => mb_substr(trim((string) ($data['genre'] ?? $series->genre)), 0, 60), 'tone' => mb_substr(trim((string) ($data['tone'] ?? $series->tone)), 0, 120), 'episodes' => $episodes];
     }
 
     private function ask(string $system, string $user, float $temperature): array
