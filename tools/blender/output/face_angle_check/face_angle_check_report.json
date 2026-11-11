@@ -2,6 +2,26 @@
   "blend_file": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\cinematic_draft.blend",
   "character": "uki",
   "root": "CHAR_uki_uki",
+  "root_descendant_count": 17,
+  "root_descendant_names_sample": [
+    "CHAR_B_uki_uki",
+    "CHAR_HP_uki_uki",
+    "CHAR_uki_b_diam",
+    "CHAR_uki_b_tunjuk",
+    "CHAR_uki_h_bingung",
+    "CHAR_uki_h_netral",
+    "CHAR_uki_lids",
+    "CHAR_uki_m_a",
+    "CHAR_uki_m_e",
+    "CHAR_uki_m_i",
+    "CHAR_uki_m_o",
+    "CHAR_uki_m_u",
+    "CHAR_uki_rim_b_diam",
+    "CHAR_uki_rim_b_tunjuk",
+    "CHAR_uki_rim_h_bingung",
+    "CHAR_uki_rim_h_netral",
+    "CHAR_uki_uki"
+  ],
   "frame": 80,
   "projection_modes": [
     "perspective",
@@ -30,6 +50,13 @@
       "projected_cards": [
         {
           "object": "CHAR_uki_h_bingung",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_bingung.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -198,6 +225,13 @@
         },
         {
           "object": "CHAR_uki_h_netral",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_netral.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -366,6 +400,13 @@
         },
         {
           "object": "CHAR_uki_m_a",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_a.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_a.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -534,6 +575,13 @@
         },
         {
           "object": "CHAR_uki_m_e",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_e.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_e.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -702,6 +750,13 @@
         },
         {
           "object": "CHAR_uki_m_i",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_i.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_i.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -870,6 +925,13 @@
         },
         {
           "object": "CHAR_uki_m_o",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_o.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_o.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -1038,6 +1100,13 @@
         },
         {
           "object": "CHAR_uki_m_u",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_u.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_u.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -1206,6 +1275,13 @@
         },
         {
           "object": "CHAR_uki_rim_h_bingung",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_bingung.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -1374,6 +1450,13 @@
         },
         {
           "object": "CHAR_uki_rim_h_netral",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_netral.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -1542,6 +1625,13 @@
         },
         {
           "object": "CHAR_uki_b_diam",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_diam.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -1710,6 +1800,13 @@
         },
         {
           "object": "CHAR_uki_b_tunjuk",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_tunjuk.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -1878,6 +1975,13 @@
         },
         {
           "object": "CHAR_uki_rim_b_diam",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_diam.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -2046,6 +2150,13 @@
         },
         {
           "object": "CHAR_uki_rim_b_tunjuk",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_tunjuk.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -2235,6 +2346,13 @@
       "projected_cards": [
         {
           "object": "CHAR_uki_h_bingung",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_bingung.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -2403,6 +2521,13 @@
         },
         {
           "object": "CHAR_uki_h_netral",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_netral.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -2571,6 +2696,13 @@
         },
         {
           "object": "CHAR_uki_m_a",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_a.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_a.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -2739,6 +2871,13 @@
         },
         {
           "object": "CHAR_uki_m_e",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_e.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_e.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -2907,6 +3046,13 @@
         },
         {
           "object": "CHAR_uki_m_i",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_i.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_i.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -3075,6 +3221,13 @@
         },
         {
           "object": "CHAR_uki_m_o",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_o.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_o.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -3243,6 +3396,13 @@
         },
         {
           "object": "CHAR_uki_m_u",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_u.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_u.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -3411,6 +3571,13 @@
         },
         {
           "object": "CHAR_uki_rim_h_bingung",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_bingung.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -3579,6 +3746,13 @@
         },
         {
           "object": "CHAR_uki_rim_h_netral",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_netral.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -3747,6 +3921,13 @@
         },
         {
           "object": "CHAR_uki_b_diam",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_diam.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -3915,6 +4096,13 @@
         },
         {
           "object": "CHAR_uki_b_tunjuk",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_tunjuk.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -4083,6 +4271,13 @@
         },
         {
           "object": "CHAR_uki_rim_b_diam",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_diam.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -4251,6 +4446,13 @@
         },
         {
           "object": "CHAR_uki_rim_b_tunjuk",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_tunjuk.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -4440,6 +4642,13 @@
       "projected_cards": [
         {
           "object": "CHAR_uki_h_bingung",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_bingung.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -4608,6 +4817,13 @@
         },
         {
           "object": "CHAR_uki_h_netral",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_netral.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -4776,6 +4992,13 @@
         },
         {
           "object": "CHAR_uki_m_a",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_a.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_a.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -4944,6 +5167,13 @@
         },
         {
           "object": "CHAR_uki_m_e",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_e.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_e.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -5112,6 +5342,13 @@
         },
         {
           "object": "CHAR_uki_m_i",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_i.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_i.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -5280,6 +5517,13 @@
         },
         {
           "object": "CHAR_uki_m_o",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_o.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_o.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -5448,6 +5692,13 @@
         },
         {
           "object": "CHAR_uki_m_u",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_u.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_u.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -5616,6 +5867,13 @@
         },
         {
           "object": "CHAR_uki_rim_h_bingung",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_bingung.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -5784,6 +6042,13 @@
         },
         {
           "object": "CHAR_uki_rim_h_netral",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_netral.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -5952,6 +6217,13 @@
         },
         {
           "object": "CHAR_uki_b_diam",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_diam.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -6120,6 +6392,13 @@
         },
         {
           "object": "CHAR_uki_b_tunjuk",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_tunjuk.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -6288,6 +6567,13 @@
         },
         {
           "object": "CHAR_uki_rim_b_diam",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_diam.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -6456,6 +6742,13 @@
         },
         {
           "object": "CHAR_uki_rim_b_tunjuk",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_tunjuk.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -6645,6 +6938,13 @@
       "projected_cards": [
         {
           "object": "CHAR_uki_h_bingung",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_bingung.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -6813,6 +7113,13 @@
         },
         {
           "object": "CHAR_uki_h_netral",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_netral.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -6981,6 +7288,13 @@
         },
         {
           "object": "CHAR_uki_m_a",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_a.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_a.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -7149,6 +7463,13 @@
         },
         {
           "object": "CHAR_uki_m_e",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_e.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_e.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -7317,6 +7638,13 @@
         },
         {
           "object": "CHAR_uki_m_i",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_i.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_i.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -7485,6 +7813,13 @@
         },
         {
           "object": "CHAR_uki_m_o",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_o.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_o.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -7653,6 +7988,13 @@
         },
         {
           "object": "CHAR_uki_m_u",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_u.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_u.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -7821,6 +8163,13 @@
         },
         {
           "object": "CHAR_uki_rim_h_bingung",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_bingung.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -7989,6 +8338,13 @@
         },
         {
           "object": "CHAR_uki_rim_h_netral",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_netral.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -8157,6 +8513,13 @@
         },
         {
           "object": "CHAR_uki_b_diam",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_diam.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -8325,6 +8688,13 @@
         },
         {
           "object": "CHAR_uki_b_tunjuk",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_tunjuk.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -8493,6 +8863,13 @@
         },
         {
           "object": "CHAR_uki_rim_b_diam",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_diam.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -8661,6 +9038,13 @@
         },
         {
           "object": "CHAR_uki_rim_b_tunjuk",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_tunjuk.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -8850,6 +9234,13 @@
       "projected_cards": [
         {
           "object": "CHAR_uki_h_bingung",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_bingung.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -9018,6 +9409,13 @@
         },
         {
           "object": "CHAR_uki_h_netral",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_netral.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -9186,6 +9584,13 @@
         },
         {
           "object": "CHAR_uki_m_a",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_a.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_a.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -9354,6 +9759,13 @@
         },
         {
           "object": "CHAR_uki_m_e",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_e.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_e.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -9522,6 +9934,13 @@
         },
         {
           "object": "CHAR_uki_m_i",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_i.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_i.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -9690,6 +10109,13 @@
         },
         {
           "object": "CHAR_uki_m_o",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_o.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_o.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -9858,6 +10284,13 @@
         },
         {
           "object": "CHAR_uki_m_u",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_u.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_u.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -10026,6 +10459,13 @@
         },
         {
           "object": "CHAR_uki_rim_h_bingung",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_bingung.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -10194,6 +10634,13 @@
         },
         {
           "object": "CHAR_uki_rim_h_netral",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_netral.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -10362,6 +10809,13 @@
         },
         {
           "object": "CHAR_uki_b_diam",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_diam.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -10530,6 +10984,13 @@
         },
         {
           "object": "CHAR_uki_b_tunjuk",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_tunjuk.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -10698,6 +11159,13 @@
         },
         {
           "object": "CHAR_uki_rim_b_diam",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_diam.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -10866,6 +11334,13 @@
         },
         {
           "object": "CHAR_uki_rim_b_tunjuk",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_tunjuk.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -11055,6 +11530,13 @@
       "projected_cards": [
         {
           "object": "CHAR_uki_h_bingung",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_bingung.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -11223,6 +11705,13 @@
         },
         {
           "object": "CHAR_uki_h_netral",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_netral.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -11391,6 +11880,13 @@
         },
         {
           "object": "CHAR_uki_m_a",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_a.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_a.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -11559,6 +12055,13 @@
         },
         {
           "object": "CHAR_uki_m_e",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_e.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_e.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -11727,6 +12230,13 @@
         },
         {
           "object": "CHAR_uki_m_i",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_i.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_i.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -11895,6 +12405,13 @@
         },
         {
           "object": "CHAR_uki_m_o",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_o.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_o.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -12063,6 +12580,13 @@
         },
         {
           "object": "CHAR_uki_m_u",
+          "image_textures": [
+            {
+              "image_name": "uki_mulut_u.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_u.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -12231,6 +12755,13 @@
         },
         {
           "object": "CHAR_uki_rim_h_bingung",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_bingung.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -12399,6 +12930,13 @@
         },
         {
           "object": "CHAR_uki_rim_h_netral",
+          "image_textures": [
+            {
+              "image_name": "uki_kepala_netral.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_HP_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -12567,6 +13105,13 @@
         },
         {
           "object": "CHAR_uki_b_diam",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_diam.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -12735,6 +13280,13 @@
         },
         {
           "object": "CHAR_uki_b_tunjuk",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_tunjuk.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -12903,6 +13455,13 @@
         },
         {
           "object": "CHAR_uki_rim_b_diam",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_diam.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
@@ -13071,6 +13630,13 @@
         },
         {
           "object": "CHAR_uki_rim_b_tunjuk",
+          "image_textures": [
+            {
+              "image_name": "uki_badan_tunjuk.png",
+              "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+              "packed": false
+            }
+          ],
           "parent": "CHAR_B_uki_uki",
           "matrix_parent_inverse": [
             [
