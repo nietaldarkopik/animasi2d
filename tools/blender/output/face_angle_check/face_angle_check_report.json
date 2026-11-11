@@ -22,6 +22,225 @@
     "CHAR_uki_rim_h_netral",
     "CHAR_uki_uki"
   ],
+  "isolation_audit": [
+    {
+      "object": "CHAR_arum_arum",
+      "type": "EMPTY",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_shadow_arum_arum",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_B_arum_arum",
+      "type": "EMPTY",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_b_angkat",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_b_diam",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_rim_b_angkat",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_rim_b_diam",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_HP_arum_arum",
+      "type": "EMPTY",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_h_kaget",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_h_netral",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_rim_h_kaget",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_rim_h_netral",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_lids",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_m_a",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_m_i",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_m_u",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_m_e",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_arum_m_o",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    },
+    {
+      "object": "CHAR_shadow_uki_uki",
+      "type": "MESH",
+      "hide_render_after_isolation": true,
+      "hide_viewport_after_isolation": true
+    }
+  ],
+  "isolation_audit_count": 19,
+  "asset_audit": [
+    {
+      "image_name": "uki_badan_diam.png",
+      "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_diam.png",
+      "exists": true,
+      "width": 800,
+      "height": 1400,
+      "packed": false,
+      "sha256": "b6b5d56ae1c017a2cdfd1e35cc1d9432952420a369b58e735f986909476bf670",
+      "size_bytes": 426741
+    },
+    {
+      "image_name": "uki_badan_tunjuk.png",
+      "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_badan_tunjuk.png",
+      "exists": true,
+      "width": 800,
+      "height": 1400,
+      "packed": false,
+      "sha256": "85d024eff3ec362b387c30ca45cd5c47db4fa537c537edd137d7ea1f3d528282",
+      "size_bytes": 438017
+    },
+    {
+      "image_name": "uki_kelopak.png",
+      "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kelopak.png",
+      "exists": true,
+      "width": 400,
+      "height": 400,
+      "packed": false,
+      "sha256": "5aa9eb679a158ce98fb1c14200b8a151a17e29dbfd0106e6e16814838b1e0db8",
+      "size_bytes": 4904
+    },
+    {
+      "image_name": "uki_kepala_bingung.png",
+      "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_bingung.png",
+      "exists": true,
+      "width": 400,
+      "height": 400,
+      "packed": false,
+      "sha256": "7bdfce923f9c5fea2825540077873bce5137198a67ddda720edd23ae87f2a5f5",
+      "size_bytes": 58434
+    },
+    {
+      "image_name": "uki_kepala_netral.png",
+      "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_kepala_netral.png",
+      "exists": true,
+      "width": 400,
+      "height": 400,
+      "packed": false,
+      "sha256": "79b12e8b4ae05f0def4eb0d026b6378f922103738c2e885eb5944869cd0415a2",
+      "size_bytes": 59405
+    },
+    {
+      "image_name": "uki_mulut_a.png",
+      "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_a.png",
+      "exists": true,
+      "width": 120,
+      "height": 80,
+      "packed": false,
+      "sha256": "778203e4139012f6da1cf0645c89daa72af5b996c158d2254291ea05cf22b021",
+      "size_bytes": 1541
+    },
+    {
+      "image_name": "uki_mulut_e.png",
+      "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_e.png",
+      "exists": true,
+      "width": 120,
+      "height": 80,
+      "packed": false,
+      "sha256": "90b9b7e86a9c29b69d729762e8fbeba5479e2077c3e124e77b7ac7d8d7b970dd",
+      "size_bytes": 1821
+    },
+    {
+      "image_name": "uki_mulut_i.png",
+      "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_i.png",
+      "exists": true,
+      "width": 120,
+      "height": 80,
+      "packed": false,
+      "sha256": "d5ac2e5815b5f134c25e5581c3ec1cf3a37b336a3ed1811e85ee27b1a1175f60",
+      "size_bytes": 1513
+    },
+    {
+      "image_name": "uki_mulut_o.png",
+      "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_o.png",
+      "exists": true,
+      "width": 120,
+      "height": 80,
+      "packed": false,
+      "sha256": "894ff05f167dedf766aae447b8a55ca97d78f657939e01e20bacc0fb726554c7",
+      "size_bytes": 1734
+    },
+    {
+      "image_name": "uki_mulut_u.png",
+      "filepath": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\..\\..\\..\\karakter\\uki\\uki_mulut_u.png",
+      "exists": true,
+      "width": 120,
+      "height": 80,
+      "packed": false,
+      "sha256": "913dc6e2b6006e37fb3e203b8ef078e256f92e0714f85daa552c95d199dfe1c9",
+      "size_bytes": 1673
+    }
+  ],
   "frame": 80,
   "projection_modes": [
     "perspective",
