@@ -173,6 +173,24 @@ class StoryController extends Controller
         return response()->json(['data' => $this->presentSeries($series->fresh())], 202);
     }
 
+    /** Generate series fields and episode scripts from a free-form prompt. */
+    public function generateFromPrompt(Request $request, StorySeries $series): JsonResponse
+    {
+        $this->own($request, $series);
+        $d = $request->validate(['prompt' => 'required|string|min:20|max:20000', 'count' => 'nullable|integer|min:1|max:10']);
+        if (! StoryWriter::available()) return response()->json(['message' => 'AI tidak tersedia: nyalakan 9router dan periksa AI_API_KEY.'], 503);
+        if ($series->ai_status === 'working' && $series->updated_at->gt(now()->subMinutes(45))) return response()->json(['message' => 'Masih ada proses AI yang berjalan untuk seri ini.'], 409);
+        try {
+            $result = app(StoryWriter::class)->fromPrompt($series, $d['prompt'], (int) ($d['count'] ?? 1));
+            $series->update(['title' => $result['title'], 'premise' => $result['premise'], 'genre' => $result['genre'], 'tone' => $result['tone']]);
+            $next = ($series->episodes()->max('number') ?? 0) + 1;
+            foreach ($result['episodes'] as $i => $ep) StoryEpisode::create(['series_id' => $series->id, 'number' => $next + $i, 'title' => $ep['title'], 'synopsis' => $ep['synopsis'], 'script' => $ep['script'], 'status' => 'scripted']);
+            return response()->json(['data' => $this->presentSeries($series->fresh(), true)]);
+        } catch (\\RuntimeException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+    }
+
     public function addEpisode(Request $request, StorySeries $series): JsonResponse
     {
         $this->own($request, $series);
