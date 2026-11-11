@@ -128,8 +128,22 @@ def main():
                 ys = [p.y for p in points]
                 width = max(xs) - min(xs)
                 height = max(ys) - min(ys)
+                world_matrix = child_eval.matrix_world
+                local_bounds = [Vector(corner) for corner in child_eval.bound_box]
+                local_size = [
+                    round(max(v[i] for v in local_bounds) - min(v[i] for v in local_bounds), 6)
+                    for i in range(3)
+                ]
+                world_axes = [
+                    [round(v, 6) for v in (world_matrix.to_3x3() @ axis)]
+                    for axis in (Vector((1, 0, 0)), Vector((0, 1, 0)), Vector((0, 0, 1)))
+                ]
                 projected_cards.append({
                     "object": child.name,
+                    "parent": child.parent.name if child.parent else None,
+                    "local_scale": [round(v, 6) for v in child_eval.scale],
+                    "local_bounds_size": local_size,
+                    "world_axis_vectors": world_axes,
                     "projected_width": round(width, 6),
                     "projected_height": round(height, 6),
                     "width_height_ratio": round(width / height, 6) if height > 1e-9 else None,
