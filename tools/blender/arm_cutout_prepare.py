@@ -16,7 +16,7 @@ def parse_args():
     p.add_argument("--output-dir",default="tools/blender/output/arum_cutout")
     p.add_argument("--body-source",default="arum_badan_diam.png")
     p.add_argument("--arm-source",default="arum_badan_angkat.png")
-    return p.parse_args()
+    return p.parse_args(av)
 
 def inside(x,y,poly):
     hit=False; j=len(poly)-1
