@@ -109,11 +109,20 @@ class FilmPipeline
             if ($out) $out("[FilmPipeline] Produksi adegan tunggal (scene 0)\n");
         }
 
+        // Remove any previous output so a stale/legacy MP4 cannot be mistaken for this Blender render.
+        if (is_file($targetMp4)) {
+            @unlink($targetMp4);
+        }
+
         $p = new Process($cmd, base_path('..'));
         $p->setTimeout($timeout);
         $p->run($out ? fn ($t, $b) => $out($b) : null);
 
-        $this->lastOutput = trim(mb_substr(trim($p->getOutput()."\n".$p->getErrorOutput()), -800));
+        $this->lastOutput = trim(mb_substr(trim($p->getOutput()."\n".$p->getErrorOutput()), -3000));
+        if (! $p->isSuccessful()) {
+            $this->lastOutput = "Blender process exit code ".$p->getExitCode()."\n".$this->lastOutput;
+            return null;
+        }
 
         if (is_file($targetMp4) && filesize($targetMp4) > 1000) {
             return $targetMp4;
