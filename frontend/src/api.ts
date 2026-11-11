@@ -125,6 +125,7 @@ export const api = {
   storyUpdate: (id: number, body: SeriesInput) => req<{ data: StorySeries }>(`/story/series/${id}`, json('PATCH', body)).then((r) => r.data),
   storyDelete: (id: number) => req<{ ok: boolean }>(`/story/series/${id}`, json('DELETE')),
   storyGenerate: (id: number, mode: 'outline' | 'scripts' | 'all', count?: number) => req<{ data: StorySeries }>(`/story/series/${id}/generate`, json('POST', { mode, ...(count ? { count } : {}) })).then((r) => r.data),
+  storyGenerateFromPrompt: (id: number, prompt: string, count = 1) => req<{ data: StorySeries }>(`/story/series/${id}/generate-from-prompt`, json('POST', { prompt, count })).then((r) => r.data),
   storyAddEpisode: (id: number, body: { title: string; synopsis?: string }) => req<{ data: StoryEpisode }>(`/story/series/${id}/episodes`, json('POST', body)).then((r) => r.data),
   storyEpisodeUpdate: (id: number, body: { title?: string; synopsis?: string | null; script?: StoryScript | null; scheduled_at?: string | null; publish?: boolean }) => req<{ data: StoryEpisode }>(`/story/episodes/${id}`, json('PATCH', body)).then((r) => r.data),
   storyEpisodeDelete: (id: number) => req<{ ok: boolean }>(`/story/episodes/${id}`, json('DELETE')),
