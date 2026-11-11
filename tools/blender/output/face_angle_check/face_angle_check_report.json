@@ -1,0 +1,26 @@
+{
+  "blend_file": "C:\\wamp64\\www\\animasi2d\\tools\\blender\\output\\cinematic_draft.blend",
+  "character": "uki",
+  "root": "CHAR_uki_uki",
+  "frame": 80,
+  "camera_tests": [
+    {
+      "view": "front",
+      "angle_degrees": 0,
+      "image": "uki_front_f000080.png",
+      "size_bytes": 1473629
+    },
+    {
+      "view": "oblique_45",
+      "angle_degrees": 45,
+      "image": "uki_oblique_45_f000080.png",
+      "size_bytes": 1468524
+    },
+    {
+      "view": "near_side_75",
+      "angle_degrees": 75,
+      "image": "uki_near_side_75_f000080.png",
+      "size_bytes": 1444227
+    }
+  ]
+}
