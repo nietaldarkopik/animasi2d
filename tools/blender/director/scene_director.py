@@ -45,19 +45,28 @@ class SceneDirector:
     def infer_action(self, speaker: str, text: str, start_f: int, end_f: int) -> Dict[str, Any]:
         """Create a deterministic, editable character action cue for one shot."""
         line = str(text or "").lower()
-        startled = any(w in line for w in ("hah", "astaga", "kaget", "serius?!", "apa?!", "tidak mungkin"))
+        # Detect a reaction only when the line is actually an exclamation/recoil.
+        # Words such as "bikin kaget" inside an explanation must not trigger a full-shot flinch.
+        opening = line.lstrip(" \"'“”")
+        startled = (
+            re.match(r"^(hah+\s*[?!,]|astaga\b|waduh\b|serius\s*[?!]|apa\s*[?!])", opening) is not None
+            or any(w in line for w in ("aku terkejut", "spontan mundur", "kaget sekali"))
+        )
         inspect = any(w in line for w in ("mengamati", "ngintip", "memeriksa", "periksa", "cek", "lihat", "mengintip"))
         approach = any(w in line for w in ("harus cek", "ke sana", "mendekat", "ikuti aku", "ayo"))
-        explain = any(w in line for w in ("iya,", "karena", "soalnya", "tadi", "begini"))
+        explain = (
+            opening.startswith(("iya,", "iya ", "karena", "soalnya", "begini"))
+            or any(w in line for w in ("embernya tadi", "tadi bocor", "bikin kaget aja"))
+        )
 
-        if startled:
+        if explain:
+            action, emotion, pose, gaze, movement = "explain", "netral", "angkat", "listener", "subtle_gesture"
+        elif startled:
             action, emotion, pose, gaze, movement = "startled_reaction", "kaget", "angkat", "speaker", "quick_recoil"
         elif approach:
             action, emotion, pose, gaze, movement = "approach_target", "bingung", "tunjuk", "story_target", "step_forward"
         elif inspect:
             action, emotion, pose, gaze, movement = "inspect_environment", "bingung", "pelipis", "story_target", "lean_forward"
-        elif explain:
-            action, emotion, pose, gaze, movement = "explain", "netral", "angkat", "listener", "subtle_gesture"
         elif "?" in line:
             action, emotion, pose, gaze, movement = "question", "bingung", "dagu", "listener", "hold"
         else:
