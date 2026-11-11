@@ -102,7 +102,8 @@ def build_scene_from_plan(
 ) -> Dict[str, Any]:
     """Build environment, lighting, props, per-shot cameras and 2.5D actors."""
     profile = {}
-    _stage_started = time.perf_counter()
+    _build_started = time.perf_counter()
+    _stage_started = _build_started
 
     def _mark_stage(name):
         nonlocal _stage_started
@@ -262,8 +263,8 @@ def build_scene_from_plan(
     _mark_stage("actors_total")
     sc.frame_set(f0)
     _mark_stage("initial_frame_evaluation")
-    profile["scene_build_total"] = round(sum(profile.values()), 4)
-    print("[Profile] scene_build_total (sum of stage timings): {:.3f}s".format(profile["scene_build_total"]), flush=True)
+    profile["scene_build_total"] = round(time.perf_counter() - _build_started, 4)
+    print("[Profile] scene_build_total: {:.3f}s".format(profile["scene_build_total"]), flush=True)
     return {
         "scene_name": scene_data.get("name", f"Scene {scene_idx + 1}"),
         "environment": env,
