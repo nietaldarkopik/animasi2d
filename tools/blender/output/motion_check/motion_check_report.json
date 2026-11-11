@@ -9,56 +9,56 @@
       "frame": 1,
       "camera": "Camera_sc1_sh1_establish",
       "file": "motion_01_f000001.jpg",
-      "size_bytes": 80008
+      "size_bytes": 79879
     },
     {
       "index": 2,
       "frame": 25,
       "camera": "Camera_sc1_sh1_establish",
       "file": "motion_02_f000025.jpg",
-      "size_bytes": 84944
+      "size_bytes": 82876
     },
     {
       "index": 3,
       "frame": 49,
       "camera": "Camera_sc1_sh2_dlg",
       "file": "motion_03_f000049.jpg",
-      "size_bytes": 69108
+      "size_bytes": 69383
     },
     {
       "index": 4,
       "frame": 73,
       "camera": "Camera_sc1_sh2_dlg",
       "file": "motion_04_f000073.jpg",
-      "size_bytes": 69573
+      "size_bytes": 69777
     },
     {
       "index": 5,
       "frame": 96,
       "camera": "Camera_sc1_sh2_dlg",
       "file": "motion_05_f000096.jpg",
-      "size_bytes": 70993
+      "size_bytes": 70210
     },
     {
       "index": 6,
       "frame": 120,
       "camera": "Camera_sc1_sh3_dlg",
       "file": "motion_06_f000120.jpg",
-      "size_bytes": 71249
+      "size_bytes": 71201
     },
     {
       "index": 7,
       "frame": 144,
       "camera": "Camera_sc1_sh3_dlg",
       "file": "motion_07_f000144.jpg",
-      "size_bytes": 76303
+      "size_bytes": 76448
     },
     {
       "index": 8,
       "frame": 168,
       "camera": "Camera_sc1_sh3_dlg",
       "file": "motion_08_f000168.jpg",
-      "size_bytes": 78461
+      "size_bytes": 78365
     }
   ]
 }
