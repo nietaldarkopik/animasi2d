@@ -20,6 +20,86 @@
         0.0,
         -1.0,
         0.0
+      ],
+      "projected_cards": [
+        {
+          "object": "CHAR_uki_h_bingung",
+          "projected_width": 0.180383,
+          "projected_height": 0.313264,
+          "width_height_ratio": 0.575817
+        },
+        {
+          "object": "CHAR_uki_h_netral",
+          "projected_width": 0.15453,
+          "projected_height": 0.275247,
+          "width_height_ratio": 0.561423
+        },
+        {
+          "object": "CHAR_uki_m_a",
+          "projected_width": 0.053975,
+          "projected_height": 0.062652,
+          "width_height_ratio": 0.861497
+        },
+        {
+          "object": "CHAR_uki_m_e",
+          "projected_width": 0.053975,
+          "projected_height": 0.062652,
+          "width_height_ratio": 0.861497
+        },
+        {
+          "object": "CHAR_uki_m_i",
+          "projected_width": 0.053975,
+          "projected_height": 0.062652,
+          "width_height_ratio": 0.861497
+        },
+        {
+          "object": "CHAR_uki_m_o",
+          "projected_width": 0.053975,
+          "projected_height": 0.062652,
+          "width_height_ratio": 0.861497
+        },
+        {
+          "object": "CHAR_uki_m_u",
+          "projected_width": 0.053975,
+          "projected_height": 0.062652,
+          "width_height_ratio": 0.861497
+        },
+        {
+          "object": "CHAR_uki_rim_h_bingung",
+          "projected_width": 0.180383,
+          "projected_height": 0.313264,
+          "width_height_ratio": 0.575817
+        },
+        {
+          "object": "CHAR_uki_rim_h_netral",
+          "projected_width": 0.155395,
+          "projected_height": 0.274427,
+          "width_height_ratio": 0.566251
+        },
+        {
+          "object": "CHAR_uki_b_diam",
+          "projected_width": 0.302224,
+          "projected_height": 0.928254,
+          "width_height_ratio": 0.325583
+        },
+        {
+          "object": "CHAR_uki_b_tunjuk",
+          "projected_width": 0.362895,
+          "projected_height": 1.09653,
+          "width_height_ratio": 0.330949
+        },
+        {
+          "object": "CHAR_uki_rim_b_diam",
+          "projected_width": 0.303975,
+          "projected_height": 0.925346,
+          "width_height_ratio": 0.328499
+        },
+        {
+          "object": "CHAR_uki_rim_b_tunjuk",
+          "projected_width": 0.362895,
+          "projected_height": 1.09653,
+          "width_height_ratio": 0.330949
+        }
       ]
     },
     {
@@ -38,6 +118,86 @@
         0.707107,
         -0.707107,
         0.0
+      ],
+      "projected_cards": [
+        {
+          "object": "CHAR_uki_h_bingung",
+          "projected_width": 0.077516,
+          "projected_height": 0.330083,
+          "width_height_ratio": 0.234838
+        },
+        {
+          "object": "CHAR_uki_h_netral",
+          "projected_width": 0.15453,
+          "projected_height": 0.275247,
+          "width_height_ratio": 0.561423
+        },
+        {
+          "object": "CHAR_uki_m_a",
+          "projected_width": 0.023082,
+          "projected_height": 0.073317,
+          "width_height_ratio": 0.314829
+        },
+        {
+          "object": "CHAR_uki_m_e",
+          "projected_width": 0.023082,
+          "projected_height": 0.073317,
+          "width_height_ratio": 0.314829
+        },
+        {
+          "object": "CHAR_uki_m_i",
+          "projected_width": 0.023082,
+          "projected_height": 0.073317,
+          "width_height_ratio": 0.314829
+        },
+        {
+          "object": "CHAR_uki_m_o",
+          "projected_width": 0.023082,
+          "projected_height": 0.073317,
+          "width_height_ratio": 0.314829
+        },
+        {
+          "object": "CHAR_uki_m_u",
+          "projected_width": 0.023082,
+          "projected_height": 0.073317,
+          "width_height_ratio": 0.314829
+        },
+        {
+          "object": "CHAR_uki_rim_h_bingung",
+          "projected_width": 0.077516,
+          "projected_height": 0.330083,
+          "width_height_ratio": 0.234838
+        },
+        {
+          "object": "CHAR_uki_rim_h_netral",
+          "projected_width": 0.155395,
+          "projected_height": 0.274427,
+          "width_height_ratio": 0.566251
+        },
+        {
+          "object": "CHAR_uki_b_diam",
+          "projected_width": 0.302224,
+          "projected_height": 0.928255,
+          "width_height_ratio": 0.325583
+        },
+        {
+          "object": "CHAR_uki_b_tunjuk",
+          "projected_width": 0.157915,
+          "projected_height": 1.050522,
+          "width_height_ratio": 0.15032
+        },
+        {
+          "object": "CHAR_uki_rim_b_diam",
+          "projected_width": 0.303975,
+          "projected_height": 0.925346,
+          "width_height_ratio": 0.328499
+        },
+        {
+          "object": "CHAR_uki_rim_b_tunjuk",
+          "projected_width": 0.157915,
+          "projected_height": 1.050522,
+          "width_height_ratio": 0.15032
+        }
       ]
     },
     {
@@ -56,6 +216,86 @@
         0.965926,
         -0.258819,
         0.0
+      ],
+      "projected_cards": [
+        {
+          "object": "CHAR_uki_h_bingung",
+          "projected_width": 0.010758,
+          "projected_height": 0.308067,
+          "width_height_ratio": 0.034921
+        },
+        {
+          "object": "CHAR_uki_h_netral",
+          "projected_width": 0.15453,
+          "projected_height": 0.275247,
+          "width_height_ratio": 0.561423
+        },
+        {
+          "object": "CHAR_uki_m_a",
+          "projected_width": 0.003139,
+          "projected_height": 0.069431,
+          "width_height_ratio": 0.045213
+        },
+        {
+          "object": "CHAR_uki_m_e",
+          "projected_width": 0.003139,
+          "projected_height": 0.069431,
+          "width_height_ratio": 0.045213
+        },
+        {
+          "object": "CHAR_uki_m_i",
+          "projected_width": 0.003139,
+          "projected_height": 0.069431,
+          "width_height_ratio": 0.045213
+        },
+        {
+          "object": "CHAR_uki_m_o",
+          "projected_width": 0.003139,
+          "projected_height": 0.069431,
+          "width_height_ratio": 0.045213
+        },
+        {
+          "object": "CHAR_uki_m_u",
+          "projected_width": 0.003139,
+          "projected_height": 0.069431,
+          "width_height_ratio": 0.045213
+        },
+        {
+          "object": "CHAR_uki_rim_h_bingung",
+          "projected_width": 0.010758,
+          "projected_height": 0.308067,
+          "width_height_ratio": 0.034921
+        },
+        {
+          "object": "CHAR_uki_rim_h_netral",
+          "projected_width": 0.155395,
+          "projected_height": 0.274427,
+          "width_height_ratio": 0.566251
+        },
+        {
+          "object": "CHAR_uki_b_diam",
+          "projected_width": 0.302224,
+          "projected_height": 0.928254,
+          "width_height_ratio": 0.325583
+        },
+        {
+          "object": "CHAR_uki_b_tunjuk",
+          "projected_width": 0.022923,
+          "projected_height": 0.967743,
+          "width_height_ratio": 0.023687
+        },
+        {
+          "object": "CHAR_uki_rim_b_diam",
+          "projected_width": 0.303975,
+          "projected_height": 0.925346,
+          "width_height_ratio": 0.328499
+        },
+        {
+          "object": "CHAR_uki_rim_b_tunjuk",
+          "projected_width": 0.022923,
+          "projected_height": 0.967743,
+          "width_height_ratio": 0.023687
+        }
       ]
     }
   ]
