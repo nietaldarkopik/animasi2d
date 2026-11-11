@@ -193,12 +193,12 @@ def main():
             ("ARM_R_UPPER", right_upper), ("ARM_R_FORE", right_fore),
         ]:
             pb = armature.pose.bones[name]
-            pb.rotation_euler[1] = value
+            pb.rotation_euler[2] = value
             pb.keyframe_insert(data_path="rotation_euler", frame=frame)
     for name in ("ARM_L_HAND", "ARM_R_HAND"):
         pb = armature.pose.bones[name]
         for frame, angle in ((1, 0.0), (36, 0.10), (48, -0.10), (60, 0.10), (72, 0.0)):
-            pb.rotation_euler[1] = angle
+            pb.rotation_euler[2] = angle
             pb.keyframe_insert(data_path="rotation_euler", frame=frame)
     try:
         action = armature.animation_data.action
