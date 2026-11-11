@@ -265,6 +265,7 @@ def make_character(
     exprs: List[Tuple[int, str]],
     poses: List[Tuple[int, str]],
     speak: Tuple[Tuple[int, int], ...] = (),
+    actions: Optional[List[Dict[str, Any]]] = None,
     env: Optional[List[float]] = None,
     f0: int = 1,
     f1: Optional[int] = None,
@@ -325,7 +326,9 @@ def make_character(
     sh.scale = (0.75 * scale, 0.42 * scale, 1)
     sh.data.materials.append(_shadowmat())
 
-    B = _empty(sc, f'CHAR_B_{char_id}_{tag}', (0, 0, 0), root)
+    # Dedicated pivot for Director motion; breathing keys remain on the body.
+    motion = _empty(sc, f'CHAR_MOTION_{char_id}_{tag}', (0, 0, 0), root)
+    B = _empty(sc, f'CHAR_B_{char_id}_{tag}', (0, 0, 0), motion)
     body_c = (0, 0, (feet - bh / 2) * S)
     body_poses = sorted({n for _, n in poses})
     bodies = {
@@ -404,6 +407,48 @@ def make_character(
         HP.rotation_euler = (0, 0.035 * math.sin(f * 0.13 + blink_seed * 2), 0)
         HP.keyframe_insert('rotation_euler', frame=f)
 
+    # Apply subtle Director motion on a separate pivot, preserving body/head animation.
+    motion_keys = {}
+    def _motion_key(frame, y=0.0, z=0.0, tilt=0.0):
+        frame = max(int(f0), min(int(f1), int(frame)))
+        motion_keys[frame] = ((0.0, float(y), float(z)), (0.0, float(tilt), 0.0))
+
+    _motion_key(f0)
+    for cue in sorted(actions or [], key=lambda item: int(item.get('start_frame', f0))):
+        action = str(cue.get('movement', 'hold'))
+        a = max(f0, int(cue.get('start_frame', f0)))
+        b = min(f1, max(a, int(cue.get('end_frame', a + 1)) - 1))
+        if action == 'quick_recoil':
+            _motion_key(a)
+            _motion_key(a + 2, y=0.075, z=0.025, tilt=-0.075)
+            _motion_key(a + 7, y=0.035, z=0.010, tilt=-0.030)
+            _motion_key(min(b, a + 12))
+        elif action == 'lean_forward':
+            _motion_key(a)
+            _motion_key(min(b, a + 4), y=-0.055, z=0.010, tilt=0.045)
+            _motion_key(max(a, b - 3), y=-0.055, z=0.010, tilt=0.045)
+            _motion_key(b)
+        elif action == 'step_forward':
+            _motion_key(a)
+            _motion_key(min(b, a + 5), y=-0.12, tilt=0.015)
+            _motion_key(max(a, b - 3), y=-0.12, tilt=0.015)
+            _motion_key(b)
+        elif action == 'subtle_gesture':
+            _motion_key(a)
+            _motion_key(min(b, a + 4), z=0.025, tilt=0.025)
+            _motion_key(max(a, b - 3), z=0.025, tilt=0.025)
+            _motion_key(b)
+        else:
+            _motion_key(a)
+            _motion_key(b)
+
+    for frame in sorted(motion_keys):
+        location, rotation = motion_keys[frame]
+        motion.location = location
+        motion.rotation_euler = rotation
+        motion.keyframe_insert('location', frame=frame)
+        motion.keyframe_insert('rotation_euler', frame=frame)
+
     # Automatic natural blinking
     rnd = random.Random(blink_seed)
     keys = [(f0, False)]
@@ -461,6 +506,7 @@ def make_character(
 
     return dict(
         root=root,
+        motion=motion,
         B=B,
         HP=HP,
         bodies=bodies,
