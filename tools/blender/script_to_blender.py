@@ -14,7 +14,7 @@ if _TOOLS_DIR not in sys.path:
     sys.path.insert(0, _TOOLS_DIR)
 
 from director.scene_director import SceneDirector
-from blender_bridge import execute_blender_code
+from blender_bridge import execute_blender_code, run_blender_cli
 
 def process_naskah_or_prompt(
     source_path_or_text: str,
@@ -66,6 +66,11 @@ def process_naskah_or_prompt(
                 }
             ],
         }
+
+    # Video rendering is deliberately detached from the interactive Blender MCP.
+    # Always save the built scene so the background Blender process can load it.
+    if render_video and output_render and not output_blend:
+        output_blend = os.path.splitext(os.path.abspath(output_render))[0] + ".blend"
 
     # 1. AI Director Script Analysis
     director = SceneDirector(fps=24, aspect_ratio=aspect_ratio)
@@ -212,6 +217,10 @@ def process_naskah_or_prompt(
             f"print('[✓] Blend file saved: {blend_esc}')",
         ])
 
+    # Everything above this point builds the scene and saves the .blend.
+    # The render block below is executed by a separate Blender background process.
+    build_lines_end = len(lines)
+
     # Render Preview JPG or Full MP4
     if output_render:
         rend_esc = os.path.abspath(output_render).replace("\\", "\\\\")
@@ -357,8 +366,22 @@ def process_naskah_or_prompt(
                 f"print('[✓] Still render finished: {rend_esc}')",
             ])
 
-    lines.append("\nresult = {'status': 'ok', 'total_frames': sc.frame_end, 'scene_name': res_build['scene_name']}")
-    py_code = "\n".join(lines)
+    result_line = "result = {'status': 'ok', 'total_frames': sc.frame_end, 'scene_name': res_build['scene_name']}"
+    lines.append("\n" + result_line)
+
+    render_py_code = None
+    if render_video and output_render:
+        # Build code runs once through MCP (or CLI if MCP is unavailable).
+        # Rendering then opens the saved .blend in a separate headless Blender process.
+        py_code = "\n".join(lines[:build_lines_end] + [result_line])
+        render_header = [
+            "import bpy, os, json, time",
+            "sc = bpy.context.scene",
+            "_pipeline_profile = {}",
+        ]
+        render_py_code = "\n".join(render_header + lines[build_lines_end:-1])
+    else:
+        py_code = "\n".join(lines)
 
     result = {
         "status": "ready",
@@ -367,8 +390,23 @@ def process_naskah_or_prompt(
     }
 
     if execute_via_bridge:
-        exec_res = execute_blender_code(py_code, fallback_cli=True)
-        result["execution"] = exec_res
+        if render_video and output_render:
+            build_res = execute_blender_code(py_code, fallback_cli=True)
+            result["build_execution"] = build_res
+            if build_res.get("status") == "ok":
+                if not output_blend or not os.path.isfile(output_blend):
+                    result["execution"] = {
+                        "status": "error",
+                        "message": "Scene build completed but the .blend file was not saved; background rendering was not started.",
+                    }
+                else:
+                    print("[*] Starting detached Blender background render:", output_blend, flush=True)
+                    result["execution"] = run_blender_cli(render_py_code, blend_file=output_blend)
+            else:
+                result["execution"] = build_res
+        else:
+            exec_res = execute_blender_code(py_code, fallback_cli=True)
+            result["execution"] = exec_res
         if render_video and exec_res.get("status") == "ok" and output_render:
             try:
                 expected_frames_dir = os.path.splitext(os.path.abspath(output_render))[0] + "_frames"
