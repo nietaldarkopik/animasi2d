@@ -192,7 +192,11 @@ class SceneDirector:
                 reveal = any(w in line for w in ("ternyata", "sebenarnya", "ketahuan", "rahasia", "bukan"))
                 question = "?" in text
 
-                if startled:
+                if requested_size in valid_sizes:
+                    shot_size = requested_size
+                    angle = requested_angle if requested_angle in valid_angles else "eye_level"
+                    movement = requested_move if requested_move in valid_moves else "static"
+                elif startled:
                     shot_size = "close_up"
                     angle = "dutch"
                     movement = "push_in"
