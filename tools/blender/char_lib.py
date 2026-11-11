@@ -424,37 +424,43 @@ def make_character(
         action = str(cue.get('movement', 'hold'))
         a = max(f0, int(cue.get('start_frame', f0)))
         b = min(f1, max(a, int(cue.get('end_frame', a + 1)) - 1))
+        length = b - a
         if action == 'quick_recoil':
-            # Quick backward flinch, then a short recovery.
+            # Anticipation -> fast recoil -> overshoot settle -> neutral.
             _motion_key(a)
-            _motion_key(a + 2, y=0.110, z=0.065, lean=-0.075, roll=-0.025, scale_value=0.955)
-            _motion_key(a + 7, y=0.045, z=0.020, lean=-0.030, roll=-0.010, scale_value=0.980)
-            _motion_key(min(b, a + 12))
+            _motion_key(min(b, a + 2), x=-0.018, y=-0.025, z=-0.012, lean=0.018, roll=0.008, scale_value=1.012)
+            _motion_key(min(b, a + 5), x=0.012, y=0.135, z=0.075, lean=-0.090, roll=-0.035, scale_value=0.945)
+            _motion_key(min(b, a + 10), x=0.006, y=0.055, z=0.025, lean=-0.035, roll=-0.012, scale_value=0.975)
+            _motion_key(min(b, a + 17))
         elif action == 'lean_forward':
-            # A readable upper-body lean without turning the sprite sideways.
+            # Ease into the lean, hold with a small breathing drift, then recover.
             _motion_key(a)
-            _motion_key(min(b, a + 5), y=-0.075, z=0.045, lean=0.065, scale_value=1.030)
-            _motion_key(max(a, b - 4), y=-0.075, z=0.045, lean=0.065, scale_value=1.030)
+            _motion_key(min(b, a + 9), y=-0.095, z=0.055, lean=0.075, roll=0.012, scale_value=1.035)
+            if length > 32:
+                mid = a + int(length * 0.55)
+                _motion_key(mid, y=-0.088, z=0.050, lean=0.068, roll=-0.008, scale_value=1.030)
+            _motion_key(max(a, b - 10), y=-0.095, z=0.055, lean=0.075, roll=0.012, scale_value=1.035)
             _motion_key(b)
         elif action == 'step_forward':
-            # Sprite characters cannot take articulated leg steps yet; simulate
-            # a controlled approach with depth, slight rise, and perspective scale.
+            # A two-beat approach: anticipation, travel, then a soft settle.
             _motion_key(a)
-            _motion_key(min(b, a + 6), x=0.035, y=-0.160, z=0.035, lean=0.040, scale_value=1.070)
-            _motion_key(max(a, b - 4), x=0.035, y=-0.160, z=0.035, lean=0.040, scale_value=1.070)
+            _motion_key(min(b, a + 4), x=-0.018, z=-0.012, lean=-0.018, scale_value=0.995)
+            _motion_key(min(b, a + 14), x=0.045, y=-0.180, z=0.045, lean=0.050, scale_value=1.075)
+            _motion_key(min(b, a + 20), x=0.035, y=-0.155, z=0.035, lean=0.035, scale_value=1.060)
             _motion_key(b)
         elif action == 'subtle_gesture':
-            # Conversational emphasis: short, readable gesture pulses instead of
-            # holding one frozen pose for the entire dialogue line.
+            # Repeated conversational beats with anticipation, readable peak,
+            # follow-through and recovery. Longer spacing avoids nervous jitter.
             _motion_key(a)
-            pulse_start = a + 5
+            pulse_start = a + 8
             pulse_index = 0
-            while pulse_start < b - 2:
+            while pulse_start < b - 14:
                 direction = 1.0 if pulse_index % 2 == 0 else -1.0
-                _motion_key(pulse_start, x=0.035 * direction, z=0.075, roll=0.055 * direction, scale_value=1.025)
-                _motion_key(min(b, pulse_start + 4), x=0.012 * direction, z=0.025, roll=0.018 * direction, scale_value=1.010)
-                _motion_key(min(b, pulse_start + 8))
-                pulse_start += 24
+                _motion_key(pulse_start, x=-0.010 * direction, z=-0.008, roll=-0.010 * direction, scale_value=0.995)
+                _motion_key(pulse_start + 4, x=0.045 * direction, z=0.070, lean=0.018, roll=0.060 * direction, scale_value=1.035)
+                _motion_key(pulse_start + 9, x=0.022 * direction, z=0.032, lean=0.010, roll=0.025 * direction, scale_value=1.015)
+                _motion_key(pulse_start + 16, x=0.0, z=0.008, roll=0.0, scale_value=1.0)
+                pulse_start += 38
                 pulse_index += 1
             _motion_key(b)
         else:
@@ -470,6 +476,17 @@ def make_character(
         motion.keyframe_insert('location', frame=frame)
         motion.keyframe_insert('rotation_euler', frame=frame)
         motion.keyframe_insert('scale', frame=frame)
+
+    # Clamp Bezier handles to prevent overshoot between action beats. This keeps
+    # the motion fluid while avoiding scale/rotation spikes on short cues.
+    try:
+        action_data = motion.animation_data.action if motion.animation_data else None
+        for fcurve in (action_data.fcurves if action_data else []):
+            for point in fcurve.keyframe_points:
+                point.handle_left_type = 'AUTO_CLAMPED'
+                point.handle_right_type = 'AUTO_CLAMPED'
+    except (AttributeError, RuntimeError):
+        pass
 
     # Automatic natural blinking
     rnd = random.Random(blink_seed)
