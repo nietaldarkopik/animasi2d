@@ -117,9 +117,49 @@ def main():
         frame_width = max(v.x for v in frame_corners) - min(v.x for v in frame_corners)
         ortho_scale = distance * frame_width
 
+        isolation_audit = []
+        for other_obj in scene.objects:
+            if other_obj.name.startswith(("CHAR_", "SIL_")) and other_obj.name not in selected_names:
+                isolation_audit.append({
+                    "object": other_obj.name,
+                    "type": other_obj.type,
+                    "hide_render_after_isolation": bool(other_obj.hide_render),
+                    "hide_viewport_after_isolation": bool(other_obj.hide_viewport),
+                })
+
+        asset_audit = {}
+        for child in selected_objects:
+            if child.type != "MESH":
+                continue
+            for material in child.data.materials:
+                if not material or not material.use_nodes:
+                    continue
+                for node in material.node_tree.nodes:
+                    if node.type != "TEX_IMAGE" or not node.image:
+                        continue
+                    img = node.image
+                    asset_path = bpy.path.abspath(img.filepath) if img.filepath else ""
+                    record = {
+                        "image_name": img.name,
+                        "filepath": asset_path,
+                        "exists": bool(asset_path and os.path.isfile(asset_path)),
+                        "width": int(img.size[0]),
+                        "height": int(img.size[1]),
+                        "packed": bool(img.packed_file),
+                    }
+                    if record["exists"]:
+                        import hashlib
+                        with open(asset_path, "rb") as asset_file:
+                            record["sha256"] = hashlib.sha256(asset_file.read()).hexdigest()
+                        record["size_bytes"] = os.path.getsize(asset_path)
+                    asset_audit[img.name] = record
+
         report = {"blend_file": bpy.data.filepath, "character": key,
                   "root": root.name, "root_descendant_count": len(selected_objects),
                   "root_descendant_names_sample": sorted(selected_names)[:40],
+                  "isolation_audit": isolation_audit,
+                  "isolation_audit_count": len(isolation_audit),
+                  "asset_audit": sorted(asset_audit.values(), key=lambda item: item["image_name"]),
                   "frame": frame,
                   "projection_modes": list(projections),
                   "orthographic_scale": round(ortho_scale, 6),
