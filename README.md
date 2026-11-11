@@ -80,6 +80,13 @@ Aplikasi web untuk membuat animasi kartun 2D dari sketsa tangan (foto/scan) atau
 | — | Lip-sync berbasis fonem | ❌ (yang ada: berdasarkan volume suara, lihat di atas) |
 | — | auto-rig penuh (bone otomatis), S3/object storage, kolaborasi multi-user | ❌ belum |
 
+### Status eksperimen rig lengan Arum (ditunda)
+
+- Eksperimen terisolasi ada di `tools/blender/arm_cutout_prepare.py`, dengan sumber `karakter/arum/arum_badan_diam.png` (badan netral) dan `karakter/arum/arum_badan_angkat.png` (donor lengan terangkat). Output uji berada di `tools/blender/output/arum_cutout/`.
+- **Status: BELUM LOLOS QC — rigging lengan Arum ditunda dan jangan dijadikan bagian pipeline produksi.** Sampai iterasi v8, `arum_body_clean.png` masih memperlihatkan kedua lengan pose netral, sehingga composite menampilkan lengan tambahan. Cutout lengan raised juga masih memerlukan pemeriksaan batas pangkal bahu/torso dan overlap.
+- Jangan lanjut membuat bone/pivot atau mengintegrasikan hasil cutout ini ke Scene Director sebelum pemisahan layer diperbaiki dan composite diperiksa secara visual. Jangan menimpa aset karakter sumber atau mengubah pipeline produksi untuk eksperimen ini.
+- Jika eksperimen dilanjutkan nanti, buat mask berdasarkan siluet sumber yang benar-benar diperiksa pada resolusi aslinya (bukan memperlebar koordinat perkiraan berulang kali). Kriteria lulus: body clean tidak menyisakan lengan netral; setiap layer arm hanya berisi lengan dan tangan dengan overlap bahu secukupnya; composite menampilkan tepat dua lengan tanpa serpihan torso/emblem yang tidak semestinya.
+
 ### Catatan penting
 
 - **Impor sheet aset** (`tools/sheet_import/slice_sheet.py SHEET.png OUT`, lalu `php artisan library:import-sheet OUT --user=<id>`): memotong grid sheet “Rakit Karaktermu”, menghapus latar tile, meng-upscale 4× dengan Real-ESRGAN, menempatkan tiap bagian pada kanvas karakter (800×1600 px = 400×800 unit) lalu mengimpornya sebagai aset pribadi. Koordinat panel diskalakan otomatis untuk sheet beresolusi lebih tinggi dengan tata letak sama. Sepatu (tampak samping), tas, jam, dan jepit dilewati karena tidak cocok untuk karakter tampak depan; pose/ekspresi pada sheet adalah karakter utuh, bukan bagian. Posisi hasil perkiraan dari titik standar slot; sempurnakan dengan slider geser/skala.
