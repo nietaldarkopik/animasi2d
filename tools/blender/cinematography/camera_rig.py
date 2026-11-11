@@ -12,7 +12,7 @@ SHOT_CONFIGS = {
     "medium_close_up": {"dist": 2.8, "height": 1.55, "lens": 55, "dutch": 0.0},
     "close_up": {"dist": 2.5, "height": 1.60, "lens": 65, "dutch": 0.0},
     "extreme_close_up": {"dist": 1.9, "height": 1.62, "lens": 85, "dutch": 0.0},
-    "over_the_shoulder": {"dist": 2.4, "height": 1.48, "lens": 55, "dutch": 0.0},
+    "over_the_shoulder": {"dist": 3.0, "height": 1.52, "lens": 50, "dutch": 0.0},
 }
 
 
@@ -105,9 +105,11 @@ def create_cinematic_camera(
         cam_obj.keyframe_insert("location", frame=f1)
         cam_obj.keyframe_insert("rotation_euler", frame=f1)
     elif movement == "tracking":
-        # Slow pan sideways
+        # Lateral camera move with a compensating pan that keeps the actor
+        # centered. Moving the look target with the camera made the subject
+        # drift toward the edge of frame on longer tracking shots.
         end_loc = (cam_start_x + 0.6, cam_start_y, cam_start_z)
-        look_at(cam_obj, end_loc, (tgt_x + 0.4, tgt_y, tgt_z), roll_deg)
+        look_at(cam_obj, end_loc, target_pos, roll_deg)
         cam_obj.keyframe_insert("location", frame=f1)
         cam_obj.keyframe_insert("rotation_euler", frame=f1)
     elif movement == "shake":
