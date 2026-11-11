@@ -37,7 +37,7 @@ export function StoryPage() {
       const s = await api.storyGet(sid)
       if (!alive.current) return
       setSeries(s)
-      if (initial) { setDraft({ title: s.title, premise: s.premise, master_script: s.master_script ?? '', genre: s.genre, tone: s.tone, narration_style: s.narration_style, use_narrator: s.use_narrator, narrator_voice: s.narrator_voice, characters: s.characters, notes: s.notes, episodes_planned: s.episodes_planned, auto_run: s.auto_run, schedule_time: s.schedule_time, auto_publish: s.auto_publish }); setCount(s.episodes_planned) }
+      if (initial) { setDraft({ title: s.title, premise: s.premise, master_script: s.master_script ?? '', genre: s.genre, tone: s.tone, narration_style: s.narration_style, use_narrator: s.use_narrator, narrator_voice: s.narrator_voice, characters: s.characters, notes: s.notes, episodes_planned: s.episodes_planned, auto_run: s.auto_run, schedule_time: s.schedule_time, auto_publish: s.auto_publish }); setCount(s.episodes_planned); setPromptText(s.master_script ?? '') }
     } catch (e) { if (alive.current) setError((e as Error).message) }
   }, [sid])
 
