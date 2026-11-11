@@ -116,10 +116,32 @@ def apply_lighting(
         practical.location = (1.7, 1.6, 2.1)
 
         if flicker:
+            # Keep the practical light mostly steady. Trigger an occasional,
+            # brief voltage dip instead of randomizing it every few frames.
+            # At 24 FPS this produces roughly one flicker event every 2-3 seconds.
             rng = random.Random(42)
-            for frame in range(max(1, int(f0)), int(f1) + 1, 3):
-                data.energy = rng.choice((8.0, 35.0, 95.0, 145.0))
+            base_energy = 145.0
+            data.energy = base_energy
+            data.keyframe_insert("energy", frame=max(1, int(f0)))
+
+            frame = max(1, int(f0)) + rng.randint(48, 72)
+            while frame <= int(f1):
+                # A short, restrained dip: slight dim, brief deeper dip, restore.
+                dip_energy = rng.choice((88.0, 102.0, 112.0))
+                data.energy = dip_energy
                 data.keyframe_insert("energy", frame=frame)
+
+                data.energy = rng.choice((48.0, 62.0, 76.0))
+                data.keyframe_insert("energy", frame=min(frame + 2, int(f1)))
+
+                data.energy = base_energy
+                data.keyframe_insert("energy", frame=min(frame + 5, int(f1)))
+
+                frame += rng.randint(60, 84)
+
+            # Keep the lamp steady at the end of the scene.
+            data.energy = base_energy
+            data.keyframe_insert("energy", frame=int(f1))
 
     return {
         "world": world,
