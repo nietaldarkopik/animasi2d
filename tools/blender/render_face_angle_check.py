@@ -75,16 +75,6 @@ def main():
     tracked = []
     visibility_restore = []
     try:
-        # Isolate by the selected root's actual descendant set, not by an
-        # assumed top-level hierarchy. Hide every other character-tagged object.
-        selected_objects = {root} | set(root.children_recursive)
-        selected_names = {obj.name for obj in selected_objects}
-        for other_obj in scene.objects:
-            if other_obj.name.startswith(("CHAR_", "SIL_")) and other_obj.name not in selected_names:
-                visibility_restore.append((other_obj, other_obj.hide_render, other_obj.hide_viewport))
-                other_obj.hide_render = True
-                other_obj.hide_viewport = True
-
         for obj in scene.objects:
             if obj.type != "EMPTY" or not obj.name.startswith("CHAR_"):
                 continue
@@ -95,7 +85,20 @@ def main():
 
         scene.camera = diag_camera
         scene.frame_set(frame)
+
+        # IMPORTANT: apply isolation AFTER frame_set. Character visibility is
+        # animated in the timeline; applying hide flags before frame_set lets
+        # animation keyframes turn the other actors visible again.
         bpy.context.view_layer.update()
+        selected_objects = {root} | set(root.children_recursive)
+        selected_names = {obj.name for obj in selected_objects}
+        for other_obj in scene.objects:
+            if other_obj.name.startswith(("CHAR_", "SIL_")) and other_obj.name not in selected_names:
+                visibility_restore.append((other_obj, other_obj.hide_render, other_obj.hide_viewport))
+                other_obj.hide_render = True
+                other_obj.hide_viewport = True
+        bpy.context.view_layer.update()
+
         origin = root.matrix_world.translation.copy()
         target = origin + Vector((0.0, 0.0, 1.48))
         distance = max(3.5, (original_camera.location - origin).length)
