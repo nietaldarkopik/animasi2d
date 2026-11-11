@@ -221,7 +221,7 @@ def _at(lst, f):
             cur = n
     return cur
 
-def _pop(ob, frames, amp=1.05):
+def _pop(ob, frames, amp=1.012):
     """Pop scale 1 -> amp -> 1 over ~4 frames on change."""
     d = {}
     for f in frames:
@@ -400,7 +400,7 @@ def make_character(
 
     # Subtle natural breathing and head movement (every ~10 frames)
     for f in range(max(1, f0 - 10), f1 + 11, 10):
-        B.location = (0, 0, 0.010 * math.sin(f * 0.21 + blink_seed))
+        B.location = (0, 0, 0.003 * math.sin(f * 0.21 + blink_seed))
         B.keyframe_insert('location', frame=f)
         B.rotation_euler = (0, 0.012 * math.sin(f * 0.09 + blink_seed), 0)
         B.keyframe_insert('rotation_euler', frame=f)
@@ -409,7 +409,8 @@ def make_character(
 
     # Director motion uses the sprite's local screen plane:
     # local X = horizontal, local Z = vertical, local Y = camera depth.
-    # Avoid rotating around local Y: that turns a flat sprite edge-on.
+    # Keep the motion pivot on the floor plane: action cues must not animate
+    # vertical translation or whole-character scale, which reads as floating.
     motion_keys = {}
     def _motion_key(frame, x=0.0, y=0.0, z=0.0, lean=0.0, roll=0.0, scale_value=1.0):
         frame = max(int(f0), min(int(f1), int(frame)))
@@ -428,25 +429,25 @@ def make_character(
         if action == 'quick_recoil':
             # Anticipation -> fast recoil -> overshoot settle -> neutral.
             _motion_key(a)
-            _motion_key(min(b, a + 2), x=-0.018, y=-0.025, z=-0.012, lean=0.018, roll=0.008, scale_value=1.012)
-            _motion_key(min(b, a + 5), x=0.012, y=0.135, z=0.075, lean=-0.090, roll=-0.035, scale_value=0.945)
-            _motion_key(min(b, a + 10), x=0.006, y=0.055, z=0.025, lean=-0.035, roll=-0.012, scale_value=0.975)
+            _motion_key(min(b, a + 2), x=-0.012, y=-0.015, lean=0.010, roll=0.006)
+            _motion_key(min(b, a + 5), x=0.008, y=0.070, lean=-0.060, roll=-0.025)
+            _motion_key(min(b, a + 10), x=0.004, y=0.030, lean=-0.025, roll=-0.010)
             _motion_key(min(b, a + 17))
         elif action == 'lean_forward':
             # Ease into the lean, hold with a small breathing drift, then recover.
             _motion_key(a)
-            _motion_key(min(b, a + 9), y=-0.095, z=0.055, lean=0.075, roll=0.012, scale_value=1.035)
+            _motion_key(min(b, a + 9), y=-0.070, lean=0.045, roll=0.010)
             if length > 32:
                 mid = a + int(length * 0.55)
-                _motion_key(mid, y=-0.088, z=0.050, lean=0.068, roll=-0.008, scale_value=1.030)
-            _motion_key(max(a, b - 10), y=-0.095, z=0.055, lean=0.075, roll=0.012, scale_value=1.035)
+                _motion_key(mid, y=-0.065, lean=0.040, roll=-0.006)
+            _motion_key(max(a, b - 10), y=-0.070, lean=0.045, roll=0.010)
             _motion_key(b)
         elif action == 'step_forward':
             # A two-beat approach: anticipation, travel, then a soft settle.
             _motion_key(a)
-            _motion_key(min(b, a + 4), x=-0.018, z=-0.012, lean=-0.018, scale_value=0.995)
-            _motion_key(min(b, a + 14), x=0.045, y=-0.180, z=0.045, lean=0.050, scale_value=1.075)
-            _motion_key(min(b, a + 20), x=0.035, y=-0.155, z=0.035, lean=0.035, scale_value=1.060)
+            _motion_key(min(b, a + 4), x=-0.012, lean=-0.012)
+            _motion_key(min(b, a + 14), x=0.045, y=-0.120, lean=0.035)
+            _motion_key(min(b, a + 20), x=0.035, y=-0.105, lean=0.025)
             _motion_key(b)
         elif action == 'subtle_gesture':
             # Repeated conversational beats with anticipation, readable peak,
@@ -456,10 +457,10 @@ def make_character(
             pulse_index = 0
             while pulse_start < b - 14:
                 direction = 1.0 if pulse_index % 2 == 0 else -1.0
-                _motion_key(pulse_start, x=-0.010 * direction, z=-0.008, roll=-0.010 * direction, scale_value=0.995)
-                _motion_key(pulse_start + 4, x=0.045 * direction, z=0.070, lean=0.018, roll=0.060 * direction, scale_value=1.035)
-                _motion_key(pulse_start + 9, x=0.022 * direction, z=0.032, lean=0.010, roll=0.025 * direction, scale_value=1.015)
-                _motion_key(pulse_start + 16, x=0.0, z=0.008, roll=0.0, scale_value=1.0)
+                _motion_key(pulse_start, x=-0.008 * direction, roll=-0.008 * direction)
+                _motion_key(pulse_start + 4, x=0.032 * direction, lean=0.012, roll=0.035 * direction)
+                _motion_key(pulse_start + 9, x=0.016 * direction, lean=0.008, roll=0.015 * direction)
+                _motion_key(pulse_start + 16, x=0.0, roll=0.0)
                 pulse_start += 38
                 pulse_index += 1
             _motion_key(b)
