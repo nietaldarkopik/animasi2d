@@ -427,26 +427,26 @@ def make_character(
         if action == 'quick_recoil':
             # Quick backward flinch, then a short recovery.
             _motion_key(a)
-            _motion_key(a + 2, y=0.055, z=0.035, lean=-0.055, scale_value=0.975)
-            _motion_key(a + 7, y=0.025, z=0.012, lean=-0.020, scale_value=0.990)
+            _motion_key(a + 2, y=0.110, z=0.065, lean=-0.075, roll=-0.025, scale_value=0.955)
+            _motion_key(a + 7, y=0.045, z=0.020, lean=-0.030, roll=-0.010, scale_value=0.980)
             _motion_key(min(b, a + 12))
         elif action == 'lean_forward':
             # A readable upper-body lean without turning the sprite sideways.
             _motion_key(a)
-            _motion_key(min(b, a + 5), y=-0.035, z=0.025, lean=0.045, scale_value=1.015)
-            _motion_key(max(a, b - 4), y=-0.035, z=0.025, lean=0.045, scale_value=1.015)
+            _motion_key(min(b, a + 5), y=-0.075, z=0.045, lean=0.065, scale_value=1.030)
+            _motion_key(max(a, b - 4), y=-0.075, z=0.045, lean=0.065, scale_value=1.030)
             _motion_key(b)
         elif action == 'step_forward':
             # Sprite characters cannot take articulated leg steps yet; simulate
             # a controlled approach with depth, slight rise, and perspective scale.
             _motion_key(a)
-            _motion_key(min(b, a + 6), y=-0.075, z=0.018, lean=0.025, scale_value=1.035)
-            _motion_key(max(a, b - 4), y=-0.075, z=0.018, lean=0.025, scale_value=1.035)
+            _motion_key(min(b, a + 6), x=0.035, y=-0.160, z=0.035, lean=0.040, scale_value=1.070)
+            _motion_key(max(a, b - 4), x=0.035, y=-0.160, z=0.035, lean=0.040, scale_value=1.070)
             _motion_key(b)
         elif action == 'subtle_gesture':
             _motion_key(a)
-            _motion_key(min(b, a + 5), z=0.035, roll=0.025, scale_value=1.010)
-            _motion_key(max(a, b - 4), z=0.035, roll=0.025, scale_value=1.010)
+            _motion_key(min(b, a + 5), x=0.025, z=0.065, roll=0.045, scale_value=1.020)
+            _motion_key(max(a, b - 4), x=0.025, z=0.065, roll=0.045, scale_value=1.020)
             _motion_key(b)
         else:
             _motion_key(a)
