@@ -1,0 +1,62 @@
+{
+  "scene": "Misteri di Balik Pintu Kamar Mandi",
+  "frame_start": 255,
+  "frame_end": 737,
+  "objects_sampled": 8,
+  "samples": 3864,
+  "actors": {
+    "Seni": {
+      "total_cues": 3,
+      "movement_counts": {
+        "hold": 1,
+        "lean_forward": 1,
+        "quick_recoil": 1
+      },
+      "actions": [
+        {
+          "action": "establish_presence",
+          "movement": "hold",
+          "start_frame": 255,
+          "end_frame": 291,
+          "dialogue_text": ""
+        },
+        {
+          "action": "inspect_environment",
+          "movement": "lean_forward",
+          "start_frame": 291,
+          "end_frame": 421,
+          "dialogue_text": "Pintu kamar mandinya sedikit terbuka... (Seni mengamati wastafel dan cermin)"
+        },
+        {
+          "action": "startled_reaction",
+          "movement": "quick_recoil",
+          "start_frame": 505,
+          "end_frame": 601,
+          "dialogue_text": "Astaga, Arum! Kamu lagi nyuci ember malam-malam begini?!"
+        }
+      ]
+    },
+    "Arum": {
+      "total_cues": 2,
+      "movement_counts": {
+        "quick_recoil": 2
+      },
+      "actions": [
+        {
+          "action": "startled_reaction",
+          "movement": "quick_recoil",
+          "start_frame": 421,
+          "end_frame": 505,
+          "dialogue_text": "Hah?! Seni, kamu ngapain ngintip di depan pintu?!"
+        },
+        {
+          "action": "startled_reaction",
+          "movement": "quick_recoil",
+          "start_frame": 601,
+          "end_frame": 738,
+          "dialogue_text": "Iya, embernya tadi bocor kena gayung. Lampunya juga kedap-kedip bikin kaget aja!"
+        }
+      ]
+    }
+  }
+}
