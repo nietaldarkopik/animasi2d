@@ -377,7 +377,7 @@ def process_naskah_or_prompt(
         render_header = [
             "import bpy, os, json, time",
             "sc = bpy.context.scene",
-            "_pipeline_profile = {}",
+            "_pipeline_profile = {'frame_render': [], 'frame_qc': []}",
         ]
         render_py_code = "\n".join(render_header + lines[build_lines_end:-1])
     else:
