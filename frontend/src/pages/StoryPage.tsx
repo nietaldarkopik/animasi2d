@@ -30,6 +30,7 @@ export function StoryPage() {
   const [editing, setEditing] = useState<StoryEpisode | null>(null)
   const [viewingVideo, setViewingVideo] = useState<string | null>(null)
   const [viewingPlan, setViewingPlan] = useState<StoryEpisode | null>(null)
+  const [viewingLog, setViewingLog] = useState<StoryEpisode | null>(null)
   const alive = useRef(true)
 
   const refresh = useCallback(async (initial = false) => {
@@ -189,7 +190,7 @@ export function StoryPage() {
             {episodes.map((e) => (
               <EpisodeCard key={e.id} ep={e} aiOn={!!caps?.ai} canPublish={!!caps?.publish} sid={sid}
                 onChange={(fn, ok) => void act(fn, ok)} onEdit={() => setEditing(e)}
-                onViewVideo={(p) => setViewingVideo(p)} onViewPlan={(ep) => setViewingPlan(ep)} />
+                onViewVideo={(p) => setViewingVideo(p)} onViewPlan={(ep) => setViewingPlan(ep)} onViewLog={(ep) => setViewingLog(ep)} />
             ))}
           </div>
         </section>
@@ -254,13 +255,14 @@ export function StoryPage() {
         </div>
       )}
 
+      {viewingLog && <ProductionLogDialog ep={viewingLog} onClose={() => setViewingLog(null)} />}
       {editing && <ScriptDialog ep={editing} people={builders.map((b) => b.name)} cast={[...(draft.characters ?? []).map((c) => c.name), ...(draft.use_narrator ? ['Narator'] : [])]} onClose={() => setEditing(null)}
         onSave={async (text) => { try { await api.storyEpisodeUpdate(editing.id, { script: parseScript(text) }); setEditing(null); await refresh(); setNote('Naskah disimpan.') } catch (e) { return (e as Error).message } return null }} />}
     </div>
   )
 }
 
-function EpisodeCard({ ep, aiOn, canPublish, onChange, onEdit, onViewVideo, onViewPlan }: { ep: StoryEpisode; aiOn: boolean; canPublish: boolean; sid: number; onChange: (fn: () => Promise<unknown>, ok?: string) => void; onEdit: () => void; onViewVideo?: (path: string) => void; onViewPlan?: (ep: StoryEpisode) => void }) {
+function EpisodeCard({ ep, aiOn, canPublish, onChange, onEdit, onViewVideo, onViewPlan, onViewLog }: { ep: StoryEpisode; aiOn: boolean; canPublish: boolean; sid: number; onChange: (fn: () => Promise<unknown>, ok?: string) => void; onEdit: () => void; onViewVideo?: (path: string) => void; onViewPlan?: (ep: StoryEpisode) => void; onViewLog?: (ep: StoryEpisode) => void }) {
   const [title, setTitle] = useState(ep.title)
   const [syn, setSyn] = useState(ep.synopsis ?? '')
   const running = ep.status === 'queued' || ep.status === 'producing'
@@ -288,6 +290,7 @@ function EpisodeCard({ ep, aiOn, canPublish, onChange, onEdit, onViewVideo, onVi
           <input type="datetime-local" disabled={running} value={when} onChange={(e) => onChange(() => api.storyEpisodeUpdate(ep.id, { scheduled_at: e.target.value ? new Date(e.target.value).toISOString() : null }), e.target.value ? 'Episode dijadwalkan.' : 'Jadwal dihapus.')} style={{ width: 'auto' }} aria-label={`Jadwal episode ${ep.number}`} />
         </label>
         {ep.project_id && <Link to={`/projects/${ep.project_id}`}>Buka project</Link>}
+        {(ep.project_id || running) && onViewLog && <button onClick={() => onViewLog(ep)} title="Pantau output Python dan Blender">📋 Log proses</button>}
         {ep.output_path && <span className="muted small" title="Folder daily_output di komputer ini">📁 {ep.output_path}</span>}
         {ep.status === 'done' && ep.output_path && onViewVideo && (
           <button onClick={() => onViewVideo(ep.output_path as string)} title="Tonton hasil film di video player">▶ Tonton Film</button>
@@ -298,6 +301,65 @@ function EpisodeCard({ ep, aiOn, canPublish, onChange, onEdit, onViewVideo, onVi
         {ep.published && <span className="badge">terunggah</span>}
         <span className="spacer" />
         <button disabled={running} aria-label={`Hapus episode ${ep.number}`} onClick={() => { if (confirm(`Hapus episode ${ep.number}?`)) onChange(() => api.storyEpisodeDelete(ep.id)) }}>🗑</button>
+      </div>
+    </div>
+  )
+}
+
+function ProductionLogDialog({ ep, onClose }: { ep: StoryEpisode; onClose: () => void }) {
+  const [log, setLog] = useState('')
+  const [available, setAvailable] = useState(false)
+  const [finished, setFinished] = useState(false)
+  const [loadError, setLoadError] = useState('')
+  const offset = useRef(0)
+  const scrollBox = useRef<HTMLPreElement>(null)
+
+  useEffect(() => {
+    let active = true
+    let loading = false
+    const poll = async () => {
+      if (loading) return
+      loading = true
+      try {
+        const result = await api.storyEpisodeLog(ep.id, offset.current)
+        if (!active) return
+        setAvailable(result.exists)
+        setFinished(result.finished)
+        setLoadError('')
+        if (result.reset) setLog(result.content)
+        else if (result.content) setLog((current) => current + result.content)
+        offset.current = result.offset
+      } catch (e) {
+        if (active) setLoadError((e as Error).message)
+      } finally {
+        loading = false
+      }
+    }
+    void poll()
+    const timer = window.setInterval(() => { if (!finished) void poll() }, 1500)
+    return () => { active = false; window.clearInterval(timer) }
+  }, [ep.id, finished])
+
+  useEffect(() => {
+    if (scrollBox.current) scrollBox.current.scrollTop = scrollBox.current.scrollHeight
+  }, [log])
+
+  return (
+    <div role="dialog" aria-modal="true" aria-label={`Log produksi episode ${ep.number}`} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.75)', display: 'grid', placeItems: 'center', zIndex: 1300, padding: 16 }}>
+      <div className="card" style={{ width: 'min(1100px, 96vw)', height: 'min(78vh, 760px)', display: 'flex', flexDirection: 'column', background: '#10131a', padding: 16 }}>
+        <div className="row between" style={{ gap: 8 }}>
+          <div>
+            <strong>📋 Log produksi — Episode {ep.number}: {ep.title}</strong>
+            <div className="muted small">{finished ? 'Proses sudah berhenti' : 'Memantau output Python / Blender secara berkala'} · {available ? 'Log tersedia' : 'Menunggu log dimulai'}</div>
+          </div>
+          <button onClick={onClose}>Tutup</button>
+        </div>
+        {loadError && <div className="error" role="alert">{loadError}</div>}
+        <pre ref={scrollBox} style={{ flex: 1, minHeight: 0, overflow: 'auto', whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', background: '#080b10', color: '#d1e7d2', padding: 12, borderRadius: 8, fontSize: 12, lineHeight: 1.5, marginTop: 12 }}>{log || 'Belum ada output. Jika episode masih antre, log akan muncul setelah worker memulai proses Blender.'}</pre>
+        <div className="row between" style={{ marginTop: 8 }}>
+          <span className="muted small">{log.length.toLocaleString()} karakter ditampilkan</span>
+          <button onClick={() => { void navigator.clipboard?.writeText(log) }} disabled={!log}>Salin log</button>
+        </div>
       </div>
     </div>
   )
