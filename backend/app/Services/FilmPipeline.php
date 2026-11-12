@@ -93,6 +93,7 @@ class FilmPipeline
 
         $cmd = [
             'python',
+            '-u',
             $pythonScript,
             "--script={$scriptPath}",
             "--save-blend={$blendPath}",
@@ -114,13 +115,32 @@ class FilmPipeline
             @unlink($targetMp4);
         }
 
+        $diagnosticLog = $outputDir . DIRECTORY_SEPARATOR . "project_{$projectId}_blender.log";
+        @file_put_contents($diagnosticLog, '['.date('c')."] [Laravel] Blender production started.\n", LOCK_EX);
+
         $p = new Process($cmd, base_path('..'));
         $p->setTimeout($timeout);
-        $p->run($out ? fn ($t, $b) => $out($b) : null);
+        $logHandle = @fopen($diagnosticLog, 'ab');
+        try {
+            $p->run(function ($type, $buffer) use ($out, $logHandle) {
+                if (is_resource($logHandle)) {
+                    fwrite($logHandle, $buffer);
+                    fflush($logHandle);
+                }
+                if ($out) $out($buffer);
+            });
+        } catch (\\Throwable $e) {
+            if (is_resource($logHandle)) {
+                fwrite($logHandle, "\n[".date('c')."] [Laravel] Process exception: ".$e->getMessage()."\n");
+                fflush($logHandle);
+            }
+            throw $e;
+        } finally {
+            if (is_resource($logHandle)) fclose($logHandle);
+        }
 
         $combinedOutput = trim($p->getOutput()."\n".$p->getErrorOutput());
-        $diagnosticLog = $outputDir . DIRECTORY_SEPARATOR . "project_{$projectId}_blender.log";
-        @file_put_contents($diagnosticLog, $combinedOutput . PHP_EOL, LOCK_EX);
+        @file_put_contents($diagnosticLog, "\n[".date('c')."] [Laravel] Blender process finished; exit code ".$p->getExitCode().".\n", FILE_APPEND | LOCK_EX);
         $this->lastOutput = trim(mb_substr($combinedOutput, -12000));
         if (! $p->isSuccessful()) {
             $this->lastOutput = "Blender process exit code ".$p->getExitCode()."\n".$this->lastOutput
