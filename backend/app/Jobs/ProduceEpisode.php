@@ -14,7 +14,8 @@ class ProduceEpisode implements ShouldQueue
 {
     use Queueable;
 
-    public int $timeout = 3600;
+    // Long episodes can render thousands of Blender frames; keep the queue job alive for up to 6 hours.
+    public int $timeout = 21600;
 
     public int $tries = 1;
 
@@ -44,7 +45,7 @@ class ProduceEpisode implements ShouldQueue
             $res = $film->createDailyCartoon($series->user_id, null, array_values(array_filter($series->characterNames(), fn ($n) => ! DailyCartoonService::isNarrator($n))), $ep->script, $series->characterIds());
             $ep->update(['project_id' => $res['project_id']]);
 
-            $file = $pipeline->export($res['project_id'], $series->user_id, null, 3600, $ep->script);
+            $file = $pipeline->export($res['project_id'], $series->user_id, null, 21600, $ep->script);
             if (! $file) {
                 throw new \RuntimeException('Perekaman film gagal: '.($pipeline->lastOutput ?: 'tanpa keterangan').' (Project #'.$res['project_id'].' tetap bisa dibuka di editor.)');
             }
