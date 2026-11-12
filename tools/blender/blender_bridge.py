@@ -11,6 +11,16 @@ import tempfile
 import time
 from typing import Dict, Any, Optional, Tuple
 
+# Windows consoles may use cp1252, which cannot encode Blender progress symbols.
+# Keep streaming diagnostics printable instead of letting stdout/stderr encoding
+# errors abort an otherwise successful Blender build or render.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        try:
+            _stream.reconfigure(errors="backslashreplace")
+        except (OSError, ValueError):
+            pass
+
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 9876
 # Video rendering can take much longer than a still preview.
