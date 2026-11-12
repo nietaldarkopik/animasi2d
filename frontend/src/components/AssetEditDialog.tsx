@@ -21,7 +21,7 @@ export function AssetEditDialog({ asset, cats, onClose, onSaved }: { asset: LibA
   const [note, setNote] = useState('')
   const [busy, setBusy] = useState(false)
 
-  /** Runs a save that replaces the file; the server keeps old character versions intact when the asset is in use. */
+  /** Saves an immutable new asset version; previous snapshots remain available in History. */
   async function replaceWith(blob: Blob, filename: string) {
     setBusy(true); setError(''); setNote('')
     try {
@@ -29,7 +29,7 @@ export function AssetEditDialog({ asset, cats, onClose, onSaved }: { asset: LibA
       setCur(r.data)
       onSaved({ asset: r.data, archivedOld: r.archived_old })
       setNote(r.archived_old
-        ? 'Aset ini dipakai oleh versi karakter, jadi versi lama tetap utuh dan hasil edit disimpan sebagai aset baru (yang lama diarsipkan). Pilih ulang aset baru di builder.'
+        ? 'Hasil edit disimpan sebagai versi baru. Versi sebelumnya tetap tersedia di History dan project lama tetap memakai snapshot yang sama.'
         : 'Tersimpan.')
       return r.data
     } catch (e) {
