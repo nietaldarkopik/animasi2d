@@ -75,7 +75,17 @@ class FilmPipeline
     public function exportWithBlender(int $projectId, array $script, string $targetMp4, ?callable $out = null, int $timeout = 1800): ?string
     {
         $outputDir = base_path('../tools/blender/output');
-        @mkdir($outputDir, 0755, true);
+        if (! is_dir($outputDir) && ! @mkdir($outputDir, 0755, true) && ! is_dir($outputDir)) {
+            $this->lastOutput = "[FilmPipeline] Tidak bisa membuat folder output: {$outputDir}";
+            return null;
+        }
+
+        $diagnosticLog = $outputDir . DIRECTORY_SEPARATOR . "project_{$projectId}_blender.log";
+        $logCreated = @file_put_contents($diagnosticLog, '['.date('c')."] [Laravel] Blender production initialized.\n", LOCK_EX);
+        if ($logCreated === false) {
+            $this->lastOutput = "[FilmPipeline] Tidak bisa membuat log: {$diagnosticLog}";
+            return null;
+        }
 
         $scriptPath = $outputDir . DIRECTORY_SEPARATOR . "project_{$projectId}_script.json";
         $blendPath = dirname($targetMp4) . DIRECTORY_SEPARATOR . 'kartun_' . date('Y-m-d') . "_project_{$projectId}.blend";
@@ -84,6 +94,9 @@ class FilmPipeline
 
         $pythonScript = base_path('../tools/blender/script_to_blender.py');
         if (!file_exists($pythonScript)) {
+            $message = "[Laravel] Python entry script not found: {$pythonScript}\n";
+            @file_put_contents($diagnosticLog, $message, FILE_APPEND | LOCK_EX);
+            $this->lastOutput = $message."[Log: {$diagnosticLog}]";
             return null;
         }
 
@@ -115,8 +128,7 @@ class FilmPipeline
             @unlink($targetMp4);
         }
 
-        $diagnosticLog = $outputDir . DIRECTORY_SEPARATOR . "project_{$projectId}_blender.log";
-        @file_put_contents($diagnosticLog, '['.date('c')."] [Laravel] Blender production started.\n", LOCK_EX);
+        @file_put_contents($diagnosticLog, '['.date('c')."] [Laravel] Starting Python process: ".implode(' ', $cmd)."\n", FILE_APPEND | LOCK_EX);
 
         $p = new Process($cmd, base_path('..'));
         $p->setTimeout($timeout);
