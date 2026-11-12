@@ -263,6 +263,39 @@ class StoryController extends Controller
         return response()->json(['data' => $this->presentSeries($series->fresh())], 202);
     }
 
+    /** Return newly appended Blender/Python log bytes for an episode owned by the current user. */
+    public function productionLog(Request $request, StoryEpisode $episode): JsonResponse
+    {
+        $this->ownEpisode($request, $episode);
+        $since = max(0, (int) $request->query('since', 0));
+        $projectId = (int) ($episode->project_id ?? 0);
+        if ($projectId <= 0) {
+            return response()->json(['content' => '', 'offset' => 0, 'exists' => false, 'reset' => false, 'finished' => ! in_array($episode->status, ['queued', 'producing'], true)]);
+        }
+
+        $path = base_path('../tools/blender/output/project_'.$projectId.'_blender.log');
+        if (! is_file($path) || ! is_readable($path)) {
+            return response()->json(['content' => '', 'offset' => 0, 'exists' => false, 'reset' => false, 'finished' => ! in_array($episode->status, ['queued', 'producing'], true)]);
+        }
+
+        $size = (int) filesize($path);
+        $reset = $since > $size;
+        $offset = $reset ? 0 : $since;
+        $handle = fopen($path, 'rb');
+        if ($handle === false) {
+            return response()->json(['content' => '', 'offset' => $offset, 'exists' => true, 'reset' => $reset, 'finished' => ! in_array($episode->status, ['queued', 'producing'], true)]);
+        }
+        try {
+            fseek($handle, $offset);
+            $content = stream_get_contents($handle, 65536) ?: '';
+            $nextOffset = ftell($handle);
+        } finally {
+            fclose($handle);
+        }
+
+        return response()->json(['content' => $content, 'offset' => $nextOffset, 'exists' => true, 'reset' => $reset, 'finished' => ! in_array($episode->status, ['queued', 'producing'], true)]);
+    }
+
     /** Film the episode now (or schedule it: PATCH scheduled_at). */
     public function produce(Request $request, StoryEpisode $episode): JsonResponse
     {
