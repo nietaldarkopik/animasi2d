@@ -29,7 +29,7 @@ class FilmPipeline
      * @param array|null $script Full structured script JSON {title, scenes: [...]}
      * @return string|null the MP4 path, null when the export failed
      */
-    public function export(int $projectId, int $userId, ?callable $out = null, int $timeout = 3600, ?array $script = null): ?string
+    public function export(int $projectId, int $userId, ?callable $out = null, int $timeout = 21600, ?array $script = null): ?string
     {
         $file = self::mp4Path($projectId);
         @mkdir(dirname($file), 0755, true);
@@ -72,7 +72,7 @@ class FilmPipeline
      * Executes the Autonomous Cartoon Production System via Blender MCP / CLI.
      * Supports multi-scene rendering: each scene is rendered separately then FFmpeg-concatenated.
      */
-    public function exportWithBlender(int $projectId, array $script, string $targetMp4, ?callable $out = null, int $timeout = 1800): ?string
+    public function exportWithBlender(int $projectId, array $script, string $targetMp4, ?callable $out = null, int $timeout = 21600): ?string
     {
         $outputDir = base_path('../tools/blender/output');
         if (! is_dir($outputDir) && ! @mkdir($outputDir, 0755, true) && ! is_dir($outputDir)) {
