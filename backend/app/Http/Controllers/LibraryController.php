@@ -285,38 +285,86 @@ class LibraryController extends Controller
         $data = $request->validate([
             'name' => 'sometimes|string|max:120',
             'tags' => 'sometimes|nullable|string|max:200',
-            'status' => 'sometimes|in:approved,rejected', // review of AI results
+            'status' => 'sometimes|in:approved,rejected',
             'category' => 'sometimes|string|exists:asset_categories,slug',
+            'note' => 'nullable|string|max:200',
         ]);
-        if (isset($data['category'])) {
-            $new = AssetCategory::where('slug', $data['category'])->firstOrFail();
-            $asset->loadMissing('category');
-            if ($new->kind !== $asset->category->kind) {
-                return response()->json(['message' => 'Tidak bisa memindahkan antara bagian karakter dan lokasi.'], 422);
-            }
-            if ($new->id !== $asset->category_id && $this->usedByVersions($asset)) {
-                return response()->json(['message' => 'Aset ini dipakai versi karakter; kategorinya tidak bisa diubah. Duplikat aset lalu ubah salinannya.'], 409);
-            }
-            $data['category_id'] = $new->id;
-            unset($data['category']);
-        }
+
         if (isset($data['status']) && $asset->status !== 'pending' && $data['status'] !== $asset->status) {
             return response()->json(['message' => 'Hanya aset berstatus pending yang bisa disetujui/ditolak.'], 409);
         }
         if (isset($data['tags'])) {
             $data['tags'] = $this->tags($data['tags']);
         }
-        $asset->update($data);
 
-        return response()->json(['data' => $asset->fresh('category')->present()]);
+        $revisionKeys = ['name', 'tags', 'category'];
+        $hasRevision = count(array_intersect($revisionKeys, array_keys($data))) > 0;
+
+        if ($hasRevision) {
+            $asset->load('category');
+            $category = isset($data['category'])
+                ? AssetCategory::where('slug', $data['category'])->firstOrFail()
+                : $asset->category;
+            if ($category->kind !== $asset->category->kind) {
+                return response()->json(['message' => 'Tidak bisa memindahkan antara jenis aset yang berbeda.'], 422);
+            }
+
+            $new = DB::transaction(function () use ($asset, $data, $category) {
+                $current = LibraryAsset::whereKey($asset->id)->lockForUpdate()->firstOrFail();
+                $newPath = 'library/u'.$current->user_id.'/'.Str::uuid().'.'.pathinfo($current->path, PATHINFO_EXTENSION);
+                $contents = Storage::disk($current->disk)->get($current->path);
+                if (! Storage::disk($current->disk)->put($newPath, $contents)) {
+                    throw new RuntimeException('Gagal menyimpan snapshot aset baru.');
+                }
+
+                $current->update(['archived_at' => now(), 'is_current' => false]);
+                $next = LibraryAsset::create([
+                    'user_id' => $current->user_id,
+                    'category_id' => $category->id,
+                    'key' => null,
+                    'name' => $data['name'] ?? $current->name,
+                    'tags' => $data['tags'] ?? ($current->tags ?? []),
+                    'source' => $current->source,
+                    'status' => $data['status'] ?? $current->status,
+                    'disk' => $current->disk,
+                    'path' => $newPath,
+                    'mime' => $current->mime,
+                    'width' => $current->width,
+                    'height' => $current->height,
+                    'tintable' => $current->tintable,
+                    'hash' => $current->hash,
+                    'meta' => $current->meta,
+                    'asset_uuid' => $current->asset_uuid,
+                    'version_number' => $current->version_number + 1,
+                    'parent_asset_id' => $current->id,
+                    'is_current' => true,
+                    'change_note' => $data['note'] ?? 'Metadata aset diperbarui',
+                ]);
+
+                return $next->load('category');
+            });
+
+            return response()->json(['data' => $new->present(), 'new_version' => true], 201);
+        }
+
+        if (isset($data['status'])) {
+            $asset->update(['status' => $data['status']]);
+        }
+
+        return response()->json(['data' => $asset->fresh('category')->present(), 'new_version' => false]);
     }
 
     /** Assets used by any character version are archived (hidden), never deleted: old versions must keep rendering. */
     public function destroy(Request $request, LibraryAsset $asset): JsonResponse
     {
         $this->own($request, $asset);
-        if ($this->usedByVersions($asset)) {
-            $asset->update(['archived_at' => now()]);
+        $hasHistory = LibraryAsset::where('user_id', $asset->user_id)
+            ->where('asset_uuid', $asset->asset_uuid)
+            ->where('id', '!=', $asset->id)
+            ->exists();
+
+        if ($this->usedByVersions($asset) || $hasHistory) {
+            $asset->update(['archived_at' => now(), 'is_current' => false]);
 
             return response()->json(['ok' => true, 'archived' => true]);
         }
