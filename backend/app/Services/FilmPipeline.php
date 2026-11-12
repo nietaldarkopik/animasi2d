@@ -129,7 +129,7 @@ class FilmPipeline
                 }
                 if ($out) $out($buffer);
             });
-        } catch (\\Throwable $e) {
+        } catch (\Throwable $e) {
             if (is_resource($logHandle)) {
                 fwrite($logHandle, "\n[".date('c')."] [Laravel] Process exception: ".$e->getMessage()."\n");
                 fflush($logHandle);
