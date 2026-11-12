@@ -105,6 +105,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/story/episodes/{episode}', [\App\Http\Controllers\StoryController::class, 'destroyEpisode']);
     Route::post('/story/episodes/{episode}/script', [\App\Http\Controllers\StoryController::class, 'writeScript'])->middleware('throttle:20,1');
     Route::post('/story/episodes/{episode}/produce', [\App\Http\Controllers\StoryController::class, 'produce'])->middleware('throttle:20,1');
+    Route::get('/story/episodes/{episode}/production-log', [\App\Http\Controllers\StoryController::class, 'productionLog'])->middleware('throttle:120,1');
     Route::get('/cartoon/status', [\App\Http\Controllers\DailyCartoonController::class, 'status']);
     Route::post('/cartoon/generate', [\App\Http\Controllers\DailyCartoonController::class, 'generate'])->middleware('throttle:10,1');
 
