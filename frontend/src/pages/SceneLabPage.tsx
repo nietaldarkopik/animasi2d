@@ -46,7 +46,6 @@ export function SceneLabPage() {
   const [selectedId, setSelectedId] = useState<string | null>('sink')
   const [prompt, setPrompt] = useState('')
   const [message, setMessage] = useState('Scene tersimpan otomatis di browser ini.')
-  const [busy, setBusy] = useState(false)
   const host = useRef<HTMLDivElement>(null)
   const runtime = useRef<{ renderer: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.PerspectiveCamera; controls: OrbitControls; meshes: Map<string, THREE.Object3D>; raf: number } | null>(null)
   const selected = draft.items.find(x => x.id === selectedId) ?? null
