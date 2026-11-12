@@ -66,6 +66,11 @@ export interface DesignTemplateInfo { id: string; label: string; views: string[]
 
 export interface LibAsset {
   id: number
+  asset_uuid: string
+  version_number: number
+  parent_asset_id: number | null
+  is_current: boolean
+  change_note: string | null
   key: string | null
   category: string
   name: string
