@@ -123,15 +123,14 @@ class LibraryController extends Controller
         return DB::table('character_version_assets')->where('library_asset_id', $asset->id)->exists();
     }
 
-    /**
-     * Replace the file of one of the user's assets (re-upload, or the result of the in-browser editor).
-     * If a character version already uses the asset, that version must keep looking the same: the old row is archived
-     * (still served) and the new content becomes a NEW asset; otherwise the file is replaced in place.
-     */
+    /** Create an immutable new version; previous versions remain available for restore. */
     public function replace(Request $request, LibraryAsset $asset): JsonResponse
     {
         $this->own($request, $asset);
-        $request->validate(['file' => 'required|file|max:6144']);
+        $data = $request->validate([
+            'file' => 'required|file|max:6144',
+            'note' => 'nullable|string|max:200',
+        ]);
         try {
             [$content, $mime, $ext, $w, $h, $tint] = $this->readUpload($request->file('file'));
         } catch (RuntimeException $e) {
@@ -139,24 +138,108 @@ class LibraryController extends Controller
         }
         $asset->load('category');
 
-        if ($this->usedByVersions($asset)) {
-            $new = DB::transaction(function () use ($asset, $content, $mime, $ext, $w, $h, $tint) {
-                $asset->update(['archived_at' => now()]);
+        $new = DB::transaction(function () use ($asset, $content, $mime, $ext, $w, $h, $tint, $data) {
+            $current = LibraryAsset::whereKey($asset->id)->lockForUpdate()->firstOrFail();
+            abort_unless($current->user_id === $asset->user_id, 404);
+            $current->update(['archived_at' => now(), 'is_current' => false]);
 
-                return self::persistAsset($asset->user_id, $asset->category, $asset->name, $asset->tags ?? [], $asset->source === 'ai' ? 'upload' : $asset->source, 'approved',
-                    $content, $mime, $ext, $w, $h, $tint, null, ($asset->meta ?? []) + ['replaces' => $asset->id]);
-            });
+            $next = self::persistAsset(
+                $current->user_id,
+                $current->category,
+                $current->name,
+                $current->tags ?? [],
+                $current->source === 'ai' ? 'upload' : $current->source,
+                'approved',
+                $content,
+                $mime,
+                $ext,
+                $w,
+                $h,
+                $tint,
+                null,
+                ($current->meta ?? []) + ['replaces' => $current->id]
+            );
+            $next->update([
+                'asset_uuid' => $current->asset_uuid,
+                'version_number' => $current->version_number + 1,
+                'parent_asset_id' => $current->id,
+                'is_current' => true,
+                'change_note' => $data['note'] ?? 'File diperbarui',
+            ]);
 
-            return response()->json(['data' => $new->present(), 'archived_old' => true, 'replaced_id' => $asset->id], 201);
-        }
+            return $next->fresh('category');
+        });
 
-        $old = $asset->path;
-        $path = 'library/u'.$asset->user_id.'/'.Str::uuid().'.'.$ext;
-        Storage::disk($asset->disk)->put($path, $content);
-        $asset->update(['path' => $path, 'mime' => $mime, 'width' => $w, 'height' => $h, 'tintable' => $tint, 'hash' => hash('sha256', $content)]);
-        Storage::disk($asset->disk)->delete($old);
+        return response()->json(['data' => $new->present(), 'archived_old' => true, 'replaced_id' => $asset->id], 201);
+    }
 
-        return response()->json(['data' => $asset->fresh('category')->present(), 'archived_old' => false]);
+    /** Return every immutable version belonging to this logical asset. */
+    public function versions(Request $request, LibraryAsset $asset): JsonResponse
+    {
+        $this->own($request, $asset);
+
+        $versions = LibraryAsset::where('user_id', $asset->user_id)
+            ->where('asset_uuid', $asset->asset_uuid)
+            ->with('category')
+            ->orderByDesc('version_number')
+            ->get()
+            ->map(fn (LibraryAsset $version) => $version->present());
+
+        return response()->json(['data' => $versions]);
+    }
+
+    /** Restore an older snapshot by creating a new current version; history is never rewritten. */
+    public function restoreVersion(Request $request, LibraryAsset $asset): JsonResponse
+    {
+        $this->own($request, $asset);
+        $data = $request->validate(['note' => 'nullable|string|max:200']);
+        $asset->load('category');
+        $content = Storage::disk($asset->disk)->get($asset->path);
+
+        $restored = DB::transaction(function () use ($request, $asset, $content, $data) {
+            $current = LibraryAsset::where('user_id', $request->user()->id)
+                ->where('asset_uuid', $asset->asset_uuid)
+                ->where('is_current', true)
+                ->lockForUpdate()
+                ->first();
+
+            if ($current && $current->id === $asset->id) {
+                return $current->load('category');
+            }
+
+            if ($current) {
+                $current->update(['archived_at' => now(), 'is_current' => false]);
+            }
+
+            $asset->loadMissing('category');
+            $next = self::persistAsset(
+                $request->user()->id,
+                $asset->category,
+                $asset->name,
+                $asset->tags ?? [],
+                $asset->source === 'ai' ? 'upload' : $asset->source,
+                'approved',
+                $content,
+                $asset->mime,
+                pathinfo($asset->path, PATHINFO_EXTENSION),
+                $asset->width,
+                $asset->height,
+                $asset->tintable,
+                null,
+                ($asset->meta ?? []) + ['restored_from' => $asset->id]
+            );
+            $next->update([
+                'asset_uuid' => $asset->asset_uuid,
+                'version_number' => ((int) LibraryAsset::where('asset_uuid', $asset->asset_uuid)->max('version_number')) + 1,
+                'parent_asset_id' => $current?->id,
+                'is_current' => true,
+                'change_note' => $data['note'] ?? 'Restore dari versi '.$asset->version_number,
+            ]);
+
+            return $next->fresh('category');
+        });
+
+        return response()->json(['data' => $restored->present()]);
     }
 
     /** Run the design-template checks again on one of the user's parts and store the report. */
