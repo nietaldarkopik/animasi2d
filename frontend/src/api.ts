@@ -131,6 +131,7 @@ export const api = {
   storyEpisodeDelete: (id: number) => req<{ ok: boolean }>(`/story/episodes/${id}`, json('DELETE')),
   storyEpisodeWrite: (id: number) => req<{ data: StorySeries }>(`/story/episodes/${id}/script`, json('POST', {})).then((r) => r.data),
   storyEpisodeProduce: (id: number, publish = false) => req<{ data: StoryEpisode }>(`/story/episodes/${id}/produce`, json('POST', { publish })).then((r) => r.data),
+  storyEpisodeLog: (id: number, since = 0) => req<{ content: string; offset: number; exists: boolean; reset: boolean; finished: boolean }>(`/story/episodes/${id}/production-log?since=${since}`),
 
   builderList: () => req<{ data: BuilderSummary[] }>('/builder/characters').then((r) => r.data),
   builderGet: (id: number, version?: number) => req<{ data: BuilderDetail }>(`/builder/characters/${id}${version ? `?version=${version}` : ''}`).then((r) => r.data),
