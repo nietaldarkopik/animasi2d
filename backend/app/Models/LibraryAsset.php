@@ -6,14 +6,29 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class LibraryAsset extends Model
 {
-    protected $fillable = ['user_id', 'category_id', 'key', 'name', 'tags', 'source', 'status', 'disk', 'path', 'mime', 'width', 'height', 'tintable', 'hash', 'meta', 'archived_at'];
+    protected $fillable = ['user_id', 'category_id', 'key', 'name', 'tags', 'source', 'status', 'disk', 'path', 'mime', 'width', 'height', 'tintable', 'hash', 'meta', 'archived_at', 'asset_uuid', 'version_number', 'parent_asset_id', 'is_current', 'change_note'];
 
     protected function casts(): array
     {
-        return ['tags' => 'array', 'meta' => 'array', 'tintable' => 'boolean', 'archived_at' => 'datetime'];
+        return ['tags' => 'array', 'meta' => 'array', 'tintable' => 'boolean', 'archived_at' => 'datetime', 'is_current' => 'boolean'];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (LibraryAsset $asset) {
+            $asset->asset_uuid ??= (string) Str::uuid();
+            $asset->version_number ??= 1;
+            $asset->is_current ??= true;
+        });
+    }
+
+    public function parentVersion(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_asset_id');
     }
 
     public function category(): BelongsTo
@@ -51,6 +66,12 @@ class LibraryAsset extends Model
     {
         return [
             'id' => $this->id,
+            'asset_uuid' => $this->asset_uuid,
+            'version_number' => (int) $this->version_number,
+            'parent_asset_id' => $this->parent_asset_id,
+            'is_current' => (bool) $this->is_current,
+            'change_note' => $this->change_note,
+            'created_at' => $this->created_at,
             'key' => $this->key,
             'category' => $this->category?->slug,
             'name' => $this->name,
