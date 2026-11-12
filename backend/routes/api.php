@@ -32,7 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/library/assets', [LibraryController::class, 'store'])->middleware('throttle:30,1');
     Route::post('/library/assets/{asset}/file', [LibraryController::class, 'replace'])->middleware('throttle:30,1');
     Route::get('/library/assets/{asset}/versions', [LibraryController::class, 'versions']);
-    Route::post('/library/assets/{asset}/versions/{version}/restore', [LibraryController::class, 'restoreVersion'])->middleware('throttle:30,1');
+    Route::post('/library/assets/{asset}/restore', [LibraryController::class, 'restoreVersion'])->middleware('throttle:30,1');
     Route::post('/library/assets/{asset}/validate', [LibraryController::class, 'validateAsset']);
     Route::post('/library/assets/{asset}/duplicate', [LibraryController::class, 'duplicate'])->middleware('throttle:30,1');
     Route::patch('/library/assets/{asset}', [LibraryController::class, 'update']);
