@@ -71,6 +71,7 @@ export interface LibAsset {
   parent_asset_id: number | null
   is_current: boolean
   change_note: string | null
+  created_at: string
   key: string | null
   category: string
   name: string
