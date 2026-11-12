@@ -325,7 +325,7 @@ export function LibraryPage() {
                   <Thumb a={v} size={64} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <strong>Versi {v.version_number}</strong> {v.is_current && <span className="small" style={{ color: 'var(--ok)' }}>· Aktif</span>}
-                    <div className="muted small">{v.change_note || 'Versi awal'} · {v.status}</div>
+                    <div className="muted small">{v.change_note || 'Versi awal'} · {v.status} · {new Date(v.created_at).toLocaleString('id-ID')}</div>
                     <div className="muted small">{v.hash.slice(0, 12)}</div>
                   </div>
                   <button disabled={v.is_current || restoringVersion !== null} onClick={() => void restoreVersion(v)}>
