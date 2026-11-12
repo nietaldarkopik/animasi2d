@@ -141,6 +141,7 @@ class LibraryController extends Controller
         $new = DB::transaction(function () use ($asset, $content, $mime, $ext, $w, $h, $tint, $data) {
             $current = LibraryAsset::whereKey($asset->id)->lockForUpdate()->firstOrFail();
             abort_unless($current->user_id === $asset->user_id, 404);
+            abort_unless($current->is_current && $current->archived_at === null, 409, 'Versi ini sudah tidak aktif. Muat ulang riwayat aset.');
             $current->update(['archived_at' => now(), 'is_current' => false]);
 
             $next = self::persistAsset(
@@ -197,11 +198,11 @@ class LibraryController extends Controller
         $content = Storage::disk($asset->disk)->get($asset->path);
 
         $restored = DB::transaction(function () use ($request, $asset, $content, $data) {
-            $current = LibraryAsset::where('user_id', $request->user()->id)
+            $family = LibraryAsset::where('user_id', $request->user()->id)
                 ->where('asset_uuid', $asset->asset_uuid)
-                ->where('is_current', true)
                 ->lockForUpdate()
-                ->first();
+                ->get();
+            $current = $family->firstWhere('is_current', true);
 
             if ($current && $current->id === $asset->id) {
                 return $current->load('category');
@@ -282,6 +283,7 @@ class LibraryController extends Controller
     public function update(Request $request, LibraryAsset $asset): JsonResponse
     {
         $this->own($request, $asset);
+        abort_unless($asset->is_current && $asset->archived_at === null, 409, 'Versi ini sudah tidak aktif. Muat ulang Library.');
         $data = $request->validate([
             'name' => 'sometimes|string|max:120',
             'tags' => 'sometimes|nullable|string|max:200',
