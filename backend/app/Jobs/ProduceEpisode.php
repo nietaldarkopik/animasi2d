@@ -52,7 +52,6 @@ class ProduceEpisode implements ShouldQueue
             $document = $project?->document;
             $canReuseProject = $project
                 && is_array($document)
-                && ! empty($document['auto_generated'])
                 && ! empty($document['scenes']);
 
             if ($canReuseProject) {
