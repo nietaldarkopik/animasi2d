@@ -71,6 +71,7 @@ class LibraryAsset extends Model
             'parent_asset_id' => $this->parent_asset_id,
             'is_current' => (bool) $this->is_current,
             'change_note' => $this->change_note,
+            'created_at' => $this->created_at,
             'key' => $this->key,
             'category' => $this->category?->slug,
             'name' => $this->name,
