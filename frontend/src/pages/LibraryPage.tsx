@@ -53,6 +53,9 @@ export function LibraryPage() {
   const [upscaler, setUpscaler] = useState<{ available: boolean; reason?: string | null } | null>(null)
   const [hd, setHd] = useState<{ id: number; factor: number } | null>(null)
   const [editing, setEditing] = useState<LibAsset | null>(null)
+  const [historyAsset, setHistoryAsset] = useState<LibAsset | null>(null)
+  const [historyVersions, setHistoryVersions] = useState<LibAsset[]>([])
+  const [restoringVersion, setRestoringVersion] = useState<number | null>(null)
   const [error, setError] = useState('')
   const [note, setNote] = useState('')
 
@@ -146,6 +149,27 @@ export function LibraryPage() {
   async function duplicate(a: LibAsset) {
     setError(''); setNote('')
     try { const c = await api.libDuplicate(a.id); setNote(`Salinan “${c.name}” dibuat di aset Anda. Klik Edit untuk merapikannya.`); load() } catch (err) { setError((err as Error).message) }
+  }
+
+  async function showHistory(a: LibAsset) {
+    setError('')
+    try {
+      const versions = await api.libVersions(a.id)
+      setHistoryAsset(a)
+      setHistoryVersions(versions)
+    } catch (err) { setError((err as Error).message) }
+  }
+
+  async function restoreVersion(version: LibAsset) {
+    if (!confirm(`Restore “${version.name}” ke versi ${version.version_number}? Versi sekarang tetap tersimpan di history.`)) return
+    setRestoringVersion(version.id); setError('')
+    try {
+      const restored = await api.libRestore(version.id, `Restore dari versi ${version.version_number}`)
+      setHistoryAsset(restored)
+      setHistoryVersions(await api.libVersions(restored.id))
+      setNote(`Versi ${restored.version_number} berhasil dibuat dari snapshot lama. Riwayat sebelumnya tetap tersimpan.`)
+      load()
+    } catch (err) { setError((err as Error).message) } finally { setRestoringVersion(null) }
   }
 
   async function remove(a: LibAsset) {
@@ -264,7 +288,10 @@ export function LibraryPage() {
                     </div>
                   )}
                   <div className="row" style={{ gap: 8 }}>
-                    {a.mine ? <button className="link" onClick={() => setEditing(a)}>edit</button> : <button className="link" onClick={() => void duplicate(a)} title="Buat salinan milik Anda yang bisa diedit">duplikat</button>}
+                    {a.mine ? <>
+                      <button className="link" onClick={() => setEditing(a)}>edit</button>
+                      <button className="link" onClick={() => void showHistory(a)}>history · v{a.version_number}</button>
+                    </> : <button className="link" onClick={() => void duplicate(a)} title="Buat salinan milik Anda yang bisa diedit">duplikat</button>}
                     {a.mine && <button className="link" onClick={() => void remove(a)}>hapus</button>}
                   </div>
                 </div>
@@ -282,6 +309,34 @@ export function LibraryPage() {
         />
       )}
       {editing && <AssetEditDialog asset={editing} cats={cats} onClose={() => { setEditing(null); load() }} onSaved={({ asset }) => setEditing(asset)} />}
+      {historyAsset && (
+        <div role="presentation" onClick={() => setHistoryAsset(null)} style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,.68)', display: 'grid', placeItems: 'center', padding: 16 }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="asset-history-title" onClick={(e) => e.stopPropagation()} className="card" style={{ width: 'min(720px, 96vw)', maxHeight: '85vh', overflow: 'auto', background: 'var(--panel, #20232c)' }}>
+            <div className="row between" style={{ alignItems: 'center' }}>
+              <div>
+                <h2 id="asset-history-title" style={{ margin: 0 }}>Riwayat aset</h2>
+                <p className="muted small" style={{ margin: '4px 0 0' }}>{historyAsset.name} · {historyVersions.length} versi</p>
+              </div>
+              <button onClick={() => setHistoryAsset(null)}>Tutup</button>
+            </div>
+            <div style={{ display: 'grid', gap: 10, marginTop: 14 }}>
+              {historyVersions.map((v) => (
+                <div key={v.id} className="row" style={{ alignItems: 'center', gap: 12, padding: 8, border: '1px solid var(--border)', borderRadius: 8 }}>
+                  <Thumb a={v} size={64} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <strong>Versi {v.version_number}</strong> {v.is_current && <span className="small" style={{ color: 'var(--ok)' }}>· Aktif</span>}
+                    <div className="muted small">{v.change_note || 'Versi awal'} · {v.status}</div>
+                    <div className="muted small">{v.hash.slice(0, 12)}</div>
+                  </div>
+                  <button disabled={v.is_current || restoringVersion !== null} onClick={() => void restoreVersion(v)}>
+                    {restoringVersion === v.id ? 'Memulihkan…' : 'Restore'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   )
 }
