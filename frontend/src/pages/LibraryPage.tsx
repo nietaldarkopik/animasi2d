@@ -177,7 +177,7 @@ export function LibraryPage() {
     setError('')
     try {
       const r = await api.libDelete(a.id)
-      setNote(r.archived ? 'Aset dipakai oleh versi karakter, jadi diarsipkan (disembunyikan) dan versi lama tetap utuh.' : 'Aset dihapus.')
+      setNote(r.archived ? 'Aset memiliki riwayat versi atau dipakai karakter, jadi diarsipkan. Snapshot lama tetap tersedia.' : 'Aset dihapus.')
       load()
     } catch (err) { setError((err as Error).message) }
   }
