@@ -105,6 +105,8 @@ export const api = {
     return req<{ data: LibAsset }>('/library/assets', { method: 'POST', body: fd }).then((r) => r.data)
   },
   libUpdate: (id: number, patch: { name?: string; tags?: string; status?: 'approved' | 'rejected'; category?: string }) => req<{ data: LibAsset }>(`/library/assets/${id}`, json('PATCH', patch)).then((r) => r.data),
+  libVersions: (id: number) => req<{ data: LibAsset[] }>(`/library/assets/${id}/versions`).then((r) => r.data),
+  libRestore: (id: number, note?: string) => req<{ data: LibAsset }>(`/library/assets/${id}/restore`, json('POST', note ? { note } : {})).then((r) => r.data),
   libReplace: (id: number, file: Blob, filename: string) => {
     const fd = new FormData()
     fd.append('file', file, filename)
