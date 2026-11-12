@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Project;
 use App\Models\StoryEpisode;
 use App\Services\DailyCartoonService;
 use App\Services\FilmPipeline;
@@ -42,12 +43,35 @@ class ProduceEpisode implements ShouldQueue
                 $ep->update(['script' => $writer->script($series, $ep)]);
             }
             $film->voices = $series->voices();
-            $res = $film->createDailyCartoon($series->user_id, null, array_values(array_filter($series->characterNames(), fn ($n) => ! DailyCartoonService::isNarrator($n))), $ep->script, $series->characterIds());
-            $ep->update(['project_id' => $res['project_id']]);
 
-            $file = $pipeline->export($res['project_id'], $series->user_id, null, 21600, $ep->script);
+            // Reuse the episode's existing generated project when it still belongs to this user.
+            // This preserves completed Blender scenes and QC-passed frames after an interrupted render.
+            $project = $ep->project_id
+                ? Project::where('user_id', $series->user_id)->find($ep->project_id)
+                : null;
+            $document = $project?->document;
+            $canReuseProject = $project
+                && is_array($document)
+                && ! empty($document['auto_generated'])
+                && ! empty($document['scenes']);
+
+            if ($canReuseProject) {
+                $projectId = $project->id;
+            } else {
+                $res = $film->createDailyCartoon(
+                    $series->user_id,
+                    null,
+                    array_values(array_filter($series->characterNames(), fn ($n) => ! DailyCartoonService::isNarrator($n))),
+                    $ep->script,
+                    $series->characterIds()
+                );
+                $projectId = $res['project_id'];
+                $ep->update(['project_id' => $projectId]);
+            }
+
+            $file = $pipeline->export($projectId, $series->user_id, null, 21600, $ep->script);
             if (! $file) {
-                throw new \RuntimeException('Perekaman film gagal: '.($pipeline->lastOutput ?: 'tanpa keterangan').' (Project #'.$res['project_id'].' tetap bisa dibuka di editor.)');
+                throw new \RuntimeException('Perekaman film gagal: '.($pipeline->lastOutput ?: 'tanpa keterangan').' (Project #'.$projectId.' tetap bisa dibuka di editor.)');
             }
             $ep->update(['output_path' => 'daily_output/'.basename($file), 'status' => 'done']);
 
