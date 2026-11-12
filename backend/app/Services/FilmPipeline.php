@@ -90,7 +90,16 @@ class FilmPipeline
         $scriptPath = $outputDir . DIRECTORY_SEPARATOR . "project_{$projectId}_script.json";
         $blendPath = dirname($targetMp4) . DIRECTORY_SEPARATOR . 'kartun_' . date('Y-m-d') . "_project_{$projectId}.blend";
 
-        @file_put_contents($scriptPath, json_encode($script, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        // Keep the original script timestamp when the content is unchanged. The Blender
+        // resume logic uses it to distinguish recoverable outputs from stale renders.
+        $scriptJson = json_encode($script, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $existingScriptJson = is_file($scriptPath) ? @file_get_contents($scriptPath) : false;
+        if ($existingScriptJson !== $scriptJson) {
+            if (@file_put_contents($scriptPath, $scriptJson, LOCK_EX) === false) {
+                $this->lastOutput = "[FilmPipeline] Tidak bisa menulis script produksi: {$scriptPath}";
+                return null;
+            }
+        }
 
         $pythonScript = base_path('../tools/blender/script_to_blender.py');
         if (!file_exists($pythonScript)) {
