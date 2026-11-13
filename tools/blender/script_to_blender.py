@@ -607,20 +607,102 @@ def produce_all_scenes(
     scene_clips: List[str] = []
     scene_results: List[Dict] = []
 
+    # A resume fingerprint prevents outputs from an older script/render plan being reused.
+    import hashlib
+    with open(script_path, 'rb') as _script_file:
+        _script_digest = hashlib.sha256(_script_file.read()).hexdigest()
+    _source_mtime = os.path.getmtime(script_path)
+
+    def _scene_frame_state(scene_data: Dict, frames_dir: str) -> Tuple[bool, bool]:
+        """Return (QC report matches this scene, every expected QC-passed PNG exists)."""
+        qc_path = os.path.join(frames_dir, 'qc_report.json')
+        if not os.path.isfile(qc_path):
+            return False, False
+        try:
+            with open(qc_path, 'r', encoding='utf-8') as _qf:
+                _qc = json.load(_qf)
+            _start = int(scene_data.get('start_frame', 1))
+            _end_exclusive = int(scene_data.get('end_frame', _start + 100))
+            _expected_frames = range(_start, _end_exclusive)
+            _expected_count = len(_expected_frames)
+            if _expected_count <= 0 or int(_qc.get('total_frames', -1)) != _expected_count:
+                return False, False
+            _passed = set(int(_n) for _n in _qc.get('passed', []))
+            _failed = set(int(_n) for _n in _qc.get('failed', []))
+            if _failed or not _passed.issubset(set(_expected_frames)):
+                return True, False
+            _all_pngs = all(
+                os.path.isfile(os.path.join(frames_dir, 'frame_{:06d}.png'.format(_n)))
+                and os.path.getsize(os.path.join(frames_dir, 'frame_{:06d}.png'.format(_n))) > 1024
+                for _n in _expected_frames if _n in _passed
+            )
+            return True, _all_pngs and len(_passed) == _expected_count
+        except Exception as _qc_error:
+            print('[Resume] Could not validate QC report:', _qc_error, flush=True)
+            return False, False
+
     for idx in range(total_scenes):
-        scene_name = plan['scenes'][idx].get('name', f'Scene_{idx}')
+        scene_data = plan['scenes'][idx]
+        scene_name = scene_data.get('name', f'Scene_{idx}')
         clip_path = os.path.join(output_dir, f"{base_name}_scene{idx:02d}.mp4")
         blend_path = os.path.join(output_dir, f"{base_name}_scene{idx:02d}.blend") if output_blend else None
         frames_dir = os.path.splitext(os.path.abspath(clip_path))[0] + "_frames"
+        os.makedirs(frames_dir, exist_ok=True)
+        qc_path = os.path.join(frames_dir, 'qc_report.json')
+        manifest_path = os.path.join(frames_dir, 'scene_resume_manifest.json')
+        scene_payload = json.dumps(scene_data, sort_keys=True, ensure_ascii=False, default=str)
+        scene_fingerprint = hashlib.sha256(
+            (_script_digest + '|' + aspect_ratio + '|' + scene_payload).encode('utf-8')
+        ).hexdigest()
 
-        # A scene clip is valid only if this invocation rendered it. Remove every
-        # artifact that could otherwise make a failed render look successful.
-        for stale_path in (clip_path, blend_path):
-            if stale_path and os.path.isfile(stale_path):
-                os.remove(stale_path)
+        qc_matches, frames_complete = _scene_frame_state(scene_data, frames_dir)
+        manifest_matches = False
+        if os.path.isfile(manifest_path):
+            try:
+                with open(manifest_path, 'r', encoding='utf-8') as _mf:
+                    manifest_matches = json.load(_mf).get('fingerprint') == scene_fingerprint
+            except Exception:
+                manifest_matches = False
+        else:
+            # Backward-compatible recovery for renders made before manifests existed:
+            # only trust artifacts newer than the exact script JSON used for this run.
+            _legacy_times = [os.path.getmtime(qc_path)] if os.path.isfile(qc_path) else []
+            if os.path.isfile(clip_path): _legacy_times.append(os.path.getmtime(clip_path))
+            if blend_path and os.path.isfile(blend_path): _legacy_times.append(os.path.getmtime(blend_path))
+            manifest_matches = bool(_legacy_times) and all(t >= _source_mtime for t in _legacy_times)
+
+        clip_ok = os.path.isfile(clip_path) and os.path.getsize(clip_path) > 1000
+        blend_ok = not blend_path or (os.path.isfile(blend_path) and os.path.getsize(blend_path) > 1000)
+
+        if clip_ok and blend_ok and qc_matches and frames_complete and manifest_matches:
+            if not os.path.isfile(manifest_path):
+                with open(manifest_path, 'w', encoding='utf-8') as _mf:
+                    json.dump({'fingerprint': scene_fingerprint, 'script_sha256': _script_digest,
+                               'aspect_ratio': aspect_ratio, 'scene_index': idx,
+                               'recovered_legacy_output': True}, _mf, indent=2)
+            print(f"[Resume] Scene {idx:02d} sudah lengkap dan cocok; MP4/Blend/frames dipakai ulang.", flush=True)
+            scene_clips.append(clip_path)
+            scene_results.append({'scene': scene_name, 'idx': idx, 'status': 'reused',
+                                  'clip': clip_path, 'frames': 'qc_complete'})
+            continue
+
+        # Keep QC-passed frames when the current script is unchanged. If the QC report
+        # predates the current script, its frames belong to an older input and must reset.
         if os.path.isdir(frames_dir):
-            import shutil
-            shutil.rmtree(frames_dir, ignore_errors=True)
+            _keep_frames = False
+            if qc_matches and os.path.isfile(qc_path):
+                _keep_frames = os.path.getmtime(qc_path) >= _source_mtime
+            if not _keep_frames and os.path.isdir(frames_dir):
+                import shutil
+                shutil.rmtree(frames_dir, ignore_errors=True)
+                os.makedirs(frames_dir, exist_ok=True)
+                print(f"[Resume] Scene {idx:02d}: input/QC tidak cocok; frame lama direset.", flush=True)
+            elif _keep_frames:
+                print(f"[Resume] Scene {idx:02d}: mempertahankan frame QC yang sudah ada.", flush=True)
+
+        # A clip without a matching complete QC set is not reusable; remove only the MP4.
+        if os.path.isfile(clip_path):
+            os.remove(clip_path)
 
         print(f"\n[Scene {idx+1}/{total_scenes}] Membangun: {scene_name}")
         try:
@@ -634,11 +716,17 @@ def produce_all_scenes(
                 aspect_ratio=aspect_ratio,
             )
             exec_status = res.get('execution', {}).get('status', 'unknown')
-            clip_ok = os.path.isfile(clip_path) and os.path.getsize(clip_path) > 1000
-            print(f"  → Eksekusi: {exec_status} | Clip: {'OK' if clip_ok else 'MISSING'}")
+            qc_matches_after, frames_complete_after = _scene_frame_state(scene_data, frames_dir)
+            clip_ok = (os.path.isfile(clip_path) and os.path.getsize(clip_path) > 1000
+                       and qc_matches_after and frames_complete_after)
+            print(f"  → Eksekusi: {exec_status} | Clip: {'OK' if clip_ok else 'MISSING/INCOMPLETE'}")
             if clip_ok:
                 scene_clips.append(clip_path)
-            scene_results.append({'scene': scene_name, 'idx': idx, 'status': exec_status, 'clip': clip_path if clip_ok else None})
+                with open(manifest_path, 'w', encoding='utf-8') as _mf:
+                    json.dump({'fingerprint': scene_fingerprint, 'script_sha256': _script_digest,
+                               'aspect_ratio': aspect_ratio, 'scene_index': idx}, _mf, indent=2)
+            scene_results.append({'scene': scene_name, 'idx': idx, 'status': exec_status,
+                                  'clip': clip_path if clip_ok else None})
         except Exception as e:
             print(f"  → ERROR: {e}")
             scene_results.append({'scene': scene_name, 'idx': idx, 'status': 'error', 'error': str(e)})
