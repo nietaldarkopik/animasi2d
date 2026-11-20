@@ -22,6 +22,8 @@ export function CardCharacterPage() {
   const [spritePreviewPack, setSpritePreviewPack] = useState<CharacterSpritePackInfo | null>(null)
   const [name, setName] = useState('')
   const [view, setView] = useState<CardView>({ pose: '', expression: '', mouth: null, blink: false })
+  const [sittingFamily, setSittingFamily] = useState('')
+  const [sittingReference, setSittingReference] = useState('')
   const [, setTick] = useState(0)
   const imgs = useRef(new Map<string, HTMLImageElement>())
   const canvas = useRef<HTMLCanvasElement>(null)
@@ -119,6 +121,35 @@ export function CardCharacterPage() {
               {m && (
                 <>
                   {pick(`Pose badan (${m.body.poses.length})`, m.body.poses, view.pose, (x) => x && setView((v) => ({ ...v, pose: x })))}
+                  {!!m.pose_families?.length && (
+                    <section style={{ marginTop: 14, padding: 12, border: '1px solid var(--border)', borderRadius: 8 }}>
+                      <h3 style={{ margin: '0 0 4px' }}>Referensi Pose Duduk</h3>
+                      <p className="muted small" style={{ margin: '0 0 10px' }}>Katalog pose duduk Uki. Pilih kelompok dan variasi referensi untuk tahap kalibrasi attachment kepala dan prop.</p>
+                      <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
+                        {m.pose_families.map((family) => (
+                          <button key={family.id} className={sittingFamily === family.id ? 'primary' : ''} onClick={() => {
+                            setSittingFamily(family.id)
+                            setSittingReference(family.default_reference)
+                          }}>{family.label}</button>
+                        ))}
+                      </div>
+                      {m.pose_families.filter((family) => family.id === sittingFamily).map((family) => {
+                        const refs = [family.default_reference, ...family.alternatives]
+                        return (
+                          <div key={family.id} style={{ marginTop: 10 }}>
+                            <div className="small"><strong>Variasi referensi</strong></div>
+                            <div className="row" style={{ gap: 6, flexWrap: 'wrap', marginTop: 5 }}>
+                              {refs.map((ref) => <button key={ref} className={sittingReference === ref ? 'primary' : ''} onClick={() => setSittingReference(ref)}>{ref}</button>)}
+                            </div>
+                            <p className="muted small" style={{ margin: '8px 0 0' }}>
+                              {family.requires_prop ? `Memerlukan prop terpisah: ${family.requires_prop}. ` : 'Tidak memerlukan prop kursi. '}
+                              Referensi ini belum mengganti pose aktif pada canvas. Anchor kepala dan posisi prop harus dikalibrasi sebelum pose dapat digunakan sebagai pose 2.5D.
+                            </p>
+                          </div>
+                        )
+                      })}
+                    </section>
+                  )}
                   {pick(`Ekspresi kepala (${m.head.expressions.length})`, m.head.expressions, view.expression, (x) => x && setView((v) => ({ ...v, expression: x })))}
                   {m.mouth && pick('Bentuk mulut (lip-sync)', m.mouth.shapes, view.mouth, (x) => setView((v) => ({ ...v, mouth: x })), 'tutup')}
                   {d.urls?.blink && (
