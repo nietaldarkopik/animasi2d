@@ -141,6 +141,21 @@ export function CardCharacterPage() {
                             <div className="row" style={{ gap: 6, flexWrap: 'wrap', marginTop: 5 }}>
                               {refs.map((ref) => <button key={ref} className={sittingReference === ref ? 'primary' : ''} onClick={() => setSittingReference(ref)}>{ref}</button>)}
                             </div>
+                            {d.sitting_reference_urls?.[sittingReference] ? (
+                              <div style={{ marginTop: 10, display: 'inline-flex', flexDirection: 'column', gap: 5, maxWidth: 240 }}>
+                                <div className="small"><strong>Preview: {sittingReference}</strong></div>
+                                <div style={{ background: CHECKER, border: '1px solid var(--border)', borderRadius: 8, padding: 8, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 180 }}>
+                                  <img
+                                    src={absUrl(d.sitting_reference_urls[sittingReference])}
+                                    alt={`Referensi pose duduk ${sittingReference}`}
+                                    style={{ display: 'block', maxWidth: '100%', maxHeight: 280, objectFit: 'contain' }}
+                                  />
+                                </div>
+                                <span className="muted small">PNG transparan · referensi statis tanpa kepala</span>
+                              </div>
+                            ) : (
+                              <p className="muted small" style={{ margin: '8px 0 0' }}>Preview belum tersedia pada versi karakter ini. Klik Perbarui dari folder untuk menyalin aset referensi terbaru.</p>
+                            )}
                             <p className="muted small" style={{ margin: '8px 0 0' }}>
                               {family.requires_prop ? `Memerlukan prop terpisah: ${family.requires_prop}. ` : 'Tidak memerlukan prop kursi. '}
                               Referensi ini belum mengganti pose aktif pada canvas. Anchor kepala dan posisi prop harus dikalibrasi sebelum pose dapat digunakan sebagai pose 2.5D.
