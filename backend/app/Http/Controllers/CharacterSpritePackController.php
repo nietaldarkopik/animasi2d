@@ -71,6 +71,9 @@ class CharacterSpritePackController extends Controller
             if (! is_array($manifest) || json_last_error() !== JSON_ERROR_NONE) {
                 return response()->json(['message' => 'Manifest JSON tidak valid.'], 422);
             }
+            if (isset($manifest['character']) && ! is_array($manifest['character'])) {
+                return response()->json(['message' => 'Bagian character pada manifest harus berupa object.'], 422);
+            }
             if (isset($manifest['character']['id']) && (int) $manifest['character']['id'] !== (int) $character->id) {
                 return response()->json(['message' => 'Character ID pada manifest tidak cocok dengan karakter yang sedang dibuka.'], 422);
             }
