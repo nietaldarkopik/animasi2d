@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { api } from '../api'
-import { evalCamera, removeCamKey, removeSwap, setCamKey, setSwap, worldPoint } from '../anim'
+import { evalCamera, removeCamKey, setCamKey, worldPoint } from '../anim'
 import { camFocus, camKeyFrames, camPan, camShake, camZoom } from '../camera'
 import { canvasRef } from '../canvas'
 import { absUrl, assetPng } from '../builder/render'
@@ -9,6 +9,7 @@ import { applyExpression, applyPose, applyRigMotion, clearExpression, MOTIONS, P
 import { addEffect, EFFECT_LABEL, makeBalloon, makeShadow, makeTitle, propPlacement, setTimeOfDay, TIME_PRESETS, timeOfDay } from '../filmTools'
 import { applyLipSync, envelope, mouthKeys, openings } from '../lipsync'
 import { applyCardLipSync, CARD_ROLES } from '../builder/card'
+import { CardLooksPanel } from './CardLooksPanel'
 import { sceneStart } from '../movie'
 import { uid, useEditor } from '../store'
 import type { CameraProp, EffectKind, Layer } from '../types'
@@ -70,7 +71,6 @@ function CharacterTab() {
   // a 2.5D card character: body image per pose, head image per expression, mouth overlay with shapes a/i/u/e/o
   const cardBody = rig.pieces[CARD_ROLES.body]
   const cardMouth = rig.pieces[CARD_ROLES.mouth]
-  const cardPoses = cardBody ? Object.keys(cardBody.expr ?? {}).filter((k) => k !== 'default') : []
   const mouth = rig.pieces.mouth ?? cardMouth
   const voice = project.audio.filter((c) => s.assets[c.assetId])
 
@@ -117,14 +117,7 @@ function CharacterTab() {
       <p className="small" style={{ margin: 0 }}>Karakter: <strong>{rig.name}</strong> · frame {frame}</p>
 
       {cardBody ? (
-        <div>
-          <h4 className="small" style={{ margin: '0 0 4px' }}>Pose 2.5D (mulai frame ini)</h4>
-          <div className="row" style={{ gap: 4, flexWrap: 'wrap' }}>
-            {cardPoses.map((p) => <button key={p} onClick={() => s.edit((d) => { const l = d.layers.find((x) => x.id === cardBody.id); if (l?.expr?.[p]) setSwap(l, frame, l.expr[p]) })} title={`Ganti gambar badan ke pose "${p}" mulai frame ${frame}`}>{p}</button>)}
-          </div>
-          <button style={{ marginTop: 4 }} onClick={() => s.edit((d) => { const l = d.layers.find((x) => x.id === cardBody.id); if (l) removeSwap(l, frame) })}>Hapus pergantian pose di frame ini</button>
-          <p className="muted small" style={{ margin: '4px 0 0' }}>Karakter 2.5D berganti gambar badan per pose (tidak ada tulang lengan/kaki). Gerakan siap pakai di bawah menggerakkan seluruh badan.</p>
-        </div>
+        <CardLooksPanel rig={rig} frame={frame} />
       ) : (
         <div>
           <h4 className="small" style={{ margin: '0 0 4px' }}>Pose (di frame ini)</h4>

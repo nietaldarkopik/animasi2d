@@ -8,6 +8,7 @@ import { ProjectsPage } from './pages/ProjectsPage'
 import { EditorPage } from './pages/EditorPage'
 import { BuilderListPage } from './pages/BuilderListPage'
 import { CardCharacterPage } from './pages/CardCharacterPage'
+import { CardNewPage } from './pages/CardNewPage'
 import { BuilderPage } from './pages/BuilderPage'
 import { LibraryPage } from './pages/LibraryPage'
 import { StoriesPage } from './pages/StoriesPage'
@@ -29,6 +30,8 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/" element={<Guard><ProjectsPage /></Guard>} />
         <Route path="/builder" element={<Guard><BuilderListPage /></Guard>} />
         <Route path="/builder/card/:id" element={<Guard><CardCharacterPage /></Guard>} />
+        <Route path="/builder/card-baru" element={<Guard><CardNewPage /></Guard>} />
+        <Route path="/builder/card-baru/:slug" element={<Guard><CardNewPage /></Guard>} />
         <Route path="/builder/:id" element={<Guard><BuilderPage /></Guard>} />
         <Route path="/library" element={<Guard><LibraryPage /></Guard>} />
         <Route path="/stories" element={<Guard><StoriesPage /></Guard>} />

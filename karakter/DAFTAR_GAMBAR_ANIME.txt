@@ -13,7 +13,7 @@ FILE PER KARAKTER (22): nama_kepala_<ekspresi>.png (10: netral, senang, kaget, s
  nama_badan_<pose>.png (9: diam, tunjuk, angkat, lambai, pinggang, pelipis, dagu, jempol, silang)
  nama_mulut_a|i|u|e|o.png (5)  nama_kelopak.png (1)  -> total 25 file
 Minimum cepat: kepala netral/senang/kaget/sedih, badan diam/tunjuk/pinggang, mulut a & o, kelopak.
-Pose duduk/lari/dinamis tidak didukung (satu pose = satu gambar diam). Gaya, proporsi, warna HARUS sama di semua file.
+Pose duduk/lari/dinamis tidak didukung oleh paket DASAR (satu pose = satu gambar diam); paket tambahan (dialog/duduk/aksi) dirancang di docs\CARD_SPEC_V2.md. Gaya, proporsi, warna HARUS sama di semua file.
 Tanpa wajah/nama tokoh nyata, logo merek, atau meniru karakter anime yang sudah ada.
 
 CATATAN UKURAN SEBENARNYA (setelah karakter Uki diproses, 2026-11-08)

@@ -1,0 +1,75 @@
+{
+ "version": 1,
+ "pack": "aksi",
+ "character": "arum",
+ "prefix": "arum",
+ "skipped": [],
+ "sheets": [
+  {
+   "id": "aksi_badan_a",
+   "group": "body",
+   "cols": 3,
+   "rows": 1,
+   "ref": "body:diam",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "body",
+     "id": "diam",
+     "text": "SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "lari_sisi",
+     "required": true,
+     "text": "running, right-side view facing the viewer's right, mid-stride, one knee raised, arms swinging"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "lari_sisi_2",
+     "required": false,
+     "text": "running, right-side view facing the viewer's right, the OPPOSITE stride phase (other leg forward, other arm forward)"
+    }
+   ],
+   "file": "arum_aksi_badan_a.png",
+   "attach": [
+    "arum_acuan.png"
+   ]
+  },
+  {
+   "id": "aksi_badan_b",
+   "group": "body",
+   "cols": 3,
+   "rows": 1,
+   "ref": "body:diam",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "body",
+     "id": "diam",
+     "text": "SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "kaget",
+     "required": false,
+     "text": "startled: both arms flung slightly outward, upper body leaning back, front view"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "lompat",
+     "required": false,
+     "text": "jumping in the air with both feet off the ground, arms raised, front view"
+    }
+   ],
+   "file": "arum_aksi_badan_b.png",
+   "attach": [
+    "arum_acuan.png"
+   ]
+  }
+ ]
+}

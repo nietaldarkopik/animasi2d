@@ -4,6 +4,7 @@ use App\Http\Controllers\AiController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BuilderCharacterController;
+use App\Http\Controllers\CardBuilderController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\EnhancementController;
@@ -20,6 +21,7 @@ Route::get('/assets/{asset}/file', [AssetController::class, 'file'])->name('asse
 
 Route::get('/library/assets/{asset}/file', [LibraryController::class, 'file'])->name('library.file')->middleware('signed:relative');
 Route::get('/builder/cards/versions/{version}/file/{name}', [\App\Http\Controllers\CardCharacterController::class, 'file'])->name('cards.file')->middleware('signed:relative');
+Route::get('/builder/card-previews/{kind}/{slug}/{name}', [CardBuilderController::class, 'preview'])->name('card-builder.preview')->middleware('signed:relative');
 Route::get('/builder/versions/{version}/thumbnail', [BuilderCharacterController::class, 'thumbnail'])->name('builder.thumbnail')->middleware('signed:relative');
 Route::get('/blender/character-face/{name}', [\App\Http\Controllers\BlenderController::class, 'characterFace']);
 Route::get('/blender/file/{filename}', [\App\Http\Controllers\BlenderController::class, 'file']);
@@ -48,6 +50,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/builder/cards/{character}/refresh', [\App\Http\Controllers\CardCharacterController::class, 'refresh'])->middleware('throttle:30,1');
     Route::post('/builder/cards/{character}/duplicate', [\App\Http\Controllers\CardCharacterController::class, 'duplicate']);
     Route::delete('/builder/cards/{character}', [\App\Http\Controllers\CardCharacterController::class, 'destroy']);
+    // Card Builder: motion packs, duplicate + recolor, and new characters from Flow sheets (drafts)
+    Route::get('/builder/cards/{character}/builder', [CardBuilderController::class, 'status']);
+    Route::put('/builder/cards/{character}/builder/appearance', [CardBuilderController::class, 'setAppearance']);
+    Route::post('/builder/cards/{character}/builder/prompts', [CardBuilderController::class, 'prompts'])->middleware('throttle:60,1');
+    Route::post('/builder/cards/{character}/builder/sheets/{pack}/{sheet}', [CardBuilderController::class, 'upload'])->middleware('throttle:60,1');
+    Route::post('/builder/cards/{character}/builder/import', [CardBuilderController::class, 'import'])->middleware('throttle:20,1');
+    Route::put('/builder/cards/{character}/builder/mouth-at', [CardBuilderController::class, 'mouthAt']);
+    Route::put('/builder/cards/{character}/builder/head-at', [CardBuilderController::class, 'headAt']);
+    Route::get('/builder/cards/{character}/builder/colors', [CardBuilderController::class, 'colors']);
+    Route::post('/builder/cards/{character}/builder/recolor', [CardBuilderController::class, 'recolor'])->middleware('throttle:20,1');
+    Route::post('/builder/card-drafts', [CardBuilderController::class, 'draftStart'])->middleware('throttle:30,1');
+    Route::get('/builder/card-drafts/{slug}', [CardBuilderController::class, 'draftShow']);
+    Route::post('/builder/card-drafts/{slug}/sheets/{sheet}', [CardBuilderController::class, 'draftUpload'])->middleware('throttle:60,1');
+    Route::post('/builder/card-drafts/{slug}/import', [CardBuilderController::class, 'draftImport'])->middleware('throttle:20,1');
+    Route::post('/builder/card-drafts/{slug}/finish', [CardBuilderController::class, 'draftFinish'])->middleware('throttle:20,1');
+    Route::delete('/builder/card-drafts/{slug}', [CardBuilderController::class, 'draftDiscard']);
     Route::get('/builder/characters', [BuilderCharacterController::class, 'index']);
     Route::post('/builder/characters', [BuilderCharacterController::class, 'store'])->middleware('throttle:60,1');
     Route::get('/builder/characters/{character}', [BuilderCharacterController::class, 'show']);

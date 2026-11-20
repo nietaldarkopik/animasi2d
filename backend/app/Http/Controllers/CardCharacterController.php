@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Character;
 use App\Models\CharacterVersion;
+use App\Models\User;
+use App\Services\CardBuilder\CardBuilderRunner;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +25,29 @@ class CardCharacterController extends Controller
 
     private function karakterDir(): string
     {
-        return base_path('..'.DIRECTORY_SEPARATOR.'karakter');
+        return app(CardBuilderRunner::class)->root();
+    }
+
+    /** Imports karakter/<slug> as a new card character of `$user`; returns the character or the reason the folder can't be used. */
+    public function importFolder(User $user, string $slug, ?string $name = null): Character|string
+    {
+        $spec = $this->readSpec($slug);
+        if (is_string($spec)) {
+            return $spec;
+        }
+
+        return DB::transaction(function () use ($user, $slug, $name, $spec) {
+            $c = Character::create(['user_id' => $user->id, 'kind' => 'card', 'name' => $name ?: ucfirst($spec['meta']['name'] ?? $slug), 'method' => 'rig']);
+            $this->addVersion($c, $slug, $spec, 'Impor dari folder karakter/'.$slug);
+
+            return $c;
+        });
+    }
+
+    /** The detail payload the API returns for a card character (the version `$number`, default the current one). */
+    public function present(Character $c, ?int $number = null): array
+    {
+        return $this->detail($c->fresh(), $number);
     }
 
     public function index(Request $request): JsonResponse
@@ -52,7 +76,7 @@ class CardCharacterController extends Controller
                 continue;
             }
             $out[] = ['slug' => $slug, 'name' => ucfirst($spec['meta']['name'] ?? $slug), 'ok' => true, 'problem' => null,
-                'style' => $spec['meta']['style'] ?? null, 'poses' => array_keys($spec['files']['body']), 'expressions' => array_keys($spec['files']['head']),
+                'style' => $spec['meta']['style'] ?? null, 'packs' => $spec['meta']['spec']['packs'] ?? ['dasar'], 'poses' => array_keys($spec['files']['body']), 'expressions' => array_keys($spec['files']['head']),
                 'imported_id' => $imported[$slug] ?? null];
         }
 
@@ -62,16 +86,10 @@ class CardCharacterController extends Controller
     public function import(Request $request): JsonResponse
     {
         $data = $request->validate(['slug' => ['required', 'string', 'max:64', 'regex:/^[a-z0-9][a-z0-9_-]*$/i'], 'name' => 'nullable|string|max:120']);
-        $spec = $this->readSpec($data['slug']);
-        if (is_string($spec)) {
-            return response()->json(['message' => $spec, 'errors' => ['slug' => [$spec]]], 422);
+        $c = $this->importFolder($request->user(), $data['slug'], $data['name'] ?? null);
+        if (is_string($c)) {
+            return response()->json(['message' => $c, 'errors' => ['slug' => [$c]]], 422);
         }
-        $c = DB::transaction(function () use ($request, $data, $spec) {
-            $c = Character::create(['user_id' => $request->user()->id, 'kind' => 'card', 'name' => ($data['name'] ?? null) ?: ucfirst($spec['meta']['name'] ?? $data['slug']), 'method' => 'rig']);
-            $this->addVersion($c, $data['slug'], $spec, 'Impor dari folder karakter/'.$data['slug']);
-
-            return $c;
-        });
 
         return response()->json(['data' => $this->detail($c->fresh())], 201);
     }
@@ -202,7 +220,31 @@ class CardCharacterController extends Controller
             $blink = null;
         }
 
-        return ['meta' => $meta, 'files' => ['body' => $body, 'head' => $head, 'mouth' => $mouth, 'blink' => $blink]];
+        // spec v2 (tools/card_builder): slots of the enabled packs (sitting, 3/4 and side views, running ...) as "extra": {group: {id: file}}
+        $extra = [];
+        foreach (['body', 'head', 'mouth'] as $group) {
+            $map = $meta['extra'][$group] ?? null;
+            if (! is_array($map) || $map === []) {
+                continue;
+            }
+            if (count($map) > 40) {
+                return "character.json di karakter/$slug punya terlalu banyak slot extra.$group (maks 40).";
+            }
+            foreach ($map as $id => $f) {
+                $id = (string) $id;
+                $f = (string) $f;
+                if (! preg_match('/^[a-z0-9_]+$/i', $id) || ! str_ends_with(strtolower($f), '.png') || ! preg_match('/^[a-z0-9_-]+$/i', substr($f, 0, -4)) || ! is_file($dir.DIRECTORY_SEPARATOR.$f)) {
+                    return "Slot extra.$group.$id ($f) tidak valid atau berkasnya tidak ada di karakter/$slug.";
+                }
+                $extra[$group][$id] = $f;
+            }
+        }
+        $files = ['body' => $body, 'head' => $head, 'mouth' => $mouth, 'blink' => $blink];
+        if ($extra) {
+            $files['extra'] = $extra;
+        }
+
+        return ['meta' => $meta, 'files' => $files];
     }
 
     private function addVersion(Character $c, string $slug, array $spec, string $note): CharacterVersion
@@ -211,6 +253,9 @@ class CardCharacterController extends Controller
         $dir = self::DIR.'/'.Str::uuid();
         $disk = Storage::disk('local');
         $names = [...array_values($spec['files']['body']), ...array_values($spec['files']['head']), ...array_values($spec['files']['mouth']), ...($spec['files']['blink'] ? [$spec['files']['blink']] : [])];
+        foreach ($spec['files']['extra'] ?? [] as $group) {
+            array_push($names, ...array_values($group));
+        }
         foreach (array_unique($names) as $f) {
             $disk->put($dir.'/'.$f, (string) file_get_contents($src.DIRECTORY_SEPARATOR.$f));
         }
@@ -283,6 +328,9 @@ class CardCharacterController extends Controller
             $f = $v->config['files'];
             $map = fn (array $xs) => array_map(fn ($name) => $this->fileUrl($v, $name), $xs);
             $urls = ['body' => $map($f['body']), 'head' => $map($f['head']), 'mouth' => $map($f['mouth'] ?? []), 'blink' => ! empty($f['blink']) ? $this->fileUrl($v, $f['blink']) : null];
+            if (! empty($f['extra'])) {
+                $urls['extra'] = array_map($map, $f['extra']);
+            }
         }
 
         return $this->summary($c) + [

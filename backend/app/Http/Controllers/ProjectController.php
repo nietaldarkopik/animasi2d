@@ -83,11 +83,19 @@ class ProjectController extends Controller
             "$p.swaps" => 'nullable|array|max:5000',
             "$p.swaps.*.f" => 'required|integer|min:0|max:100000',
             "$p.swaps.*.assetId" => 'required|integer',
-            "$p.expr" => 'nullable|array|max:40',
+            "$p.expr" => 'nullable|array|max:80',
             "$p.expr.*" => 'integer',
             "$p.rig" => 'nullable|array|required_array_keys:id,role',
             "$p.rig.id" => 'string|max:64',
             "$p.rig.role" => 'string|max:64',
+            // 2.5D card characters (spec v2): where the head sits for each body slot, and whether the figure may be mirrored
+            "$p.rig.card" => 'nullable|array|max:8',
+            "$p.rig.card.head0" => 'array|size:2',
+            "$p.rig.card.head0.*" => 'numeric|between:-20000,20000',
+            "$p.rig.card.head" => 'array|max:80',
+            "$p.rig.card.head.*" => 'array|size:2',
+            "$p.rig.card.head.*.*" => 'numeric|between:-20000,20000',
+            "$p.rig.card.mirror" => 'boolean',
         ];
         foreach (['x', 'y', 'scaleX', 'scaleY', 'rotation', 'opacity'] as $prop) {
             $rules["$p.keyframes.$prop"] = 'nullable|array|max:5000';

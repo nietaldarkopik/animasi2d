@@ -71,6 +71,14 @@ return [
     ],
 
 
+    // Card Builder (tools/card_builder, Python): paket gerak, karakter baru dari Flow, duplikat + ganti warna untuk karakter kartu 2.5D.
+    // `root` = folder karakter/ (default ../karakter); tes memakai folder sementara.
+    'card_builder' => [
+        'python' => env('CARD_BUILDER_PYTHON') ?: env('PYTHON_BIN') ?: 'python',
+        'root' => env('CARD_BUILDER_ROOT') ?: null,
+        'timeout' => (int) (env('CARD_BUILDER_TIMEOUT') ?: 240),
+    ],
+
     // clipper-tool: unggah otomatis film kartun ke YouTube (cartoon:generate-daily --publish)
     'clipper' => [
         'path' => env('CLIPPER_PATH'),
