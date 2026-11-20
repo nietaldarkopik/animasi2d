@@ -15,6 +15,9 @@ export interface CharacterSpritePackInfo {
   name: string
   character_id: number
   character_version: number | null
+  outfit_id: string
+  outfit_name: string
+  outfit_type: 'base' | 'outfit_variant'
   image_width: number
   image_height: number
   frame_width: number
@@ -171,7 +174,7 @@ export const api = {
   builderRename: (id: number, name: string) => req(`/builder/characters/${id}`, json('PATCH', { name })),
   builderDuplicate: (id: number) => req<{ data: BuilderDetail }>(`/builder/characters/${id}/duplicate`, json('POST', {})).then((r) => r.data),
   builderDelete: (id: number) => req(`/builder/characters/${id}`, json('DELETE')),
-  builderImportSpritePack: (characterId: number, input: { file: File; name: string; characterVersion: number | null; columns: number; rows: number; fps: number; facing: Facing; animationName: string; loop: boolean; manifest?: string }) => {
+  builderImportSpritePack: (characterId: number, input: { file: File; name: string; characterVersion: number | null; columns: number; rows: number; fps: number; facing: Facing; animationName: string; loop: boolean; outfitType: 'base' | 'outfit_variant'; outfitId: string; outfitName: string; manifest?: string }) => {
     const fd = new FormData()
     fd.append('file', input.file, input.file.name)
     fd.append('name', input.name)
@@ -180,6 +183,9 @@ export const api = {
     fd.append('rows', String(input.rows))
     fd.append('fps', String(input.fps))
     fd.append('facing', input.facing)
+    fd.append('outfit_type', input.outfitType)
+    fd.append('outfit_id', input.outfitId)
+    fd.append('outfit_name', input.outfitName)
     fd.append('animation_name', input.animationName)
     fd.append('loop', input.loop ? '1' : '0')
     if (input.manifest) fd.append('manifest', input.manifest)
