@@ -114,7 +114,7 @@ export function CardCharacterPage() {
                 <span className="badge">2.5D</span>
               </div>
               {m?.style && <p className="muted small" style={{ margin: '4px 0' }}>{m.style}</p>}
-              <p className="muted small" style={{ margin: '4px 0' }}>Sumber: folder <code>karakter/{d.source}</code>. Gambar sudah disalin ke versi ini; menggambar ulang PNG di folder tidak mengubahnya sampai Anda klik <em>Perbarui dari folder</em>.</p>
+              <p className="muted small" style={{ margin: '4px 0' }}>Sumber: {d.source === 'package-import' ? 'paket karakter ZIP' : <>folder <code>karakter/{d.source}</code></>}. Gambar sudah disalin ke versi ini; menggambar ulang PNG di folder tidak mengubahnya sampai Anda klik <em>Perbarui dari folder</em>.</p>
 
               {m && (
                 <>
@@ -131,7 +131,7 @@ export function CardCharacterPage() {
               )}
 
               <div className="row" style={{ gap: 6, marginTop: 16, flexWrap: 'wrap' }}>
-                <button className="primary" disabled={busy} onClick={() => void act(async () => { const x = await api.cardRefresh(d.id); setD(x) })} title="Buat versi baru dari isi folder karakter saat ini">{busy ? 'Memproses…' : 'Perbarui dari folder'}</button>
+                <button className="primary" disabled={busy || d.source === 'package-import'} onClick={() => void act(async () => { const x = await api.cardRefresh(d.id); setD(x) })} title={d.source === 'package-import' ? 'Karakter ini berasal dari paket ZIP, bukan folder sumber.' : 'Buat versi baru dari isi folder karakter saat ini'}>{busy ? 'Memproses…' : 'Perbarui dari folder'}</button>
                 <button disabled={busy} onClick={() => void act(async () => { const x = await api.cardDuplicate(d.id); nav(`/builder/card/${x.id}`) })}>Duplikat</button>
                 <button disabled={busy} onClick={() => void act(() => api.cardExportPackage(d.id, d.viewing ?? undefined))}>Export Paket ZIP</button>
                 <button disabled={busy} onClick={() => packageInput.current?.click()}>Import Paket sebagai Karakter Baru</button>
