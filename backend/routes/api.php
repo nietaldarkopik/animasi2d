@@ -50,6 +50,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/builder/cards/{character}/refresh', [\App\Http\Controllers\CardCharacterController::class, 'refresh'])->middleware('throttle:30,1');
     Route::post('/builder/cards/{character}/duplicate', [\App\Http\Controllers\CardCharacterController::class, 'duplicate']);
     Route::delete('/builder/cards/{character}', [\App\Http\Controllers\CardCharacterController::class, 'destroy']);
+    Route::get('/builder/cards/{character}/sprite-packs', [CharacterSpritePackController::class, 'index']);
+    Route::post('/builder/cards/{character}/sprite-packs', [CharacterSpritePackController::class, 'store'])->middleware('throttle:20,1');
     Route::get('/builder/characters', [BuilderCharacterController::class, 'index']);
     Route::post('/builder/characters', [BuilderCharacterController::class, 'store'])->middleware('throttle:60,1');
     Route::get('/builder/characters/{character}', [BuilderCharacterController::class, 'show']);
