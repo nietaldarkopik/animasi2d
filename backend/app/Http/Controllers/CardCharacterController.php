@@ -256,6 +256,9 @@ class CardCharacterController extends Controller
         $this->own($request, $character);
         $cur = $character->versions()->where('number', $character->current_version)->firstOrFail();
         $slug = $cur->config['source'] ?? '';
+        if ($slug === 'package-import') {
+            return response()->json(['message' => 'Karakter ini berasal dari paket ZIP dan tidak memiliki folder sumber. Ekspor paket, edit aset, lalu impor sebagai karakter baru.'], 422);
+        }
         $spec = $this->readSpec($slug);
         if (is_string($spec)) {
             return response()->json(['message' => $spec, 'errors' => ['slug' => [$spec]]], 422);
