@@ -17,7 +17,7 @@ export interface CharacterReferencePackManifest {
     source_canvas: { width: 400; height: 800 }
     fit: 'contain-height'
   }
-  reference_image: 'character_reference_1024.png'
+  reference_image: string
   rig: CharacterConfig['rig'] | null
   expressions: NonNullable<CharacterConfig['expressions']>
   config: CharacterConfig
@@ -68,6 +68,7 @@ export function buildCharacterReferencePackManifest(input: {
   version: number | null
   config: CharacterConfig
   assets: Record<number, LibAsset>
+  referenceImageName?: string
 }): CharacterReferencePackManifest {
   const referenced = new Set<number>()
   Object.values(input.config.parts).forEach((part) => referenced.add(part.assetId))
@@ -113,7 +114,7 @@ export function buildCharacterReferencePackManifest(input: {
       source_canvas: { ...CHARACTER_SOURCE_CANVAS },
       fit: 'contain-height',
     },
-    reference_image: 'character_reference_1024.png',
+    reference_image: input.referenceImageName ?? 'character_reference_1024.png',
     rig: input.config.rig ?? null,
     expressions: input.config.expressions ?? [],
     config: input.config,
