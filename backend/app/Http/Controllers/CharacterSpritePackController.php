@@ -30,6 +30,9 @@ class CharacterSpritePackController extends Controller
         $data = $request->validate([
             'file' => 'required|file|mimetypes:image/png|max:51200',
             'name' => 'nullable|string|max:120',
+            'outfit_type' => 'nullable|in:base,outfit_variant',
+            'outfit_id' => 'nullable|string|max:64|regex:/^[a-z0-9_-]+$/',
+            'outfit_name' => 'nullable|string|max:120',
             'character_version' => 'nullable|integer|min:1',
             'columns' => 'required|integer|min:1|max:16',
             'rows' => 'required|integer|min:1|max:16',
@@ -40,6 +43,10 @@ class CharacterSpritePackController extends Controller
             'manifest' => 'nullable|string|max:200000',
         ]);
 
+        $outfitType = $data['outfit_type'] ?? 'base';
+        if ($outfitType === 'outfit_variant' && empty($data['outfit_id'])) {
+            return response()->json(['message' => 'Outfit ID wajib diisi untuk variasi pakaian.'], 422);
+        }
         if (isset($data['character_version']) && ! CharacterVersion::where('character_id', $character->id)->where('number', $data['character_version'])->exists()) {
             return response()->json(['message' => 'Versi karakter yang dipilih tidak ditemukan.'], 422);
         }
@@ -106,6 +113,24 @@ class CharacterSpritePackController extends Controller
             ];
         }
 
+        $outfitId = $outfitType === 'base' ? 'base' : $data['outfit_id'];
+        $manifest['outfit'] = [
+            'id' => $outfitId,
+            'name' => ($data['outfit_name'] ?? '') ?: ($outfitType === 'base' ? 'Pakaian dasar' : $outfitId),
+            'type' => $outfitType,
+        ];
+        if ($outfitType === 'outfit_variant') {
+            $basePack = CharacterSpritePack::where('character_id', $character->id)
+                ->where('outfit_type', 'base')->where('facing', $data['facing'])->latest()->first();
+            if (! $basePack) {
+                return response()->json(['message' => 'Import sprite sheet karakter dasar terlebih dahulu sebelum menambahkan variasi pakaian.'], 422);
+            }
+            if ($this->frameSignature($basePack->manifest ?? []) !== $this->frameSignature($manifest)
+                || ($basePack->manifest['frame']['pivot'] ?? ['x' => 512, 'y' => 1024]) !== ($manifest['frame']['pivot'] ?? ['x' => 512, 'y' => 1024])) {
+                return response()->json(['message' => 'Outfit harus memiliki animation ID, urutan frame, facing, dan pivot yang sama dengan karakter dasar.'], 422);
+            }
+        }
+
         $sha = hash('sha256', $content);
         $existing = CharacterSpritePack::where('character_id', $character->id)->where('sha256', $sha)->first();
         if ($existing) {
@@ -119,6 +144,9 @@ class CharacterSpritePackController extends Controller
             'character_id' => $character->id,
             'character_version' => $data['character_version'] ?? $character->current_version,
             'name' => ($data['name'] ?? '') ?: pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+            'outfit_id' => $outfitId,
+            'outfit_name' => $manifest['outfit']['name'],
+            'outfit_type' => $outfitType,
             'disk' => 'local',
             'path' => $path,
             'mime' => 'image/png',
@@ -201,11 +229,24 @@ class CharacterSpritePackController extends Controller
         return $errors;
     }
 
+    /** Stable pose signature used to ensure an outfit atlas has the same named frames in the same order as its base character. */
+    private function frameSignature(array $manifest): string
+    {
+        $animations = [];
+        foreach ($manifest['animations'] ?? [] as $name => $animation) {
+            $animations[$name] = array_map(fn ($frame) => (string) ($frame['id'] ?? ''), $animation['frames'] ?? []);
+        }
+        ksort($animations);
+
+        return hash('sha256', json_encode($animations, JSON_UNESCAPED_SLASHES) ?: '');
+    }
+
     private function present(CharacterSpritePack $pack): array
     {
         return [
             'id' => $pack->id, 'name' => $pack->name, 'character_id' => $pack->character_id,
-            'character_version' => $pack->character_version, 'image_width' => $pack->image_width, 'image_height' => $pack->image_height,
+            'character_version' => $pack->character_version, 'outfit_id' => $pack->outfit_id, 'outfit_name' => $pack->outfit_name, 'outfit_type' => $pack->outfit_type,
+            'image_width' => $pack->image_width, 'image_height' => $pack->image_height,
             'frame_width' => $pack->frame_width, 'frame_height' => $pack->frame_height,
             'columns' => $pack->columns, 'rows' => $pack->rows, 'frame_count' => $pack->frame_count,
             'fps' => $pack->fps, 'facing' => $pack->facing, 'status' => $pack->status,
