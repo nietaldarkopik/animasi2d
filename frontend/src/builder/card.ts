@@ -25,6 +25,7 @@ export interface CardDetail extends CardSummary {
   viewing: number | null
   meta: CardMeta | null
   urls: CardUrls | null
+  sitting_reference_urls?: Record<string, string>
 }
 export interface CardAvailable { slug: string; name: string; ok: boolean; problem: string | null; style?: string | null; poses?: string[]; expressions?: string[]; imported_id: number | null }
 
