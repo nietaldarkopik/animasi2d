@@ -1,4 +1,5 @@
 import type { SeriesInput, StoryEpisode, StoryScript, StorySeries } from './story/types'
+import type { Facing } from './builder/types'
 import type { CardAvailable, CardDetail, CardSummary } from './builder/card'
 import type { AssetValidation, DesignTemplateInfo, BuilderDetail, BuilderSummary, CharacterConfig, Facing, LibAsset, LibCategory } from './builder/types'
 import type { Layer, AiJobInfo, AiStatus, Asset, EnhanceModeId, EnhanceModeInfo, EnhanceOptions, ExportInfo, Geometry, ImageOp, Project, ProjectDoc, ProjectSummary, VersionInfo } from './types'
@@ -8,6 +9,28 @@ const TOKEN_KEY = 'cm_token'
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY)
 export const setToken = (t: string | null) => (t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY))
+
+export interface CharacterSpritePackInfo {
+  id: number
+  name: string
+  character_id: number
+  character_version: number | null
+  image_width: number
+  image_height: number
+  frame_width: number
+  frame_height: number
+  columns: number
+  rows: number
+  frame_count: number
+  fps: number
+  facing: Facing
+  status: string
+  sha256: string
+  manifest: Record<string, unknown>
+  file_url: string
+  created_at: string
+  duplicate?: boolean
+}
 
 export class ApiError extends Error {
   status: number
@@ -148,6 +171,21 @@ export const api = {
   builderRename: (id: number, name: string) => req(`/builder/characters/${id}`, json('PATCH', { name })),
   builderDuplicate: (id: number) => req<{ data: BuilderDetail }>(`/builder/characters/${id}/duplicate`, json('POST', {})).then((r) => r.data),
   builderDelete: (id: number) => req(`/builder/characters/${id}`, json('DELETE')),
+  builderImportSpritePack: (characterId: number, input: { file: File; name: string; characterVersion: number | null; columns: number; rows: number; fps: number; facing: Facing; animationName: string; loop: boolean; manifest?: string }) => {
+    const fd = new FormData()
+    fd.append('file', input.file, input.file.name)
+    fd.append('name', input.name)
+    if (input.characterVersion) fd.append('character_version', String(input.characterVersion))
+    fd.append('columns', String(input.columns))
+    fd.append('rows', String(input.rows))
+    fd.append('fps', String(input.fps))
+    fd.append('facing', input.facing)
+    fd.append('animation_name', input.animationName)
+    fd.append('loop', input.loop ? '1' : '0')
+    if (input.manifest) fd.append('manifest', input.manifest)
+    return req<{ data: CharacterSpritePackInfo; duplicate?: boolean }>(`/builder/characters/${characterId}/sprite-packs`, { method: 'POST', body: fd }).then((r) => ({ ...r.data, duplicate: !!r.duplicate }))
+  },
+  builderSpritePacks: (characterId: number) => req<{ data: CharacterSpritePackInfo[] }>(`/builder/characters/${characterId}/sprite-packs`).then((r) => r.data),
   // 2.5D card characters (PNG cards from the karakter/ folder)
   cardList: () => req<{ data: CardSummary[] }>('/builder/cards').then((r) => r.data),
   /** every character a story or the auto-director may cast: Character Builder rigs and 2.5D cards (ids share one table) */
