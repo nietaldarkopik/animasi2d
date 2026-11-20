@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { switchFacing } from './facing'
 import type { CharacterConfig, Facing, LibAsset } from './types'
 
-const asset = (id: number, category: string, view: Facing, set: string | null): LibAsset => ({ id, key: null, category, name: `a${id}`, tags: [], source: 'upload', status: 'approved', mime: 'image/png', width: 800, height: 1600, tintable: false, view, set, hash: `h${id}`, mine: true, meta: null, url: '' })
+const asset = (id: number, category: string, view: Facing, set: string | null): LibAsset => ({ id, asset_uuid: `test-asset-${id}`, version_number: 1, parent_asset_id: null, is_current: true, change_note: null, created_at: '2026-01-01T00:00:00Z', key: null, category, name: `a${id}`, tags: [], source: 'upload', status: 'approved', mime: 'image/png', width: 800, height: 1600, tintable: false, view, set, hash: `h${id}`, mine: true, meta: null, url: '' })
 
 const lib = [
   asset(1, 'top', 'front', 'kit:L1:top'), asset(2, 'top', 'right', 'kit:L1:top'), asset(3, 'top', 'back', 'kit:L1:top'),
