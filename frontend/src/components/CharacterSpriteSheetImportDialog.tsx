@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { api, type CharacterSpritePackInfo } from '../api'
 import type { Facing } from '../builder/types'
 
@@ -20,14 +20,22 @@ export function CharacterSpriteSheetImportDialog({ characterId, version, onClose
   const [fps, setFps] = useState(12)
   const [animationName, setAnimationName] = useState('idle')
   const [facing, setFacing] = useState<Facing>('front')
+  const [outfitType, setOutfitType] = useState<'base' | 'outfit_variant'>('base')
+  const [outfitId, setOutfitId] = useState('base')
+  const [outfitName, setOutfitName] = useState('Pakaian dasar')
+  const [previewUrl, setPreviewUrl] = useState('')
   const [loop, setLoop] = useState(true)
   const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [note, setNote] = useState('')
 
-  const previewUrl = useMemo(() => file ? URL.createObjectURL(file) : '', [file])
-  useEffect(() => () => { if (previewUrl) URL.revokeObjectURL(previewUrl) }, [previewUrl])
+  useEffect(() => {
+    if (!file) { setPreviewUrl(''); return }
+    const url = URL.createObjectURL(file)
+    setPreviewUrl(url)
+    return () => URL.revokeObjectURL(url)
+  }, [file])
 
   useEffect(() => {
     if (!previewUrl) { setDimensions(null); return }
@@ -59,7 +67,7 @@ export function CharacterSpriteSheetImportDialog({ characterId, version, onClose
     try {
       const pack = await api.builderImportSpritePack(characterId, {
         file, name: file.name.replace(/\.png$/i, ''), characterVersion: version,
-        columns, rows, fps, facing, animationName, loop, manifest: manifestText || undefined,
+        columns, rows, fps, facing, animationName, loop, outfitType, outfitId: outfitType === 'base' ? 'base' : outfitId, outfitName, manifest: manifestText || undefined,
       })
       setNote(pack.duplicate ? 'Sprite sheet ini sudah pernah diimpor. Data lama digunakan.' : 'Sprite sheet berhasil diimpor dan disimpan sebagai draft untuk pemeriksaan.')
       onImported(pack)
@@ -105,6 +113,11 @@ export function CharacterSpriteSheetImportDialog({ characterId, version, onClose
           <label>FPS<input type="number" min={1} max={60} value={fps} onChange={(e) => setFps(Number(e.target.value))} /></label>
           <label>Arah karakter<select value={facing} onChange={(e) => setFacing(e.target.value as Facing)}><option value="front">Depan</option><option value="right">Kanan</option><option value="left">Kiri</option><option value="back">Belakang</option></select></label>
           <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}><input type="checkbox" checked={loop} onChange={(e) => setLoop(e.target.checked)} /> Loop animasi</label>
+          <label>Jenis paket<select value={outfitType} onChange={(e) => { setOutfitType(e.target.value as 'base' | 'outfit_variant'); if (e.target.value === 'base') { setOutfitId('base'); setOutfitName('Pakaian dasar') } else { setOutfitId('hoodie'); setOutfitName('Hoodie') } }}><option value="base">Karakter dasar</option><option value="outfit_variant">Variasi pakaian karakter</option></select></label>
+          {outfitType === 'outfit_variant' && <>
+            <label>Outfit ID<input value={outfitId} maxLength={64} onChange={(e) => setOutfitId(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '-'))} /></label>
+            <label>Nama pakaian<input value={outfitName} maxLength={120} onChange={(e) => setOutfitName(e.target.value)} /></label>
+          </>}
         </div>
 
         <label style={{ display: 'grid', gap: 6 }}>
@@ -117,10 +130,10 @@ export function CharacterSpriteSheetImportDialog({ characterId, version, onClose
         {error && <p role="alert" style={{ color: 'var(--danger)', margin: 0 }}>{error}</p>}
         {note && <p role="status" style={{ color: 'var(--success)', margin: 0 }}>{note}</p>}
         <footer className="row between">
-          <span className="muted small">Disimpan sebagai draft; perlu QC sebelum dipakai di produksi.</span>
+          <span className="muted small">{outfitType === 'base' ? 'Paket karakter dasar.' : 'Variasi harus memiliki facing, animation ID, urutan frame, dan pivot yang sama dengan paket dasar.'} Disimpan sebagai draft QC.</span>
           <div className="row">
             <button onClick={onClose} disabled={busy}>Batal</button>
-            <button className="primary" onClick={() => void submit()} disabled={busy || !file || !validGrid}>{busy ? 'Mengimpor…' : 'Import Sprite Sheet'}</button>
+            <button className="primary" onClick={() => void submit()} disabled={busy || !file || !validGrid || (outfitType === 'outfit_variant' && !outfitId.trim())}>{busy ? 'Mengimpor…' : 'Import Sprite Sheet'}</button>
           </div>
         </footer>
       </section>
