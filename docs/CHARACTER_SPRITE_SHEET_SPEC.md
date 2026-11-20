@@ -122,7 +122,8 @@ Raw single-image sprite sheets without a manifest may be imported in assisted mo
 - Character Builder has an Import Sprite Sheet dialog for 1024x1024 PNG atlases, grid dimensions, FPS, facing, optional atlas manifest and outfit metadata.
 - Imported atlases are stored as immutable file-backed sprite-pack records with SHA-256, frame metadata and `pending_review` status.
 - Outfit variants are stored as full-character pose-matched atlases (not garment-only overlays). They must match the base pack's animation and frame IDs/order and pivot. This makes whole-outfit switching possible without trying to align a separate shirt layer over an arbitrary pose.
-- Imported atlases are not yet played in PixiJS. Runtime playback, preview timeline, frame QC, pack version management and per-scene outfit selection remain subsequent phases.
+- Imported atlases can now be previewed in Character Builder using PixiJS 8 `AnimatedSprite`; the preview reads frame rectangles, pivot, FPS and loop behavior from the manifest.
+- Scene-layer playback, timeline animation tracks, per-scene outfit selection, frame QC and pack version management remain subsequent phases.
 - The reference-pack exporter and atlas importer are different formats and purposes: the former guides image generation; the latter describes actual animation frames.
 
 ## Storage and versioning
@@ -148,7 +149,7 @@ Raw single-image sprite sheets without a manifest may be imported in assisted mo
 3. **Pose and animation library:** define canonical pose IDs, facing and animation timelines; connect imported frames to the library.
 4. **Outfit Manager:** support modular rigged clothing and pose-matched clothing sets with anchors and compatibility.
 5. **Google Flow workflow:** export reference packs and prompts; import generated results; run QC and alignment review.
-6. **PixiJS integration:** play imported atlases in editor/timeline and allow outfit selection per scene.
+6. **PixiJS integration:** (a) PixiJS atlas playback preview in Character Builder; (b) connect sprite-pack references to scene layers and timeline; (c) allow validated outfit selection per scene.
 7. **Story/Auto Director integration:** map shot instructions to animation IDs, pose IDs, expressions, facing and outfit.
 
 ## Non-goals for v1
