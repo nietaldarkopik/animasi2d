@@ -4,7 +4,7 @@ import { syncShoes } from './shoes'
 import { baseSlot, DEFAULT_PALETTE, effectiveZ, placement } from './spec'
 import type { CharacterConfig, LibAsset } from './types'
 
-const shoe = (o: Partial<LibAsset> = {}): LibAsset => ({ id: 9, key: null, category: 'shoes', name: 'Sepatu (satu)', tags: [], source: 'upload', status: 'approved', mime: 'image/svg+xml', width: 800, height: 1600, tintable: false, hash: 'h', mine: true, meta: null, url: '', mirror: { px: 160, py: 760 }, ...o })
+const shoe = (o: Partial<LibAsset> = {}): LibAsset => ({ id: 9, key: null, category: 'shoes', name: 'Sepatu (satu)', tags: [], source: 'upload', status: 'approved', mime: 'image/svg+xml', width: 800, height: 1600, tintable: false, hash: 'h', mine: true, meta: null, url: '', mirror: { px: 160, py: 760 }, ...o, asset_uuid: o.asset_uuid ?? 'test-asset-9', version_number: o.version_number ?? 1, parent_asset_id: o.parent_asset_id ?? null, is_current: o.is_current ?? true, change_note: o.change_note ?? null, created_at: o.created_at ?? '2026-01-01T00:00:00Z' })
 
 describe('one mirrored shoe', () => {
   it('turns and scales about its own centre, not about the pair centre', () => {
