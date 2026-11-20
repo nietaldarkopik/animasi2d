@@ -129,7 +129,8 @@ class CardCharacterController extends Controller
             $zip->addFromString('GOOGLE-FLOW-PROMPT.txt', implode("\n", [
                 'Edit this complete character sprite sheet consistently across every cell.',
                 'Preserve the exact 4-column × 4-row grid, every 1024×1024 cell boundary, the original 4096×4096 canvas size, and each character position/scale.',
-                'Keep one complete full-body character inside each existing cell. Do not merge, move, reorder, crop, add, or remove cells.',
+                'Keep one complete full-body character inside each character cell. Some cells on the last page(s) may contain isolated mouth/blink overlays; preserve those as separate transparent overlay artwork.',
+                'Do not merge, move, reorder, crop, add, or remove cells.',
                 'Preserve the character identity: face, hairstyle, skin tone, body proportions, silhouette, and recognizable details.',
                 'Apply the requested outfit/style change consistently to every pose and expression in all pages.',
                 'Keep the background transparent. Do not add labels, captions, borders, shadows outside the character, or decorative elements.',
