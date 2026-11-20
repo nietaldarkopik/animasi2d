@@ -146,7 +146,7 @@ export function CardCharacterPage() {
                                 <div className="small"><strong>Preview: {sittingReference}</strong></div>
                                 <div style={{ background: CHECKER, border: '1px solid var(--border)', borderRadius: 8, padding: 8, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 180 }}>
                                   <img
-                                    src={absUrl(d.sitting_reference_urls[sittingReference])}
+                                    src={absUrl(d.sitting_reference_urls?.[sittingReference] ?? '')}
                                     alt={`Referensi pose duduk ${sittingReference}`}
                                     style={{ display: 'block', maxWidth: '100%', maxHeight: 280, objectFit: 'contain' }}
                                   />
