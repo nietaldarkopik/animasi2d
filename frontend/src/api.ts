@@ -196,6 +196,30 @@ export const api = {
   castList: () => Promise.all([api.builderList(), api.cardList().catch(() => [] as CardSummary[])]).then(([b, c]) => [...b, ...c]),
   cardAvailable: () => req<{ data: CardAvailable[] }>('/builder/cards/available').then((r) => r.data),
   cardImport: (slug: string, name?: string) => req<{ data: CardDetail }>('/builder/cards', json('POST', { slug, ...(name ? { name } : {}) })).then((r) => r.data),
+  cardImportPackage: (file: File, name?: string) => {
+    const fd = new FormData()
+    fd.append('file', file, file.name)
+    if (name?.trim()) fd.append('name', name.trim())
+    return req<{ data: CardDetail }>('/builder/cards/import-package', { method: 'POST', body: fd }).then((r) => r.data)
+  },
+  cardExportPackage: async (id: number, version?: number) => {
+    const query = version ? `?version=${version}` : ''
+    const path = `/builder/cards/${id}/export-package${query}`
+    const res = await fetch(BASE + path, { headers: { Accept: 'application/zip', Authorization: `Bearer ${getToken()}` } })
+    if (res.status === 401) {
+      setToken(null)
+      window.location.assign('/login')
+      throw new ApiError('Sesi login berakhir.', 401)
+    }
+    if (!res.ok) {
+      const body = await res.json().catch(() => null)
+      throw new ApiError(body?.message ?? `Gagal export paket karakter (${res.status}).`, res.status, body)
+    }
+    const blobUrl = URL.createObjectURL(await res.blob())
+    const a = Object.assign(document.createElement('a'), { href: blobUrl, download: `character-${id}-v${version ?? 'current'}.zip` })
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 10_000)
+  },
   cardGet: (id: number, version?: number) => req<{ data: CardDetail }>(`/builder/cards/${id}${version ? `?version=${version}` : ''}`).then((r) => r.data),
   cardRefresh: (id: number) => req<{ data: CardDetail }>(`/builder/cards/${id}/refresh`, json('POST', {})).then((r) => r.data),
   cardRename: (id: number, name: string) => req(`/builder/cards/${id}`, json('PATCH', { name })),
