@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "character": "uki",
+  "pose_families": [
+    {
+      "id": "sit_chair_neutral",
+      "label": "Duduk di kursi — netral",
+      "default_reference": "sit_chair_neutral_a",
+      "alternatives": ["sit_chair_neutral_b", "sit_chair_neutral_c"],
+      "requires_prop": "chair"
+    },
+    {
+      "id": "sit_chair_lean",
+      "label": "Duduk di kursi — condong ke depan",
+      "default_reference": "sit_chair_lean_a",
+      "alternatives": ["sit_chair_lean_c"],
+      "requires_prop": "chair"
+    },
+    {
+      "id": "sit_floor_crosslegged",
+      "label": "Duduk bersila",
+      "default_reference": "sit_floor_crosslegged_b",
+      "alternatives": ["sit_floor_crosslegged_d"],
+      "requires_prop": null
+    },
+    {
+      "id": "sit_wide_legs",
+      "label": "Duduk kaki terbuka",
+      "default_reference": "sit_wide_legs_d",
+      "alternatives": [],
+      "requires_prop": null
+    }
+  ],
+  "generation": {
+    "script": "_proses/proses_duduk.py",
+    "output": "references/*.png",
+    "command": "python karakter/uki/_proses/proses_duduk.py",
+    "requirements": ["Pillow", "NumPy"]
+  },
+  "integration_notes": [
+    "Source JPGs remain unchanged under _mentah/.",
+    "The generated images are transparent static pose references, not animation frames.",
+    "Head attachment must be aligned to each pose's neck anchor after visual review.",
+    "A chair must be added as a separate prop behind the character.",
+    "Do not replace existing standing body assets."
+  ]
+}
