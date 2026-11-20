@@ -398,6 +398,8 @@ class CardCharacterController extends Controller
             'reference' => ['required', 'string', 'regex:/^[a-z0-9_-]+$/'],
             'x' => ['required', 'numeric', 'between:-800,1200'],
             'y' => ['required', 'numeric', 'between:-800,1400'],
+            'head_scale' => ['sometimes', 'numeric', 'between:0.45,1.8'],
+            'body_scale' => ['sometimes', 'numeric', 'between:0.65,1.5'],
         ]);
         $source = $character->versions()->where('number', $character->current_version)->firstOrFail();
         abort_unless(isset($source->config['sitting_references'][$data['reference']]), 404, 'Referensi pose duduk tidak ditemukan pada versi ini.');
@@ -406,6 +408,10 @@ class CardCharacterController extends Controller
         $meta = $config['meta'] ?? [];
         $meta['sitting_head_offsets'] = $meta['sitting_head_offsets'] ?? [];
         $meta['sitting_head_offsets'][$data['reference']] = [(int) round($data['x']), (int) round($data['y'])];
+        $meta['sitting_head_scales'] = $meta['sitting_head_scales'] ?? [];
+        $meta['sitting_head_scales'][$data['reference']] = (float) ($data['head_scale'] ?? ($meta['sitting_head_scales'][$data['reference']] ?? 1));
+        $meta['sitting_body_scales'] = $meta['sitting_body_scales'] ?? [];
+        $meta['sitting_body_scales'][$data['reference']] = (float) ($data['body_scale'] ?? ($meta['sitting_body_scales'][$data['reference']] ?? 1));
         $config['meta'] = $meta;
 
         $version = DB::transaction(function () use ($character, $source, $config, $data) {
@@ -415,7 +421,7 @@ class CardCharacterController extends Controller
                 'number' => $number,
                 'config' => $config,
                 'thumbnail_path' => $source->thumbnail_path,
-                'note' => 'Kalibrasi attachment kepala: '.$data['reference'],
+                'note' => 'Kalibrasi pose duduk (posisi dan skala): '.$data['reference'],
             ]);
             $character->update(['current_version' => $number]);
 
