@@ -97,8 +97,9 @@ class CardCharacterController extends Controller
             'meta' => $config['meta'],
             'files' => $files,
             'instructions' => [
-                'Edit PNG files inside assets/ while keeping filenames and transparent backgrounds.',
-                'Keep body/head canvas dimensions and paste offsets compatible, or update meta and validate the result.',
+                'Edit sprite-sheet/sprite-sheet-01.png and any additional sprite-sheet pages in Google Flow; keep the 4x4 grid, transparent background, and cell boundaries unchanged.',
+                'Each 1024x1024 cell is a complete character composite for one body pose and head expression; sprite-sheet-index.json and each page JSON map cells back to pose/expression IDs.',
+                'Keep the original assets/ PNGs in the ZIP. They preserve the modular card rig; edited sprite sheets are imported as full-character sprite packs on the new character.',
                 'Import this ZIP as a new character; the original character and its versions remain unchanged.',
             ],
         ];
@@ -229,6 +230,71 @@ class CardCharacterController extends Controller
                 $assets[$name] = $bytes;
             }
 
+            // Optional edited sprite-sheet pages are imported as full-character sprite packs.
+            // Read exact allow-listed ZIP entries; never extract the archive.
+            $spritePages = [];
+            $indexText = $zip->getFromName('sprite-sheet-index.json');
+            if (is_string($indexText)) {
+                if (strlen($indexText) > 1048576) {
+                    return response()->json(['message' => 'Index sprite sheet melebihi 1 MB.'], 422);
+                }
+                $index = json_decode($indexText, true);
+                if (! is_array($index) || ($index['format'] ?? null) !== 'animasi2d.character-card-sprite-sheet-index'
+                    || ($index['format_version'] ?? null) !== 1 || ! is_array($index['pages'] ?? null)
+                    || count($index['pages']) > 100) {
+                    return response()->json(['message' => 'Index sprite sheet tidak valid.'], 422);
+                }
+                foreach ($index['pages'] as $page) {
+                    $imageName = $page['image'] ?? '';
+                    $manifestName = $page['manifest'] ?? '';
+                    if (! is_string($imageName) || ! preg_match('/^sprite-sheet-\\d{2,3}\\.png$/', $imageName)
+                        || ! is_string($manifestName) || ! preg_match('/^sprite-sheet-\\d{2,3}\\.json$/', $manifestName)) {
+                        return response()->json(['message' => 'Nama file pada index sprite sheet tidak valid.'], 422);
+                    }
+                    $imageEntry = 'sprite-sheet/'.$imageName;
+                    $manifestEntry = 'sprite-sheet/'.$manifestName;
+                    $imageStat = $zip->statName($imageEntry);
+                    $manifestText = $zip->getFromName($manifestEntry);
+                    $sheetBytes = $zip->getFromName($imageEntry);
+                    if (! is_array($imageStat) || ($imageStat['size'] ?? 0) > 52428800 || ! is_string($sheetBytes)
+                        || ! is_string($manifestText) || strlen($manifestText) > 200000) {
+                        return response()->json(['message' => 'File sprite sheet atau manifest tidak lengkap/terlalu besar.'], 422);
+                    }
+                    $sheetInfo = @getimagesizefromstring($sheetBytes);
+                    $sheetJson = json_decode($manifestText, true);
+                    if (! $sheetInfo || ($sheetInfo['mime'] ?? null) !== 'image/png' || $sheetInfo[0] !== 4096 || $sheetInfo[1] !== 4096
+                        || strlen($sheetBytes) < 26 || ord($sheetBytes[25]) !== 6
+                        || ! is_array($sheetJson) || ($sheetJson['format'] ?? null) !== 'animasi2d.character-sprite-atlas'
+                        || ($sheetJson['format_version'] ?? null) !== 1
+                        || ($sheetJson['frame']['width'] ?? null) !== 1024 || ($sheetJson['frame']['height'] ?? null) !== 1024
+                        || ($sheetJson['atlas']['width'] ?? null) !== 4096 || ($sheetJson['atlas']['height'] ?? null) !== 4096
+                        || ($sheetJson['atlas']['columns'] ?? null) !== 4 || ($sheetJson['atlas']['rows'] ?? null) !== 4
+                        || ! is_array($sheetJson['animations'] ?? null) || empty($sheetJson['animations'])) {
+                        return response()->json(['message' => 'Sprite sheet harus PNG RGBA 4096×4096 dengan manifest atlas 4×4 yang valid.'], 422);
+                    }
+                    $count = 0;
+                    foreach ($sheetJson['animations'] as $animation) {
+                        if (! is_array($animation) || ! is_array($animation['frames'] ?? null) || ! is_numeric($animation['fps'] ?? null)
+                            || (int) $animation['fps'] < 1 || (int) $animation['fps'] > 60) {
+                            return response()->json(['message' => 'Definisi animasi sprite sheet tidak valid.'], 422);
+                        }
+                        foreach ($animation['frames'] as $frame) {
+                            $count++;
+                            if (! is_array($frame) || ($frame['width'] ?? null) !== 1024 || ($frame['height'] ?? null) !== 1024
+                                || ! is_numeric($frame['x'] ?? null) || ! is_numeric($frame['y'] ?? null)
+                                || (int) $frame['x'] < 0 || (int) $frame['y'] < 0
+                                || (int) $frame['x'] + 1024 > 4096 || (int) $frame['y'] + 1024 > 4096 || empty($frame['id'])) {
+                                return response()->json(['message' => 'Koordinat frame pada sprite sheet tidak valid.'], 422);
+                            }
+                        }
+                    }
+                    if ($count < 1 || $count > 16) {
+                        return response()->json(['message' => 'Setiap halaman sprite sheet harus berisi 1–16 frame.'], 422);
+                    }
+                    $spritePages[] = ['image' => $imageName, 'bytes' => $sheetBytes, 'manifest' => $sheetJson, 'frame_count' => $count];
+                }
+            }
+
             $safeFiles = [
                 'body' => $files['body'],
                 'head' => $files['head'],
@@ -236,7 +302,7 @@ class CardCharacterController extends Controller
                 'blink' => $files['blink'] ?? null,
             ];
             $characterName = ($data['name'] ?? '') ?: (($manifest['character']['name'] ?? $meta['name'] ?? 'Karakter').' (impor)');
-            $character = DB::transaction(function () use ($request, $characterName, $meta, $safeFiles, $assets) {
+            $character = DB::transaction(function () use ($request, $characterName, $meta, $safeFiles, $assets, $spritePages) {
                 $c = Character::create(['user_id' => $request->user()->id, 'kind' => 'card', 'name' => $characterName, 'method' => 'rig']);
                 $dir = self::DIR.'/'.Str::uuid();
                 foreach ($assets as $filename => $bytes) {
@@ -254,6 +320,25 @@ class CardCharacterController extends Controller
                     'note' => 'Karakter baru dari paket ZIP yang diimpor',
                 ]);
                 $c->update(['current_version' => 1]);
+
+                foreach ($spritePages as $page) {
+                    $sha = hash('sha256', $page['bytes']);
+                    $sheetPath = 'character-sprite-packs/'.$c->id.'/'.$sha.'.png';
+                    Storage::disk('local')->put($sheetPath, $page['bytes']);
+                    $sheetManifest = $page['manifest'];
+                    $sheetManifest['character'] = ['id' => $c->id, 'name' => $c->name, 'version' => 1];
+                    $sheetManifest['verification'] = 'unverified-google-flow-edit';
+                    CharacterSpritePack::create([
+                        'user_id' => $request->user()->id, 'character_id' => $c->id, 'character_version' => 1,
+                        'name' => pathinfo($page['image'], PATHINFO_FILENAME), 'outfit_id' => 'base',
+                        'outfit_name' => 'Pakaian dasar (Google Flow)', 'outfit_type' => 'base',
+                        'disk' => 'local', 'path' => $sheetPath, 'mime' => 'image/png',
+                        'image_width' => 4096, 'image_height' => 4096, 'frame_width' => 1024, 'frame_height' => 1024,
+                        'columns' => 4, 'rows' => 4, 'frame_count' => $page['frame_count'],
+                        'fps' => 1, 'facing' => $sheetManifest['facing'] ?? 'front',
+                        'manifest' => $sheetManifest, 'sha256' => $sha, 'status' => 'pending_review',
+                    ]);
+                }
 
                 return $c;
             });
