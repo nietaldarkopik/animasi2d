@@ -26,6 +26,9 @@ export function CardCharacterPage() {
   const [sittingReference, setSittingReference] = useState('')
   const [sittingHeadOffset, setSittingHeadOffset] = useState<[number, number]>([200, 0])
   const [draggingHead, setDraggingHead] = useState(false)
+  const [sittingHeadScale, setSittingHeadScale] = useState(1)
+  const [sittingBodyScale, setSittingBodyScale] = useState(1)
+  const [canvasZoom, setCanvasZoom] = useState(1)
   const [, setTick] = useState(0)
   const imgs = useRef(new Map<string, HTMLImageElement>())
   const canvas = useRef<HTMLCanvasElement>(null)
@@ -50,6 +53,8 @@ export function CardCharacterPage() {
           setSittingFamily(family.id)
           setSittingReference(family.default_reference)
           setSittingHeadOffset(m.sitting_head_offsets?.[family.default_reference] ?? [200, 0])
+          setSittingHeadScale(m.sitting_head_scales?.[family.default_reference] ?? 1)
+          setSittingBodyScale(m.sitting_body_scales?.[family.default_reference] ?? 1)
         }
       }
     } catch (e) { setError((e as Error).message) }
@@ -95,12 +100,13 @@ export function CardCharacterPage() {
   const sittingBodyImage = m && d?.urls?.sitting?.[sittingReference]
     ? imgs.current.get(d.urls.sitting[sittingReference])
     : undefined
-  const sittingHeadScale = m && sittingBodyImage
+  const sittingBaseScale = m && sittingBodyImage
     ? Math.min(
       m.body.canvas[0] / Math.max(1, sittingBodyImage.naturalWidth),
       (m.body.char_height_px ?? m.body.canvas[1] * 0.93) / Math.max(1, sittingBodyImage.naturalHeight),
     )
     : 1
+  const sittingPreviewBodyScale = sittingBaseScale * sittingBodyScale
   const pick = (label: string, items: string[], cur: string | null, set: (x: string | null) => void, allowNone?: string) => (
     <div>
       <h4 className="small" style={{ margin: '8px 0 4px' }}>{label}</h4>
@@ -118,13 +124,13 @@ export function CardCharacterPage() {
         <span style={{ width: 16 }} />
         <AppNav />
       </header>
-      <main style={{ maxWidth: 1100, margin: '0 auto', padding: 16 }}>
+      <main style={{ maxWidth: 1400, margin: '0 auto', padding: 16 }}>
         <p className="small"><Link to="/builder">← Semua karakter</Link></p>
         {error && <div className="error" role="alert">{error}</div>}
         {!d ? <p className="muted">Memuat…</p> : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(240px, 380px) 1fr', gap: 20, alignItems: 'start' }}>
-            <div style={{ background: CHECKER, borderRadius: 8, padding: 8 }}>
-              <canvas ref={canvas} style={{ width: '100%', height: 'auto', display: 'block' }} aria-label={`Pratinjau ${d.name}`} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 520px) 1fr', gap: 20, alignItems: 'start' }}>
+            <div style={{ background: CHECKER, borderRadius: 8, padding: 8, overflow: 'auto' }}>
+              <canvas ref={canvas} style={{ width: `${canvasZoom * 100}%`, maxWidth: 'none', height: 'auto', display: 'block', margin: '0 auto' }} aria-label={`Pratinjau ${d.name}`} />
             </div>
             <div>
               <div className="row" style={{ gap: 6, alignItems: 'center' }}>
@@ -148,6 +154,8 @@ export function CardCharacterPage() {
                             setSittingFamily(family.id)
                             setSittingReference(family.default_reference)
                             setSittingHeadOffset(m.sitting_head_offsets?.[family.default_reference] ?? [200, 0])
+                            setSittingHeadScale(m.sitting_head_scales?.[family.default_reference] ?? 1)
+                            setSittingBodyScale(m.sitting_body_scales?.[family.default_reference] ?? 1)
                           }}>{family.label}</button>
                         ))}
                       </div>
@@ -157,7 +165,7 @@ export function CardCharacterPage() {
                           <div key={family.id} style={{ marginTop: 10 }}>
                             <div className="small"><strong>Variasi referensi</strong></div>
                             <div className="row" style={{ gap: 6, flexWrap: 'wrap', marginTop: 5 }}>
-                              {refs.map((ref) => <button key={ref} className={sittingReference === ref ? 'primary' : ''} onClick={() => { setSittingReference(ref); setSittingHeadOffset(m.sitting_head_offsets?.[ref] ?? [200, 0]) }}>{ref}</button>)}
+                              {refs.map((ref) => <button key={ref} className={sittingReference === ref ? 'primary' : ''} onClick={() => { setSittingReference(ref); setSittingHeadOffset(m.sitting_head_offsets?.[ref] ?? [200, 0]); setSittingHeadScale(m.sitting_head_scales?.[ref] ?? 1); setSittingBodyScale(m.sitting_body_scales?.[ref] ?? 1) }}>{ref}</button>)}
                             </div>
                             {d.sitting_reference_urls?.[sittingReference] ? (
                               <div style={{ marginTop: 10, display: 'inline-flex', flexDirection: 'column', gap: 5, maxWidth: 240 }}>
@@ -176,7 +184,7 @@ export function CardCharacterPage() {
                             )}
                             <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid var(--border)' }}>
                               <div className="small"><strong>Kalibrasi posisi kepala</strong></div>
-                              <p className="muted small" style={{ margin: '4px 0 8px' }}>Seret kepala ke leher pada gambar. Koordinat dihitung pada kanvas badan 800 × 1400 px.</p>
+                              <p className="muted small" style={{ margin: '4px 0 8px' }}>Atur posisi dan ukuran kepala, lalu sesuaikan skala badan. Semua nilai tersimpan per pose.</p>
                               <div
                                 onPointerMove={(event) => {
                                   if (!draggingHead) return
@@ -188,15 +196,15 @@ export function CardCharacterPage() {
                                 }}
                                 onPointerUp={() => setDraggingHead(false)}
                                 onPointerCancel={() => setDraggingHead(false)}
-                                style={{ position: 'relative', width: 240, aspectRatio: '4 / 7', maxWidth: '100%', overflow: 'hidden', border: '1px solid var(--border)', borderRadius: 8, background: CHECKER, touchAction: 'none', userSelect: 'none' }}
+                                style={{ position: 'relative', width: 320, aspectRatio: '4 / 7', maxWidth: '100%', overflow: 'hidden', border: '1px solid var(--border)', borderRadius: 8, background: CHECKER, touchAction: 'none', userSelect: 'none' }}
                               >
                                 <img src={absUrl(d.sitting_reference_urls?.[sittingReference] ?? '')} alt="" draggable={false}
-                                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center bottom', pointerEvents: 'none' }} />
+                                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center bottom', pointerEvents: 'none', transform: `scale(${sittingBodyScale})`, transformOrigin: 'center bottom' }} />
                                 {d.urls?.head?.[view.expression] && (
                                   <img src={absUrl(d.urls.head[view.expression])} alt="Kepala yang dapat diposisikan" draggable={false}
                                     onPointerDown={(event) => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); setDraggingHead(true) }}
                                     onPointerUp={() => setDraggingHead(false)}
-                                    style={{ position: 'absolute', left: `${sittingHeadOffset[0] / 8}%`, top: `${sittingHeadOffset[1] / 14}%`, width: `${m ? (m.head.canvas[0] * sittingHeadScale / m.body.canvas[0]) * 100 : 50}%`, height: `${m ? (m.head.canvas[1] * sittingHeadScale / m.body.canvas[1]) * 100 : 400 / 1400 * 100}%`, objectFit: 'contain', cursor: draggingHead ? 'grabbing' : 'grab', touchAction: 'none' }} />
+                                    style={{ position: 'absolute', left: `${sittingHeadOffset[0] / 8}%`, top: `${sittingHeadOffset[1] / 14}%`, width: `${m ? (m.head.canvas[0] * sittingPreviewBodyScale * sittingHeadScale / m.body.canvas[0]) * 100 : 50}%`, height: `${m ? (m.head.canvas[1] * sittingPreviewBodyScale * sittingHeadScale / m.body.canvas[1]) * 100 : 400 / 1400 * 100}%`, objectFit: 'contain', cursor: draggingHead ? 'grabbing' : 'grab', touchAction: 'none' }} />
                                 )}
                               </div>
                               <div className="row" style={{ gap: 8, flexWrap: 'wrap', marginTop: 8, alignItems: 'end' }}>
@@ -206,8 +214,20 @@ export function CardCharacterPage() {
                                 <label className="small">Y
                                   <input type="number" value={sittingHeadOffset[1]} onChange={(e) => setSittingHeadOffset(([x]) => [x, Number(e.target.value)])} style={{ width: 88 }} />
                                 </label>
+                                <label className="small">Ukuran kepala
+                                  <input type="range" min="0.45" max="1.8" step="0.01" value={sittingHeadScale} onChange={(e) => setSittingHeadScale(Number(e.target.value))} />
+                                  <span>{Math.round(sittingHeadScale * 100)}%</span>
+                                </label>
+                                <label className="small">Ukuran badan
+                                  <input type="range" min="0.65" max="1.5" step="0.01" value={sittingBodyScale} onChange={(e) => setSittingBodyScale(Number(e.target.value))} />
+                                  <span>{Math.round(sittingBodyScale * 100)}%</span>
+                                </label>
+                                <label className="small">Zoom canvas
+                                  <input type="range" min="0.75" max="1.8" step="0.05" value={canvasZoom} onChange={(e) => setCanvasZoom(Number(e.target.value))} />
+                                  <span>{Math.round(canvasZoom * 100)}%</span>
+                                </label>
                                 <button className="primary" disabled={busy || !d.sitting_reference_urls?.[sittingReference]} onClick={() => void act(async () => {
-                                  const updated = await api.cardSaveSittingHeadOffset(d.id, sittingReference, sittingHeadOffset[0], sittingHeadOffset[1])
+                                  const updated = await api.cardSaveSittingHeadOffset(d.id, sittingReference, sittingHeadOffset[0], sittingHeadOffset[1], sittingHeadScale, sittingBodyScale)
                                   setD(updated)
                                 })}>Simpan kalibrasi</button>
                                 <button disabled={!m.sitting_head_offsets?.[sittingReference]} onClick={() => setView((v) => ({ ...v, pose: `sitting:${sittingReference}`, mouth: null, blink: false }))}>Gunakan di canvas</button>
