@@ -4,6 +4,9 @@ import { api } from '../api'
 import { absUrl } from '../builder/render'
 import { drawCard, type CardDetail, type CardView } from '../builder/card'
 import { AppNav } from '../components/AppNav'
+import { CharacterSpriteSheetImportDialog } from '../components/CharacterSpriteSheetImportDialog'
+import { CharacterSpritePackPreview } from '../components/CharacterSpritePackPreview'
+import type { CharacterSpritePackInfo } from '../api'
 
 const CHECKER = 'repeating-conic-gradient(#2b2f3a 0 25%, #20232c 0 50%) 0 0 / 14px 14px'
 
@@ -14,6 +17,9 @@ export function CardCharacterPage() {
   const [d, setD] = useState<CardDetail | null>(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
+  const [spriteImportOpen, setSpriteImportOpen] = useState(false)
+  const [spritePacks, setSpritePacks] = useState<CharacterSpritePackInfo[]>([])
+  const [spritePreviewPack, setSpritePreviewPack] = useState<CharacterSpritePackInfo | null>(null)
   const [name, setName] = useState('')
   const [view, setView] = useState<CardView>({ pose: '', expression: '', mouth: null, blink: false })
   const [, setTick] = useState(0)
@@ -38,6 +44,13 @@ export function CardCharacterPage() {
     } catch (e) { setError((e as Error).message) }
   }
   useEffect(() => { void load() }, [id]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!id) return
+    let cancelled = false
+    api.builderSpritePacks(Number(id), 'card').then((packs) => { if (!cancelled) setSpritePacks(packs) }).catch((e) => { if (!cancelled) setError((e as Error).message) })
+    return () => { cancelled = true }
+  }, [id])
 
   // load every image of the version once; redraw as they arrive
   useEffect(() => {
@@ -123,6 +136,29 @@ export function CardCharacterPage() {
               </div>
               <p className="muted small">Pakai di film: buka project → tombol <strong>Karakter</strong> → bagian <em>Karakter 2.5D</em> → <strong>Sisipkan 2.5D</strong>. Lalu ganti pose, ekspresi, dan lip-sync dari panel <em>Alat film → Karakter</em>.</p>
 
+              <section style={{ marginTop: 18, padding: 12, border: '1px solid var(--border)', borderRadius: 8 }}>
+                <div className="row between" style={{ gap: 8, flexWrap: 'wrap' }}>
+                  <div>
+                    <h3 style={{ margin: 0 }}>Sprite Sheet Animasi</h3>
+                    <p className="muted small" style={{ margin: '4px 0 0' }}>Impor atlas animasi untuk karakter {d.name}.</p>
+                  </div>
+                  <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
+                    <button className="primary" disabled={busy} onClick={() => setSpriteImportOpen(true)}>Import Sprite Sheet</button>
+                    <button disabled={!spritePacks.length} onClick={() => setSpritePreviewPack(spritePacks[0] ?? null)}>Preview Animasi</button>
+                  </div>
+                </div>
+                {spritePacks.length ? (
+                  <ul className="plain" style={{ margin: '10px 0 0' }}>
+                    {spritePacks.map((pack) => (
+                      <li key={pack.id} className="row between" style={{ gap: 8, padding: '6px 0', borderTop: '1px solid var(--border)' }}>
+                        <span><strong>{pack.name}</strong> <span className="muted small">· {pack.frame_count} frame · {pack.facing} · {pack.outfit_name} · {pack.status}</span></span>
+                        <button onClick={() => setSpritePreviewPack(pack)}>Preview</button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : <p className="muted small" style={{ margin: '10px 0 0' }}>Belum ada sprite sheet yang diimpor.</p>}
+              </section>
+
               <h3 style={{ marginTop: 20 }}>Versi</h3>
               <ul className="plain">
                 {d.versions.slice().reverse().map((v) => (
@@ -136,6 +172,12 @@ export function CardCharacterPage() {
           </div>
         )}
       </main>
+      {spriteImportOpen && d && <CharacterSpriteSheetImportDialog characterId={d.id} resource="card" version={d.viewing ?? null} onClose={() => setSpriteImportOpen(false)} onImported={(pack) => {
+        setSpritePacks((items) => [pack, ...items.filter((item) => item.id !== pack.id)])
+        setSpritePreviewPack(pack)
+        setSpriteImportOpen(false)
+      }} />}
+      {spritePreviewPack && <CharacterSpritePackPreview pack={spritePreviewPack} onClose={() => setSpritePreviewPack(null)} />}
     </div>
   )
 }
