@@ -110,11 +110,11 @@ def main() -> None:
             })
             print(f"{pose_id}: {panel.width}x{panel.height}")
 
-    (OUT.parent / "pose_catalog.json").write_text(
+    (OUT.parent / "pose_manifest.json").write_text(
         json.dumps(catalog, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    print(f"Catalog written: {OUT.parent / 'pose_catalog.json'}")
+    print(f"Pose manifest written: {OUT.parent / 'pose_catalog.json'}")
 
 
 if __name__ == "__main__":
