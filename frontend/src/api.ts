@@ -157,8 +157,7 @@ export const api = {
   storyEpisodeUpdate: (id: number, body: { title?: string; synopsis?: string | null; script?: StoryScript | null; scheduled_at?: string | null; publish?: boolean }) => req<{ data: StoryEpisode }>(`/story/episodes/${id}`, json('PATCH', body)).then((r) => r.data),
   storyEpisodeDelete: (id: number) => req<{ ok: boolean }>(`/story/episodes/${id}`, json('DELETE')),
   storyEpisodeWrite: (id: number) => req<{ data: StorySeries }>(`/story/episodes/${id}/script`, json('POST', {})).then((r) => r.data),
-  storyEpisodeProduce: (id: number, publish = false) => req<{ data: StoryEpisode }>(`/story/episodes/${id}/produce`, json('POST', { publish })).then((r) => r.data),
-  storyEpisodeLog: (id: number, since = 0) => req<{ content: string; offset: number; exists: boolean; reset: boolean; finished: boolean }>(`/story/episodes/${id}/production-log?since=${since}`),
+  storyEpisodeProduce: (id: number, publish = false) => req<{ data: StoryEpisode }>(`/story/episodes/${id}/produce`, json('POST', { publish })).then((r) => r.data),  storyEpisodeLog: (id: number, since = 0) => req<{ content: string; offset: number; exists: boolean; reset: boolean; finished: boolean }>(`/story/episodes/${id}/production-log?since=${since}`),
 
   builderList: () => req<{ data: BuilderSummary[] }>('/builder/characters').then((r) => r.data),
   builderGet: (id: number, version?: number) => req<{ data: BuilderDetail }>(`/builder/characters/${id}${version ? `?version=${version}` : ''}`).then((r) => r.data),
@@ -173,7 +172,7 @@ export const api = {
   builderRename: (id: number, name: string) => req(`/builder/characters/${id}`, json('PATCH', { name })),
   builderDuplicate: (id: number) => req<{ data: BuilderDetail }>(`/builder/characters/${id}/duplicate`, json('POST', {})).then((r) => r.data),
   builderDelete: (id: number) => req(`/builder/characters/${id}`, json('DELETE')),
-  builderImportSpritePack: (characterId: number, input: { file: File; name: string; characterVersion: number | null; columns: number; rows: number; fps: number; facing: Facing; animationName: string; loop: boolean; outfitType: 'base' | 'outfit_variant'; outfitId: string; outfitName: string; manifest?: string }) => {
+  builderImportSpritePack: (characterId: number, input: { file: File; name: string; characterVersion: number | null; columns: number; rows: number; fps: number; facing: Facing; animationName: string; loop: boolean; outfitType: 'base' | 'outfit_variant'; outfitId: string; outfitName: string; manifest?: string }, resource: 'builder' | 'card' = 'builder') => {
     const fd = new FormData()
     fd.append('file', input.file, input.file.name)
     fd.append('name', input.name)
@@ -188,9 +187,9 @@ export const api = {
     fd.append('animation_name', input.animationName)
     fd.append('loop', input.loop ? '1' : '0')
     if (input.manifest) fd.append('manifest', input.manifest)
-    return req<{ data: CharacterSpritePackInfo; duplicate?: boolean }>(`/builder/characters/${characterId}/sprite-packs`, { method: 'POST', body: fd }).then((r) => ({ ...r.data, duplicate: !!r.duplicate }))
+    return req<{ data: CharacterSpritePackInfo; duplicate?: boolean }>(`/builder/${resource === 'card' ? 'cards' : 'characters'}/${characterId}/sprite-packs`, { method: 'POST', body: fd }).then((r) => ({ ...r.data, duplicate: !!r.duplicate }))
   },
-  builderSpritePacks: (characterId: number) => req<{ data: CharacterSpritePackInfo[] }>(`/builder/characters/${characterId}/sprite-packs`).then((r) => r.data),
+  builderSpritePacks: (characterId: number, resource: 'builder' | 'card' = 'builder') => req<{ data: CharacterSpritePackInfo[] }>(`/builder/${resource === 'card' ? 'cards' : 'characters'}/${characterId}/sprite-packs`).then((r) => r.data),
   // 2.5D card characters (PNG cards from the karakter/ folder)
   cardList: () => req<{ data: CardSummary[] }>('/builder/cards').then((r) => r.data),
   /** every character a story or the auto-director may cast: Character Builder rigs and 2.5D cards (ids share one table) */
@@ -298,4 +297,3 @@ export const api = {
     }
   }>('/clipwize/status'),
 }
-
