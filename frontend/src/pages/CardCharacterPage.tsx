@@ -93,7 +93,7 @@ export function CardCharacterPage() {
 
   const m = d?.meta
   const sittingBodyImage = m && d?.urls?.sitting?.[sittingReference]
-    ? imgs.current.get(absUrl(d.urls.sitting[sittingReference]))
+    ? imgs.current.get(d.urls.sitting[sittingReference])
     : undefined
   const sittingHeadScale = m && sittingBodyImage
     ? Math.min(
