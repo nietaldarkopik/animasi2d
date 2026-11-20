@@ -145,7 +145,7 @@ export function CardCharacterPage() {
                   })
                 }} />
               </div>
-              <p className="muted small">Export menghasilkan sprite sheet karakter lengkap (setiap sel menggabungkan satu pose badan + satu ekspresi kepala, 16 kombinasi per halaman) beserta manifest dan aset modular asli. Edit PNG di folder sprite-sheet/ di Google Flow, pertahankan grid 4×4 dan ukuran 4096×4096, lalu impor ZIP sebagai karakter baru. Sprite sheet hasil edit otomatis dilampirkan sebagai sprite pack; karakter asli tidak ditimpa.</p>
+              <p className="muted small">Export menghasilkan sprite sheet karakter lengkap (kombinasi pose badan + ekspresi kepala, serta sel overlay mulut/kedip; 16 sel per halaman) beserta manifest dan aset modular asli. Edit PNG di folder sprite-sheet/ di Google Flow, pertahankan grid 4×4 dan ukuran 4096×4096, lalu impor ZIP sebagai karakter baru. Sprite sheet hasil edit otomatis dilampirkan sebagai sprite pack; karakter asli tidak ditimpa.</p>
               <p className="muted small">Pakai di film: buka project → tombol <strong>Karakter</strong> → bagian <em>Karakter 2.5D</em> → <strong>Sisipkan 2.5D</strong>. Lalu ganti pose, ekspresi, dan lip-sync dari panel <em>Alat film → Karakter</em>.</p>
 
               <section style={{ marginTop: 18, padding: 12, border: '1px solid var(--border)', borderRadius: 8 }}>
