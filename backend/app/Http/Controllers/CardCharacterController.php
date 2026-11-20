@@ -533,10 +533,16 @@ class CardCharacterController extends Controller
         $combinations = [];
         foreach ($bodyPoses as $pose => $bodyName) {
             foreach ($expressions as $expression => $headName) {
-                $combinations[] = ['pose' => (string) $pose, 'expression' => (string) $expression, 'body' => $bodyName, 'head' => $headName];
+                $combinations[] = ['kind' => 'character', 'pose' => (string) $pose, 'expression' => (string) $expression, 'body' => $bodyName, 'head' => $headName];
             }
         }
-        abort_if($combinations === [], 422, 'Karakter tidak memiliki kombinasi pose dan ekspresi untuk diekspor.');
+        foreach (($files['mouth'] ?? []) as $shape => $mouthName) {
+            $combinations[] = ['kind' => 'mouth', 'shape' => (string) $shape, 'overlay' => $mouthName];
+        }
+        if (! empty($files['blink'])) {
+            $combinations[] = ['kind' => 'blink', 'overlay' => $files['blink']];
+        }
+        abort_if($combinations === [], 422, 'Karakter tidak memiliki aset untuk diekspor.');
 
         $pages = [];
         foreach (array_chunk($combinations, 16) as $pageIndex => $items) {
@@ -545,40 +551,64 @@ class CardCharacterController extends Controller
             imagesavealpha($atlas, true);
             imagefill($atlas, 0, 0, imagecolorallocatealpha($atlas, 0, 0, 0, 127));
             $frames = [];
+            $characterFrames = [];
+            $overlayFrames = [];
             $sourceMap = [];
             foreach ($items as $i => $item) {
-                $bodyBytes = $disk->get($dir.'/'.$item['body']);
-                $headBytes = $disk->get($dir.'/'.$item['head']);
-                $body = @imagecreatefromstring($bodyBytes);
-                $head = @imagecreatefromstring($headBytes);
-                abort_unless($body && $head, 422, 'PNG body/head tidak dapat dibaca untuk sprite sheet.');
-                $bw = imagesx($body); $bh = imagesy($body);
-                $hw = imagesx($head); $hh = imagesy($head);
-                $scale = min(512 / max(1, $bw), 1024 / max(1, $bh));
-                $dw = max(1, (int) round($bw * $scale));
-                $dh = max(1, (int) round($bh * $scale));
-                $dx = (int) floor((1024 - $dw) / 2);
-                $dy = 1024 - $dh;
                 $cell = imagecreatetruecolor(1024, 1024);
                 imagealphablending($cell, false);
                 imagesavealpha($cell, true);
                 imagefill($cell, 0, 0, imagecolorallocatealpha($cell, 0, 0, 0, 127));
                 imagealphablending($cell, true);
-                imagecopyresampled($cell, $body, $dx, $dy, 0, 0, $dw, $dh, $bw, $bh);
 
-                [$headX, $headY] = $meta['head']['paste_on_body'] ?? [0, 0];
-                $headX += (int) ($meta['body']['head_dx'][$item['pose']] ?? 0);
-                $hx = $dx + (int) round($headX * $scale);
-                $hy = $dy + (int) round($headY * $scale);
-                imagecopyresampled($cell, $head, $hx, $hy, 0, 0,
-                    max(1, (int) round($hw * $scale)), max(1, (int) round($hh * $scale)), $hw, $hh);
+                if (($item['kind'] ?? 'character') !== 'character') {
+                    $overlay = @imagecreatefromstring($disk->get($dir.'/'.$item['overlay']));
+                    abort_unless($overlay, 422, 'PNG overlay mulut/kedip tidak dapat dibaca untuk sprite sheet.');
+                    $ow = imagesx($overlay); $oh = imagesy($overlay);
+                    $scale = min(512 / max(1, $ow), 512 / max(1, $oh));
+                    $dw = max(1, (int) round($ow * $scale));
+                    $dh = max(1, (int) round($oh * $scale));
+                    imagecopyresampled($cell, $overlay, (int) floor((1024 - $dw) / 2), (int) floor((1024 - $dh) / 2), 0, 0, $dw, $dh, $ow, $oh);
+                    imagedestroy($overlay);
+                } else {
+                    $body = @imagecreatefromstring($disk->get($dir.'/'.$item['body']));
+                    $head = @imagecreatefromstring($disk->get($dir.'/'.$item['head']));
+                    abort_unless($body && $head, 422, 'PNG body/head tidak dapat dibaca untuk sprite sheet.');
+                    $bw = imagesx($body); $bh = imagesy($body);
+                    $hw = imagesx($head); $hh = imagesy($head);
+                    $scale = min(512 / max(1, $bw), 1024 / max(1, $bh));
+                    $dw = max(1, (int) round($bw * $scale));
+                    $dh = max(1, (int) round($bh * $scale));
+                    $dx = (int) floor((1024 - $dw) / 2);
+                    $dy = 1024 - $dh;
+                    imagecopyresampled($cell, $body, $dx, $dy, 0, 0, $dw, $dh, $bw, $bh);
+
+                    [$headX, $headY] = $meta['head']['paste_on_body'] ?? [0, 0];
+                    $headX += (int) ($meta['body']['head_dx'][$item['pose']] ?? 0);
+                    $hx = $dx + (int) round($headX * $scale);
+                    $hy = $dy + (int) round($headY * $scale);
+                    imagecopyresampled($cell, $head, $hx, $hy, 0, 0,
+                        max(1, (int) round($hw * $scale)), max(1, (int) round($hh * $scale)), $hw, $hh);
+                    imagedestroy($body); imagedestroy($head);
+                }
 
                 $col = $i % 4; $row = intdiv($i, 4);
                 imagecopy($atlas, $cell, $col * 1024, $row * 1024, 0, 0, 1024, 1024);
-                $id = Str::slug($item['pose'].'-'.$item['expression'], '_');
-                $frames[] = ['id' => $id, 'x' => $col * 1024, 'y' => $row * 1024, 'width' => 1024, 'height' => 1024];
-                $sourceMap[$id] = ['pose' => $item['pose'], 'expression' => $item['expression']];
-                imagedestroy($body); imagedestroy($head); imagedestroy($cell);
+                if (($item['kind'] ?? 'character') === 'character') {
+                    $id = Str::slug($item['pose'].'-'.$item['expression'], '_');
+                    $sourceMap[$id] = ['type' => 'character', 'pose' => $item['pose'], 'expression' => $item['expression']];
+                } elseif ($item['kind'] === 'mouth') {
+                    $id = Str::slug('mouth-'.$item['shape'], '_');
+                    $sourceMap[$id] = ['type' => 'mouth', 'shape' => $item['shape']];
+                } else {
+                    $id = 'blink_overlay';
+                    $sourceMap[$id] = ['type' => 'blink'];
+                }
+                $frame = ['id' => $id, 'x' => $col * 1024, 'y' => $row * 1024, 'width' => 1024, 'height' => 1024];
+                $frames[] = $frame;
+                if (($item['kind'] ?? 'character') === 'character') $characterFrames[] = $frame;
+                else $overlayFrames[] = $frame;
+                imagedestroy($cell);
             }
             ob_start();
             imagepng($atlas, null, 6);
@@ -594,7 +624,10 @@ class CardCharacterController extends Controller
                 'frame' => ['width' => 1024, 'height' => 1024, 'pivot' => ['x' => 512, 'y' => 1024]],
                 'atlas' => ['width' => 4096, 'height' => 4096, 'columns' => 4, 'rows' => 4],
                 'facing' => 'front',
-                'animations' => ['character_variants' => ['fps' => 1, 'loop' => false, 'frames' => $frames]],
+                'animations' => array_filter([
+                    'character_variants' => $characterFrames ? ['fps' => 1, 'loop' => false, 'frames' => $characterFrames] : null,
+                    'facial_overlays' => $overlayFrames ? ['fps' => 1, 'loop' => false, 'frames' => $overlayFrames] : null,
+                ]),
                 'outfit' => ['id' => 'base', 'name' => 'Pakaian dasar', 'type' => 'base'],
                 'source_map' => $sourceMap,
             ];
