@@ -1,5 +1,4 @@
 import type { SeriesInput, StoryEpisode, StoryScript, StorySeries } from './story/types'
-import type { Facing } from './builder/types'
 import type { CardAvailable, CardDetail, CardSummary } from './builder/card'
 import type { AssetValidation, DesignTemplateInfo, BuilderDetail, BuilderSummary, CharacterConfig, Facing, LibAsset, LibCategory } from './builder/types'
 import type { Layer, AiJobInfo, AiStatus, Asset, EnhanceModeId, EnhanceModeInfo, EnhanceOptions, ExportInfo, Geometry, ImageOp, Project, ProjectDoc, ProjectSummary, VersionInfo } from './types'
