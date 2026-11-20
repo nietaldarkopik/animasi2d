@@ -15,6 +15,7 @@ export interface CardMeta {
   mouth?: { canvas: [number, number]; paste_on_head_topleft: [number, number]; shapes: string[] }
   blink?: { canvas: [number, number]; paste_on_head_topleft: [number, number]; blink_ok?: string[]; skip?: string[] }
   pose_families?: { id: string; label: string; default_reference: string; alternatives: string[]; requires_prop: string | null }[]
+  sitting_head_offsets?: Record<string, [number, number]>
 }
 
 export interface CardUrls { body: Record<string, string>; head: Record<string, string>; mouth: Record<string, string>; blink: string | null }
