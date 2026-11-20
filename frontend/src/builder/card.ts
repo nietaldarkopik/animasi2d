@@ -18,7 +18,7 @@ export interface CardMeta {
   sitting_head_offsets?: Record<string, [number, number]>
 }
 
-export interface CardUrls { body: Record<string, string>; head: Record<string, string>; mouth: Record<string, string>; blink: string | null }
+export interface CardUrls { body: Record<string, string>; head: Record<string, string>; mouth: Record<string, string>; blink: string | null; sitting?: Record<string, string> }
 
 export interface CardSummary { id: number; kind: 'card'; name: string; current_version: number; updated_at: string; source: string | null; thumbnail: string | null }
 export interface CardDetail extends CardSummary {
@@ -48,11 +48,24 @@ export interface CardView { pose: string; expression: string; mouth: string | nu
 
 /** Draws one look of the character (pose + expression + optional mouth shape and closed eyes) on `ctx`, body pixels. */
 export function drawCard(ctx: CanvasRenderingContext2D, meta: CardMeta, img: (url: string) => HTMLImageElement | undefined, urls: CardUrls, v: CardView): void {
-  const body = img(urls.body[v.pose])
+  const sittingReference = v.pose.startsWith('sitting:') ? v.pose.slice('sitting:'.length) : null
+  const body = sittingReference ? img(urls.sitting?.[sittingReference] ?? '') : img(urls.body[v.pose])
   const head = img(urls.head[v.expression])
-  if (body) ctx.drawImage(body, 0, 0)
+  let h = headOffset(meta, v.pose)
+  if (body && sittingReference) {
+    const [canvasW, canvasH] = meta.body.canvas
+    const scale = Math.min(canvasW / Math.max(1, body.naturalWidth), (meta.body.char_height_px ?? canvasH * 0.93) / Math.max(1, body.naturalHeight))
+    const width = body.naturalWidth * scale
+    const height = body.naturalHeight * scale
+    const x = meta.body.center_x - width / 2
+    const y = meta.body.feet_y - height
+    ctx.drawImage(body, x, y, width, height)
+    const offset = meta.sitting_head_offsets?.[sittingReference] ?? [meta.head.paste_on_body[0], meta.head.paste_on_body[1]]
+    h = { x: offset[0], y: offset[1] }
+  } else if (body) {
+    ctx.drawImage(body, 0, 0)
+  }
   if (!head) return
-  const h = headOffset(meta, v.pose)
   ctx.drawImage(head, h.x, h.y)
   const m = v.mouth && meta.mouth ? img(urls.mouth[v.mouth]) : undefined
   if (m && meta.mouth) ctx.drawImage(m, h.x + meta.mouth.paste_on_head_topleft[0], h.y + meta.mouth.paste_on_head_topleft[1])
