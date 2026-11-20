@@ -3,7 +3,7 @@ import { composeSvg, compactTrace, scopeIds, splitSvg, svgPart, xmlEscape, type 
 import { DEFAULT_PALETTE } from './spec'
 import type { CharacterConfig, LibAsset } from './types'
 
-const asset = (id: number, o: Partial<LibAsset> = {}): LibAsset => ({ id, key: null, category: 'x', name: `a${id}`, tags: [], source: 'upload', status: 'approved', mime: 'image/svg+xml', width: 400, height: 800, tintable: false, hash: 'h', mine: true, meta: null, url: '', ...o })
+const asset = (id: number, o: Partial<LibAsset> = {}): LibAsset => ({ id, key: null, category: 'x', name: `a${id}`, tags: [], source: 'upload', status: 'approved', mime: 'image/svg+xml', width: 400, height: 800, tintable: false, hash: 'h', mine: true, meta: null, url: '', ...o, asset_uuid: o.asset_uuid ?? `test-asset-${id}`, version_number: o.version_number ?? 1, parent_asset_id: o.parent_asset_id ?? null, is_current: o.is_current ?? true, change_note: o.change_note ?? null, created_at: o.created_at ?? '2026-01-01T00:00:00Z' })
 const cfg = (parts: CharacterConfig['parts'], view: 'half' | 'full' = 'full'): CharacterConfig => ({ schema_version: 1, view, palette: { ...DEFAULT_PALETTE }, parts })
 const Z: Record<string, number> = { body: 2, top: 7, face: 9, hair_front: 10, hair_back: 1 }
 const zOf = (s: string) => Z[s] ?? 0
