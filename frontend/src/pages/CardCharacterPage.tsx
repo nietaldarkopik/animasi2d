@@ -192,10 +192,10 @@ export function CardCharacterPage() {
                               </div>
                               <div className="row" style={{ gap: 8, flexWrap: 'wrap', marginTop: 8, alignItems: 'end' }}>
                                 <label className="small">X
-                                  <input type="number" value={sittingHeadOffset[0]} onChange={(e) => setSittingHeadOffset(([x, y]) => [Number(e.target.value), y])} style={{ width: 88 }} />
+                                  <input type="number" value={sittingHeadOffset[0]} onChange={(e) => setSittingHeadOffset(([, y]) => [Number(e.target.value), y])} style={{ width: 88 }} />
                                 </label>
                                 <label className="small">Y
-                                  <input type="number" value={sittingHeadOffset[1]} onChange={(e) => setSittingHeadOffset(([x, y]) => [x, Number(e.target.value)])} style={{ width: 88 }} />
+                                  <input type="number" value={sittingHeadOffset[1]} onChange={(e) => setSittingHeadOffset(([x]) => [x, Number(e.target.value)])} style={{ width: 88 }} />
                                 </label>
                                 <button className="primary" disabled={busy || !d.sitting_reference_urls?.[sittingReference]} onClick={() => void act(async () => {
                                   const updated = await api.cardSaveSittingHeadOffset(d.id, sittingReference, sittingHeadOffset[0], sittingHeadOffset[1])
