@@ -31,6 +31,13 @@ SHEETS = {
 PANEL_COUNT = 3
 PADDING = 12
 
+# Small per-pose crop adjustments in source-image pixels.
+# The left expansion for this pose restores the shoe that reaches beyond
+# the nominal panel boundary; the source image remains unchanged.
+CROP_OVERRIDES = {
+    "sit_chair_neutral_a": {"left": 40},
+}
+
 
 def remove_green(image: Image.Image) -> Image.Image:
     """Apply a soft green chroma key and mild edge despill."""
@@ -134,9 +141,14 @@ def main() -> None:
         keyed_sheet = remove_green(source)
 
         for panel_index, pose_id in spec["poses"].items():
-            # No overlap: prevents pixels from the neighbouring figure entering this pose.
+            # Default to equal-width panels, with narrowly scoped per-pose overrides.
+            # Green-screen removal is already applied to the full sheet, so an expanded
+            # crop can safely include empty green margin without changing source assets.
             left, right = panel_edges[panel_index], panel_edges[panel_index + 1]
-            raw_panel = keyed_sheet.crop((left, 0, right, source.height))
+            override = CROP_OVERRIDES.get(pose_id, {})
+            crop_left = max(0, left - int(override.get("left", 0)))
+            crop_right = min(source.width, right + int(override.get("right", 0)))
+            raw_panel = keyed_sheet.crop((crop_left, 0, crop_right, source.height))
             panel, bounds = trim_transparent(raw_panel)
 
             x0, y0, x1, y1 = bounds
