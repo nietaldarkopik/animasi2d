@@ -16,6 +16,7 @@ import { fitHead, fittedHeadPart, HEAD_SLOTS, kitOf } from '../builder/fitHead'
 import type { BuilderVersionInfo, CharacterConfig, DesignFamilyInfo, Facing, LibAsset, LibCategory, Palette, PartRef, SavedExpression } from '../builder/types'
 import { AppNav } from '../components/AppNav'
 import { SvgExportDialog } from '../components/SvgExportDialog'
+import { buildCharacterReferencePackManifest, renderCharacterReferenceFrame } from '../builder/characterPack'
 
 // swatches from the sheet's colour panel (master-assets/assets-v1/palette.json)
 const SWATCHES: Record<'hair' | 'skin' | 'eye' | 'cloth', string[]> = {
