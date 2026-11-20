@@ -123,6 +123,7 @@ Raw single-image sprite sheets without a manifest may be imported in assisted mo
 - Imported atlases are stored as immutable file-backed sprite-pack records with SHA-256, frame metadata and `pending_review` status.
 - Outfit variants are stored as full-character pose-matched atlases (not garment-only overlays). They must match the base pack's animation and frame IDs/order and pivot. This makes whole-outfit switching possible without trying to align a separate shirt layer over an arbitrary pose.
 - Imported atlases can now be previewed in Character Builder using PixiJS 8 `AnimatedSprite`; the preview reads frame rectangles, pivot, FPS and loop behavior from the manifest.
+- 2.5D card characters can be exported as editable ZIP packages and re-imported as new character records without modifying the source character.
 - Scene-layer playback, timeline animation tracks, per-scene outfit selection, frame QC and pack version management remain subsequent phases.
 - The reference-pack exporter and atlas importer are different formats and purposes: the former guides image generation; the latter describes actual animation frames.
 
@@ -133,6 +134,19 @@ Raw single-image sprite sheets without a manifest may be imported in assisted mo
 - Keep sprite packs immutable and link them to a specific CharacterVersion.
 - New outfits or regenerated sheets create new versions; do not mutate packs used by existing episodes/projects.
 - Use content hashes to avoid duplicate uploads and to detect changed files.
+
+## Editable 2.5D character package
+
+The 2.5D Card Character page supports a separate portable package workflow:
+
+1. Export the currently viewed immutable character version as a ZIP.
+2. The ZIP contains `character.json`, every referenced body/head/mouth/blink PNG under `assets/`, and an optional `preview.png`.
+3. Edit the PNG artwork while keeping filenames and transparent backgrounds. If image dimensions, pose IDs, expression IDs or offsets change, update the matching metadata in `character.json`.
+4. Import the edited ZIP as a new 2.5D card character. The import creates a new character ID and v1; it does not overwrite the source character or any existing version.
+
+Package format: `animasi2d.character-card-package`, version 1. Import reads only explicitly referenced `assets/<filename>` PNG entries and does not extract arbitrary ZIP paths. ZIP upload is limited to 50 MB, each PNG to 10 MB, and the combined unique asset count to 200. The server requires the PHP ZipArchive extension.
+
+This package workflow preserves the existing modular 2.5D composition (body pose + head expression + optional mouth/blink overlays). It is distinct from a flattened animation sprite atlas: after editing the source cards, use the sprite-sheet importer separately if a frame-by-frame atlas is desired.
 
 ## PixiJS runtime
 
