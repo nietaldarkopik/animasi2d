@@ -51,7 +51,7 @@ class CharacterSpritePackController extends Controller
         }
         $content = (string) file_get_contents($file->getRealPath());
         // PNG color type 6 is RGBA; transparent character atlases are required.
-        if (strlen($content) < 26 || substr($content, 0, 8) !== "\\x89PNG\\r\\n\\x1a\\n" || ord($content[25]) !== 6) {
+        if (strlen($content) < 26 || substr($content, 0, 8) !== hex2bin('89504e470d0a1a0a') || ord($content[25]) !== 6) {
             return response()->json(['message' => 'Sprite sheet harus PNG RGBA dengan channel transparansi.'], 422);
         }
 
