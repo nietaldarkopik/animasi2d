@@ -45,6 +45,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/builder/cards', [\App\Http\Controllers\CardCharacterController::class, 'index']);
     Route::get('/builder/cards/available', [\App\Http\Controllers\CardCharacterController::class, 'available']);
     Route::post('/builder/cards', [\App\Http\Controllers\CardCharacterController::class, 'import'])->middleware('throttle:30,1');
+    Route::post('/builder/cards/import-package', [\App\Http\Controllers\CardCharacterController::class, 'importPackage'])->middleware('throttle:10,1');
+    Route::get('/builder/cards/{character}/export-package', [\App\Http\Controllers\CardCharacterController::class, 'exportPackage']);
     Route::get('/builder/cards/{character}', [\App\Http\Controllers\CardCharacterController::class, 'show']);
     Route::patch('/builder/cards/{character}', [\App\Http\Controllers\CardCharacterController::class, 'rename']);
     Route::post('/builder/cards/{character}/refresh', [\App\Http\Controllers\CardCharacterController::class, 'refresh'])->middleware('throttle:30,1');
