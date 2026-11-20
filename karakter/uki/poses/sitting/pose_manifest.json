@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "character": "uki",
+  "kind": "reference_pose_assets",
+  "canvas": "transparent_trimmed_png",
+  "notes": [
+    "These are static pose references, not animation frames.",
+    "The source figures have no heads; attach a compatible head using a neck anchor after review.",
+    "Chair is a separate prop and is not included in the source images.",
+    "Green-screen removal is an initial automated pass; inspect edges before production use."
+  ],
+  "poses": [
+    {
+      "id": "sit_chair_neutral_a",
+      "source": "_mentah/uki_duduk_A.jpg",
+      "source_panel": 1,
+      "file": "references/sit_chair_neutral_a.png",
+      "width": 388,
+      "height": 657,
+      "has_head": false,
+      "has_chair": false
+    },
+    {
+      "id": "sit_chair_lean_a",
+      "source": "_mentah/uki_duduk_A.jpg",
+      "source_panel": 2,
+      "file": "references/sit_chair_lean_a.png",
+      "width": 345,
+      "height": 605,
+      "has_head": false,
+      "has_chair": false
+    },
+    {
+      "id": "sit_floor_crosslegged_b",
+      "source": "_mentah/uki_duduk_B.jpg",
+      "source_panel": 1,
+      "file": "references/sit_floor_crosslegged_b.png",
+      "width": 481,
+      "height": 453,
+      "has_head": false,
+      "has_chair": false
+    },
+    {
+      "id": "sit_chair_neutral_b",
+      "source": "_mentah/uki_duduk_B.jpg",
+      "source_panel": 2,
+      "file": "references/sit_chair_neutral_b.png",
+      "width": 385,
+      "height": 639,
+      "has_head": false,
+      "has_chair": false
+    },
+    {
+      "id": "sit_chair_neutral_c",
+      "source": "_mentah/uki_duduk_C.jpg",
+      "source_panel": 1,
+      "file": "references/sit_chair_neutral_c.png",
+      "width": 287,
+      "height": 627,
+      "has_head": false,
+      "has_chair": false
+    },
+    {
+      "id": "sit_chair_lean_c",
+      "source": "_mentah/uki_duduk_C.jpg",
+      "source_panel": 2,
+      "file": "references/sit_chair_lean_c.png",
+      "width": 330,
+      "height": 596,
+      "has_head": false,
+      "has_chair": false
+    },
+    {
+      "id": "sit_floor_crosslegged_d",
+      "source": "_mentah/uki_duduk_D.jpg",
+      "source_panel": 1,
+      "file": "references/sit_floor_crosslegged_d.png",
+      "width": 369,
+      "height": 379,
+      "has_head": false,
+      "has_chair": false
+    },
+    {
+      "id": "sit_wide_legs_d",
+      "source": "_mentah/uki_duduk_D.jpg",
+      "source_panel": 2,
+      "file": "references/sit_wide_legs_d.png",
+      "width": 319,
+      "height": 590,
+      "has_head": false,
+      "has_chair": false
+    }
+  ]
+}
