@@ -125,7 +125,7 @@ class CharacterSpritePackController extends Controller
             if (! $basePack) {
                 return response()->json(['message' => 'Import sprite sheet karakter dasar terlebih dahulu sebelum menambahkan variasi pakaian.'], 422);
             }
-            if ($basePack->character_version !== ($data['character_version'] ?? $character->current_version)
+            if ((int) $basePack->character_version !== (int) ($data['character_version'] ?? $character->current_version)
                 || $this->frameSignature($basePack->manifest ?? []) !== $this->frameSignature($manifest)
                 || ($basePack->manifest['frame']['pivot'] ?? ['x' => 512, 'y' => 1024]) !== ($manifest['frame']['pivot'] ?? ['x' => 512, 'y' => 1024])) {
                 return response()->json(['message' => 'Outfit harus memiliki animation ID, urutan frame, facing, dan pivot yang sama dengan karakter dasar.'], 422);
