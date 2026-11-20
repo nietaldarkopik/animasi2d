@@ -123,7 +123,7 @@ Raw single-image sprite sheets without a manifest may be imported in assisted mo
 - Imported atlases are stored as immutable file-backed sprite-pack records with SHA-256, frame metadata and `pending_review` status.
 - Outfit variants are stored as full-character pose-matched atlases (not garment-only overlays). They must match the base pack's animation and frame IDs/order and pivot. This makes whole-outfit switching possible without trying to align a separate shirt layer over an arbitrary pose.
 - Imported atlases can now be previewed in Character Builder using PixiJS 8 `AnimatedSprite`; the preview reads frame rectangles, pivot, FPS and loop behavior from the manifest.
-- 2.5D card characters can be exported as editable ZIP packages and re-imported as new character records without modifying the source character.
+- 2.5D card exports now include complete 4×4 composite sprite-sheet pages (body pose × head expression), per-page manifests/source maps, and a Google Flow editing prompt; edited ZIP imports attach those pages as unverified sprite packs to a new card character.
 - Scene-layer playback, timeline animation tracks, per-scene outfit selection, frame QC and pack version management remain subsequent phases.
 - The reference-pack exporter and atlas importer are different formats and purposes: the former guides image generation; the latter describes actual animation frames.
 
@@ -135,18 +135,19 @@ Raw single-image sprite sheets without a manifest may be imported in assisted mo
 - New outfits or regenerated sheets create new versions; do not mutate packs used by existing episodes/projects.
 - Use content hashes to avoid duplicate uploads and to detect changed files.
 
-## Editable 2.5D character package
+## Editable 2.5D character package + Google Flow sprite sheet
 
-The 2.5D Card Character page supports a separate portable package workflow:
+The 2.5D Card Character page exports a ZIP with both the original modular source and a complete composite sprite sheet:
 
 1. Export the currently viewed immutable character version as a ZIP.
-2. The ZIP contains `character.json`, every referenced body/head/mouth/blink PNG under `assets/`, and an optional `preview.png`.
-3. Edit the PNG artwork while keeping filenames and transparent backgrounds. If image dimensions, pose IDs, expression IDs or offsets change, update the matching metadata in `character.json`.
-4. Import the edited ZIP as a new 2.5D card character. The import creates a new character ID and v1; it does not overwrite the source character or any existing version.
+2. The ZIP contains `character.json`, all original body/head/mouth/blink PNGs under `assets/`, `sprite-sheet-index.json`, one or more composite atlas pages under `sprite-sheet/`, page manifests, and `GOOGLE-FLOW-PROMPT.txt`.
+3. Each sprite-sheet cell is a complete character composition for one body-pose × head-expression combination. Every page is a 4×4 grid of 1024×1024 frames (4096×4096 PNG RGBA); combinations beyond 16 continue on another page. The page manifest maps every frame ID back to its original pose and expression IDs using `source_map`.
+4. Edit only the PNG pages in Google Flow. Preserve the exact canvas size, grid, cell boundaries, character scale/position, transparent background, and identity. The supplied prompt file describes these constraints.
+5. Import the edited ZIP as a new character. The original modular source is retained for the existing card rig, and each edited atlas page is automatically attached to the new character as an unverified full-character sprite pack. The source character and its versions are never overwritten.
 
-Package format: `animasi2d.character-card-package`, version 1. Import reads only explicitly referenced `assets/<filename>` PNG entries and does not extract arbitrary ZIP paths. ZIP upload is limited to 50 MB, each PNG to 10 MB, and the combined unique asset count to 200. The server requires the PHP ZipArchive extension.
+Package format: `animasi2d.character-card-package`, version 1. Sprite atlas pages use `animasi2d.character-sprite-atlas`, version 1. Import reads only explicitly referenced, allow-listed ZIP entries and does not extract arbitrary paths. ZIP upload is limited to 50 MB, each original PNG to 10 MB, and the combined unique original asset count to 200. The server requires PHP ZipArchive and GD extensions for export.
 
-This package workflow preserves the existing modular 2.5D composition (body pose + head expression + optional mouth/blink overlays). It is distinct from a flattened animation sprite atlas: after editing the source cards, use the sprite-sheet importer separately if a frame-by-frame atlas is desired.
+Important: Google Flow may alter geometry or cell boundaries even when instructed not to. Imported sheets are marked `pending_review`; preview and alignment review are required before treating them as production-ready. The modular card assets remain unchanged in this first version, while the edited full-character atlas is attached as a sprite pack for preview/runtime work.
 
 ## PixiJS runtime
 
