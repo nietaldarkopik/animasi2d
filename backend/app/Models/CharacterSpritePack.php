@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CharacterSpritePack extends Model
 {
     protected $fillable = [
-        'user_id', 'character_id', 'character_version', 'name', 'disk', 'path', 'mime',
+        'user_id', 'character_id', 'character_version', 'name', 'outfit_id', 'outfit_name', 'outfit_type', 'disk', 'path', 'mime',
         'image_width', 'image_height', 'frame_width', 'frame_height', 'columns', 'rows',
         'frame_count', 'fps', 'facing', 'manifest', 'sha256', 'status',
     ];
