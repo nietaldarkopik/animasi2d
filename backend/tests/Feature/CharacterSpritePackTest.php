@@ -110,4 +110,33 @@ class CharacterSpritePackTest extends TestCase
 
         $this->assertDatabaseCount('character_sprite_packs', 1);
     }
+
+    public function test_it_accepts_an_outfit_variant_when_pose_ids_and_order_match_the_base_pack(): void
+    {
+        $user = User::factory()->create();
+        $character = $this->character($user);
+        $headers = $this->auth($user);
+
+        $this->withHeaders($headers)->post('/api/builder/characters/'.$character->id.'/sprite-packs', [
+            'file' => $this->png(),
+            'columns' => 1,
+            'rows' => 1,
+            'facing' => 'front',
+            'animation_name' => 'idle',
+        ])->assertCreated();
+
+        $this->withHeaders($headers)->post('/api/builder/characters/'.$character->id.'/sprite-packs', [
+            'file' => $this->png(1024, 1024, true),
+            'columns' => 1,
+            'rows' => 1,
+            'facing' => 'front',
+            'animation_name' => 'idle',
+            'outfit_type' => 'outfit_variant',
+            'outfit_id' => 'hoodie',
+            'outfit_name' => 'Hoodie',
+        ])->assertCreated()->assertJsonPath('data.outfit_id', 'hoodie')->assertJsonPath('data.outfit_type', 'outfit_variant');
+
+        $this->assertDatabaseCount('character_sprite_packs', 2);
+    }
+
 }
