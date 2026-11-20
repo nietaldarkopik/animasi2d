@@ -21,6 +21,7 @@ Route::get('/assets/{asset}/file', [AssetController::class, 'file'])->name('asse
 Route::get('/library/assets/{asset}/file', [LibraryController::class, 'file'])->name('library.file')->middleware('signed:relative');
 Route::get('/builder/cards/versions/{version}/file/{name}', [\App\Http\Controllers\CardCharacterController::class, 'file'])->name('cards.file')->middleware('signed:relative');
 Route::get('/builder/versions/{version}/thumbnail', [BuilderCharacterController::class, 'thumbnail'])->name('builder.thumbnail')->middleware('signed:relative');
+Route::get('/builder/sprite-packs/{pack}/file', [CharacterSpritePackController::class, 'file'])->name('builder.sprite-packs.file')->middleware('signed:relative');
 Route::get('/blender/character-face/{name}', [\App\Http\Controllers\BlenderController::class, 'characterFace']);
 Route::get('/blender/file/{filename}', [\App\Http\Controllers\BlenderController::class, 'file']);
 
@@ -55,6 +56,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/builder/characters/{character}/versions', [BuilderCharacterController::class, 'addNewVersion'])->middleware('throttle:60,1');
     Route::post('/builder/characters/{character}/duplicate', [BuilderCharacterController::class, 'duplicate']);
     Route::delete('/builder/characters/{character}', [BuilderCharacterController::class, 'destroy']);
+    Route::get('/builder/characters/{character}/sprite-packs', [CharacterSpritePackController::class, 'index']);
+    Route::post('/builder/characters/{character}/sprite-packs', [CharacterSpritePackController::class, 'store'])->middleware('throttle:20,1');
 
     Route::get('/auth/me', [AuthController::class, 'me']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
