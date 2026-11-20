@@ -114,7 +114,7 @@ def main() -> None:
         json.dumps(catalog, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    print(f"Pose manifest written: {OUT.parent / 'pose_catalog.json'}")
+    print(f"Pose manifest written: {OUT.parent / 'pose_manifest.json'}")
 
 
 if __name__ == "__main__":
