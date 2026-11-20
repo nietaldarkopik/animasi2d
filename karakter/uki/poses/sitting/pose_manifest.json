@@ -4,10 +4,10 @@
   "kind": "reference_pose_assets",
   "canvas": "transparent_trimmed_png",
   "notes": [
-    "These are static pose references, not animation frames.",
-    "The source figures have no heads; attach a compatible head using a neck anchor after review.",
+    "Static pose references, not animation frames.",
+    "Source figures have no heads; attach a compatible head using a neck anchor after review.",
     "Chair is a separate prop and is not included in the source images.",
-    "Green-screen removal is an initial automated pass; inspect edges before production use."
+    "Green-screen removal is an automated first pass; inspect the contact sheet before production use."
   ],
   "poses": [
     {
@@ -15,7 +15,7 @@
       "source": "_mentah/uki_duduk_A.jpg",
       "source_panel": 1,
       "file": "references/sit_chair_neutral_a.png",
-      "width": 388,
+      "width": 396,
       "height": 657,
       "has_head": false,
       "has_chair": false
@@ -35,7 +35,7 @@
       "source": "_mentah/uki_duduk_B.jpg",
       "source_panel": 1,
       "file": "references/sit_floor_crosslegged_b.png",
-      "width": 481,
+      "width": 392,
       "height": 453,
       "has_head": false,
       "has_chair": false
@@ -45,7 +45,7 @@
       "source": "_mentah/uki_duduk_B.jpg",
       "source_panel": 2,
       "file": "references/sit_chair_neutral_b.png",
-      "width": 385,
+      "width": 376,
       "height": 639,
       "has_head": false,
       "has_chair": false
@@ -76,7 +76,7 @@
       "source_panel": 1,
       "file": "references/sit_floor_crosslegged_d.png",
       "width": 369,
-      "height": 379,
+      "height": 380,
       "has_head": false,
       "has_chair": false
     },

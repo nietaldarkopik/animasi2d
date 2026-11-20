@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "checks": [
+    {
+      "pose_id": "sit_chair_neutral_a",
+      "width": 396,
+      "height": 657,
+      "visible_pixels": 101867,
+      "semi_transparent_edge_pixels": 3282,
+      "transparent_pixel_ratio": 0.6085,
+      "residual_green_pixel_ratio": 0.0028,
+      "touches_panel_boundary": true,
+      "alpha_channel": true
+    },
+    {
+      "pose_id": "sit_chair_lean_a",
+      "width": 345,
+      "height": 605,
+      "visible_pixels": 94304,
+      "semi_transparent_edge_pixels": 3149,
+      "transparent_pixel_ratio": 0.5482,
+      "residual_green_pixel_ratio": 0.0031,
+      "touches_panel_boundary": false,
+      "alpha_channel": true
+    },
+    {
+      "pose_id": "sit_floor_crosslegged_b",
+      "width": 392,
+      "height": 453,
+      "visible_pixels": 96317,
+      "semi_transparent_edge_pixels": 2365,
+      "transparent_pixel_ratio": 0.4576,
+      "residual_green_pixel_ratio": 0.0023,
+      "touches_panel_boundary": true,
+      "alpha_channel": true
+    },
+    {
+      "pose_id": "sit_chair_neutral_b",
+      "width": 376,
+      "height": 639,
+      "visible_pixels": 100476,
+      "semi_transparent_edge_pixels": 3188,
+      "transparent_pixel_ratio": 0.5818,
+      "residual_green_pixel_ratio": 0.0027,
+      "touches_panel_boundary": true,
+      "alpha_channel": true
+    },
+    {
+      "pose_id": "sit_chair_neutral_c",
+      "width": 287,
+      "height": 627,
+      "visible_pixels": 99580,
+      "semi_transparent_edge_pixels": 2891,
+      "transparent_pixel_ratio": 0.4466,
+      "residual_green_pixel_ratio": 0.0026,
+      "touches_panel_boundary": false,
+      "alpha_channel": true
+    },
+    {
+      "pose_id": "sit_chair_lean_c",
+      "width": 330,
+      "height": 596,
+      "visible_pixels": 102230,
+      "semi_transparent_edge_pixels": 3006,
+      "transparent_pixel_ratio": 0.4802,
+      "residual_green_pixel_ratio": 0.0031,
+      "touches_panel_boundary": false,
+      "alpha_channel": true
+    },
+    {
+      "pose_id": "sit_floor_crosslegged_d",
+      "width": 369,
+      "height": 380,
+      "visible_pixels": 71537,
+      "semi_transparent_edge_pixels": 2149,
+      "transparent_pixel_ratio": 0.4898,
+      "residual_green_pixel_ratio": 0.0027,
+      "touches_panel_boundary": false,
+      "alpha_channel": true
+    },
+    {
+      "pose_id": "sit_wide_legs_d",
+      "width": 319,
+      "height": 590,
+      "visible_pixels": 88244,
+      "semi_transparent_edge_pixels": 3342,
+      "transparent_pixel_ratio": 0.5311,
+      "residual_green_pixel_ratio": 0.0037,
+      "touches_panel_boundary": false,
+      "alpha_channel": true
+    }
+  ],
+  "warnings": [
+    {
+      "pose_id": "sit_chair_neutral_a",
+      "warning": "Foreground reaches a panel boundary; inspect for possible clipping."
+    },
+    {
+      "pose_id": "sit_floor_crosslegged_b",
+      "warning": "Foreground reaches a panel boundary; inspect for possible clipping."
+    },
+    {
+      "pose_id": "sit_chair_neutral_b",
+      "warning": "Foreground reaches a panel boundary; inspect for possible clipping."
+    }
+  ]
+}
