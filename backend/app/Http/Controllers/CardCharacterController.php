@@ -166,16 +166,25 @@ class CardCharacterController extends Controller
             }
             $meta = $manifest['meta'] ?? null;
             $files = $manifest['files'] ?? null;
-            if (! is_array($meta) || ! is_array($files) || empty($files['body']) || empty($files['head'])
-                || empty($meta['body']['poses']) || empty($meta['head']['expressions'])
-                || ! is_array($files['body']) || ! is_array($files['head'])) {
-                return response()->json(['message' => 'Metadata paket tidak lengkap: body dan head wajib tersedia.'], 422);
+            if (! is_array($meta) || ! is_array($files)
+                || ! is_array($meta['body'] ?? null) || ! is_array($meta['head'] ?? null)
+                || ! is_array($meta['body']['poses'] ?? null) || ! is_array($meta['head']['expressions'] ?? null)
+                || ! is_array($files['body'] ?? null) || ! is_array($files['head'] ?? null)
+                || $files['body'] === [] || $files['head'] === []
+                || ! is_array($meta['body']['canvas'] ?? null) || count($meta['body']['canvas']) !== 2
+                || ! is_array($meta['head']['canvas'] ?? null) || count($meta['head']['canvas']) !== 2
+                || ! is_array($meta['head']['paste_on_body'] ?? null) || count($meta['head']['paste_on_body']) !== 2
+                || ! is_numeric($meta['body']['feet_y'] ?? null) || ! is_numeric($meta['body']['center_x'] ?? null)
+                || ! is_array($files['mouth'] ?? []) || (isset($files['blink']) && $files['blink'] !== null && ! is_string($files['blink']))) {
+                return response()->json(['message' => 'Metadata paket tidak lengkap atau strukturnya tidak valid. Body, head, canvas, dan file pose wajib tersedia.'], 422);
             }
             if (array_keys($files['body']) !== array_values($meta['body']['poses']) || array_keys($files['head']) !== array_values($meta['head']['expressions'])) {
                 return response()->json(['message' => 'Daftar pose/ekspresi pada metadata tidak cocok dengan file gambar.'], 422);
             }
-            if (count($files['body']) > 80 || count($files['head']) > 80 || count($files['mouth'] ?? []) > 40) {
-                return response()->json(['message' => 'Jumlah aset dalam paket melebihi batas.'], 422);
+            if (count($files['body']) > 80 || count($files['head']) > 80 || count($files['mouth'] ?? []) > 40
+                || (! empty($files['mouth']) && ! is_array($meta['mouth']['shapes'] ?? null))
+                || (! empty($files['mouth']) && array_keys($files['mouth']) !== array_values($meta['mouth']['shapes']))) {
+                return response()->json(['message' => 'Jumlah aset atau pemetaan pose, ekspresi, dan mulut dalam paket tidak valid.'], 422);
             }
 
             $names = [...array_values($files['body']), ...array_values($files['head']), ...array_values($files['mouth'] ?? []), ...(! empty($files['blink']) ? [$files['blink']] : [])];
