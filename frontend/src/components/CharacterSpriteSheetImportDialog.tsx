@@ -4,6 +4,7 @@ import type { Facing } from '../builder/types'
 
 interface Props {
   characterId: number
+  resource?: 'builder' | 'card'
   version: number | null
   onClose: () => void
   onImported: (pack: CharacterSpritePackInfo) => void
@@ -11,7 +12,7 @@ interface Props {
 
 const FRAME = 1024
 
-export function CharacterSpriteSheetImportDialog({ characterId, version, onClose, onImported }: Props) {
+export function CharacterSpriteSheetImportDialog({ characterId, resource = 'builder', version, onClose, onImported }: Props) {
   const [file, setFile] = useState<File | null>(null)
   const [manifestFile, setManifestFile] = useState<File | null>(null)
   const [manifestText, setManifestText] = useState('')
@@ -70,7 +71,7 @@ export function CharacterSpriteSheetImportDialog({ characterId, version, onClose
       const pack = await api.builderImportSpritePack(characterId, {
         file, name: file.name.replace(/\.png$/i, ''), characterVersion: version,
         columns, rows, fps, facing, animationName, loop, outfitType, outfitId: outfitType === 'base' ? 'base' : outfitId, outfitName, manifest: manifestText || undefined,
-      })
+      }, resource)
       setNote(pack.duplicate ? 'Sprite sheet ini sudah pernah diimpor. Data lama digunakan.' : 'Sprite sheet berhasil diimpor dan disimpan sebagai draft untuk pemeriksaan.')
       onImported(pack)
     } catch (e) {
