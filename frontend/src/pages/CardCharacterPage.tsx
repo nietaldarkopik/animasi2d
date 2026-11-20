@@ -25,6 +25,7 @@ export function CardCharacterPage() {
   const [, setTick] = useState(0)
   const imgs = useRef(new Map<string, HTMLImageElement>())
   const canvas = useRef<HTMLCanvasElement>(null)
+  const packageInput = useRef<HTMLInputElement>(null)
 
   async function load(version?: number) {
     try {
@@ -132,8 +133,19 @@ export function CardCharacterPage() {
               <div className="row" style={{ gap: 6, marginTop: 16, flexWrap: 'wrap' }}>
                 <button className="primary" disabled={busy} onClick={() => void act(async () => { const x = await api.cardRefresh(d.id); setD(x) })} title="Buat versi baru dari isi folder karakter saat ini">{busy ? 'Memproses…' : 'Perbarui dari folder'}</button>
                 <button disabled={busy} onClick={() => void act(async () => { const x = await api.cardDuplicate(d.id); nav(`/builder/card/${x.id}`) })}>Duplikat</button>
+                <button disabled={busy} onClick={() => void act(() => api.cardExportPackage(d.id, d.viewing ?? undefined))}>Export Paket ZIP</button>
+                <button disabled={busy} onClick={() => packageInput.current?.click()}>Import Paket sebagai Karakter Baru</button>
                 <button disabled={busy} onClick={() => { if (confirm(`Hapus karakter "${d.name}" beserta semua versinya?`)) void act(async () => { await api.cardDelete(d.id); nav('/builder') }) }}>Hapus</button>
+                <input ref={packageInput} type="file" accept=".zip,application/zip" style={{ display: 'none' }} onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  e.target.value = ''
+                  if (file) void act(async () => {
+                    const created = await api.cardImportPackage(file)
+                    nav(`/builder/card/${created.id}`)
+                  })
+                }} />
               </div>
+              <p className="muted small">Export menghasilkan ZIP berisi character.json dan semua PNG modular (body, head, mulut, kedip). Edit gambar di dalam folder assets/ tanpa mengubah nama file, lalu impor ZIP sebagai karakter baru. Karakter asli dan versinya tidak ditimpa.</p>
               <p className="muted small">Pakai di film: buka project → tombol <strong>Karakter</strong> → bagian <em>Karakter 2.5D</em> → <strong>Sisipkan 2.5D</strong>. Lalu ganti pose, ekspresi, dan lip-sync dari panel <em>Alat film → Karakter</em>.</p>
 
               <section style={{ marginTop: 18, padding: 12, border: '1px solid var(--border)', borderRadius: 8 }}>
