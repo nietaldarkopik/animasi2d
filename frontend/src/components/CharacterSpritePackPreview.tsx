@@ -20,15 +20,16 @@ export function CharacterSpritePackPreview({ pack, onClose }: Props) {
     let cancelled = false
     let app: Application | null = null
     let current: AnimatedSprite | null = null
+    let appDestroyed = false
     const run = async () => {
       try {
         const resolved = resolveSpriteAnimation(pack.manifest, animationId)
         app = new Application()
         await app.init({ width: 480, height: 480, backgroundAlpha: 0, antialias: true, preference: 'webgl', resolution: window.devicePixelRatio || 1 })
-        if (cancelled || !host.current) { app.destroy(true); return }
+        if (cancelled || !host.current) { app.destroy(true); appDestroyed = true; return }
         host.current.replaceChildren(app.canvas)
         const atlas = await Assets.load<Texture>(pack.file_url)
-        if (cancelled) { app.destroy(true); return }
+        if (cancelled) { if (!appDestroyed) { app.destroy(true); appDestroyed = true } return }
         const frames = resolved.frames.map((frame) => new Texture({
           source: atlas.source,
           frame: new Rectangle(frame.x, frame.y, frame.width, frame.height),
@@ -51,7 +52,7 @@ export function CharacterSpritePackPreview({ pack, onClose }: Props) {
       cancelled = true
       sprite.current = null
       current?.stop()
-      app?.destroy(true, { children: true })
+      if (app && !appDestroyed) { app.destroy(true, { children: true }); appDestroyed = true }
       host.current?.replaceChildren()
     }
   }, [pack.id, pack.file_url, pack.manifest, animationId])
