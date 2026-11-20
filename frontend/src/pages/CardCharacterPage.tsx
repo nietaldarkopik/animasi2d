@@ -4,6 +4,7 @@ import { api } from '../api'
 import { absUrl } from '../builder/render'
 import { drawCard, type CardDetail, type CardView } from '../builder/card'
 import { AppNav } from '../components/AppNav'
+import { CardBuilderPanel } from '../components/CardBuilderPanel'
 
 const CHECKER = 'repeating-conic-gradient(#2b2f3a 0 25%, #20232c 0 50%) 0 0 / 14px 14px'
 
@@ -100,7 +101,7 @@ export function CardCharacterPage() {
                 <span className="badge">2.5D</span>
               </div>
               {m?.style && <p className="muted small" style={{ margin: '4px 0' }}>{m.style}</p>}
-              <p className="muted small" style={{ margin: '4px 0' }}>Sumber: folder <code>karakter/{d.source}</code>. Gambar sudah disalin ke versi ini; menggambar ulang PNG di folder tidak mengubahnya sampai Anda klik <em>Perbarui dari folder</em>.</p>
+              <p className="muted small" style={{ margin: '4px 0' }}>Sumber: folder <code>karakter/{d.source}</code>. Gambar sudah disalin ke versi ini; menggambar ulang PNG di folder tidak mengubahnya sampai Anda klik <em>Perbarui dari folder</em>. {d.source && <>Karakter dibuat dari lembar Flow? Lembar mentahnya masih tersimpan: <Link to={`/builder/card-baru/${d.source}`}>revisi kalibrasi tanpa unggah ulang</Link>.</>}</p>
 
               {m && (
                 <>
@@ -122,6 +123,8 @@ export function CardCharacterPage() {
                 <button disabled={busy} onClick={() => { if (confirm(`Hapus karakter "${d.name}" beserta semua versinya?`)) void act(async () => { await api.cardDelete(d.id); nav('/builder') }) }}>Hapus</button>
               </div>
               <p className="muted small">Pakai di film: buka project → tombol <strong>Karakter</strong> → bagian <em>Karakter 2.5D</em> → <strong>Sisipkan 2.5D</strong>. Lalu ganti pose, ekspresi, dan lip-sync dari panel <em>Alat film → Karakter</em>.</p>
+
+              {d.source && <CardBuilderPanel card={d} onChanged={(x) => { setD(x); void load() }} />}
 
               <h3 style={{ marginTop: 20 }}>Versi</h3>
               <ul className="plain">

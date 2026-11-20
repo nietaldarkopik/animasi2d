@@ -1,0 +1,145 @@
+{
+ "version": 1,
+ "pack": "duduk",
+ "character": "jacky",
+ "prefix": "jacky",
+ "skipped": [],
+ "sheets": [
+  {
+   "id": "duduk_badan_a",
+   "group": "body",
+   "cols": 3,
+   "rows": 1,
+   "ref": "body:diam",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "body",
+     "id": "diam",
+     "text": "SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "duduk_tegak",
+     "required": true,
+     "text": "sitting upright, back straight, knees together, both hands resting on the thighs, front view"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "duduk_condong",
+     "required": true,
+     "text": "sitting and leaning forward, both elbows resting on the knees, hands loosely clasped, front view"
+    }
+   ],
+   "file": "jacky_duduk_badan_a.png",
+   "attach": [
+    "jacky_acuan.png"
+   ],
+   "text": "Clean modern Japanese anime character asset, 2D cel-shading with soft flat shadows (maximum 2 tone levels), thin, clear, uniform dark-brown outlines, large expressive anime-style eyes with highlights when visible, clean polished line art, smooth shapes, consistent rendering quality, and a cohesive modern Japanese anime aesthetic. Maintain exactly the same art style, outline characteristics, shading technique, and rendering quality across all generated assets. Not photorealistic, not 3D, not painterly. Background: solid pure flat green RGB(0,255,0), no shadows, no floor, no gradients, and no green elements on the character. No text, labels, numbers, or watermark. Use the attached reference image as the PRIMARY and AUTHORITATIVE source for the character's identity and appearance. Reproduce the exact character shown in the reference, including apparent gender, age appearance, face, hairstyle, hair color, eye shape, eye color, skin tone, body proportions, accessories, clothing, outfit design, footwear, and all visible details. Do not impose any hairstyle, facial features, accessories, clothing, or body characteristics that are not present in the reference. Do not reuse the appearance of characters from previous generations. Apply only the specified Japanese anime art style while preserving the reference character's original identity. Character: rambut pendek. Match the attached reference image exactly: same colors, face shape, outfit and outline weight. ONE image. Body only, NO HEAD, stop at the neck base and collar: shoulders, torso, both arms, hands, legs, shoes. Feet (or seat contact) on the same horizontal level, same horizontal center in each cell. Hands clear with 5 fingers. 3 equal cells side by side, 3 columns x 1 row, with clear green space between cells so that no limb touches the next cell. HEADLESS BODY, STRICT: every cell shows ONLY the body from the collar down. The neck is cut off flat at the base of the collar with nothing above it: NO head, NO face, NO hair, NO ears, NO floating or extra head anywhere in the cell, not even small or in the background. The reference image may show a head: ignore that head completely and do not draw it. Poses where a hand goes to the head (temple, chin, wave) are drawn with the hand in the air at that height and the head still absent. SAME BODY IN EVERY CELL: draw exactly the same body as in the reference and in cell 1 - same outfit, same colors, same proportions, same scale. Collar-to-shoes height, shoulder width, torso length and leg length are identical in all cells; only the arms and hands change between poses. Do not zoom, enlarge, shrink or redraw the body per cell, and keep the same line weight and shading in every cell. Draw NO chair, bench, floor, seat or shadow: the figure sits on an invisible seat. Keep exactly the same body size and proportions as the standing reference in cell 1. Poses left to right: (1) SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference; (2) sitting upright, back straight, knees together, both hands resting on the thighs, front view; (3) sitting and leaning forward, both elbows resting on the knees, hands loosely clasped, front view;"
+  },
+  {
+   "id": "duduk_badan_b",
+   "group": "body",
+   "cols": 3,
+   "rows": 1,
+   "ref": "body:diam",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "body",
+     "id": "diam",
+     "text": "SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "duduk_sila",
+     "required": true,
+     "text": "sitting cross-legged on the floor, hands resting on the knees, front view"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "duduk_tangan_lutut",
+     "required": true,
+     "text": "sitting, slightly leaning forward, both hands placed on the knees, front view"
+    }
+   ],
+   "file": "jacky_duduk_badan_b.png",
+   "attach": [
+    "jacky_acuan.png"
+   ],
+   "text": "Clean modern Japanese anime character asset, 2D cel-shading with soft flat shadows (maximum 2 tone levels), thin, clear, uniform dark-brown outlines, large expressive anime-style eyes with highlights when visible, clean polished line art, smooth shapes, consistent rendering quality, and a cohesive modern Japanese anime aesthetic. Maintain exactly the same art style, outline characteristics, shading technique, and rendering quality across all generated assets. Not photorealistic, not 3D, not painterly. Background: solid pure flat green RGB(0,255,0), no shadows, no floor, no gradients, and no green elements on the character. No text, labels, numbers, or watermark. Use the attached reference image as the PRIMARY and AUTHORITATIVE source for the character's identity and appearance. Reproduce the exact character shown in the reference, including apparent gender, age appearance, face, hairstyle, hair color, eye shape, eye color, skin tone, body proportions, accessories, clothing, outfit design, footwear, and all visible details. Do not impose any hairstyle, facial features, accessories, clothing, or body characteristics that are not present in the reference. Do not reuse the appearance of characters from previous generations. Apply only the specified Japanese anime art style while preserving the reference character's original identity. Character: rambut pendek. Match the attached reference image exactly: same colors, face shape, outfit and outline weight. ONE image. Body only, NO HEAD, stop at the neck base and collar: shoulders, torso, both arms, hands, legs, shoes. Feet (or seat contact) on the same horizontal level, same horizontal center in each cell. Hands clear with 5 fingers. 3 equal cells side by side, 3 columns x 1 row, with clear green space between cells so that no limb touches the next cell. HEADLESS BODY, STRICT: every cell shows ONLY the body from the collar down. The neck is cut off flat at the base of the collar with nothing above it: NO head, NO face, NO hair, NO ears, NO floating or extra head anywhere in the cell, not even small or in the background. The reference image may show a head: ignore that head completely and do not draw it. Poses where a hand goes to the head (temple, chin, wave) are drawn with the hand in the air at that height and the head still absent. SAME BODY IN EVERY CELL: draw exactly the same body as in the reference and in cell 1 - same outfit, same colors, same proportions, same scale. Collar-to-shoes height, shoulder width, torso length and leg length are identical in all cells; only the arms and hands change between poses. Do not zoom, enlarge, shrink or redraw the body per cell, and keep the same line weight and shading in every cell. Draw NO chair, bench, floor, seat or shadow: the figure sits on an invisible seat. Keep exactly the same body size and proportions as the standing reference in cell 1. Poses left to right: (1) SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference; (2) sitting cross-legged on the floor, hands resting on the knees, front view; (3) sitting, slightly leaning forward, both hands placed on the knees, front view;"
+  },
+  {
+   "id": "duduk_badan_c",
+   "group": "body",
+   "cols": 3,
+   "rows": 1,
+   "ref": "body:diam",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "body",
+     "id": "diam",
+     "text": "SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "duduk_tegak_34",
+     "required": false,
+     "text": "sitting upright, back straight, knees together, both hands resting on the thighs, 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "duduk_condong_34",
+     "required": false,
+     "text": "sitting and leaning forward, both elbows resting on the knees, hands loosely clasped, 3/4 view facing the viewer's right"
+    }
+   ],
+   "file": "jacky_duduk_badan_c.png",
+   "attach": [
+    "jacky_acuan.png"
+   ],
+   "text": "Clean modern Japanese anime character asset, 2D cel-shading with soft flat shadows (maximum 2 tone levels), thin, clear, uniform dark-brown outlines, large expressive anime-style eyes with highlights when visible, clean polished line art, smooth shapes, consistent rendering quality, and a cohesive modern Japanese anime aesthetic. Maintain exactly the same art style, outline characteristics, shading technique, and rendering quality across all generated assets. Not photorealistic, not 3D, not painterly. Background: solid pure flat green RGB(0,255,0), no shadows, no floor, no gradients, and no green elements on the character. No text, labels, numbers, or watermark. Use the attached reference image as the PRIMARY and AUTHORITATIVE source for the character's identity and appearance. Reproduce the exact character shown in the reference, including apparent gender, age appearance, face, hairstyle, hair color, eye shape, eye color, skin tone, body proportions, accessories, clothing, outfit design, footwear, and all visible details. Do not impose any hairstyle, facial features, accessories, clothing, or body characteristics that are not present in the reference. Do not reuse the appearance of characters from previous generations. Apply only the specified Japanese anime art style while preserving the reference character's original identity. Character: rambut pendek. Match the attached reference image exactly: same colors, face shape, outfit and outline weight. ONE image. Body only, NO HEAD, stop at the neck base and collar: shoulders, torso, both arms, hands, legs, shoes. Feet (or seat contact) on the same horizontal level, same horizontal center in each cell. Hands clear with 5 fingers. 3 equal cells side by side, 3 columns x 1 row, with clear green space between cells so that no limb touches the next cell. HEADLESS BODY, STRICT: every cell shows ONLY the body from the collar down. The neck is cut off flat at the base of the collar with nothing above it: NO head, NO face, NO hair, NO ears, NO floating or extra head anywhere in the cell, not even small or in the background. The reference image may show a head: ignore that head completely and do not draw it. Poses where a hand goes to the head (temple, chin, wave) are drawn with the hand in the air at that height and the head still absent. SAME BODY IN EVERY CELL: draw exactly the same body as in the reference and in cell 1 - same outfit, same colors, same proportions, same scale. Collar-to-shoes height, shoulder width, torso length and leg length are identical in all cells; only the arms and hands change between poses. Do not zoom, enlarge, shrink or redraw the body per cell, and keep the same line weight and shading in every cell. Draw NO chair, bench, floor, seat or shadow: the figure sits on an invisible seat. Keep exactly the same body size and proportions as the standing reference in cell 1. Poses left to right: (1) SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference; (2) sitting upright, back straight, knees together, both hands resting on the thighs, 3/4 view facing the viewer's right; (3) sitting and leaning forward, both elbows resting on the knees, hands loosely clasped, 3/4 view facing the viewer's right;"
+  },
+  {
+   "id": "duduk_badan_d",
+   "group": "body",
+   "cols": 3,
+   "rows": 1,
+   "ref": "body:diam",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "body",
+     "id": "diam",
+     "text": "SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "duduk_sila_34",
+     "required": false,
+     "text": "sitting cross-legged on the floor, hands resting on the knees, 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "duduk_tangan_lutut_34",
+     "required": false,
+     "text": "sitting, slightly leaning forward, both hands placed on the knees, 3/4 view facing the viewer's right"
+    }
+   ],
+   "file": "jacky_duduk_badan_d.png",
+   "attach": [
+    "jacky_acuan.png"
+   ],
+   "text": "Clean modern Japanese anime character asset, 2D cel-shading with soft flat shadows (maximum 2 tone levels), thin, clear, uniform dark-brown outlines, large expressive anime-style eyes with highlights when visible, clean polished line art, smooth shapes, consistent rendering quality, and a cohesive modern Japanese anime aesthetic. Maintain exactly the same art style, outline characteristics, shading technique, and rendering quality across all generated assets. Not photorealistic, not 3D, not painterly. Background: solid pure flat green RGB(0,255,0), no shadows, no floor, no gradients, and no green elements on the character. No text, labels, numbers, or watermark. Use the attached reference image as the PRIMARY and AUTHORITATIVE source for the character's identity and appearance. Reproduce the exact character shown in the reference, including apparent gender, age appearance, face, hairstyle, hair color, eye shape, eye color, skin tone, body proportions, accessories, clothing, outfit design, footwear, and all visible details. Do not impose any hairstyle, facial features, accessories, clothing, or body characteristics that are not present in the reference. Do not reuse the appearance of characters from previous generations. Apply only the specified Japanese anime art style while preserving the reference character's original identity. Character: rambut pendek. Match the attached reference image exactly: same colors, face shape, outfit and outline weight. ONE image. Body only, NO HEAD, stop at the neck base and collar: shoulders, torso, both arms, hands, legs, shoes. Feet (or seat contact) on the same horizontal level, same horizontal center in each cell. Hands clear with 5 fingers. 3 equal cells side by side, 3 columns x 1 row, with clear green space between cells so that no limb touches the next cell. HEADLESS BODY, STRICT: every cell shows ONLY the body from the collar down. The neck is cut off flat at the base of the collar with nothing above it: NO head, NO face, NO hair, NO ears, NO floating or extra head anywhere in the cell, not even small or in the background. The reference image may show a head: ignore that head completely and do not draw it. Poses where a hand goes to the head (temple, chin, wave) are drawn with the hand in the air at that height and the head still absent. SAME BODY IN EVERY CELL: draw exactly the same body as in the reference and in cell 1 - same outfit, same colors, same proportions, same scale. Collar-to-shoes height, shoulder width, torso length and leg length are identical in all cells; only the arms and hands change between poses. Do not zoom, enlarge, shrink or redraw the body per cell, and keep the same line weight and shading in every cell. Draw NO chair, bench, floor, seat or shadow: the figure sits on an invisible seat. Keep exactly the same body size and proportions as the standing reference in cell 1. Poses left to right: (1) SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference; (2) sitting cross-legged on the floor, hands resting on the knees, 3/4 view facing the viewer's right; (3) sitting, slightly leaning forward, both hands placed on the knees, 3/4 view facing the viewer's right;"
+  }
+ ]
+}

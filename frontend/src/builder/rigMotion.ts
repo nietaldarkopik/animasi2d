@@ -1,4 +1,5 @@
 import { applyPreset, evalLayer, ikDriven, removeSwap, setKey, setSwap } from '../anim'
+import { applyCardMotion, isCardRig } from './cardMotion'
 import { SKELETON } from './rig'
 import type { Layer, SceneDocument } from '../types'
 
@@ -126,6 +127,8 @@ const sine = (doc: SceneDocument, ref: Layer | undefined, amount: number, cycles
  * `dir` = +1 moves right, -1 moves left. Existing keys inside the range are replaced.
  */
 export function applyRigMotion(doc: SceneDocument, rig: RigRef, id: string, start: number, opts: { duration: number; distance: number; dir: 1 | -1 }): boolean {
+  // 2.5D card characters have no limb bones: their own motions (side-view images, mirrored facing, pose swaps)
+  if (isCardRig(rig) && applyCardMotion(doc, rig, id, start, opts)) return true
   const fps = doc.settings.fps
   const { duration, distance, dir } = opts
   const frames = Math.max(2, Math.round(duration * fps))

@@ -288,6 +288,13 @@ class StoryController extends Controller
         try {
             fseek($handle, $offset);
             $content = stream_get_contents($handle, 65536) ?: '';
+            // Blender/Windows process output may contain bytes that are not valid UTF-8.
+            // Keep byte offsets based on the original file, but sanitize the response text for JSON.
+            if (function_exists('mb_scrub')) {
+                $content = mb_scrub($content, 'UTF-8');
+            } else {
+                $content = iconv('UTF-8', 'UTF-8//IGNORE', $content) ?: '';
+            }
             $nextOffset = ftell($handle);
         } finally {
             fclose($handle);

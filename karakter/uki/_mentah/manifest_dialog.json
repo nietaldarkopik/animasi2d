@@ -1,0 +1,330 @@
+{
+ "version": 1,
+ "pack": "dialog",
+ "character": "uki",
+ "prefix": "uki",
+ "skipped": [
+  "blink:34",
+  "blink:sisi"
+ ],
+ "sheets": [
+  {
+   "id": "dialog_badan_a",
+   "group": "body",
+   "cols": 3,
+   "rows": 1,
+   "ref": "body:diam",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "body",
+     "id": "diam",
+     "text": "SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "diam_34",
+     "required": true,
+     "text": "standing with arms relaxed beside the body, 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "diam_sisi",
+     "required": true,
+     "text": "standing with arms relaxed, right-side profile view facing the viewer's right"
+    }
+   ],
+   "file": "uki_dialog_badan_a.png",
+   "attach": [
+    "uki_acuan.png"
+   ],
+   "text": "Clean modern Japanese anime character asset, 2D cel-shading with soft flat shadows (maximum 2 tone levels), thin, clear, uniform dark-brown outlines, large expressive anime-style eyes with highlights when visible, clean polished line art, smooth shapes, consistent rendering quality, and a cohesive modern Japanese anime aesthetic. Maintain exactly the same art style, outline characteristics, shading technique, and rendering quality across all generated assets. Not photorealistic, not 3D, not painterly. Background: solid pure flat green RGB(0,255,0), no shadows, no floor, no gradients, and no green elements on the character. No text, labels, numbers, or watermark. Use the attached reference image as the PRIMARY and AUTHORITATIVE source for the character's identity and appearance. Reproduce the exact character shown in the reference, including apparent gender, age appearance, face, hairstyle, hair color, eye shape, eye color, skin tone, body proportions, accessories, clothing, outfit design, footwear, and all visible details. Do not impose any hairstyle, facial features, accessories, clothing, or body characteristics that are not present in the reference. Do not reuse the appearance of characters from previous generations. Apply only the specified Japanese anime art style while preserving the reference character's original identity. Character: light warm beige skin, short black hair with side-swept fringe, black rectangular glasses, short-sleeve white button shirt with a small invented emblem on the chest pocket, black belt, grey-blue trousers, black-and-white sneakers, black wristwatch on the left wrist. Match the attached reference image exactly: same colors, face shape, outfit and outline weight. ONE image. Body only, NO HEAD, stop at the neck base and collar: shoulders, torso, both arms, hands, legs, shoes. Feet (or seat contact) on the same horizontal level, same horizontal center in each cell. Hands clear with 5 fingers. 3 equal cells side by side, 3 columns x 1 row, with clear green space between cells so that no limb touches the next cell. Keep exactly the same body size and proportions as the standing reference in cell 1. Poses left to right: (1) SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference; (2) standing with arms relaxed beside the body, 3/4 view facing the viewer's right; (3) standing with arms relaxed, right-side profile view facing the viewer's right;"
+  },
+  {
+   "id": "dialog_badan_b",
+   "group": "body",
+   "cols": 2,
+   "rows": 1,
+   "ref": "body:diam",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "body",
+     "id": "diam",
+     "text": "SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "diam_belakang",
+     "required": false,
+     "text": "standing with arms relaxed, REAR view (seen from behind)"
+    }
+   ],
+   "file": "uki_dialog_badan_b.png",
+   "attach": [
+    "uki_acuan.png"
+   ],
+   "text": "Clean modern Japanese anime character asset, 2D cel-shading with soft flat shadows (maximum 2 tone levels), thin, clear, uniform dark-brown outlines, large expressive anime-style eyes with highlights when visible, clean polished line art, smooth shapes, consistent rendering quality, and a cohesive modern Japanese anime aesthetic. Maintain exactly the same art style, outline characteristics, shading technique, and rendering quality across all generated assets. Not photorealistic, not 3D, not painterly. Background: solid pure flat green RGB(0,255,0), no shadows, no floor, no gradients, and no green elements on the character. No text, labels, numbers, or watermark. Use the attached reference image as the PRIMARY and AUTHORITATIVE source for the character's identity and appearance. Reproduce the exact character shown in the reference, including apparent gender, age appearance, face, hairstyle, hair color, eye shape, eye color, skin tone, body proportions, accessories, clothing, outfit design, footwear, and all visible details. Do not impose any hairstyle, facial features, accessories, clothing, or body characteristics that are not present in the reference. Do not reuse the appearance of characters from previous generations. Apply only the specified Japanese anime art style while preserving the reference character's original identity. Character: light warm beige skin, short black hair with side-swept fringe, black rectangular glasses, short-sleeve white button shirt with a small invented emblem on the chest pocket, black belt, grey-blue trousers, black-and-white sneakers, black wristwatch on the left wrist. Match the attached reference image exactly: same colors, face shape, outfit and outline weight. ONE image. Body only, NO HEAD, stop at the neck base and collar: shoulders, torso, both arms, hands, legs, shoes. Feet (or seat contact) on the same horizontal level, same horizontal center in each cell. Hands clear with 5 fingers. 2 equal cells side by side, 2 columns x 1 row, with clear green space between cells so that no limb touches the next cell. Keep exactly the same body size and proportions as the standing reference in cell 1. Poses left to right: (1) SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference; (2) standing with arms relaxed, REAR view (seen from behind);"
+  },
+  {
+   "id": "dialog_kepala_34",
+   "group": "head",
+   "cols": 3,
+   "rows": 2,
+   "ref": "head:netral",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "head",
+     "id": "netral",
+     "text": "SIZE REFERENCE: neutral expression, FRONT view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "netral_34",
+     "required": true,
+     "text": "neutral expression, 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "senang_34",
+     "required": false,
+     "text": "happy (gentle smile), 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "kaget_34",
+     "required": false,
+     "text": "surprised (wide eyes, small round mouth), 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "sedih_34",
+     "required": false,
+     "text": "sad, 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "marah_34",
+     "required": false,
+     "text": "angry, 3/4 view facing the viewer's right"
+    }
+   ],
+   "file": "uki_dialog_kepala_34.png",
+   "attach": [
+    "uki_acuan.png",
+    "uki_kepala_netral.png"
+   ],
+   "text": "Clean modern Japanese anime character asset, 2D cel-shading with soft flat shadows (maximum 2 tone levels), thin, clear, uniform dark-brown outlines, large expressive anime-style eyes with highlights when visible, clean polished line art, smooth shapes, consistent rendering quality, and a cohesive modern Japanese anime aesthetic. Maintain exactly the same art style, outline characteristics, shading technique, and rendering quality across all generated assets. Not photorealistic, not 3D, not painterly. Background: solid pure flat green RGB(0,255,0), no shadows, no floor, no gradients, and no green elements on the character. No text, labels, numbers, or watermark. Use the attached reference image as the PRIMARY and AUTHORITATIVE source for the character's identity and appearance. Reproduce the exact character shown in the reference, including apparent gender, age appearance, face, hairstyle, hair color, eye shape, eye color, skin tone, body proportions, accessories, clothing, outfit design, footwear, and all visible details. Do not impose any hairstyle, facial features, accessories, clothing, or body characteristics that are not present in the reference. Do not reuse the appearance of characters from previous generations. Apply only the specified Japanese anime art style while preserving the reference character's original identity. Character: light warm beige skin, short black hair with side-swept fringe, black rectangular glasses, short-sleeve white button shirt with a small invented emblem on the chest pocket, black belt, grey-blue trousers, black-and-white sneakers, black wristwatch on the left wrist. Match the attached reference image exactly: same colors, face shape, outfit and outline weight. ONE image: grid of 3 columns x 2 rows with 6 HEAD-ONLY items (head, ears, hair, accessories, face, short neck stub) in square cells with clear green space between them, identical head size and position, eyes open, mouth closed or small natural mouth. Every head is drawn at exactly the same scale as cell 1: do not enlarge or shrink the 3/4 or side views. Order left to right, top to bottom: (1) SIZE REFERENCE: neutral expression, FRONT view, exactly as in the reference; (2) neutral expression, 3/4 view facing the viewer's right; (3) happy (gentle smile), 3/4 view facing the viewer's right; (4) surprised (wide eyes, small round mouth), 3/4 view facing the viewer's right; (5) sad, 3/4 view facing the viewer's right; (6) angry, 3/4 view facing the viewer's right;"
+  },
+  {
+   "id": "dialog_kepala_sisi",
+   "group": "head",
+   "cols": 3,
+   "rows": 2,
+   "ref": "head:netral",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "head",
+     "id": "netral",
+     "text": "SIZE REFERENCE: neutral expression, FRONT view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "netral_sisi",
+     "required": true,
+     "text": "neutral expression, right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "senang_sisi",
+     "required": false,
+     "text": "happy (gentle smile), right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "kaget_sisi",
+     "required": false,
+     "text": "surprised (wide eyes, small round mouth), right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "sedih_sisi",
+     "required": false,
+     "text": "sad, right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "marah_sisi",
+     "required": false,
+     "text": "angry, right-side profile view facing the viewer's right"
+    }
+   ],
+   "file": "uki_dialog_kepala_sisi.png",
+   "attach": [
+    "uki_acuan.png",
+    "uki_kepala_netral.png"
+   ],
+   "text": "Clean modern Japanese anime character asset, 2D cel-shading with soft flat shadows (maximum 2 tone levels), thin, clear, uniform dark-brown outlines, large expressive anime-style eyes with highlights when visible, clean polished line art, smooth shapes, consistent rendering quality, and a cohesive modern Japanese anime aesthetic. Maintain exactly the same art style, outline characteristics, shading technique, and rendering quality across all generated assets. Not photorealistic, not 3D, not painterly. Background: solid pure flat green RGB(0,255,0), no shadows, no floor, no gradients, and no green elements on the character. No text, labels, numbers, or watermark. Use the attached reference image as the PRIMARY and AUTHORITATIVE source for the character's identity and appearance. Reproduce the exact character shown in the reference, including apparent gender, age appearance, face, hairstyle, hair color, eye shape, eye color, skin tone, body proportions, accessories, clothing, outfit design, footwear, and all visible details. Do not impose any hairstyle, facial features, accessories, clothing, or body characteristics that are not present in the reference. Do not reuse the appearance of characters from previous generations. Apply only the specified Japanese anime art style while preserving the reference character's original identity. Character: light warm beige skin, short black hair with side-swept fringe, black rectangular glasses, short-sleeve white button shirt with a small invented emblem on the chest pocket, black belt, grey-blue trousers, black-and-white sneakers, black wristwatch on the left wrist. Match the attached reference image exactly: same colors, face shape, outfit and outline weight. ONE image: grid of 3 columns x 2 rows with 6 HEAD-ONLY items (head, ears, hair, accessories, face, short neck stub) in square cells with clear green space between them, identical head size and position, eyes open, mouth closed or small natural mouth. Every head is drawn at exactly the same scale as cell 1: do not enlarge or shrink the 3/4 or side views. Order left to right, top to bottom: (1) SIZE REFERENCE: neutral expression, FRONT view, exactly as in the reference; (2) neutral expression, right-side profile view facing the viewer's right; (3) happy (gentle smile), right-side profile view facing the viewer's right; (4) surprised (wide eyes, small round mouth), right-side profile view facing the viewer's right; (5) sad, right-side profile view facing the viewer's right; (6) angry, right-side profile view facing the viewer's right;"
+  },
+  {
+   "id": "dialog_kepala_lirik",
+   "group": "head",
+   "cols": 3,
+   "rows": 1,
+   "ref": "head:netral",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "head",
+     "id": "netral",
+     "text": "SIZE REFERENCE: neutral expression, FRONT view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "lirik_kanan",
+     "required": false,
+     "text": "neutral expression, FRONT view with the head NOT turned, only the eyes looking to the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "lirik_kiri",
+     "required": false,
+     "text": "neutral expression, FRONT view with the head NOT turned, only the eyes looking to the viewer's left"
+    }
+   ],
+   "file": "uki_dialog_kepala_lirik.png",
+   "attach": [
+    "uki_acuan.png",
+    "uki_kepala_netral.png"
+   ],
+   "text": "Clean modern Japanese anime character asset, 2D cel-shading with soft flat shadows (maximum 2 tone levels), thin, clear, uniform dark-brown outlines, large expressive anime-style eyes with highlights when visible, clean polished line art, smooth shapes, consistent rendering quality, and a cohesive modern Japanese anime aesthetic. Maintain exactly the same art style, outline characteristics, shading technique, and rendering quality across all generated assets. Not photorealistic, not 3D, not painterly. Background: solid pure flat green RGB(0,255,0), no shadows, no floor, no gradients, and no green elements on the character. No text, labels, numbers, or watermark. Use the attached reference image as the PRIMARY and AUTHORITATIVE source for the character's identity and appearance. Reproduce the exact character shown in the reference, including apparent gender, age appearance, face, hairstyle, hair color, eye shape, eye color, skin tone, body proportions, accessories, clothing, outfit design, footwear, and all visible details. Do not impose any hairstyle, facial features, accessories, clothing, or body characteristics that are not present in the reference. Do not reuse the appearance of characters from previous generations. Apply only the specified Japanese anime art style while preserving the reference character's original identity. Character: light warm beige skin, short black hair with side-swept fringe, black rectangular glasses, short-sleeve white button shirt with a small invented emblem on the chest pocket, black belt, grey-blue trousers, black-and-white sneakers, black wristwatch on the left wrist. Match the attached reference image exactly: same colors, face shape, outfit and outline weight. ONE image: grid of 3 columns x 1 rows with 3 HEAD-ONLY items (head, ears, hair, accessories, face, short neck stub) in square cells with clear green space between them, identical head size and position, eyes open, mouth closed or small natural mouth. Every head is drawn at exactly the same scale as cell 1: do not enlarge or shrink the 3/4 or side views. Order left to right, top to bottom: (1) SIZE REFERENCE: neutral expression, FRONT view, exactly as in the reference; (2) neutral expression, FRONT view with the head NOT turned, only the eyes looking to the viewer's right; (3) neutral expression, FRONT view with the head NOT turned, only the eyes looking to the viewer's left;"
+  },
+  {
+   "id": "dialog_mulut_34",
+   "group": "mouth",
+   "cols": 6,
+   "rows": 1,
+   "ref": "mouth:a",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "mouth",
+     "id": "a",
+     "text": "SIZE REFERENCE: vowel A (wide open) seen from the FRONT"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "a_34",
+     "required": false,
+     "text": "A (wide open) seen from the 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "i_34",
+     "required": false,
+     "text": "I (flat and wide with teeth showing) seen from the 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "u_34",
+     "required": false,
+     "text": "U (small round pucker) seen from the 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "e_34",
+     "required": false,
+     "text": "E (medium open) seen from the 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "o_34",
+     "required": false,
+     "text": "O (round open) seen from the 3/4 view facing the viewer's right"
+    }
+   ],
+   "file": "uki_dialog_mulut_34.png",
+   "attach": [
+    "uki_acuan.png"
+   ],
+   "text": "Clean modern Japanese anime character asset, 2D cel-shading with soft flat shadows (maximum 2 tone levels), thin, clear, uniform dark-brown outlines, large expressive anime-style eyes with highlights when visible, clean polished line art, smooth shapes, consistent rendering quality, and a cohesive modern Japanese anime aesthetic. Maintain exactly the same art style, outline characteristics, shading technique, and rendering quality across all generated assets. Not photorealistic, not 3D, not painterly. Background: solid pure flat green RGB(0,255,0), no shadows, no floor, no gradients, and no green elements on the character. No text, labels, numbers, or watermark. Use the attached reference image as the PRIMARY and AUTHORITATIVE source for the character's identity and appearance. Reproduce the exact character shown in the reference, including apparent gender, age appearance, face, hairstyle, hair color, eye shape, eye color, skin tone, body proportions, accessories, clothing, outfit design, footwear, and all visible details. Do not impose any hairstyle, facial features, accessories, clothing, or body characteristics that are not present in the reference. Do not reuse the appearance of characters from previous generations. Apply only the specified Japanese anime art style while preserving the reference character's original identity. Character: light warm beige skin, short black hair with side-swept fringe, black rectangular glasses, short-sleeve white button shirt with a small invented emblem on the chest pocket, black belt, grey-blue trousers, black-and-white sneakers, black wristwatch on the left wrist. Match the attached reference image exactly: same colors, face shape, outfit and outline weight. ONE image: 1 row x 6 cells with MOUTH-ONLY close-ups, no face, no head, with clear green space between cells. Every mouth is drawn at exactly the same scale as cell 1. Same size and same center in all cells. Simple anime style: dark opening, small teeth hint, tongue only in A. Same lip and skin colors as uki. Cells left to right: (1) SIZE REFERENCE: vowel A (wide open) seen from the FRONT; (2) A (wide open) seen from the 3/4 view facing the viewer's right; (3) I (flat and wide with teeth showing) seen from the 3/4 view facing the viewer's right; (4) U (small round pucker) seen from the 3/4 view facing the viewer's right; (5) E (medium open) seen from the 3/4 view facing the viewer's right; (6) O (round open) seen from the 3/4 view facing the viewer's right;"
+  },
+  {
+   "id": "dialog_mulut_sisi",
+   "group": "mouth",
+   "cols": 6,
+   "rows": 1,
+   "ref": "mouth:a",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "mouth",
+     "id": "a",
+     "text": "SIZE REFERENCE: vowel A (wide open) seen from the FRONT"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "a_sisi",
+     "required": false,
+     "text": "A (wide open) seen from the right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "i_sisi",
+     "required": false,
+     "text": "I (flat and wide with teeth showing) seen from the right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "u_sisi",
+     "required": false,
+     "text": "U (small round pucker) seen from the right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "e_sisi",
+     "required": false,
+     "text": "E (medium open) seen from the right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "o_sisi",
+     "required": false,
+     "text": "O (round open) seen from the right-side profile view facing the viewer's right"
+    }
+   ],
+   "file": "uki_dialog_mulut_sisi.png",
+   "attach": [
+    "uki_acuan.png"
+   ],
+   "text": "Clean modern Japanese anime character asset, 2D cel-shading with soft flat shadows (maximum 2 tone levels), thin, clear, uniform dark-brown outlines, large expressive anime-style eyes with highlights when visible, clean polished line art, smooth shapes, consistent rendering quality, and a cohesive modern Japanese anime aesthetic. Maintain exactly the same art style, outline characteristics, shading technique, and rendering quality across all generated assets. Not photorealistic, not 3D, not painterly. Background: solid pure flat green RGB(0,255,0), no shadows, no floor, no gradients, and no green elements on the character. No text, labels, numbers, or watermark. Use the attached reference image as the PRIMARY and AUTHORITATIVE source for the character's identity and appearance. Reproduce the exact character shown in the reference, including apparent gender, age appearance, face, hairstyle, hair color, eye shape, eye color, skin tone, body proportions, accessories, clothing, outfit design, footwear, and all visible details. Do not impose any hairstyle, facial features, accessories, clothing, or body characteristics that are not present in the reference. Do not reuse the appearance of characters from previous generations. Apply only the specified Japanese anime art style while preserving the reference character's original identity. Character: light warm beige skin, short black hair with side-swept fringe, black rectangular glasses, short-sleeve white button shirt with a small invented emblem on the chest pocket, black belt, grey-blue trousers, black-and-white sneakers, black wristwatch on the left wrist. Match the attached reference image exactly: same colors, face shape, outfit and outline weight. ONE image: 1 row x 6 cells with MOUTH-ONLY close-ups, no face, no head, with clear green space between cells. Every mouth is drawn at exactly the same scale as cell 1. Same size and same center in all cells. Simple anime style: dark opening, small teeth hint, tongue only in A. Same lip and skin colors as uki. Cells left to right: (1) SIZE REFERENCE: vowel A (wide open) seen from the FRONT; (2) A (wide open) seen from the right-side profile view facing the viewer's right; (3) I (flat and wide with teeth showing) seen from the right-side profile view facing the viewer's right; (4) U (small round pucker) seen from the right-side profile view facing the viewer's right; (5) E (medium open) seen from the right-side profile view facing the viewer's right; (6) O (round open) seen from the right-side profile view facing the viewer's right;"
+  }
+ ]
+}

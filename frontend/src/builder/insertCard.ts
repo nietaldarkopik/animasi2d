@@ -13,11 +13,13 @@ export async function prepareCard(projectId: number, c: { id: number }, onProgre
   const d = await api.cardGet(c.id)
   if (!d.meta || !d.urls) throw new Error(`Karakter "${d.name}" belum punya versi.`)
   const urls = d.urls
-  const jobs: { group: 'body' | 'head' | 'mouth' | 'blink'; key: string; url: string }[] = [
+  const jobs: { group: 'body' | 'head' | 'mouth' | 'blink'; key: string; url: string; extra?: boolean }[] = [
     ...Object.entries(urls.body).map(([key, url]) => ({ group: 'body' as const, key, url })),
     ...Object.entries(urls.head).map(([key, url]) => ({ group: 'head' as const, key, url })),
     ...Object.entries(urls.mouth).map(([key, url]) => ({ group: 'mouth' as const, key, url })),
     ...(urls.blink ? [{ group: 'blink' as const, key: 'kelopak', url: urls.blink }] : []),
+    // spec v2 packs (sitting, 3/4 and side views, running ...)
+    ...(['body', 'head', 'mouth'] as const).flatMap((group) => Object.entries(urls.extra?.[group] ?? {}).map(([key, url]) => ({ group, key, url, extra: true }))),
   ]
   const assets: CardAssets = { body: {}, head: {}, mouth: {}, blink: null }
   let done = 0
@@ -29,6 +31,7 @@ export async function prepareCard(projectId: number, c: { id: number }, onProgre
       const asset = await api.uploadAsset(projectId, blob, `${d.name}-${j.group}-${j.key}.png`)
       useEditor.getState().addAsset(asset)
       if (j.group === 'blink') assets.blink = asset.id
+      else if (j.extra) ((assets.extra ??= {})[j.group] ??= {})[j.key] = asset.id
       else assets[j.group][j.key] = asset.id
       onProgress?.(`${d.name}: mengunggah gambar ${++done}/${jobs.length}…`)
     }

@@ -1,5 +1,6 @@
 import type { SeriesInput, StoryEpisode, StoryScript, StorySeries } from './story/types'
 import type { CardAvailable, CardDetail, CardSummary } from './builder/card'
+import type { BuilderStatus, ColorCluster, DraftImportResult, DraftState, ImportResult, PackId, PromptResult, ValidationReport } from './builder/cardBuilder'
 import type { AssetValidation, DesignTemplateInfo, BuilderDetail, BuilderSummary, CharacterConfig, Facing, LibAsset, LibCategory } from './builder/types'
 import type { Layer, AiJobInfo, AiStatus, Asset, EnhanceModeId, EnhanceModeInfo, EnhanceOptions, ExportInfo, Geometry, ImageOp, Project, ProjectDoc, ProjectSummary, VersionInfo } from './types'
 
@@ -159,6 +160,35 @@ export const api = {
   cardRename: (id: number, name: string) => req(`/builder/cards/${id}`, json('PATCH', { name })),
   cardDuplicate: (id: number) => req<{ data: CardDetail }>(`/builder/cards/${id}/duplicate`, json('POST', {})).then((r) => r.data),
   cardDelete: (id: number) => req(`/builder/cards/${id}`, json('DELETE')),
+  // Card Builder: motion packs, recolor duplicates and new characters from Flow sheets
+  cbStatus: (id: number) => req<{ data: BuilderStatus }>(`/builder/cards/${id}/builder`).then((r) => r.data),
+  cbAppearance: (id: number, appearance: string) => req(`/builder/cards/${id}/builder/appearance`, json('PUT', { appearance })),
+  cbPrompts: (id: number, pack: PackId, requiredOnly = false) => req<{ data: PromptResult }>(`/builder/cards/${id}/builder/prompts`, json('POST', { pack, required_only: requiredOnly })).then((r) => r.data),
+  cbUpload: (id: number, pack: PackId, sheet: string, file: File) => {
+    const fd = new FormData()
+    fd.append('file', file)
+    return req<{ data: { file: string } }>(`/builder/cards/${id}/builder/sheets/${pack}/${sheet}`, { method: 'POST', body: fd }).then((r) => r.data)
+  },
+  cbImport: (id: number, o: { pack: PackId; dry_run?: boolean; overwrite?: boolean; fit?: boolean; equal?: boolean; scales?: Record<string, number> }) =>
+    req<{ data: ImportResult }>(`/builder/cards/${id}/builder/import`, json('POST', o)).then((r) => r.data),
+  cbHeadAt: (id: number, slot: string, x: number, y: number, rot: number) => req<{ data: { slot: string; at: [number, number]; rot: number } }>(`/builder/cards/${id}/builder/head-at`, json('PUT', { slot, x, y, rot })).then((r) => r.data),
+  cbMouthAt: (id: number, view: '34' | 'sisi', x: number, y: number) => req(`/builder/cards/${id}/builder/mouth-at`, json('PUT', { view, x, y })),
+  cbColors: (id: number) => req<{ data: { clusters: ColorCluster[] } }>(`/builder/cards/${id}/builder/colors`).then((r) => r.data.clusters),
+  cbRecolorPreview: (id: number, as: string, maps: string[], groups?: string[]) =>
+    req<{ data: { preview_png_base64: string | null; validation: ValidationReport } }>(`/builder/cards/${id}/builder/recolor`, json('POST', { as, maps, preview: true, ...(groups?.length ? { groups } : {}) })).then((r) => r.data),
+  cbRecolorSave: (id: number, as: string, name: string, maps: string[], groups?: string[]) =>
+    req<{ data: { character: CardDetail; validation: ValidationReport } }>(`/builder/cards/${id}/builder/recolor`, json('POST', { as, name, maps, ...(groups?.length ? { groups } : {}) })).then((r) => r.data),
+  cbDraftStart: (d: { slug: string; name: string; appearance: string; style?: string }) => req<{ data: DraftState }>('/builder/card-drafts', json('POST', d)).then((r) => r.data),
+  cbDraftGet: (slug: string) => req<{ data: DraftState }>(`/builder/card-drafts/${slug}`).then((r) => r.data),
+  cbDraftUpload: (slug: string, sheet: string, file: File) => {
+    const fd = new FormData()
+    fd.append('file', file)
+    return req<{ data: { file: string } }>(`/builder/card-drafts/${slug}/sheets/${sheet}`, { method: 'POST', body: fd }).then((r) => r.data)
+  },
+  cbDraftImport: (slug: string, o: { fit?: boolean; equal?: boolean; calib?: Record<string, unknown> }) =>
+    req<{ data: DraftImportResult }>(`/builder/card-drafts/${slug}/import`, json('POST', o)).then((r) => r.data),
+  cbDraftFinish: (slug: string, name?: string, update?: boolean) => req<{ data: CardDetail }>(`/builder/card-drafts/${slug}/finish`, json('POST', { ...(name ? { name } : {}), ...(update ? { update: true } : {}) })).then((r) => r.data),
+  cbDraftDiscard: (slug: string) => req(`/builder/card-drafts/${slug}`, json('DELETE')),
   uploadAudio: (id: number, file: File) => {
     const fd = new FormData()
     fd.append('file', file, file.name)

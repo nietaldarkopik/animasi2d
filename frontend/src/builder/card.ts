@@ -1,4 +1,4 @@
-import type { Keyframe, Layer } from '../types'
+import type { CardRig, Keyframe, Layer } from '../types'
 
 /**
  * 2.5D card characters: ready-made PNG cards (a body per pose, a head per expression, mouth shapes, an eyelid overlay)
@@ -7,16 +7,24 @@ import type { Keyframe, Layer } from '../types'
  * The rig roles are `piece:card_*`, so the editor's expression buttons (EXPR_SLOTS) and the root-bone motions work on them.
  */
 
+/** Images of the spec v2 packs (sitting, 3/4 and side views, running ...) by slot id: karakter/<name>/character.json "extra". */
+export interface CardExtra<T> { body?: Record<string, T>; head?: Record<string, T>; mouth?: Record<string, T> }
+
 export interface CardMeta {
   name?: string
   style?: string
-  body: { canvas: [number, number]; feet_y: number; center_x: number; char_height_px?: number; poses: string[]; head_dx?: Record<string, number> }
+  body: { canvas: [number, number]; feet_y: number; center_x: number; char_height_px?: number; poses: string[]; head_dx?: Record<string, number>; head_at?: Record<string, [number, number]>; head_rot?: Record<string, number> }
   head: { canvas: [number, number]; paste_on_body: [number, number]; expressions: string[] }
-  mouth?: { canvas: [number, number]; paste_on_head_topleft: [number, number]; shapes: string[] }
+  mouth?: { canvas: [number, number]; paste_on_head_topleft: [number, number]; shapes: string[]; at?: Record<string, [number, number]> }
   blink?: { canvas: [number, number]; paste_on_head_topleft: [number, number]; blink_ok?: string[]; skip?: string[] }
+  spec?: { version: number; packs: string[]; mirror_ok?: boolean }
+  extra?: CardExtra<string>
 }
 
-export interface CardUrls { body: Record<string, string>; head: Record<string, string>; mouth: Record<string, string>; blink: string | null }
+export interface CardUrls { body: Record<string, string>; head: Record<string, string>; mouth: Record<string, string>; blink: string | null; extra?: CardExtra<string> }
+
+/** The image url of a body / head / mouth slot, whether it is a base slot or a spec v2 one. */
+export const slotUrl = (urls: CardUrls, group: 'body' | 'head' | 'mouth', id: string): string | undefined => urls[group][id] ?? urls.extra?.[group]?.[id]
 
 export interface CardSummary { id: number; kind: 'card'; name: string; current_version: number; updated_at: string; source: string | null; thumbnail: string | null }
 export interface CardDetail extends CardSummary {
@@ -29,10 +37,26 @@ export interface CardAvailable { slug: string; name: string; ok: boolean; proble
 
 export const CARD_ROLES = { body: 'card_body', head: 'card_head', mouth: 'card_mouth', blink: 'card_blink' } as const
 
-/** Where the head sits on the body for `pose` (top-left, body pixels). */
+/** Where the head sits on the body for `pose` (top-left, body pixels). Slots of the spec v2 packs carry their own `head_at`. */
 export function headOffset(meta: CardMeta, pose: string): { x: number; y: number } {
+  const at = meta.body.head_at?.[pose]
+  if (at) return { x: at[0], y: at[1] }
   const [px, py] = meta.head.paste_on_body
   return { x: px + (meta.body.head_dx?.[pose] ?? 0), y: py }
+}
+
+/** The neck stub the head turns around: bottom centre of the neutral head (head_top 75 + head_h 304 on a 400×500 canvas). */
+export const NECK_PIVOT: [number, number] = [200, 379]
+
+/**
+ * A layer turns around its centre, a head around its neck: this is how far the head layer's centre must move so that tilting it by
+ * `rot` degrees (clockwise) leaves the neck where it was. Add it to the head position.
+ */
+export function tiltShift(rot: number, headH: number): [number, number] {
+  if (!rot) return [0, 0]
+  const n = NECK_PIVOT[1] - headH / 2          // neck below the layer centre
+  const r = (rot * Math.PI) / 180
+  return [n * Math.sin(r), n * (1 - Math.cos(r))]
 }
 
 /** Average head shift over all poses: the rig uses one head position (the poses differ by a few pixels only). */
@@ -45,20 +69,20 @@ export interface CardView { pose: string; expression: string; mouth: string | nu
 
 /** Draws one look of the character (pose + expression + optional mouth shape and closed eyes) on `ctx`, body pixels. */
 export function drawCard(ctx: CanvasRenderingContext2D, meta: CardMeta, img: (url: string) => HTMLImageElement | undefined, urls: CardUrls, v: CardView): void {
-  const body = img(urls.body[v.pose])
-  const head = img(urls.head[v.expression])
+  const body = img(slotUrl(urls, 'body', v.pose) ?? '')
+  const head = img(slotUrl(urls, 'head', v.expression) ?? '')
   if (body) ctx.drawImage(body, 0, 0)
   if (!head) return
   const h = headOffset(meta, v.pose)
   ctx.drawImage(head, h.x, h.y)
-  const m = v.mouth && meta.mouth ? img(urls.mouth[v.mouth]) : undefined
+  const m = v.mouth && meta.mouth ? img(slotUrl(urls, 'mouth', v.mouth) ?? '') : undefined
   if (m && meta.mouth) ctx.drawImage(m, h.x + meta.mouth.paste_on_head_topleft[0], h.y + meta.mouth.paste_on_head_topleft[1])
   const b = v.blink && urls.blink && meta.blink ? img(urls.blink) : undefined
   if (b && meta.blink) ctx.drawImage(b, h.x + meta.blink.paste_on_head_topleft[0], h.y + meta.blink.paste_on_head_topleft[1])
 }
 
 /** Project asset ids of every card image, after they were uploaded to the project. */
-export interface CardAssets { body: Record<string, number>; head: Record<string, number>; mouth: Record<string, number>; blink: number | null }
+export interface CardAssets { body: Record<string, number>; head: Record<string, number>; mouth: Record<string, number>; blink: number | null; extra?: CardExtra<number> }
 
 export interface PreparedCard { name: string; version: number | null; meta: CardMeta; assets: CardAssets }
 
@@ -85,11 +109,22 @@ export function cardLayers(p: PreparedCard, scene: { width: number; height: numb
     ...base, id: newId(), type: 'image', name: `${label} · Badan`, assetId: p.assets.body[pose0], parentId: root.id,
     // body centre relative to the feet (the root bone)
     x: r3((bw / 2 - m.body.center_x) * k), y: r3((bh / 2 - m.body.feet_y) * k),
-    scaleX: r3(k), scaleY: r3(k), rig: { id: rigId, role: `piece:${CARD_ROLES.body}` }, expr: { ...p.assets.body, default: p.assets.body[pose0] },
+    scaleX: r3(k), scaleY: r3(k), rig: { id: rigId, role: `piece:${CARD_ROLES.body}` }, expr: { ...p.assets.body, ...p.assets.extra?.body, default: p.assets.body[pose0] },
   }
   const hx = m.head.paste_on_body[0] + meanHeadDx(m) + hw / 2 - bw / 2
   const hy = m.head.paste_on_body[1] + hh / 2 - bh / 2
-  const head: Layer = { ...base, id: newId(), type: 'image', name: `${label} · Kepala`, assetId: p.assets.head[expr0], parentId: body.id, x: r3(hx), y: r3(hy), rig: { id: rigId, role: `piece:${CARD_ROLES.head}` }, expr: { ...p.assets.head, default: p.assets.head[expr0] } }
+  // spec v2: slots with their own head position (sitting, side views, running); the other poses use `head0`
+  const cardRig: CardRig = { head0: [r3(hx), r3(hy)], head: {}, mirror: m.spec?.mirror_ok !== false }
+  for (const id of Object.keys(p.assets.extra?.body ?? {})) {
+    const at = m.body.head_at?.[id]
+    if (!at) continue
+    const rot = m.body.head_rot?.[id] ?? 0
+    const [sx, sy] = tiltShift(rot, hh)
+    cardRig.head[id] = [r3(at[0] + hw / 2 - bw / 2 + sx), r3(at[1] + hh / 2 - bh / 2 + sy)]
+    if (rot) (cardRig.rot ??= {})[id] = rot
+  }
+  root.rig = { id: rigId, role: 'bone:root', card: cardRig }
+  const head: Layer = { ...base, id: newId(), type: 'image', name: `${label} · Kepala`, assetId: p.assets.head[expr0], parentId: body.id, x: r3(hx), y: r3(hy), rig: { id: rigId, role: `piece:${CARD_ROLES.head}` }, expr: { ...p.assets.head, ...p.assets.extra?.head, default: p.assets.head[expr0] } }
   const out: Layer[] = [root, body, head]
 
   if (m.mouth && Object.keys(p.assets.mouth).length) {
@@ -97,7 +132,7 @@ export function cardLayers(p: PreparedCard, scene: { width: number; height: numb
     const [mx, my] = m.mouth.paste_on_head_topleft
     const first = m.mouth.shapes[0]
     // hidden while silent (the head image has its own closed mouth); lip sync shows a shape and swaps between them
-    out.push({ ...base, id: newId(), type: 'image', name: `${label} · Mulut`, assetId: p.assets.mouth[first], parentId: head.id, x: r3(mx + mw / 2 - hw / 2), y: r3(my + mh / 2 - hh / 2), opacity: 0, rig: { id: rigId, role: `piece:${CARD_ROLES.mouth}` }, expr: { ...p.assets.mouth } })
+    out.push({ ...base, id: newId(), type: 'image', name: `${label} · Mulut`, assetId: p.assets.mouth[first], parentId: head.id, x: r3(mx + mw / 2 - hw / 2), y: r3(my + mh / 2 - hh / 2), opacity: 0, rig: { id: rigId, role: `piece:${CARD_ROLES.mouth}` }, expr: { ...p.assets.mouth, ...p.assets.extra?.mouth } })
   }
   if (m.blink && p.assets.blink) {
     const [ew, eh] = m.blink.canvas

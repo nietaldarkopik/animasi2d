@@ -1,0 +1,323 @@
+{
+ "version": 1,
+ "pack": "dialog",
+ "character": "arum",
+ "prefix": "arum",
+ "skipped": [
+  "blink:34",
+  "blink:sisi"
+ ],
+ "sheets": [
+  {
+   "id": "dialog_badan_a",
+   "group": "body",
+   "cols": 3,
+   "rows": 1,
+   "ref": "body:diam",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "body",
+     "id": "diam",
+     "text": "SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "diam_34",
+     "required": true,
+     "text": "standing with arms relaxed beside the body, 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "diam_sisi",
+     "required": true,
+     "text": "standing with arms relaxed, right-side profile view facing the viewer's right"
+    }
+   ],
+   "file": "arum_dialog_badan_a.png",
+   "attach": [
+    "arum_acuan.png"
+   ]
+  },
+  {
+   "id": "dialog_badan_b",
+   "group": "body",
+   "cols": 2,
+   "rows": 1,
+   "ref": "body:diam",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "body",
+     "id": "diam",
+     "text": "SIZE REFERENCE: standing with arms relaxed, front view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "body",
+     "id": "diam_belakang",
+     "required": false,
+     "text": "standing with arms relaxed, REAR view (seen from behind)"
+    }
+   ],
+   "file": "arum_dialog_badan_b.png",
+   "attach": [
+    "arum_acuan.png"
+   ]
+  },
+  {
+   "id": "dialog_kepala_34",
+   "group": "head",
+   "cols": 3,
+   "rows": 2,
+   "ref": "head:netral",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "head",
+     "id": "netral",
+     "text": "SIZE REFERENCE: neutral expression, FRONT view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "netral_34",
+     "required": true,
+     "text": "neutral expression, 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "senang_34",
+     "required": false,
+     "text": "happy (gentle smile), 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "kaget_34",
+     "required": false,
+     "text": "surprised (wide eyes, small round mouth), 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "sedih_34",
+     "required": false,
+     "text": "sad, 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "marah_34",
+     "required": false,
+     "text": "angry, 3/4 view facing the viewer's right"
+    }
+   ],
+   "file": "arum_dialog_kepala_34.png",
+   "attach": [
+    "arum_acuan.png",
+    "arum_kepala_netral.png"
+   ]
+  },
+  {
+   "id": "dialog_kepala_sisi",
+   "group": "head",
+   "cols": 3,
+   "rows": 2,
+   "ref": "head:netral",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "head",
+     "id": "netral",
+     "text": "SIZE REFERENCE: neutral expression, FRONT view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "netral_sisi",
+     "required": true,
+     "text": "neutral expression, right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "senang_sisi",
+     "required": false,
+     "text": "happy (gentle smile), right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "kaget_sisi",
+     "required": false,
+     "text": "surprised (wide eyes, small round mouth), right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "sedih_sisi",
+     "required": false,
+     "text": "sad, right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "marah_sisi",
+     "required": false,
+     "text": "angry, right-side profile view facing the viewer's right"
+    }
+   ],
+   "file": "arum_dialog_kepala_sisi.png",
+   "attach": [
+    "arum_acuan.png",
+    "arum_kepala_netral.png"
+   ]
+  },
+  {
+   "id": "dialog_kepala_lirik",
+   "group": "head",
+   "cols": 3,
+   "rows": 1,
+   "ref": "head:netral",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "head",
+     "id": "netral",
+     "text": "SIZE REFERENCE: neutral expression, FRONT view, exactly as in the reference"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "lirik_kanan",
+     "required": false,
+     "text": "neutral expression, FRONT view with the head NOT turned, only the eyes looking to the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "head",
+     "id": "lirik_kiri",
+     "required": false,
+     "text": "neutral expression, FRONT view with the head NOT turned, only the eyes looking to the viewer's left"
+    }
+   ],
+   "file": "arum_dialog_kepala_lirik.png",
+   "attach": [
+    "arum_acuan.png",
+    "arum_kepala_netral.png"
+   ]
+  },
+  {
+   "id": "dialog_mulut_34",
+   "group": "mouth",
+   "cols": 6,
+   "rows": 1,
+   "ref": "mouth:a",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "mouth",
+     "id": "a",
+     "text": "SIZE REFERENCE: vowel A (wide open) seen from the FRONT"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "a_34",
+     "required": false,
+     "text": "A (wide open) seen from the 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "i_34",
+     "required": false,
+     "text": "I (flat and wide with teeth showing) seen from the 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "u_34",
+     "required": false,
+     "text": "U (small round pucker) seen from the 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "e_34",
+     "required": false,
+     "text": "E (medium open) seen from the 3/4 view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "o_34",
+     "required": false,
+     "text": "O (round open) seen from the 3/4 view facing the viewer's right"
+    }
+   ],
+   "file": "arum_dialog_mulut_34.png",
+   "attach": [
+    "arum_acuan.png"
+   ]
+  },
+  {
+   "id": "dialog_mulut_sisi",
+   "group": "mouth",
+   "cols": 6,
+   "rows": 1,
+   "ref": "mouth:a",
+   "cells": [
+    {
+     "role": "ref",
+     "group": "mouth",
+     "id": "a",
+     "text": "SIZE REFERENCE: vowel A (wide open) seen from the FRONT"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "a_sisi",
+     "required": false,
+     "text": "A (wide open) seen from the right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "i_sisi",
+     "required": false,
+     "text": "I (flat and wide with teeth showing) seen from the right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "u_sisi",
+     "required": false,
+     "text": "U (small round pucker) seen from the right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "e_sisi",
+     "required": false,
+     "text": "E (medium open) seen from the right-side profile view facing the viewer's right"
+    },
+    {
+     "role": "slot",
+     "group": "mouth",
+     "id": "o_sisi",
+     "required": false,
+     "text": "O (round open) seen from the right-side profile view facing the viewer's right"
+    }
+   ],
+   "file": "arum_dialog_mulut_sisi.png",
+   "attach": [
+    "arum_acuan.png"
+   ]
+  }
+ ]
+}

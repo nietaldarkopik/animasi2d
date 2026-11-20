@@ -12,6 +12,18 @@ export interface Keyframe {
 /** Image swap key: from frame `f` on the layer shows `assetId` (expressions, mouth shapes). Held until the next key. */
 export interface Swap { f: number; assetId: number }
 
+/** 2.5D card character (spec v2), stored on its root bone: where the head sits (body pixels, relative to the body image) for each body image. */
+export interface CardRig {
+  /** head position for the base poses */
+  head0: [number, number]
+  /** head position for body images that need their own (sitting, 3/4 and side views, running) keyed by slot id */
+  head: Record<string, [number, number]>
+  /** head tilt in degrees (clockwise, around the neck) for the body images that need one; absent = no body image is tilted */
+  rot?: Record<string, number>
+  /** false: the design is asymmetric, never mirror it to face left */
+  mirror?: boolean
+}
+
 export interface Layer {
   keyframes?: Partial<Record<AnimProp, Keyframe[]>>
   /** per-frame image swaps (a step track); before the first key the layer's own assetId shows */
@@ -19,7 +31,7 @@ export interface Layer {
   /** expression id -> asset id for this layer (eyes / brows / mouth of a rig made with expressions) */
   expr?: Record<string, number>
   /** which rig character (instance id) and which part (bone:<key> / piece:<key>) this layer is */
-  rig?: { id: string; role: string }
+  rig?: { id: string; role: string; card?: CardRig }
   /** shape layers: rectangle (default) or ellipse */
   shape?: 'rect' | 'ellipse'
   /** balloon layers: kind, fill colour, and where the tail points to relative to the balloon centre */

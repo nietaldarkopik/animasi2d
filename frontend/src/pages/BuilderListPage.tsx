@@ -46,7 +46,10 @@ export function BuilderListPage() {
       <main style={{ maxWidth: 1100, margin: '0 auto', padding: 16 }}>
         <div className="row between">
           <h1 style={{ margin: 0 }}>Karakter</h1>
-          <button className="primary" onClick={() => nav('/builder/new')}>+ Karakter baru</button>
+          <span className="row" style={{ gap: 6 }}>
+            <button onClick={() => nav('/builder/card-baru')} title="Buat karakter kartu 2.5D dari lembar gambar Flow">+ Karakter 2.5D dari Flow</button>
+            <button className="primary" onClick={() => nav('/builder/new')}>+ Karakter baru</button>
+          </span>
         </div>
         <p className="muted small">Setiap kali disimpan, karakter mendapat <strong>versi baru</strong>; versi lama tidak berubah. Karakter bisa disisipkan ke scene film dari editor (tombol “Karakter”).</p>
         {error && <div className="error" role="alert">{error}</div>}
