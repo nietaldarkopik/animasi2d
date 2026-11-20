@@ -16,6 +16,8 @@ export interface CardMeta {
   blink?: { canvas: [number, number]; paste_on_head_topleft: [number, number]; blink_ok?: string[]; skip?: string[] }
   pose_families?: { id: string; label: string; default_reference: string; alternatives: string[]; requires_prop: string | null }[]
   sitting_head_offsets?: Record<string, [number, number]>
+  sitting_head_scales?: Record<string, number>
+  sitting_body_scales?: Record<string, number>
 }
 
 export interface CardUrls { body: Record<string, string>; head: Record<string, string>; mouth: Record<string, string>; blink: string | null; sitting?: Record<string, string> }
@@ -55,7 +57,7 @@ export function drawCard(ctx: CanvasRenderingContext2D, meta: CardMeta, img: (ur
   let headScale = 1
   if (body && sittingReference) {
     const [canvasW, canvasH] = meta.body.canvas
-    headScale = Math.min(canvasW / Math.max(1, body.naturalWidth), (meta.body.char_height_px ?? canvasH * 0.93) / Math.max(1, body.naturalHeight))
+    headScale = Math.min(canvasW / Math.max(1, body.naturalWidth), (meta.body.char_height_px ?? canvasH * 0.93) / Math.max(1, body.naturalHeight)) * (meta.sitting_body_scales?.[sittingReference] ?? 1)
     const width = body.naturalWidth * headScale
     const height = body.naturalHeight * headScale
     const x = meta.body.center_x - width / 2
@@ -67,14 +69,16 @@ export function drawCard(ctx: CanvasRenderingContext2D, meta: CardMeta, img: (ur
     ctx.drawImage(body, 0, 0)
   }
   if (!head) return
-  ctx.drawImage(head, h.x, h.y, head.naturalWidth * headScale, head.naturalHeight * headScale)
+  const sittingHeadScale = sittingReference ? (meta.sitting_head_scales?.[sittingReference] ?? 1) : 1
+  const finalHeadScale = headScale * sittingHeadScale
+  ctx.drawImage(head, h.x, h.y, head.naturalWidth * finalHeadScale, head.naturalHeight * finalHeadScale)
   const m = v.mouth && meta.mouth ? img(urls.mouth[v.mouth]) : undefined
   if (m && meta.mouth) {
     const [mx, my] = meta.mouth.paste_on_head_topleft
-    ctx.drawImage(m, h.x + mx * headScale, h.y + my * headScale, m.naturalWidth * headScale, m.naturalHeight * headScale)
+    ctx.drawImage(m, h.x + mx * finalHeadScale, h.y + my * finalHeadScale, m.naturalWidth * finalHeadScale, m.naturalHeight * finalHeadScale)
   }
   const b = v.blink && urls.blink && meta.blink ? img(urls.blink) : undefined
-  if (b && meta.blink) ctx.drawImage(b, h.x + meta.blink.paste_on_head_topleft[0] * headScale, h.y + meta.blink.paste_on_head_topleft[1] * headScale, b.naturalWidth * headScale, b.naturalHeight * headScale)
+  if (b && meta.blink) ctx.drawImage(b, h.x + meta.blink.paste_on_head_topleft[0] * finalHeadScale, h.y + meta.blink.paste_on_head_topleft[1] * finalHeadScale, b.naturalWidth * finalHeadScale, b.naturalHeight * finalHeadScale)
 }
 
 /** Project asset ids of every card image, after they were uploaded to the project. */
