@@ -81,6 +81,39 @@ class CardCharacterPackageTest extends TestCase
         Storage::disk('local')->assertExists($version->config['dir'].'/head_netral.png');
     }
 
+    public function test_it_saves_sitting_head_calibration_as_a_new_immutable_version(): void
+    {
+        $user = User::factory()->create();
+        $character = Character::create(['user_id' => $user->id, 'kind' => 'card', 'name' => 'Uki', 'method' => 'rig', 'current_version' => 1]);
+        $dir = 'cards/test-sitting-calibration';
+        Storage::disk('local')->put($dir.'/body_diam.png', $this->pngBytes());
+        Storage::disk('local')->put($dir.'/head_netral.png', $this->pngBytes());
+        Storage::disk('local')->put($dir.'/sitting_sit_chair_neutral_a.png', $this->pngBytes());
+        CharacterVersion::create([
+            'character_id' => $character->id,
+            'number' => 1,
+            'config' => [
+                'type' => 'card', 'dir' => $dir,
+                'meta' => ['name' => 'Uki', 'body' => ['canvas' => [800, 1400], 'feet_y' => 1375, 'center_x' => 400, 'poses' => ['diam']],
+                    'head' => ['canvas' => [400, 400], 'paste_on_body' => [200, 0], 'expressions' => ['netral']]],
+                'files' => ['body' => ['diam' => 'body_diam.png'], 'head' => ['netral' => 'head_netral.png'], 'mouth' => [], 'blink' => null],
+                'sitting_references' => ['sit_chair_neutral_a' => 'sitting_sit_chair_neutral_a.png'],
+            ],
+            'note' => 'fixture',
+        ]);
+
+        $this->withHeaders($this->auth($user))->patch('/api/builder/cards/'.$character->id.'/sitting-head-offset', [
+            'reference' => 'sit_chair_neutral_a', 'x' => 214, 'y' => 96,
+        ])->assertCreated()
+            ->assertJsonPath('data.current_version', 2)
+            ->assertJsonPath('data.meta.sitting_head_offsets.sit_chair_neutral_a.0', 214)
+            ->assertJsonPath('data.meta.sitting_head_offsets.sit_chair_neutral_a.1', 96);
+
+        $this->assertDatabaseHas('character_versions', ['character_id' => $character->id, 'number' => 1]);
+        $this->assertDatabaseHas('character_versions', ['character_id' => $character->id, 'number' => 2]);
+        $this->assertArrayNotHasKey('sitting_head_offsets', CharacterVersion::where('character_id', $character->id)->where('number', 1)->firstOrFail()->config['meta']);
+    }
+
     public function test_it_exports_the_selected_character_version_as_a_zip_download(): void
     {
         $user = User::factory()->create();
