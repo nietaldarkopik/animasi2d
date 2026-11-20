@@ -3,7 +3,7 @@ import { fitHeadWith, fittedHeadPart, KITS, kitOf } from './fitHead'
 import { partBox, placement, type FracBox } from './spec'
 import type { CharacterConfig, Facing, LibAsset } from './types'
 
-const asset = (id: number, category: string, set: string | null = null, view: Facing = 'front'): LibAsset => ({ id, key: null, category, name: `a${id}`, tags: [], source: 'upload', status: 'approved', mime: 'image/png', width: 800, height: 1600, tintable: false, view, set, hash: `h${id}`, mine: true, meta: null, url: '' })
+const asset = (id: number, category: string, set: string | null = null, view: Facing = 'front'): LibAsset => ({ id, asset_uuid: `test-asset-${id}`, version_number: 1, parent_asset_id: null, is_current: true, change_note: null, created_at: '2026-01-01T00:00:00Z', key: null, category, name: `a${id}`, tags: [], source: 'upload', status: 'approved', mime: 'image/png', width: 800, height: 1600, tintable: false, view, set, hash: `h${id}`, mine: true, meta: null, url: '' })
 const FRAC: FracBox = { x0: 0.3, y0: 0.05, x1: 0.7, y1: 0.35 } // visible art of every test asset (fractions of the 400x800 canvas image)
 const lib = [asset(1, 'top', 'kit:laki_laki_anime:top'), asset(2, 'face'), asset(3, 'hair_front'), asset(4, 'face'), asset(5, 'top')]
 const cfg = (top = 1): CharacterConfig => ({ schema_version: 1, view: 'full', palette: {} as never, parts: { top: { assetId: top, dx: 0, dy: 0, scale: 1 }, face: { assetId: 2, dx: 0, dy: 0, scale: 1 }, hair_front: { assetId: 3, dx: 0, dy: 0, scale: 1 } } })
