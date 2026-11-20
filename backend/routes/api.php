@@ -4,6 +4,7 @@ use App\Http\Controllers\AiController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BuilderCharacterController;
+use App\Http\Controllers\CharacterSpritePackController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\EnhancementController;
