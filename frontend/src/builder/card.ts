@@ -52,11 +52,12 @@ export function drawCard(ctx: CanvasRenderingContext2D, meta: CardMeta, img: (ur
   const body = sittingReference ? img(urls.sitting?.[sittingReference] ?? '') : img(urls.body[v.pose])
   const head = img(urls.head[v.expression])
   let h = headOffset(meta, v.pose)
+  let headScale = 1
   if (body && sittingReference) {
     const [canvasW, canvasH] = meta.body.canvas
-    const scale = Math.min(canvasW / Math.max(1, body.naturalWidth), (meta.body.char_height_px ?? canvasH * 0.93) / Math.max(1, body.naturalHeight))
-    const width = body.naturalWidth * scale
-    const height = body.naturalHeight * scale
+    headScale = Math.min(canvasW / Math.max(1, body.naturalWidth), (meta.body.char_height_px ?? canvasH * 0.93) / Math.max(1, body.naturalHeight))
+    const width = body.naturalWidth * headScale
+    const height = body.naturalHeight * headScale
     const x = meta.body.center_x - width / 2
     const y = meta.body.feet_y - height
     ctx.drawImage(body, x, y, width, height)
@@ -66,11 +67,14 @@ export function drawCard(ctx: CanvasRenderingContext2D, meta: CardMeta, img: (ur
     ctx.drawImage(body, 0, 0)
   }
   if (!head) return
-  ctx.drawImage(head, h.x, h.y)
+  ctx.drawImage(head, h.x, h.y, head.naturalWidth * headScale, head.naturalHeight * headScale)
   const m = v.mouth && meta.mouth ? img(urls.mouth[v.mouth]) : undefined
-  if (m && meta.mouth) ctx.drawImage(m, h.x + meta.mouth.paste_on_head_topleft[0], h.y + meta.mouth.paste_on_head_topleft[1])
+  if (m && meta.mouth) {
+    const [mx, my] = meta.mouth.paste_on_head_topleft
+    ctx.drawImage(m, h.x + mx * headScale, h.y + my * headScale, m.naturalWidth * headScale, m.naturalHeight * headScale)
+  }
   const b = v.blink && urls.blink && meta.blink ? img(urls.blink) : undefined
-  if (b && meta.blink) ctx.drawImage(b, h.x + meta.blink.paste_on_head_topleft[0], h.y + meta.blink.paste_on_head_topleft[1])
+  if (b && meta.blink) ctx.drawImage(b, h.x + meta.blink.paste_on_head_topleft[0] * headScale, h.y + meta.blink.paste_on_head_topleft[1] * headScale, b.naturalWidth * headScale, b.naturalHeight * headScale)
 }
 
 /** Project asset ids of every card image, after they were uploaded to the project. */
