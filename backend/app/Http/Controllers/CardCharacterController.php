@@ -787,8 +787,12 @@ class CardCharacterController extends Controller
         if ($v) {
             $f = $v->config['files'];
             $map = fn (array $xs) => array_map(fn ($name) => $this->fileUrl($v, $name), $xs);
-            $urls = ['body' => $map($f['body']), 'head' => $map($f['head']), 'mouth' => $map($f['mouth'] ?? []), 'blink' => ! empty($f['blink']) ? $this->fileUrl($v, $f['blink']) : null];
-            $sittingReferenceUrls = array_map(fn ($filename) => $this->fileUrl($v, $filename), $v->config['sitting_references'] ?? []);
+            $sittingReferenceUrls = [];
+            foreach (($v->config['sitting_references'] ?? []) as $reference => $filename) {
+                $sittingReferenceUrls[$reference] = $this->fileUrl($v, $filename);
+            }
+            $urls = ['body' => $map($f['body']), 'head' => $map($f['head']), 'mouth' => $map($f['mouth'] ?? []),
+                'blink' => ! empty($f['blink']) ? $this->fileUrl($v, $f['blink']) : null, 'sitting' => $sittingReferenceUrls];
         }
 
         return $this->summary($c) + [
