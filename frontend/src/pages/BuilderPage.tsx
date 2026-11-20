@@ -17,6 +17,8 @@ import type { BuilderVersionInfo, CharacterConfig, DesignFamilyInfo, Facing, Lib
 import { AppNav } from '../components/AppNav'
 import { SvgExportDialog } from '../components/SvgExportDialog'
 import { CharacterSpriteSheetImportDialog } from '../components/CharacterSpriteSheetImportDialog'
+import { CharacterSpritePackPreview } from '../components/CharacterSpritePackPreview'
+import type { CharacterSpritePackInfo } from '../api'
 import { buildCharacterReferencePackManifest, renderCharacterReferenceFrame } from '../builder/characterPack'
 
 // swatches from the sheet's colour panel (master-assets/assets-v1/palette.json)
@@ -55,6 +57,8 @@ export function BuilderPage() {
   const [cats, setCats] = useState<LibCategory[]>([])
   const [svgOpen, setSvgOpen] = useState(false)
   const [spriteImportOpen, setSpriteImportOpen] = useState(false)
+  const [spritePacks, setSpritePacks] = useState<CharacterSpritePackInfo[]>([])
+  const [spritePreviewPack, setSpritePreviewPack] = useState<CharacterSpritePackInfo | null>(null)
   const [families, setFamilies] = useState<Record<string, DesignFamilyInfo>>({})
   const [templates, setTemplates] = useState<{ id: string; label: string }[]>([])
   const [lib, setLib] = useState<LibAsset[]>([])
@@ -136,6 +140,13 @@ export function BuilderPage() {
     })()
     return () => { dead = true }
   }, [id, isNew])
+
+  useEffect(() => {
+    if (!charId) { setSpritePacks([]); return }
+    let dead = false
+    api.builderSpritePacks(charId).then((packs) => { if (!dead) setSpritePacks(packs) }).catch(() => {})
+    return () => { dead = true }
+  }, [charId])
 
   useEffect(() => {
     const h = (e: BeforeUnloadEvent) => { if (dirty) e.preventDefault() }
@@ -391,6 +402,11 @@ export function BuilderPage() {
         <button onClick={() => void exportPng(true)}>PNG transparan</button>
         <button onClick={() => void exportReferencePack()} disabled={!ready || Object.keys(config.parts).length === 0} title="Ekspor gambar referensi 1024×1024 dan manifest versi karakter untuk Google Flow">Reference Pack</button>
         <button onClick={() => setSpriteImportOpen(true)} disabled={!charId} title={charId ? 'Import sprite sheet animasi untuk karakter ini' : 'Simpan karakter terlebih dahulu'}>Import Sprite Sheet</button>
+        <button onClick={() => {
+          const latest = spritePacks[0]
+          if (latest) setSpritePreviewPack(latest)
+          else if (charId) void api.builderSpritePacks(charId).then((packs) => { setSpritePacks(packs); if (packs[0]) setSpritePreviewPack(packs[0]); else setNote('Belum ada sprite pack untuk karakter ini.') }).catch((e) => setError((e as Error).message))
+        }} disabled={!charId} title="Putar animasi sprite sheet dengan PixiJS">Preview Animasi{spritePacks.length ? ` (${spritePacks.length})` : ''}</button>
         <button onClick={() => setSvgOpen(true)} disabled={!ready || Object.keys(config.parts).length === 0} title="Ekspor vektor: SVG berlapis (satu layer per bagian) untuk Inkscape, Illustrator, Figma">SVG (vektor)</button>
         <button onClick={exportJson}>JSON</button>
         <button className="primary" disabled={busy || !ready} onClick={() => void save()}>{busy ? 'Menyimpan…' : 'Simpan versi'}</button>
@@ -626,7 +642,13 @@ export function BuilderPage() {
         </aside>
       </div>
       {svgOpen && <SvgExportDialog config={config} assets={byId} zOf={zOf} labels={{ ...Object.fromEntries(cats.map((c) => [c.slug, c.name])), shoes: 'Sepatu kiri', [RIGHT_SHOE]: 'Sepatu kanan' }} name={name} onClose={() => setSvgOpen(false)} />}
-      {spriteImportOpen && charId && <CharacterSpriteSheetImportDialog characterId={charId} version={viewing} onClose={() => setSpriteImportOpen(false)} onImported={(pack) => { setNote(`Sprite pack #${pack.id} tersimpan sebagai draft QC (${pack.frame_count} frame).`); setSpriteImportOpen(false) }} />}
+      {spriteImportOpen && charId && <CharacterSpriteSheetImportDialog characterId={charId} version={viewing} onClose={() => setSpriteImportOpen(false)} onImported={(pack) => {
+        setNote(`Sprite pack #${pack.id} tersimpan sebagai draft QC (${pack.frame_count} frame).`)
+        setSpritePacks((items) => [pack, ...items.filter((item) => item.id !== pack.id)])
+        setSpritePreviewPack(pack)
+        setSpriteImportOpen(false)
+      }} />}
+      {spritePreviewPack && <CharacterSpritePackPreview pack={spritePreviewPack} onClose={() => setSpritePreviewPack(null)} />}
     </div>
   )
 }
