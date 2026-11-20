@@ -387,6 +387,44 @@ class CardCharacterController extends Controller
         return response()->json(['data' => $this->detail($character, $request->integer('version') ?: null)]);
     }
 
+    /**
+     * Save a sitting-reference head placement as a new immutable card version.
+     * Coordinates are top-left of the head image in the card body canvas.
+     */
+    public function saveSittingHeadOffset(Request $request, Character $character): JsonResponse
+    {
+        $this->own($request, $character);
+        $data = $request->validate([
+            'reference' => ['required', 'string', 'regex:/^[a-z0-9_-]+$/'],
+            'x' => ['required', 'numeric', 'between:-800,1200'],
+            'y' => ['required', 'numeric', 'between:-800,1400'],
+        ]);
+        $source = $character->versions()->where('number', $character->current_version)->firstOrFail();
+        abort_unless(isset($source->config['sitting_references'][$data['reference']]), 404, 'Referensi pose duduk tidak ditemukan pada versi ini.');
+
+        $config = $source->config;
+        $meta = $config['meta'] ?? [];
+        $meta['sitting_head_offsets'] = $meta['sitting_head_offsets'] ?? [];
+        $meta['sitting_head_offsets'][$data['reference']] = [(int) round($data['x']), (int) round($data['y'])];
+        $config['meta'] = $meta;
+
+        $version = DB::transaction(function () use ($character, $source, $config, $data) {
+            $number = (int) $character->versions()->max('number') + 1;
+            $version = CharacterVersion::create([
+                'character_id' => $character->id,
+                'number' => $number,
+                'config' => $config,
+                'thumbnail_path' => $source->thumbnail_path,
+                'note' => 'Kalibrasi attachment kepala: '.$data['reference'],
+            ]);
+            $character->update(['current_version' => $number]);
+
+            return $version;
+        });
+
+        return response()->json(['data' => $this->detail($character->fresh(), $version->number)], 201);
+    }
+
     public function rename(Request $request, Character $character): JsonResponse
     {
         $this->own($request, $character);
