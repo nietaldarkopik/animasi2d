@@ -26,6 +26,7 @@ export function CharacterSpriteSheetImportDialog({ characterId, version, onClose
   const [previewUrl, setPreviewUrl] = useState('')
   const [loop, setLoop] = useState(true)
   const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null)
+  const [previewFrame, setPreviewFrame] = useState(0)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [note, setNote] = useState('')
@@ -42,6 +43,7 @@ export function CharacterSpriteSheetImportDialog({ characterId, version, onClose
     const image = new Image()
     image.onload = () => {
       setDimensions({ width: image.naturalWidth, height: image.naturalHeight })
+      setPreviewFrame(0)
       if (image.naturalWidth % FRAME === 0 && image.naturalHeight % FRAME === 0) {
         setColumns(image.naturalWidth / FRAME)
         setRows(image.naturalHeight / FRAME)
@@ -97,10 +99,12 @@ export function CharacterSpriteSheetImportDialog({ characterId, version, onClose
 
         {dimensions && (
           <div className="row" style={{ gap: 12, alignItems: 'center' }}>
-            <div style={{ width: 150, height: 150, flex: '0 0 150px', backgroundColor: '#777', backgroundImage: previewUrl ? `url("${previewUrl}")` : undefined, backgroundSize: `${columns * 100}% ${rows * 100}%`, backgroundPosition: 'top left', backgroundRepeat: 'no-repeat', border: '1px solid var(--border)' }} />
-            <div className="small">
+            <div style={{ width: 150, height: 150, flex: '0 0 150px', backgroundColor: '#777', backgroundImage: previewUrl ? `url("${previewUrl}")` : undefined, backgroundSize: `${columns * 100}% ${rows * 100}%`, backgroundPosition: `${columns > 1 ? (previewFrame % columns) / (columns - 1) * 100 : 0}% ${rows > 1 ? Math.floor(previewFrame / columns) / (rows - 1) * 100 : 0}%`, backgroundRepeat: 'no-repeat', border: '1px solid var(--border)' }} />
+            <div className="small" style={{ flex: 1 }}>
               <div>Ukuran gambar: <strong>{dimensions.width} × {dimensions.height} px</strong></div>
               <div>Frame terdeteksi: <strong>{dimensions.width / FRAME} × {dimensions.height / FRAME}</strong></div>
+              <div>Preview cell: <strong>{previewFrame + 1} / {columns * rows}</strong></div>
+              <input aria-label="Pilih frame preview" type="range" min={0} max={Math.max(0, columns * rows - 1)} value={Math.min(previewFrame, Math.max(0, columns * rows - 1))} onChange={(e) => setPreviewFrame(Number(e.target.value))} />
               <div>{validGrid ? <span style={{ color: 'var(--success)' }}>Grid valid</span> : <span style={{ color: 'var(--danger)' }}>Grid belum cocok dengan 1024 px</span>}</div>
             </div>
           </div>
