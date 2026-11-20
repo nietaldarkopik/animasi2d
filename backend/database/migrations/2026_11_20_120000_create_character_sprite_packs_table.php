@@ -14,6 +14,9 @@ return new class extends Migration
             $table->foreignId('character_id')->constrained('characters')->cascadeOnDelete();
             $table->unsignedInteger('character_version')->nullable();
             $table->string('name', 120);
+            $table->string('outfit_id', 64)->default('base');
+            $table->string('outfit_name', 120)->nullable();
+            $table->string('outfit_type', 24)->default('base');
             $table->string('disk', 32)->default('local');
             $table->string('path', 500);
             $table->string('mime', 40)->default('image/png');
