@@ -67,7 +67,7 @@ export function CardCharacterPage() {
   useEffect(() => {
     if (!d?.urls) return
     imgs.current = new Map()
-    const all = [...Object.values(d.urls.body), ...Object.values(d.urls.head), ...Object.values(d.urls.mouth), ...(d.urls.blink ? [d.urls.blink] : [])]
+    const all = [...Object.values(d.urls.body), ...Object.values(d.urls.head), ...Object.values(d.urls.mouth), ...Object.values(d.urls.sitting ?? {}), ...(d.urls.blink ? [d.urls.blink] : [])]
     for (const u of all) {
       const im = new Image()
       im.onload = () => { imgs.current.set(u, im); setTick((t) => t + 1) }
@@ -201,8 +201,9 @@ export function CardCharacterPage() {
                                   const updated = await api.cardSaveSittingHeadOffset(d.id, sittingReference, sittingHeadOffset[0], sittingHeadOffset[1])
                                   setD(updated)
                                 })}>Simpan kalibrasi</button>
+                                <button disabled={!m.sitting_head_offsets?.[sittingReference]} onClick={() => setView((v) => ({ ...v, pose: `sitting:${sittingReference}`, mouth: null, blink: false }))}>Gunakan di canvas</button>
                               </div>
-                              <p className="muted small" style={{ margin: '6px 0 0' }}>Tersimpan per variasi pose dan membuat versi karakter baru. Kepala hanya untuk preview kalibrasi; pose aktif di canvas belum berubah.</p>
+                              <p className="muted small" style={{ margin: '6px 0 0' }}>Tersimpan per variasi pose dan membuat versi karakter baru. Setelah tersimpan, klik Gunakan di canvas untuk mengaktifkan pose ini.</p>
                             </div>
                             <p className="muted small" style={{ margin: '8px 0 0' }}>
                               {family.requires_prop ? `Memerlukan prop terpisah: ${family.requires_prop}. ` : 'Tidak memerlukan prop kursi. '}
