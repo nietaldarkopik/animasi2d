@@ -49,6 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/builder/cards/{character}/export-package', [\App\Http\Controllers\CardCharacterController::class, 'exportPackage']);
     Route::get('/builder/cards/{character}', [\App\Http\Controllers\CardCharacterController::class, 'show']);
     Route::patch('/builder/cards/{character}', [\App\Http\Controllers\CardCharacterController::class, 'rename']);
+    Route::patch('/builder/cards/{character}/sitting-head-offset', [\App\Http\Controllers\CardCharacterController::class, 'saveSittingHeadOffset']);
     Route::post('/builder/cards/{character}/refresh', [\App\Http\Controllers\CardCharacterController::class, 'refresh'])->middleware('throttle:30,1');
     Route::post('/builder/cards/{character}/duplicate', [\App\Http\Controllers\CardCharacterController::class, 'duplicate']);
     Route::delete('/builder/cards/{character}', [\App\Http\Controllers\CardCharacterController::class, 'destroy']);
