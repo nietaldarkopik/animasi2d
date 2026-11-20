@@ -141,7 +141,7 @@ The 2.5D Card Character page exports a ZIP with both the original modular source
 
 1. Export the currently viewed immutable character version as a ZIP.
 2. The ZIP contains `character.json`, all original body/head/mouth/blink PNGs under `assets/`, `sprite-sheet-index.json`, one or more composite atlas pages under `sprite-sheet/`, page manifests, and `GOOGLE-FLOW-PROMPT.txt`.
-3. Each sprite-sheet cell is a complete character composition for one body-pose × head-expression combination. Every page is a 4×4 grid of 1024×1024 frames (4096×4096 PNG RGBA); combinations beyond 16 continue on another page. The page manifest maps every frame ID back to its original pose and expression IDs using `source_map`.
+3. Each character cell is a complete character composition for one body-pose × head-expression combination. Mouth and blink overlay artwork is also included as separate transparent cells, grouped under the `facial_overlays` animation. Every page is a 4×4 grid of 1024×1024 frames (4096×4096 PNG RGBA); combinations beyond 16 continue on another page. The page manifest maps every frame ID back to its original pose/expression/overlay IDs using `source_map`.
 4. Edit only the PNG pages in Google Flow. Preserve the exact canvas size, grid, cell boundaries, character scale/position, transparent background, and identity. The supplied prompt file describes these constraints.
 5. Import the edited ZIP as a new character. The original modular source is retained for the existing card rig, and each edited atlas page is automatically attached to the new character as an unverified full-character sprite pack. The source character and its versions are never overwritten.
 
