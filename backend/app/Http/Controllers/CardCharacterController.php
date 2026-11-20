@@ -126,6 +126,17 @@ class CardCharacterController extends Controller
                 'frame' => ['width' => 1024, 'height' => 1024], 'columns' => 4, 'rows' => 4,
                 'pages' => array_map(fn ($p) => ['image' => $p['image'], 'manifest' => $p['manifest'], 'frame_count' => count($p['frames'])], $spritePages)];
             $zip->addFromString('sprite-sheet-index.json', json_encode($pageIndex, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            $zip->addFromString('GOOGLE-FLOW-PROMPT.txt', implode("\n", [
+                'Edit this complete character sprite sheet consistently across every cell.',
+                'Preserve the exact 4-column × 4-row grid, every 1024×1024 cell boundary, the original 4096×4096 canvas size, and each character position/scale.',
+                'Keep one complete full-body character inside each existing cell. Do not merge, move, reorder, crop, add, or remove cells.',
+                'Preserve the character identity: face, hairstyle, skin tone, body proportions, silhouette, and recognizable details.',
+                'Apply the requested outfit/style change consistently to every pose and expression in all pages.',
+                'Keep the background transparent. Do not add labels, captions, borders, shadows outside the character, or decorative elements.',
+                'Return each edited page as a PNG with exactly the same dimensions. Do not change the grid layout.',
+                '',
+                'After editing, replace only the PNG files in sprite-sheet/ and keep all JSON manifests and assets/ files unchanged.',
+            ]));
             foreach ($spritePages as $page) {
                 $zip->addFromString('sprite-sheet/'.$page['image'], $page['png']);
                 $zip->addFromString('sprite-sheet/'.$page['manifest'], json_encode($page['json'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
