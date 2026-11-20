@@ -262,6 +262,6 @@ class CharacterSpritePackController extends Controller
 
     private function own(Request $request, Character $character): void
     {
-        abort_unless($character->user_id === $request->user()->id && $character->kind === 'builder', 404);
+        abort_unless($character->user_id === $request->user()->id && in_array($character->kind, ['builder', 'card'], true), 404);
     }
 }
