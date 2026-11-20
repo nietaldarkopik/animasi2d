@@ -92,6 +92,15 @@ export function CardCharacterPage() {
   }
 
   const m = d?.meta
+  const sittingBodyImage = m && d?.urls?.sitting?.[sittingReference]
+    ? imgs.current.get(absUrl(d.urls.sitting[sittingReference]))
+    : undefined
+  const sittingHeadScale = m && sittingBodyImage
+    ? Math.min(
+      m.body.canvas[0] / Math.max(1, sittingBodyImage.naturalWidth),
+      (m.body.char_height_px ?? m.body.canvas[1] * 0.93) / Math.max(1, sittingBodyImage.naturalHeight),
+    )
+    : 1
   const pick = (label: string, items: string[], cur: string | null, set: (x: string | null) => void, allowNone?: string) => (
     <div>
       <h4 className="small" style={{ margin: '8px 0 4px' }}>{label}</h4>
@@ -187,7 +196,7 @@ export function CardCharacterPage() {
                                   <img src={absUrl(d.urls.head[view.expression])} alt="Kepala yang dapat diposisikan" draggable={false}
                                     onPointerDown={(event) => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); setDraggingHead(true) }}
                                     onPointerUp={() => setDraggingHead(false)}
-                                    style={{ position: 'absolute', left: `${sittingHeadOffset[0] / 8}%`, top: `${sittingHeadOffset[1] / 14}%`, width: '50%', height: `${400 / 1400 * 100}%`, objectFit: 'contain', cursor: draggingHead ? 'grabbing' : 'grab', touchAction: 'none' }} />
+                                    style={{ position: 'absolute', left: `${sittingHeadOffset[0] / 8}%`, top: `${sittingHeadOffset[1] / 14}%`, width: `${m ? (m.head.canvas[0] * sittingHeadScale / m.body.canvas[0]) * 100 : 50}%`, height: `${m ? (m.head.canvas[1] * sittingHeadScale / m.body.canvas[1]) * 100 : 400 / 1400 * 100}%`, objectFit: 'contain', cursor: draggingHead ? 'grabbing' : 'grab', touchAction: 'none' }} />
                                 )}
                               </div>
                               <div className="row" style={{ gap: 8, flexWrap: 'wrap', marginTop: 8, alignItems: 'end' }}>
