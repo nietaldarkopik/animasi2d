@@ -115,6 +115,20 @@ class CardCharacterController extends Controller
 
         try {
             $zip->addFromString('character.json', json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
+            // Google Flow editing sheet: every body-pose × head-expression combination is
+            // rendered as a complete, transparent 1024px frame. 16 frames per 4096px page.
+            $spritePages = $this->buildCharacterSpriteSheets($config['dir'], $config['meta'], $files);
+            $pageIndex = ['format' => 'animasi2d.character-card-sprite-sheet-index', 'format_version' => 1,
+                'character' => ['name' => $character->name, 'source_id' => $character->id, 'source_version' => $version->number],
+                'frame' => ['width' => 1024, 'height' => 1024], 'columns' => 4, 'rows' => 4,
+                'pages' => array_map(fn ($p) => ['image' => $p['image'], 'manifest' => $p['manifest'], 'frame_count' => count($p['frames'])], $spritePages)];
+            $zip->addFromString('sprite-sheet-index.json', json_encode($pageIndex, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            foreach ($spritePages as $page) {
+                $zip->addFromString('sprite-sheet/'.$page['image'], $page['png']);
+                $zip->addFromString('sprite-sheet/'.$page['manifest'], json_encode($page['json'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            }
+
             $names = [...array_values($files['body'] ?? []), ...array_values($files['head'] ?? []), ...array_values($files['mouth'] ?? []), ...(! empty($files['blink']) ? [$files['blink']] : [])];
             foreach (array_unique($names) as $name) {
                 abort_unless(is_string($name) && preg_match('/^[a-z0-9_-]+\.png$/i', $name), 422, 'Nama file aset karakter tidak valid.');
@@ -401,6 +415,96 @@ class CardCharacterController extends Controller
         $c->update(['current_version' => $n]);
 
         return $v;
+    }
+
+    /**
+     * Builds Google Flow-ready composite sprite sheets: one complete character per cell,
+     * covering every body pose × head expression combination. Original modular PNGs remain
+     * in the ZIP as the editable source and for exact re-import.
+     *
+     * @return array<int, array{image:string,manifest:string,png:string,json:array,frames:array}>
+     */
+    private function buildCharacterSpriteSheets(string $dir, array $meta, array $files): array
+    {
+        if (! function_exists('imagecreatefromstring') || ! function_exists('imagecreatetruecolor')) {
+            abort(501, 'Ekstensi PHP GD diperlukan untuk membuat sprite sheet karakter.');
+        }
+
+        $disk = Storage::disk('local');
+        $bodyPoses = $files['body'] ?? [];
+        $expressions = $files['head'] ?? [];
+        $combinations = [];
+        foreach ($bodyPoses as $pose => $bodyName) {
+            foreach ($expressions as $expression => $headName) {
+                $combinations[] = ['pose' => (string) $pose, 'expression' => (string) $expression, 'body' => $bodyName, 'head' => $headName];
+            }
+        }
+        abort_if($combinations === [], 422, 'Karakter tidak memiliki kombinasi pose dan ekspresi untuk diekspor.');
+
+        $pages = [];
+        foreach (array_chunk($combinations, 16) as $pageIndex => $items) {
+            $atlas = imagecreatetruecolor(4096, 4096);
+            imagealphablending($atlas, false);
+            imagesavealpha($atlas, true);
+            imagefill($atlas, 0, 0, imagecolorallocatealpha($atlas, 0, 0, 0, 127));
+            $frames = [];
+            $sourceMap = [];
+            foreach ($items as $i => $item) {
+                $bodyBytes = $disk->get($dir.'/'.$item['body']);
+                $headBytes = $disk->get($dir.'/'.$item['head']);
+                $body = @imagecreatefromstring($bodyBytes);
+                $head = @imagecreatefromstring($headBytes);
+                abort_unless($body && $head, 422, 'PNG body/head tidak dapat dibaca untuk sprite sheet.');
+                $bw = imagesx($body); $bh = imagesy($body);
+                $hw = imagesx($head); $hh = imagesy($head);
+                $scale = min(512 / max(1, $bw), 1024 / max(1, $bh));
+                $dw = max(1, (int) round($bw * $scale));
+                $dh = max(1, (int) round($bh * $scale));
+                $dx = (int) floor((1024 - $dw) / 2);
+                $dy = 1024 - $dh;
+                $cell = imagecreatetruecolor(1024, 1024);
+                imagealphablending($cell, false);
+                imagesavealpha($cell, true);
+                imagefill($cell, 0, 0, imagecolorallocatealpha($cell, 0, 0, 0, 127));
+                imagealphablending($cell, true);
+                imagecopyresampled($cell, $body, $dx, $dy, 0, 0, $dw, $dh, $bw, $bh);
+
+                [$headX, $headY] = $meta['head']['paste_on_body'] ?? [0, 0];
+                $headX += (int) ($meta['body']['head_dx'][$item['pose']] ?? 0);
+                $hx = $dx + (int) round($headX * $scale);
+                $hy = $dy + (int) round($headY * $scale);
+                imagecopyresampled($cell, $head, $hx, $hy, 0, 0,
+                    max(1, (int) round($hw * $scale)), max(1, (int) round($hh * $scale)), $hw, $hh);
+
+                $col = $i % 4; $row = intdiv($i, 4);
+                imagecopy($atlas, $cell, $col * 1024, $row * 1024, 0, 0, 1024, 1024);
+                $id = Str::slug($item['pose'].'-'.$item['expression'], '_');
+                $frames[] = ['id' => $id, 'x' => $col * 1024, 'y' => $row * 1024, 'width' => 1024, 'height' => 1024];
+                $sourceMap[$id] = ['pose' => $item['pose'], 'expression' => $item['expression']];
+                imagedestroy($body); imagedestroy($head); imagedestroy($cell);
+            }
+            ob_start();
+            imagepng($atlas, null, 6);
+            $png = (string) ob_get_clean();
+            imagedestroy($atlas);
+
+            $number = $pageIndex + 1;
+            $imageName = sprintf('sprite-sheet-%02d.png', $number);
+            $manifestName = sprintf('sprite-sheet-%02d.json', $number);
+            $json = [
+                'format' => 'animasi2d.character-sprite-atlas', 'format_version' => 1,
+                'character' => ['name' => $meta['name'] ?? 'Character'],
+                'frame' => ['width' => 1024, 'height' => 1024, 'pivot' => ['x' => 512, 'y' => 1024]],
+                'atlas' => ['width' => 4096, 'height' => 4096, 'columns' => 4, 'rows' => 4],
+                'facing' => 'front',
+                'animations' => ['character_variants' => ['fps' => 1, 'loop' => false, 'frames' => $frames]],
+                'outfit' => ['id' => 'base', 'name' => 'Pakaian dasar', 'type' => 'base'],
+                'source_map' => $sourceMap,
+            ];
+            $pages[] = ['image' => $imageName, 'manifest' => $manifestName, 'png' => $png, 'json' => $json, 'frames' => $frames];
+        }
+
+        return $pages;
     }
 
     /** Body (first pose) with the neutral head pasted on, the way character.json places it; cropped to the figure. */
