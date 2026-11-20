@@ -528,9 +528,12 @@ class CardCharacterController extends Controller
                     return in_array($family['default_reference'], $availableIds, true)
                         && count(array_diff($family['alternatives'], $availableIds)) === 0;
                 }));
-                $sittingReferences = array_intersect_key($sittingReferences, array_flip(array_unique(array_merge(
-                    ...array_map(fn ($family) => [$family['default_reference'], ...$family['alternatives']], $meta['pose_families'])
-                ))));
+                $referenceIds = [];
+                foreach ($meta['pose_families'] as $family) {
+                    $referenceIds[] = $family['default_reference'];
+                    array_push($referenceIds, ...$family['alternatives']);
+                }
+                $sittingReferences = array_intersect_key($sittingReferences, array_flip(array_unique($referenceIds)));
             }
         }
 
