@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use ZipArchive;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -74,6 +75,170 @@ class CardCharacterController extends Controller
         });
 
         return response()->json(['data' => $this->detail($c->fresh())], 201);
+    }
+
+    /**
+     * Export the selected immutable card version as an editable ZIP package.
+     * The archive contains character.json plus every source PNG; it never mutates the source character.
+     */
+    public function exportPackage(Request $request, Character $character)
+    {
+        $this->own($request, $character);
+        abort_unless(class_exists(ZipArchive::class), 501, 'Ekstensi PHP ZipArchive belum tersedia di server.');
+        $version = $character->versions()->where('number', $request->integer('version') ?: $character->current_version)->firstOrFail();
+        $config = $version->config;
+        abort_unless(($config['type'] ?? null) === 'card' && ! empty($config['dir']) && is_array($config['files'] ?? null), 422);
+
+        $files = $config['files'];
+        $manifest = [
+            'format' => 'animasi2d.character-card-package',
+            'format_version' => 1,
+            'character' => ['name' => $character->name, 'source_id' => $character->id, 'source_version' => $version->number],
+            'meta' => $config['meta'],
+            'files' => $files,
+            'instructions' => [
+                'Edit PNG files inside assets/ while keeping filenames and transparent backgrounds.',
+                'Keep body/head canvas dimensions and paste offsets compatible, or update meta and validate the result.',
+                'Import this ZIP as a new character; the original character and its versions remain unchanged.',
+            ],
+        ];
+
+        $tmp = tempnam(sys_get_temp_dir(), 'animasi2d-character-');
+        if ($tmp === false) {
+            abort(500, 'Tidak dapat menyiapkan file export.');
+        }
+        $zip = new ZipArchive();
+        if ($zip->open($tmp, ZipArchive::OVERWRITE) !== true) {
+            @unlink($tmp);
+            abort(500, 'Tidak dapat membuat paket ZIP.');
+        }
+
+        try {
+            $zip->addFromString('character.json', json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            $names = [...array_values($files['body'] ?? []), ...array_values($files['head'] ?? []), ...array_values($files['mouth'] ?? []), ...(! empty($files['blink']) ? [$files['blink']] : [])];
+            foreach (array_unique($names) as $name) {
+                abort_unless(is_string($name) && preg_match('/^[a-z0-9_-]+\.png$/i', $name), 422, 'Nama file aset karakter tidak valid.');
+                $assetPath = $config['dir'].'/'.$name;
+                abort_unless(Storage::disk('local')->exists($assetPath), 404, 'Aset karakter tidak ditemukan: '.$name);
+                $zip->addFromString('assets/'.$name, Storage::disk('local')->get($assetPath));
+            }
+            if (! empty($version->thumbnail_path) && Storage::disk('local')->exists($version->thumbnail_path)) {
+                $zip->addFromString('preview.png', Storage::disk('local')->get($version->thumbnail_path));
+            }
+        } catch (\Throwable $e) {
+            $zip->close();
+            @unlink($tmp);
+            throw $e;
+        }
+        $zip->close();
+
+        return response()->download($tmp, Str::slug($character->name ?: 'character').'-v'.$version->number.'.zip', [
+            'Content-Type' => 'application/zip',
+            'Cache-Control' => 'private, no-store',
+        ])->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Import an exported/edited card package as a completely new character.
+     * ZIP entries are read by exact allow-listed names; the archive is never extracted.
+     */
+    public function importPackage(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'file' => 'required|file|mimes:zip|max:51200',
+            'name' => 'nullable|string|max:120',
+        ]);
+        abort_unless(class_exists(ZipArchive::class), 501, 'Ekstensi PHP ZipArchive belum tersedia di server.');
+
+        $zip = new ZipArchive();
+        if ($zip->open($data['file']->getRealPath()) !== true) {
+            return response()->json(['message' => 'File ZIP tidak dapat dibuka.'], 422);
+        }
+
+        try {
+            $manifestText = $zip->getFromName('character.json');
+            if (! is_string($manifestText) || strlen($manifestText) > 1048576) {
+                return response()->json(['message' => 'Paket harus memiliki character.json maksimal 1 MB.'], 422);
+            }
+            $manifest = json_decode($manifestText, true);
+            if (! is_array($manifest) || ($manifest['format'] ?? null) !== 'animasi2d.character-card-package' || ($manifest['format_version'] ?? null) !== 1) {
+                return response()->json(['message' => 'Format paket karakter tidak dikenal atau versinya tidak didukung.'], 422);
+            }
+            $meta = $manifest['meta'] ?? null;
+            $files = $manifest['files'] ?? null;
+            if (! is_array($meta) || ! is_array($files) || empty($files['body']) || empty($files['head'])
+                || empty($meta['body']['poses']) || empty($meta['head']['expressions'])
+                || ! is_array($files['body']) || ! is_array($files['head'])) {
+                return response()->json(['message' => 'Metadata paket tidak lengkap: body dan head wajib tersedia.'], 422);
+            }
+            if (array_keys($files['body']) !== array_values($meta['body']['poses']) || array_keys($files['head']) !== array_values($meta['head']['expressions'])) {
+                return response()->json(['message' => 'Daftar pose/ekspresi pada metadata tidak cocok dengan file gambar.'], 422);
+            }
+            if (count($files['body']) > 80 || count($files['head']) > 80 || count($files['mouth'] ?? []) > 40) {
+                return response()->json(['message' => 'Jumlah aset dalam paket melebihi batas.'], 422);
+            }
+
+            $names = [...array_values($files['body']), ...array_values($files['head']), ...array_values($files['mouth'] ?? []), ...(! empty($files['blink']) ? [$files['blink']] : [])];
+            $names = array_values(array_unique($names));
+            if (count($names) < 2 || count($names) > 200) {
+                return response()->json(['message' => 'Jumlah file gambar dalam paket tidak valid.'], 422);
+            }
+            $assets = [];
+            $totalBytes = 0;
+            foreach ($names as $name) {
+                if (! is_string($name) || ! preg_match('/^[a-z0-9_-]+\.png$/i', $name)) {
+                    return response()->json(['message' => 'Nama file PNG dalam manifest tidak valid.'], 422);
+                }
+                $entry = 'assets/'.$name;
+                $stat = $zip->statName($entry);
+                if (! is_array($stat) || ($stat['size'] ?? 0) < 8 || ($stat['size'] ?? 0) > 10485760) {
+                    return response()->json(['message' => 'File '.$name.' tidak ada atau ukurannya tidak valid.'], 422);
+                }
+                $totalBytes += (int) $stat['size'];
+                if ($totalBytes > 52428800) {
+                    return response()->json(['message' => 'Total ukuran aset ZIP melebihi 50 MB.'], 422);
+                }
+                $bytes = $zip->getFromName($entry);
+                $image = is_string($bytes) ? @getimagesizefromstring($bytes) : false;
+                if (! is_string($bytes) || ! $image || ($image['mime'] ?? null) !== 'image/png') {
+                    return response()->json(['message' => 'Aset '.$name.' harus berupa PNG valid.'], 422);
+                }
+                $assets[$name] = $bytes;
+            }
+
+            $safeFiles = [
+                'body' => $files['body'],
+                'head' => $files['head'],
+                'mouth' => $files['mouth'] ?? [],
+                'blink' => $files['blink'] ?? null,
+            ];
+            $characterName = ($data['name'] ?? '') ?: (($manifest['character']['name'] ?? $meta['name'] ?? 'Karakter').' (impor)');
+            $character = DB::transaction(function () use ($request, $characterName, $meta, $safeFiles, $assets) {
+                $c = Character::create(['user_id' => $request->user()->id, 'kind' => 'card', 'name' => $characterName, 'method' => 'rig']);
+                $dir = self::DIR.'/'.Str::uuid();
+                foreach ($assets as $filename => $bytes) {
+                    Storage::disk('local')->put($dir.'/'.$filename, $bytes);
+                }
+                $spec = ['meta' => $meta, 'files' => $safeFiles];
+                $thumb = $this->thumbnail(Storage::disk('local')->path($dir), $spec);
+                if ($thumb) {
+                    Storage::disk('local')->put($dir.'/_thumb.png', $thumb);
+                }
+                $config = ['type' => 'card', 'schema_version' => 1, 'source' => 'package-import', 'dir' => $dir, 'meta' => $meta, 'files' => $safeFiles];
+                CharacterVersion::create([
+                    'character_id' => $c->id, 'number' => 1, 'config' => $config,
+                    'thumbnail_path' => $thumb ? $dir.'/_thumb.png' : null,
+                    'note' => 'Karakter baru dari paket ZIP yang diimpor',
+                ]);
+                $c->update(['current_version' => 1]);
+
+                return $c;
+            });
+
+            return response()->json(['data' => $this->detail($character->fresh())], 201);
+        } finally {
+            $zip->close();
+        }
     }
 
     /** New version from the folder the character was imported from (after the PNGs were redrawn). */
