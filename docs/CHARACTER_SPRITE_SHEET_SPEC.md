@@ -1,0 +1,122 @@
+# Character Sprite Sheet System — Technical Specification
+
+Status: implementation baseline / v1
+Repository: `nietaldarkopik/animasi2d`
+Implementation branch: `feat/character-sprite-sheet-hybrid`
+
+## Goals
+
+- Keep the existing Character Builder as the canonical editable character source.
+- Export portable reference packs for Google Flow and external character-asset workflows.
+- Import a standardized animation atlas as a full character animation asset.
+- Support clothing changes without changing character identity, body proportions, skeleton, or frame alignment.
+- Keep PixiJS as the runtime renderer and preserve existing character versions and projects.
+
+## Existing foundations (verified in repository)
+
+- Character Builder stores immutable `CharacterVersion` snapshots with a version-pinned `CharacterConfig`.
+- Character parts reference `LibraryAsset` IDs and hashes; archived assets remain available to old character versions.
+- Existing logical character canvas is 400x800 units. Full-canvas raster parts are typically 800x1600 (2x).
+- Existing design template `anime-v1` defines slot anchors and four facing values: front/right/left/back.
+- Existing rig stores per-facing joints and can split body/clothing parts for bone animation.
+- Existing expressions store eye, brow and mouth part variants.
+- Existing frontend renderer can composite the modular character into a transparent canvas and export PNG/SVG.
+- Existing character versioning is immutable.
+
+## Architecture
+
+Hybrid means two representations coexist:
+
+1. **Modular source character** — body parts, face, hair, clothing, accessories, palette, expressions, rig and facing-specific assets. This remains editable in Character Builder.
+2. **Animation sprite atlas** — rasterized 1024x1024 cells, grouped into atlas pages and played by PixiJS. This is a derived runtime asset, not the source of truth for the modular character.
+
+Outfits are independent compatible assets. They must declare the character template, rig/skeleton compatibility, facing, pose/frame IDs, slot/layer mapping, anchors and source hashes. Do not assume one static clothing PNG can fit every pose.
+
+## Frame and atlas standard
+
+| Property | Standard |
+|---|---|
+| Frame canvas | 1024 x 1024 px |
+| Format | PNG RGBA, transparent background |
+| Color space | sRGB |
+| Pivot | root/ground anchor; default (512, 1024) |
+| Source character canvas | 400 x 800 logical units |
+| Atlas page | 4 columns x 4 rows |
+| Atlas page dimensions | 4096 x 4096 px |
+| Metadata | JSON manifest |
+| Runtime | PixiJS 8 |
+
+The 1024x1024 frame is square; the full-body 1:2 character is contained and centred horizontally. Character pixels must not be stretched to fill the square. The pivot must be stored per pack and can be overridden after validation.
+
+## Naming and metadata contract
+
+- Character IDs are stable: `uki`, `arum`, `riska`, `seni`.
+- Animation names: `idle`, `walk`, `run`, `talk`, `sit`, `gesture`, `custom`.
+- Frame IDs are stable within an animation, e.g. `walk_0001`.
+- Facing values: `front`, `right`, `left`, `back`.
+- Outfit IDs are independent, e.g. `casual`, `hoodie`, `formal`.
+- Every pack must declare format version, character/version, template, rig version, frame dimensions, pivot, atlas page layout, animations, FPS/loop, facing, outfit compatibility, asset hashes and QC results.
+
+## Outfit compatibility
+
+An outfit is accepted only when its compatibility metadata matches the character's:
+- design template and character proportions;
+- rig/skeleton version;
+- facing;
+- animation and frame IDs for pose-matched clothing;
+- slot/layer and anchor definitions.
+
+Two supported methods:
+- **Modular outfit:** garment layers are attached to rig bones and rendered with the character.
+- **Pose-matched outfit:** garment artwork is provided for each matching pose/frame ID. This is the reliable fallback for clothing generated as complete artwork by Google Flow.
+
+A generated outfit is never automatically assumed compatible. The importer must show alignment/identity warnings and allow manual correction before approval.
+
+## Import validation
+
+The importer must validate:
+- PNG dimensions and atlas grid divisibility;
+- transparent alpha channel and non-empty frames;
+- declared frame count versus available cells;
+- pivot and character bounds;
+- frame-to-frame root alignment;
+- stable scale and facing;
+- duplicate or missing frame IDs;
+- manifest version and required metadata;
+- outfit compatibility and missing pose frames.
+
+Raw single-image sprite sheets without a manifest may be imported in assisted mode: user selects cell width/height, columns/rows, animation ranges, FPS and facing. Such imports are treated as unverified until mapped and previewed.
+
+## Storage and versioning
+
+- Store PNG atlas pages and source reference files in file storage, not MySQL blobs.
+- Store metadata, ownership, hashes, status, compatibility and QC reports in MySQL.
+- Keep sprite packs immutable and link them to a specific CharacterVersion.
+- New outfits or regenerated sheets create new versions; do not mutate packs used by existing episodes/projects.
+- Use content hashes to avoid duplicate uploads and to detect changed files.
+
+## PixiJS runtime
+
+- Load atlas pages lazily and cache textures by immutable pack/version/hash.
+- Use manifest frame rectangles, pivot, FPS, loop and animation IDs.
+- Allow outfit switching only to a validated compatible outfit.
+- Release textures when the pack is no longer referenced.
+- Preserve the existing modular renderer and rig workflow.
+
+## Delivery phases
+
+1. **Reference Pack Export:** export a 1024x1024 transparent current-facing reference image and version-pinned JSON manifest from Character Builder. This is the first implementation increment.
+2. **Sprite Sheet Importer:** upload a PNG atlas plus optional manifest; crop frames; validate; preview animation; save an immutable sprite pack.
+3. **Pose and animation library:** define canonical pose IDs, facing and animation timelines; connect imported frames to the library.
+4. **Outfit Manager:** support modular rigged clothing and pose-matched clothing sets with anchors and compatibility.
+5. **Google Flow workflow:** export reference packs and prompts; import generated results; run QC and alignment review.
+6. **PixiJS integration:** play imported atlases in editor/timeline and allow outfit selection per scene.
+7. **Story/Auto Director integration:** map shot instructions to animation IDs, pose IDs, expressions, facing and outfit.
+
+## Non-goals for v1
+
+- Do not replace PixiJS.
+- Do not replace or flatten the Character Builder source.
+- Do not claim that Google Flow guarantees pixel-perfect alignment.
+- Do not auto-approve generated sheets or clothing without validation.
+- Do not change existing character versions or old project assets.

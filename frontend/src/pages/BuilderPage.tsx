@@ -16,6 +16,8 @@ import { fitHead, fittedHeadPart, HEAD_SLOTS, kitOf } from '../builder/fitHead'
 import type { BuilderVersionInfo, CharacterConfig, DesignFamilyInfo, Facing, LibAsset, LibCategory, Palette, PartRef, SavedExpression } from '../builder/types'
 import { AppNav } from '../components/AppNav'
 import { SvgExportDialog } from '../components/SvgExportDialog'
+import { CharacterSpriteSheetImportDialog } from '../components/CharacterSpriteSheetImportDialog'
+import { buildCharacterReferencePackManifest, renderCharacterReferenceFrame } from '../builder/characterPack'
 
 // swatches from the sheet's colour panel (master-assets/assets-v1/palette.json)
 const SWATCHES: Record<'hair' | 'skin' | 'eye' | 'cloth', string[]> = {
@@ -52,6 +54,7 @@ export function BuilderPage() {
 
   const [cats, setCats] = useState<LibCategory[]>([])
   const [svgOpen, setSvgOpen] = useState(false)
+  const [spriteImportOpen, setSpriteImportOpen] = useState(false)
   const [families, setFamilies] = useState<Record<string, DesignFamilyInfo>>({})
   const [templates, setTemplates] = useState<{ id: string; label: string }[]>([])
   const [lib, setLib] = useState<LibAsset[]>([])
@@ -608,6 +611,7 @@ export function BuilderPage() {
         </aside>
       </div>
       {svgOpen && <SvgExportDialog config={config} assets={byId} zOf={zOf} labels={{ ...Object.fromEntries(cats.map((c) => [c.slug, c.name])), shoes: 'Sepatu kiri', [RIGHT_SHOE]: 'Sepatu kanan' }} name={name} onClose={() => setSvgOpen(false)} />}
+      {spriteImportOpen && charId && <CharacterSpriteSheetImportDialog characterId={charId} version={viewing} onClose={() => setSpriteImportOpen(false)} onImported={(pack) => { setNote(`Sprite pack #${pack.id} tersimpan sebagai draft QC (${pack.frame_count} frame).`); setSpriteImportOpen(false) }} />}
     </div>
   )
 }
