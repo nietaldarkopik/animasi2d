@@ -72,9 +72,36 @@ Two supported methods:
 
 A generated outfit is never automatically assumed compatible. The importer must show alignment/identity warnings and allow manual correction before approval.
 
+## Atlas manifest contract
+
+The importer accepts the following sidecar manifest format. Coordinates are pixel coordinates in the atlas page; each frame rectangle is exactly 1024 x 1024.
+
+```json
+{
+  "format": "animasi2d.character-sprite-atlas",
+  "format_version": 1,
+  "character": { "id": 12, "name": "Uki", "version": 3 },
+  "frame": { "width": 1024, "height": 1024, "pivot": { "x": 512, "y": 1024 } },
+  "atlas": { "width": 4096, "height": 4096, "columns": 4, "rows": 4 },
+  "facing": "front",
+  "animations": {
+    "idle": {
+      "fps": 8,
+      "loop": true,
+      "frames": [
+        { "id": "idle_0001", "x": 0, "y": 0, "width": 1024, "height": 1024 }
+      ]
+    }
+  },
+  "outfit": { "id": "base", "name": "Pakaian dasar", "type": "base" }
+}
+```
+
+If no sidecar manifest is supplied, the importer creates one animation from all grid cells in row-major order. This is a convenient fallback, but it cannot infer semantic animation groups from a picture alone.
+
 ## Import validation
 
-The importer must validate:
+The importer validates:
 - PNG dimensions and atlas grid divisibility;
 - transparent alpha channel and non-empty frames;
 - declared frame count versus available cells;
@@ -83,9 +110,20 @@ The importer must validate:
 - stable scale and facing;
 - duplicate or missing frame IDs;
 - manifest version and required metadata;
-- outfit compatibility and missing pose frames.
+- outfit compatibility and missing pose frames
+- RGBA PNG signature (transparent channel required)
+- base/outfit relationship: an outfit variant must have a base pack first and exactly match animation IDs and ordered frame IDs, facing and pivot.
 
 Raw single-image sprite sheets without a manifest may be imported in assisted mode: user selects cell width/height, columns/rows, animation ranges, FPS and facing. Such imports are treated as unverified until mapped and previewed.
+
+## Current implementation status
+
+- Character Builder now exports a 1024x1024 transparent current-facing reference PNG and a version-pinned JSON reference manifest.
+- Character Builder has an Import Sprite Sheet dialog for 1024x1024 PNG atlases, grid dimensions, FPS, facing, optional atlas manifest and outfit metadata.
+- Imported atlases are stored as immutable file-backed sprite-pack records with SHA-256, frame metadata and `pending_review` status.
+- Outfit variants are stored as full-character pose-matched atlases (not garment-only overlays). They must match the base pack's animation and frame IDs/order and pivot. This makes whole-outfit switching possible without trying to align a separate shirt layer over an arbitrary pose.
+- Imported atlases are not yet played in PixiJS. Runtime playback, preview timeline, frame QC, pack version management and per-scene outfit selection remain subsequent phases.
+- The reference-pack exporter and atlas importer are different formats and purposes: the former guides image generation; the latter describes actual animation frames.
 
 ## Storage and versioning
 
