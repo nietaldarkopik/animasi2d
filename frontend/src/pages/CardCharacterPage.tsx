@@ -24,6 +24,8 @@ export function CardCharacterPage() {
   const [view, setView] = useState<CardView>({ pose: '', expression: '', mouth: null, blink: false })
   const [sittingFamily, setSittingFamily] = useState('')
   const [sittingReference, setSittingReference] = useState('')
+  const [sittingHeadOffset, setSittingHeadOffset] = useState<[number, number]>([200, 0])
+  const [draggingHead, setDraggingHead] = useState(false)
   const [, setTick] = useState(0)
   const imgs = useRef(new Map<string, HTMLImageElement>())
   const canvas = useRef<HTMLCanvasElement>(null)
@@ -43,6 +45,12 @@ export function CardCharacterPage() {
           mouth: null,
           blink: false,
         }))
+        if (m.pose_families?.length) {
+          const family = m.pose_families.find((item) => item.id === sittingFamily) ?? m.pose_families[0]
+          setSittingFamily(family.id)
+          setSittingReference(family.default_reference)
+          setSittingHeadOffset(m.sitting_head_offsets?.[family.default_reference] ?? [200, 0])
+        }
       }
     } catch (e) { setError((e as Error).message) }
   }
@@ -130,6 +138,7 @@ export function CardCharacterPage() {
                           <button key={family.id} className={sittingFamily === family.id ? 'primary' : ''} onClick={() => {
                             setSittingFamily(family.id)
                             setSittingReference(family.default_reference)
+                            setSittingHeadOffset(m.sitting_head_offsets?.[family.default_reference] ?? [200, 0])
                           }}>{family.label}</button>
                         ))}
                       </div>
@@ -139,7 +148,7 @@ export function CardCharacterPage() {
                           <div key={family.id} style={{ marginTop: 10 }}>
                             <div className="small"><strong>Variasi referensi</strong></div>
                             <div className="row" style={{ gap: 6, flexWrap: 'wrap', marginTop: 5 }}>
-                              {refs.map((ref) => <button key={ref} className={sittingReference === ref ? 'primary' : ''} onClick={() => setSittingReference(ref)}>{ref}</button>)}
+                              {refs.map((ref) => <button key={ref} className={sittingReference === ref ? 'primary' : ''} onClick={() => { setSittingReference(ref); setSittingHeadOffset(m.sitting_head_offsets?.[ref] ?? [200, 0]) }}>{ref}</button>)}
                             </div>
                             {d.sitting_reference_urls?.[sittingReference] ? (
                               <div style={{ marginTop: 10, display: 'inline-flex', flexDirection: 'column', gap: 5, maxWidth: 240 }}>
@@ -156,9 +165,48 @@ export function CardCharacterPage() {
                             ) : (
                               <p className="muted small" style={{ margin: '8px 0 0' }}>Preview belum tersedia pada versi karakter ini. Klik Perbarui dari folder untuk menyalin aset referensi terbaru.</p>
                             )}
+                            <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid var(--border)' }}>
+                              <div className="small"><strong>Kalibrasi posisi kepala</strong></div>
+                              <p className="muted small" style={{ margin: '4px 0 8px' }}>Seret kepala ke leher pada gambar. Koordinat dihitung pada kanvas badan 800 × 1400 px.</p>
+                              <div
+                                onPointerMove={(event) => {
+                                  if (!draggingHead) return
+                                  const rect = event.currentTarget.getBoundingClientRect()
+                                  setSittingHeadOffset(([x, y]) => [
+                                    Math.round(Math.max(-800, Math.min(1200, x + event.movementX * 800 / rect.width))),
+                                    Math.round(Math.max(-800, Math.min(1400, y + event.movementY * 1400 / rect.height))),
+                                  ])
+                                }}
+                                onPointerUp={() => setDraggingHead(false)}
+                                onPointerCancel={() => setDraggingHead(false)}
+                                style={{ position: 'relative', width: 240, aspectRatio: '4 / 7', maxWidth: '100%', overflow: 'hidden', border: '1px solid var(--border)', borderRadius: 8, background: CHECKER, touchAction: 'none', userSelect: 'none' }}
+                              >
+                                <img src={absUrl(d.sitting_reference_urls?.[sittingReference] ?? '')} alt="" draggable={false}
+                                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center bottom', pointerEvents: 'none' }} />
+                                {d.urls?.head?.[view.expression] && (
+                                  <img src={absUrl(d.urls.head[view.expression])} alt="Kepala yang dapat diposisikan" draggable={false}
+                                    onPointerDown={(event) => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); setDraggingHead(true) }}
+                                    onPointerUp={() => setDraggingHead(false)}
+                                    style={{ position: 'absolute', left: `${sittingHeadOffset[0] / 8}%`, top: `${sittingHeadOffset[1] / 14}%`, width: '50%', height: `${400 / 1400 * 100}%`, objectFit: 'contain', cursor: draggingHead ? 'grabbing' : 'grab', touchAction: 'none' }} />
+                                )}
+                              </div>
+                              <div className="row" style={{ gap: 8, flexWrap: 'wrap', marginTop: 8, alignItems: 'end' }}>
+                                <label className="small">X
+                                  <input type="number" value={sittingHeadOffset[0]} onChange={(e) => setSittingHeadOffset(([x, y]) => [Number(e.target.value), y])} style={{ width: 88 }} />
+                                </label>
+                                <label className="small">Y
+                                  <input type="number" value={sittingHeadOffset[1]} onChange={(e) => setSittingHeadOffset(([x, y]) => [x, Number(e.target.value)])} style={{ width: 88 }} />
+                                </label>
+                                <button className="primary" disabled={busy || !d.sitting_reference_urls?.[sittingReference]} onClick={() => void act(async () => {
+                                  const updated = await api.cardSaveSittingHeadOffset(d.id, sittingReference, sittingHeadOffset[0], sittingHeadOffset[1])
+                                  setD(updated)
+                                })}>Simpan kalibrasi</button>
+                              </div>
+                              <p className="muted small" style={{ margin: '6px 0 0' }}>Tersimpan per variasi pose dan membuat versi karakter baru. Kepala hanya untuk preview kalibrasi; pose aktif di canvas belum berubah.</p>
+                            </div>
                             <p className="muted small" style={{ margin: '8px 0 0' }}>
                               {family.requires_prop ? `Memerlukan prop terpisah: ${family.requires_prop}. ` : 'Tidak memerlukan prop kursi. '}
-                              Referensi ini belum mengganti pose aktif pada canvas. Anchor kepala dan posisi prop harus dikalibrasi sebelum pose dapat digunakan sebagai pose 2.5D.
+                              Prop kursi akan ditambahkan setelah kalibrasi kepala selesai.
                             </p>
                           </div>
                         )
