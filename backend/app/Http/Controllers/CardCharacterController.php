@@ -531,7 +531,9 @@ class CardCharacterController extends Controller
                 $referenceIds = [];
                 foreach ($meta['pose_families'] as $family) {
                     $referenceIds[] = $family['default_reference'];
-                    array_push($referenceIds, ...$family['alternatives']);
+                    foreach ($family['alternatives'] as $alternative) {
+                        $referenceIds[] = $alternative;
+                    }
                 }
                 $sittingReferences = array_intersect_key($sittingReferences, array_flip(array_unique($referenceIds)));
             }
