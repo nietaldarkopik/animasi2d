@@ -491,7 +491,51 @@ class CardCharacterController extends Controller
             $blink = null;
         }
 
-        return ['meta' => $meta, 'files' => ['body' => $body, 'head' => $head, 'mouth' => $mouth, 'blink' => $blink]];
+        // Optional static sitting-pose references are versioned with the card assets.
+        // They are previews only; they do not enter the active body-pose rig.
+        $sittingReferences = [];
+        $catalogPath = $dir.DIRECTORY_SEPARATOR.'poses'.DIRECTORY_SEPARATOR.'sitting'.DIRECTORY_SEPARATOR.'pose_catalog.json';
+        $manifestPath = $dir.DIRECTORY_SEPARATOR.'poses'.DIRECTORY_SEPARATOR.'sitting'.DIRECTORY_SEPARATOR.'pose_manifest.json';
+        if (is_file($catalogPath) && is_file($manifestPath)) {
+            $catalog = json_decode((string) file_get_contents($catalogPath), true);
+            $manifest = json_decode((string) file_get_contents($manifestPath), true);
+            if (is_array($catalog) && is_array($catalog['pose_families'] ?? null) && is_array($manifest) && is_array($manifest['poses'] ?? null)) {
+                $families = [];
+                foreach ($catalog['pose_families'] as $family) {
+                    if (! is_array($family) || ! preg_match('/^[a-z0-9_-]+$/', (string) ($family['id'] ?? ''))
+                        || ! is_string($family['label'] ?? null) || ! is_string($family['default_reference'] ?? null)
+                        || ! is_array($family['alternatives'] ?? null)) {
+                        continue;
+                    }
+                    $families[] = ['id' => $family['id'], 'label' => $family['label'], 'default_reference' => $family['default_reference'],
+                        'alternatives' => array_values(array_filter($family['alternatives'], fn ($id) => is_string($id) && preg_match('/^[a-z0-9_-]+$/', $id))),
+                        'requires_prop' => is_string($family['requires_prop'] ?? null) ? $family['requires_prop'] : null];
+                }
+                foreach ($manifest['poses'] as $pose) {
+                    $id = $pose['id'] ?? null;
+                    $relative = $pose['file'] ?? null;
+                    if (! is_string($id) || ! preg_match('/^[a-z0-9_-]+$/', $id) || ! is_string($relative)
+                        || ! preg_match('#^references/[a-z0-9_-]+\.png$#i', $relative)) {
+                        continue;
+                    }
+                    $sourceFile = $dir.DIRECTORY_SEPARATOR.'poses'.DIRECTORY_SEPARATOR.'sitting'.DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $relative);
+                    if (is_file($sourceFile)) {
+                        $sittingReferences[$id] = ['source' => $sourceFile, 'stored' => 'sitting_'.$id.'.png'];
+                    }
+                }
+                $availableIds = array_keys($sittingReferences);
+                $meta['pose_families'] = array_values(array_filter($families, function ($family) use ($availableIds) {
+                    return in_array($family['default_reference'], $availableIds, true)
+                        && count(array_diff($family['alternatives'], $availableIds)) === 0;
+                }));
+                $sittingReferences = array_intersect_key($sittingReferences, array_flip(array_unique(array_merge(
+                    ...array_map(fn ($family) => [$family['default_reference'], ...$family['alternatives']], $meta['pose_families'])
+                ))));
+            }
+        }
+
+        return ['meta' => $meta, 'files' => ['body' => $body, 'head' => $head, 'mouth' => $mouth, 'blink' => $blink],
+            'sitting_references' => $sittingReferences];
     }
 
     private function addVersion(Character $c, string $slug, array $spec, string $note): CharacterVersion
@@ -503,12 +547,18 @@ class CardCharacterController extends Controller
         foreach (array_unique($names) as $f) {
             $disk->put($dir.'/'.$f, (string) file_get_contents($src.DIRECTORY_SEPARATOR.$f));
         }
+        $sittingFiles = [];
+        foreach (($spec['sitting_references'] ?? []) as $id => $reference) {
+            $disk->put($dir.'/'.$reference['stored'], (string) file_get_contents($reference['source']));
+            $sittingFiles[$id] = $reference['stored'];
+        }
         $thumb = $this->thumbnail($disk->path($dir), $spec);
         if ($thumb) {
             $disk->put($dir.'/_thumb.png', $thumb);
         }
         $n = (int) $c->versions()->max('number') + 1;
-        $config = ['type' => 'card', 'schema_version' => 1, 'source' => $slug, 'dir' => $dir, 'meta' => $spec['meta'], 'files' => $spec['files']];
+        $config = ['type' => 'card', 'schema_version' => 1, 'source' => $slug, 'dir' => $dir, 'meta' => $spec['meta'], 'files' => $spec['files'],
+            'sitting_references' => $sittingFiles];
         $v = CharacterVersion::create(['character_id' => $c->id, 'number' => $n, 'config' => $config, 'thumbnail_path' => $thumb ? $dir.'/_thumb.png' : null, 'note' => $note]);
         $c->update(['current_version' => $n]);
 
@@ -695,6 +745,7 @@ class CardCharacterController extends Controller
             $f = $v->config['files'];
             $map = fn (array $xs) => array_map(fn ($name) => $this->fileUrl($v, $name), $xs);
             $urls = ['body' => $map($f['body']), 'head' => $map($f['head']), 'mouth' => $map($f['mouth'] ?? []), 'blink' => ! empty($f['blink']) ? $this->fileUrl($v, $f['blink']) : null];
+            $sittingReferenceUrls = array_map(fn ($filename) => $this->fileUrl($v, $filename), $v->config['sitting_references'] ?? []);
         }
 
         return $this->summary($c) + [
@@ -703,6 +754,7 @@ class CardCharacterController extends Controller
             'viewing' => $v?->number,
             'meta' => $v?->config['meta'],
             'urls' => $urls,
+            'sitting_reference_urls' => $sittingReferenceUrls ?? [],
         ];
     }
 
