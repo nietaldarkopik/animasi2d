@@ -279,6 +279,19 @@ export function BuilderPage() {
     } catch (e) { setError((e as Error).message) }
   }
 
+  async function exportReferencePack() {
+    setError('')
+    try {
+      const image = await renderCharacterReferenceFrame(config, byId, zOf)
+      const safeName = (name.trim() || 'karakter').toLowerCase().replace(/[^a-z0-9_-]+/g, '-') || 'character'
+      const referenceImageName = `${safeName}-character_reference_1024.png`
+      const manifest = buildCharacterReferencePackManifest({ characterId: charId, name: name.trim() || 'Karakter', version: viewing, config, assets: byId, referenceImageName })
+      download(image, referenceImageName)
+      download(new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' }), `${safeName}-character_manifest.json`)
+      setNote('Reference pack berhasil dibuat: gambar PNG 1024×1024 dan manifest JSON. Ini referensi karakter, belum sprite sheet animasi multi-frame.')
+    } catch (e) { setError((e as Error).message) }
+  }
+
   function exportJson() {
     const doc = {
       format: 'cartoon-maker.character', name, version: viewing, config,
@@ -376,6 +389,8 @@ export function BuilderPage() {
         <button onClick={undo} disabled={!hist.past.length} aria-label="Undo" title="Undo">↶</button>
         <button onClick={redo} disabled={!hist.future.length} aria-label="Redo" title="Redo">↷</button>
         <button onClick={() => void exportPng(true)}>PNG transparan</button>
+        <button onClick={() => void exportReferencePack()} disabled={!ready || Object.keys(config.parts).length === 0} title="Ekspor gambar referensi 1024×1024 dan manifest versi karakter untuk Google Flow">Reference Pack</button>
+        <button onClick={() => setSpriteImportOpen(true)} disabled={!charId} title={charId ? 'Import sprite sheet animasi untuk karakter ini' : 'Simpan karakter terlebih dahulu'}>Import Sprite Sheet</button>
         <button onClick={() => setSvgOpen(true)} disabled={!ready || Object.keys(config.parts).length === 0} title="Ekspor vektor: SVG berlapis (satu layer per bagian) untuk Inkscape, Illustrator, Figma">SVG (vektor)</button>
         <button onClick={exportJson}>JSON</button>
         <button className="primary" disabled={busy || !ready} onClick={() => void save()}>{busy ? 'Menyimpan…' : 'Simpan versi'}</button>
