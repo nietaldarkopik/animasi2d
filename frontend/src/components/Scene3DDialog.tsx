@@ -170,7 +170,8 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
           const size = bounds.getSize(new THREE.Vector3())
           const center = bounds.getCenter(new THREE.Vector3())
           const largest = Math.max(size.x, size.y, size.z, 0.001)
-          const fitScale = 1.8 / largest
+          // Use a room-scale reference size; the previous 1.8-unit fit made city environments look tiny.
+          const fitScale = 8 / largest
           model.scale.setScalar(fitScale)
           model.position.copy(center).multiplyScalar(-fitScale)
           model.traverse((node) => {
