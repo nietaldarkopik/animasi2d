@@ -224,7 +224,7 @@ export function SceneLabPage() {
       object.rotation.set(0, 0, 0)
       object.traverse(node => {
         const mesh = node as THREE.Mesh
-        if (mesh.material && !Array.isArray(mesh.material) && 'color' in mesh.material && !item.imageData) {
+        if (item.shape !== 'model' && mesh.material && !Array.isArray(mesh.material) && 'color' in mesh.material && !item.imageData) {
           (mesh.material as THREE.MeshStandardMaterial).color.set(item.id === selectedId ? '#ffffff' : item.color)
           ;(mesh.material as THREE.MeshStandardMaterial).emissive?.set(item.id === selectedId ? '#26384d' : '#000000')
         }
