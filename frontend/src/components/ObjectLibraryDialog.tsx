@@ -68,7 +68,7 @@ export function ObjectLibraryDialog({ projectId, onClose }: { projectId: number;
     if (!category) { setError('Kategori object belum tersedia.'); return }
     setBusy(true); setError(''); setNote('')
     try {
-      const name = file.name.replace(/\\.[^.]+$/, '').replace(/[_-]+/g, ' ')
+      const name = file.name.split('.').slice(0, -1).join('.') || file.name.replace(/[_-]+/g, ' ')
       const asset = await api.libUpload(file, category, name, 'object, properti')
       setAssets((old) => [asset, ...old.filter((a) => a.id !== asset.id)])
       setNote(`"${asset.name}" tersimpan di Object Library.`)
