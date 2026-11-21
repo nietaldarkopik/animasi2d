@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import * as THREE from 'three'
 import { api } from '../api'
 import { uid, useEditor } from '../store'
@@ -43,8 +43,6 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
   const [error, setError] = useState('')
   const active = config.objects.find((o) => o.id === selected) ?? null
   const aspect = useEditor((s) => s.doc ? s.doc.settings.width / s.doc.settings.height : 9 / 16)
-
-  const selectedIndex = useMemo(() => config.objects.findIndex((o) => o.id === selected), [config.objects, selected])
 
   useEffect(() => {
     if (!host.current) return
@@ -159,7 +157,7 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
     setSelected(item.id)
   }
 
-  function orbit(e: React.PointerEvent<HTMLDivElement>) {
+  function orbit(e: PointerEvent<HTMLDivElement>) {
     if (e.buttons !== 1) return
     const target = e.currentTarget
     const rect = target.getBoundingClientRect()
@@ -179,19 +177,35 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
       const finalConfig = { ...config, camera }
       useEditor.getState().updateScene(sceneId, { threeScene: finalConfig })
       const gl = renderer.current
-      if (!gl) throw new Error('Preview 3D belum siap.')
-      const blob = await new Promise<Blob>((resolve, reject) => gl.domElement.toBlob((b) => b ? resolve(b) : reject(new Error('Gagal membuat render PNG.')), 'image/png'))
-      const asset = await api.uploadAsset(projectId, blob, `scene-3d-${sceneId}.png`)
-      useEditor.getState().addAsset(asset)
+      const scene = world.current
+      const previewCamera = cameraRef.current
       const doc = useEditor.getState().doc
-      if (!doc) throw new Error('Dokumen scene tidak ditemukan.')
-      const fit = Math.min(doc.settings.width / asset.width, doc.settings.height / asset.height)
+      if (!gl || !scene || !previewCamera || !doc) throw new Error('Preview 3D belum siap.')
+      // Render at the exact project dimensions, not the dialog preview dimensions.
+      const exportRenderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true })
+      try {
+        exportRenderer.setPixelRatio(1)
+        exportRenderer.setSize(doc.settings.width, doc.settings.height, false)
+        exportRenderer.outputColorSpace = THREE.SRGBColorSpace
+        exportRenderer.shadowMap.enabled = true
+        exportRenderer.shadowMap.type = THREE.PCFSoftShadowMap
+        const exportCamera = previewCamera.clone()
+        exportCamera.aspect = doc.settings.width / doc.settings.height
+        exportCamera.updateProjectionMatrix()
+        exportRenderer.render(scene, exportCamera)
+        const blob = await new Promise<Blob>((resolve, reject) => exportRenderer.domElement.toBlob((b) => b ? resolve(b) : reject(new Error('Gagal membuat render PNG.')), 'image/png'))
+        const asset = await api.uploadAsset(projectId, blob, `scene-3d-${sceneId}.png`)
+        useEditor.getState().addAsset(asset)
+        const fit = Math.min(doc.settings.width / asset.width, doc.settings.height / asset.height)
       useEditor.getState().addLayersToScene(sceneId, [{
         id: uid(), type: 'image', name: 'Latar 3D', assetId: asset.id,
         x: doc.settings.width / 2, y: doc.settings.height / 2,
         scaleX: fit, scaleY: fit, rotation: 0, opacity: 1, visible: true, locked: true,
-      }], { first: true })
-      onClose()
+        }], { first: true })
+        onClose()
+      } finally {
+        exportRenderer.dispose()
+      }
     } catch (e) {
       setError((e as Error).message || 'Gagal menyimpan scene 3D.')
     } finally { setBusy(false) }
