@@ -18,10 +18,9 @@ export interface CardMeta {
   sitting_head_offsets?: Record<string, [number, number]>
   sitting_head_scales?: Record<string, number>
   sitting_body_scales?: Record<string, number>
-  sitting_chairs?: Record<string, { asset: string; x: number; y: number; scale: number }>
 }
 
-export interface CardUrls { body: Record<string, string>; head: Record<string, string>; mouth: Record<string, string>; blink: string | null; sitting?: Record<string, string>; chairs?: Record<string, string> }
+export interface CardUrls { body: Record<string, string>; head: Record<string, string>; mouth: Record<string, string>; blink: string | null; sitting?: Record<string, string> }
 
 export interface CardSummary { id: number; kind: 'card'; name: string; current_version: number; updated_at: string; source: string | null; thumbnail: string | null }
 export interface CardDetail extends CardSummary {
@@ -57,12 +56,6 @@ export function drawCard(ctx: CanvasRenderingContext2D, meta: CardMeta, img: (ur
   let h = headOffset(meta, v.pose)
   let headScale = 1
   if (body && sittingReference) {
-    const chairConfig = meta.sitting_chairs?.[sittingReference]
-    const chairImage = chairConfig?.asset ? img(urls.chairs?.[chairConfig.asset] ?? '') : undefined
-    if (chairImage && chairConfig) {
-      const chairScale = chairConfig.scale || 1
-      ctx.drawImage(chairImage, chairConfig.x, chairConfig.y, chairImage.naturalWidth * chairScale, chairImage.naturalHeight * chairScale)
-    }
     const [canvasW, canvasH] = meta.body.canvas
     headScale = Math.min(canvasW / Math.max(1, body.naturalWidth), (meta.body.char_height_px ?? canvasH * 0.93) / Math.max(1, body.naturalHeight)) * (meta.sitting_body_scales?.[sittingReference] ?? 1)
     const width = body.naturalWidth * headScale
