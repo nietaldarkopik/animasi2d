@@ -20,6 +20,7 @@ import { ImageToSvgDialog } from '../components/ImageToSvgDialog'
 import { absUrl } from '../builder/render'
 import { CharacterLibraryDialog } from '../components/CharacterLibraryDialog'
 import { ObjectLibraryDialog } from '../components/ObjectLibraryDialog'
+import { Scene3DDialog } from '../components/Scene3DDialog'
 import { VersionsDialog } from '../components/VersionsDialog'
 import { Timeline } from '../components/Timeline'
 import { fitZoom as fitZoomFor, wheelFactor, zoomAt, type StageView } from '../stageView'
@@ -48,7 +49,7 @@ export function EditorPage() {
   const s = useEditor()
   const [loadError, setLoadError] = useState('')
   const [toast, setToast] = useState('')
-  const [dialog, setDialog] = useState<'export' | 'versions' | 'presets' | 'ai' | 'help' | 'characters' | 'background' | 'board' | 'objects' | null>(null)
+  const [dialog, setDialog] = useState<'export' | 'versions' | 'presets' | 'ai' | 'help' | 'characters' | 'background' | 'board' | 'objects' | 'scene3d' | null>(null)
   const [tour, setTour] = useState(false)
   const [online, setOnline] = useState(navigator.onLine)
   const [zoom, setZoom] = useState(1)
@@ -430,6 +431,7 @@ export function EditorPage() {
         <button onClick={() => setDialog('background')} title="Pasang lokasi/latar (sekolah, rumah, taman…)">Latar</button>
         <button onClick={() => setDialog('characters')} title="Simpan/sisipkan karakter reusable">Karakter</button>
         <button onClick={() => setDialog('objects')} title="Pilih dan sisipkan object reusable ke scene">Object</button>
+        <button onClick={() => setDialog('scene3d')} title="Bangun lingkungan 3D dengan Three.js">3D Scene</button>
         <button onClick={() => setDialog('versions')}>Riwayat</button>
         <button className="primary" onClick={() => void s.save().then(() => setDialog('export'))}>Export</button>
         <button onClick={() => setDialog('help')} aria-label="Bantuan dan tur" title="Bantuan, pintasan, tur singkat">?</button>
@@ -550,6 +552,7 @@ export function EditorPage() {
       {dialog === 'background' && <BackgroundDialog projectId={projectId} onClose={() => setDialog(null)} />}
       {dialog === 'characters' && <CharacterLibraryDialog projectId={projectId} onClose={() => setDialog(null)} />}
       {dialog === 'objects' && <ObjectLibraryDialog projectId={projectId} onClose={() => setDialog(null)} />}
+      {dialog === 'scene3d' && s.activeSceneId && <Scene3DDialog projectId={projectId} sceneId={s.activeSceneId} initial={s.project?.scenes.find((scene) => scene.id === s.activeSceneId)?.threeScene} onClose={() => setDialog(null)} />}
       {dialog === 'versions' && <VersionsDialog projectId={projectId} onClose={() => setDialog(null)} />}
     </div>
   )
