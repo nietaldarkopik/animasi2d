@@ -118,6 +118,13 @@ export const api = {
   instantiateCharacter: (id: number, projectId: number) => req<{ data: { layers: Layer[]; assets: Asset[] } }>(`/characters/${id}/instantiate`, json('POST', { project_id: projectId })).then((r) => r.data),
   deleteCharacter: (id: number) => req(`/characters/${id}`, json('DELETE')),
   // ---- asset library & character builder ----
+  environments: () => req<{ data: LibAsset[] }>('/library/environments').then((r) => r.data),
+  uploadEnvironment: (file: File, name: string) => {
+    const fd = new FormData()
+    fd.append('file', file, file.name)
+    fd.append('name', name)
+    return req<{ data: LibAsset }>('/library/environments', { method: 'POST', body: fd }).then((r) => r.data)
+  },
   libCategories: () => req<{ data: LibCategory[] }>('/library/categories').then((r) => r.data),
   libAssets: (q: { kind?: string; category?: string; q?: string; status?: string; mine?: boolean } = {}) => {
     const p = new URLSearchParams()
