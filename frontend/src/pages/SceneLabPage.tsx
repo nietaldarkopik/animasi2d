@@ -149,8 +149,7 @@ export function SceneLabPage() {
     if (!el) return
     const scene = new THREE.Scene()
     scene.background = new THREE.Color('#202a35')
-    scene.fog = new THREE.Fog('#202a35', 14, 35)
-    const camera = new THREE.PerspectiveCamera(42, 1, .1, 100)
+    const camera = new THREE.PerspectiveCamera(42, 1, .1, 100000)
     camera.position.set(8, 6.5, 10)
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
@@ -254,14 +253,23 @@ export function SceneLabPage() {
         const bounds = new THREE.Box3().setFromObject(model)
         const size = bounds.getSize(new THREE.Vector3())
         const center = bounds.getCenter(new THREE.Vector3())
-        // Match the 8-unit room width so imported environments are not tiny beside built-in rooms.
-        const fit = 8 / Math.max(size.x, size.y, size.z, 0.001)
-        model.scale.setScalar(fit)
-        model.position.copy(center).multiplyScalar(-fit)
+        // Preserve the GLB's authored dimensions and unit scale; only center its origin.
+        model.position.copy(center).multiplyScalar(-1)
         model.traverse(n => { const m = n as THREE.Mesh; if (m.isMesh) { m.castShadow = true; m.receiveShadow = true } })
         const wrapper = new THREE.Group(); wrapper.add(model)
+        wrapper.userData.originalDimensions = { width: size.x, height: size.y, depth: size.z }
         wrapper.position.set(item.x, item.y, item.z); wrapper.scale.set(item.width, item.height, item.depth)
         rt.scene.add(wrapper); rt.meshes.set(item.id, wrapper)
+        // Frame a newly imported standalone environment so its original dimensions remain usable.
+        if (draft.items.length === 1) {
+          const radius = Math.max(size.length(), 1)
+          const distance = radius / (2 * Math.tan(THREE.MathUtils.degToRad(rt.camera.fov / 2))) * 1.35
+          rt.controls.target.set(item.x, item.y, item.z)
+          rt.camera.position.set(item.x + distance * .8, item.y + distance * .55, item.z + distance)
+          rt.camera.near = Math.max(.01, radius / 10000)
+          rt.camera.far = Math.max(100000, radius * 20)
+          rt.camera.updateProjectionMatrix()
+        }
       }, undefined, () => setMessage('Gagal memuat GLB dari Environment Library.'))
     }
     return () => { cancelled = true }
@@ -403,6 +411,7 @@ export function SceneLabPage() {
           <strong>{draft.placeName}</strong><span className="muted small">{draft.items.length} objek</span>
           <label style={{ width: 'auto', minWidth: 160 }}><span className="muted small">Pilih environment</span><select defaultValue="" onChange={e => { if (e.target.value) loadPreset(e.target.value); e.target.value = '' }}><option value="">Muat preset…</option><optgroup label="Preset bawaan">{BUILT_IN_PRESETS.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</optgroup>{savedPresets.length > 0 && <optgroup label="Preset milik saya">{savedPresets.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</optgroup>}</select></label>
           <button onClick={saveAsPreset}>Simpan sebagai preset</button>
+          <button className="danger" onClick={() => { if (!window.confirm('Kosongkan seluruh isi scene untuk membuat environment baru?')) return; setDraft({ placeName: 'Environment baru', items: [] }); setSelectedId(null); runtime.current?.camera.position.set(8, 6.5, 10); runtime.current?.controls.target.set(0, 0, 0); setMessage('Scene dikosongkan. Mulai bangun environment baru dari awal.') }}>Reset ruangan</button>
           <input ref={modelInput} type="file" accept=".glb,model/gltf-binary" hidden onChange={e => void importEnvironmentModel(e.target.files?.[0])} />
           <button onClick={() => modelInput.current?.click()} disabled={uploadingEnvironment}>{uploadingEnvironment ? 'Mengunggah GLB…' : 'Import GLB environment'}</button><span className="spacer" />
           <button onClick={() => { runtime.current?.camera.position.set(8, 6.5, 10); runtime.current?.controls.target.set(0, 1, 0) }}>Reset kamera</button>
@@ -446,9 +455,10 @@ export function SceneLabPage() {
             <label>Jenis<select value={selected.kind} onChange={e => patchItem(selected.id, { kind: e.target.value as Kind })}><option value="place">Bagian tempat</option><option value="prop">Properti</option><option value="character">Karakter</option></select></label>
             <label>Bentuk<select value={selected.shape} onChange={e => patchItem(selected.id, { shape: e.target.value as Shape })}><option value="box">Kotak</option><option value="sphere">Bola</option><option value="cylinder">Silinder</option><option value="plane">Bidang / karakter</option><option value="model">Model GLB</option></select></label>
             {selected.shape !== 'model' && <label>Warna<input type="color" value={selected.color} onChange={e => patchItem(selected.id, { color: e.target.value })} /></label>}
+            {selected.shape === 'model' && (() => { const dimensions = runtime.current?.meshes.get(selected.id)?.userData.originalDimensions as { width: number; height: number; depth: number } | undefined; return <p className="muted small">Dimensi asli GLB: {dimensions ? `${dimensions.width.toFixed(2)} × ${dimensions.height.toFixed(2)} × ${dimensions.depth.toFixed(2)} unit` : 'sedang memuat model…'}. Skala awal 1× mempertahankan ukuran dari file.</p> })()}
             <div className="grid2">
               {(['x','y','z'] as const).map(axis => <label key={axis}>{axis.toUpperCase()}<input type="number" step=".1" value={selected[axis]} onChange={e => patchItem(selected.id, { [axis]: Number(e.target.value) })} /></label>)}
-              {(['width','height','depth'] as const).map(axis => <label key={axis}>{axis === 'width' ? 'Lebar' : axis === 'height' ? 'Tinggi' : 'Kedalaman'}<input type="number" min=".02" step=".1" value={selected[axis]} onChange={e => patchItem(selected.id, { [axis]: clamp(Number(e.target.value), .02, 30) })} /></label>)}
+              {(['width','height','depth'] as const).map(axis => <label key={axis}>{selected.shape === 'model' ? `Skala ${axis === 'width' ? 'X' : axis === 'height' ? 'Y' : 'Z'}` : axis === 'width' ? 'Lebar' : axis === 'height' ? 'Tinggi' : 'Kedalaman'}<input type="number" min={selected.shape === 'model' ? '.0001' : '.02'} step={selected.shape === 'model' ? '.1' : '.1'} value={selected[axis]} onChange={e => patchItem(selected.id, { [axis]: clamp(Number(e.target.value), selected.shape === 'model' ? .0001 : .02, selected.shape === 'model' ? 10000 : 30) })} /></label>)}
             </div>
             <button className="danger" onClick={() => { setDraft(d => ({ ...d, items: d.items.filter(x => x.id !== selected.id) })); setSelectedId(null) }}>Hapus objek</button>
           </> : <p className="muted small">Pilih objek untuk mengubah properti.</p>}
