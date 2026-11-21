@@ -66,6 +66,56 @@ class LibraryController extends Controller
         return response()->json(['data' => $q->orderBy('category_id')->orderBy('id')->limit(500)->get()->map->present()]);
     }
 
+    /** List the current user's reusable GLB environment models. */
+    public function environments(Request $request): JsonResponse
+    {
+        $assets = LibraryAsset::visibleTo($request->user()->id)
+            ->where('mime', 'model/gltf-binary')
+            ->where('meta->asset_type', 'environment')
+            ->with('category')
+            ->orderBy('name')
+            ->get();
+
+        return response()->json(['data' => $assets->map->present()]);
+    }
+
+    /** Store the original GLB in the reusable Environment Library (not in a project). */
+    public function storeEnvironment(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'file' => 'required|file|max:51200',
+            'name' => 'required|string|max:120',
+        ]);
+        $file = $request->file('file');
+        if (strtolower($file->getClientOriginalExtension()) !== 'glb') {
+            return response()->json(['message' => 'Environment harus menggunakan file .glb.'], 422);
+        }
+        $handle = fopen($file->getRealPath(), 'rb');
+        $magic = $handle ? fread($handle, 4) : '';
+        if ($handle) fclose($handle);
+        if ($magic !== 'glTF') {
+            return response()->json(['message' => 'File GLB tidak valid. Header GLB tidak dikenali.'], 422);
+        }
+
+        $category = AssetCategory::where('slug', 'bg_home')->firstOrFail();
+        $path = $file->storeAs('library/u'.$request->user()->id, Str::uuid().'.glb', 'local');
+        $asset = LibraryAsset::create([
+            'user_id' => $request->user()->id,
+            'category_id' => $category->id,
+            'name' => $data['name'],
+            'tags' => ['environment', 'glb', '3d'],
+            'source' => 'upload',
+            'status' => 'approved',
+            'disk' => 'local',
+            'path' => $path,
+            'mime' => 'model/gltf-binary',
+            'tintable' => false,
+            'meta' => ['asset_type' => 'environment', 'format' => 'glb', 'original_name' => $file->getClientOriginalName()],
+        ]);
+
+        return response()->json(['data' => $asset->load('category')->present()], 201);
+    }
+
     /** Manual upload (SVG is sanitised; PNG/JPEG/WebP is validated). */
     public function store(Request $request): JsonResponse
     {
