@@ -298,6 +298,13 @@ class ProjectController extends Controller
                     }
                 }
                 unset($layer);
+                // Imported 3D models are project assets too; remap their references in a duplicated project.
+                foreach ($scene['threeScene']['objects'] ?? [] as $i => $object) {
+                    if (! empty($object['assetId']) && isset($map[$object['assetId']])) {
+                        $scene['threeScene']['objects'][$i]['assetId'] = $map[$object['assetId']];
+                        unset($scene['threeScene']['objects'][$i]['modelUrl']); // the duplicate gets a fresh signed URL on open
+                    }
+                }
             }
             unset($scene);
             foreach ($doc['audio'] as &$clip) {
