@@ -254,7 +254,8 @@ export function SceneLabPage() {
         const bounds = new THREE.Box3().setFromObject(model)
         const size = bounds.getSize(new THREE.Vector3())
         const center = bounds.getCenter(new THREE.Vector3())
-        const fit = 3 / Math.max(size.x, size.y, size.z, 0.001)
+        // Match the 8-unit room width so imported environments are not tiny beside built-in rooms.
+        const fit = 8 / Math.max(size.x, size.y, size.z, 0.001)
         model.scale.setScalar(fit)
         model.position.copy(center).multiplyScalar(-fit)
         model.traverse(n => { const m = n as THREE.Mesh; if (m.isMesh) { m.castShadow = true; m.receiveShadow = true } })
