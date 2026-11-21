@@ -434,6 +434,24 @@ class ProjectController extends Controller
                 return $scene['name'].': '.$err;
             }
         }
+        $modelIds = [];
+        foreach ($doc['scenes'] as $scene) {
+            foreach ($scene['threeScene']['objects'] ?? [] as $object) {
+                if (($object['shape'] ?? null) === 'model' && ! empty($object['assetId'])) {
+                    $modelIds[] = (int) $object['assetId'];
+                }
+            }
+        }
+        $modelIds = array_values(array_unique($modelIds));
+        if ($modelIds !== []) {
+            $validModels = Asset::where('project_id', $project->id)
+                ->whereIn('mime', ['model/gltf-binary', 'model/gltf+json'])
+                ->whereIn('id', $modelIds)->count();
+            if ($validModels !== count($modelIds)) {
+                return 'Scene 3D merujuk model yang tidak ada di project ini.';
+            }
+        }
+
         if ($doc['audio'] !== []) {
             $ids = array_unique(array_column($doc['audio'], 'assetId'));
             $ok = Asset::where('project_id', $project->id)->where('mime', 'like', 'audio/%')->whereIn('id', $ids)->count();
