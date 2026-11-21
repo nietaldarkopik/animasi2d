@@ -209,7 +209,7 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
         id: uid(), type: 'image', name: 'Latar 3D', assetId: asset.id,
         x: doc.settings.width / 2, y: doc.settings.height / 2,
         scaleX: fit, scaleY: fit, rotation: 0, opacity: 1, visible: true, locked: true,
-        }], { first: true })
+        }], { first: true, replacePrefix: 'Latar 3D' })
         onClose()
       } finally {
         exportRenderer.dispose()
