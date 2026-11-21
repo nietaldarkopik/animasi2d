@@ -437,7 +437,10 @@ class ProjectController extends Controller
         $modelIds = [];
         foreach ($doc['scenes'] as $scene) {
             foreach ($scene['threeScene']['objects'] ?? [] as $object) {
-                if (($object['shape'] ?? null) === 'model' && ! empty($object['assetId'])) {
+                if (($object['shape'] ?? null) === 'model') {
+                    if (empty($object['assetId'])) {
+                        return 'Setiap model 3D harus merujuk aset model dari project ini.';
+                    }
                     $modelIds[] = (int) $object['assetId'];
                 }
             }
