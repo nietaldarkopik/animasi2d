@@ -36,6 +36,7 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
   const host = useRef<HTMLDivElement>(null)
   const modelLoadGeneration = useRef(0)
   const modelInput = useRef<HTMLInputElement>(null)
+  const environmentInput = useRef<HTMLInputElement>(null)
   const renderer = useRef<THREE.WebGLRenderer | null>(null)
   const world = useRef<THREE.Scene | null>(null)
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
@@ -207,6 +208,57 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
     return () => { modelLoadGeneration.current += 1 }
   }, [config, camera])
 
+  async function importEnvironment(file?: File) {
+    if (!file) return
+    try {
+      const parsed = JSON.parse(await file.text())
+      const source = parsed.config ?? parsed
+      let objects: Scene3DObject[]
+      if (Array.isArray(source.items) && source.placeName) {
+        objects = source.items.filter((item: { kind?: string }) => item.kind !== 'character').map((item: Record<string, unknown>) => ({
+          id: String(item.id ?? uid()),
+          name: String(item.name ?? 'Objek environment'),
+          shape: item.shape === 'sphere' || item.shape === 'cylinder' ? item.shape : 'box',
+          position: [Number(item.x ?? 0), Number(item.y ?? 0), Number(item.z ?? 0)] as [number, number, number],
+          rotation: [0, 0, 0] as [number, number, number],
+          scale: [Number(item.width ?? 1), Number(item.height ?? 1), Number(item.depth ?? 1)] as [number, number, number],
+          color: String(item.color ?? '#a6b4c2'),
+        }))
+      } else if (Array.isArray(source.objects)) {
+        objects = source.objects.map((item: Scene3DObject) => ({
+          ...item,
+          id: String(item.id ?? uid()),
+          shape: item.shape === 'sphere' || item.shape === 'cylinder' || item.shape === 'model' ? item.shape : 'box',
+          position: item.position ?? [0, 0.5, 0],
+          rotation: item.rotation ?? [0, 0, 0],
+          scale: item.scale ?? [1, 1, 1],
+          color: item.color ?? '#a6b4c2',
+        }))
+      } else throw new Error('File tidak berisi daftar objek environment yang dikenali.')
+      const nextCamera = Array.isArray(source.camera) && source.camera.length === 3
+        ? source.camera.map(Number) as [number, number, number]
+        : [7, 6, 9] as [number, number, number]
+      const next: Scene3DConfig = {
+        ...freshConfig(),
+        background: typeof source.background === 'string' ? source.background : '#202a35',
+        floor: Boolean(source.floor),
+        walls: Boolean(source.walls),
+        ambient: Number.isFinite(Number(source.ambient)) ? Number(source.ambient) : 1.4,
+        directional: Number.isFinite(Number(source.directional)) ? Number(source.directional) : 2.2,
+        camera: nextCamera,
+        objects,
+      }
+      setConfig(next)
+      setCamera(nextCamera)
+      setSelected(objects[0]?.id ?? null)
+      setError('')
+    } catch (e) {
+      setError((e as Error).message || 'Gagal membaca environment JSON.')
+    } finally {
+      if (environmentInput.current) environmentInput.current.value = ''
+    }
+  }
+
   async function importModel(file?: File) {
     if (!file) return
     const extension = file.name.toLowerCase().split('.').pop()
@@ -347,6 +399,8 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
           <aside style={{ overflow: 'auto', display: 'grid', alignContent: 'start', gap: 10 }}>
             <section>
               <h3>Lingkungan</h3>
+              <input ref={environmentInput} type="file" accept="application/json,.json" hidden onChange={(e) => void importEnvironment(e.target.files?.[0])} />
+              <button onClick={() => environmentInput.current?.click()} disabled={busy}>Impor environment dari Scene Lab (.JSON)</button>
               <label className="field"><span>Warna langit / latar</span><input type="color" value={config.background} onChange={(e) => setConfig((c) => ({ ...c, background: e.target.value }))} /></label>
               <label className="inline"><input type="checkbox" checked={config.floor} onChange={(e) => setConfig((c) => ({ ...c, floor: e.target.checked }))} /> Lantai</label>
               <label className="inline"><input type="checkbox" checked={config.walls} onChange={(e) => setConfig((c) => ({ ...c, walls: e.target.checked }))} /> Dinding</label>
