@@ -183,7 +183,7 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
           wrapper.scale.set(...item.scale)
           scene.add(wrapper)
           modelReady()
-        }, undefined, () => modelReady())
+        }, undefined, () => { if (generation === modelLoadGeneration.current) setError(`Gagal memuat model 3D: ${item.name}`); modelReady() })
         continue
       }
       const geometry = item.shape === 'sphere'
@@ -221,7 +221,7 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
       useEditor.getState().addAsset(asset)
       const item: Scene3DObject = {
         id: uid(),
-        name: file.name.replace(/\\.(glb|gltf)$/i, ''),
+        name: file.name.replace(/\.(glb|gltf)$/i, ''),
         shape: 'model',
         assetId: asset.id,
         modelUrl: asset.url,
