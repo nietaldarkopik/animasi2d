@@ -28,6 +28,10 @@ export function CardCharacterPage() {
   const [draggingHead, setDraggingHead] = useState(false)
   const [sittingHeadScale, setSittingHeadScale] = useState(1)
   const [sittingBodyScale, setSittingBodyScale] = useState(1)
+  const [sittingChair, setSittingChair] = useState('wooden_dining_chair')
+  const [sittingChairX, setSittingChairX] = useState(0)
+  const [sittingChairY, setSittingChairY] = useState(0)
+  const [sittingChairScale, setSittingChairScale] = useState(0.5)
   const [canvasZoom, setCanvasZoom] = useState(1)
   const [, setTick] = useState(0)
   const imgs = useRef(new Map<string, HTMLImageElement>())
@@ -55,6 +59,11 @@ export function CardCharacterPage() {
           setSittingHeadOffset(m.sitting_head_offsets?.[family.default_reference] ?? [200, 0])
           setSittingHeadScale(m.sitting_head_scales?.[family.default_reference] ?? 1)
           setSittingBodyScale(m.sitting_body_scales?.[family.default_reference] ?? 1)
+          const chair = m.sitting_chairs?.[family.default_reference]
+          setSittingChair(chair?.asset ?? 'wooden_dining_chair')
+          setSittingChairX(chair?.x ?? 0)
+          setSittingChairY(chair?.y ?? 0)
+          setSittingChairScale(chair?.scale ?? 0.5)
         }
       }
     } catch (e) { setError((e as Error).message) }
@@ -72,7 +81,7 @@ export function CardCharacterPage() {
   useEffect(() => {
     if (!d?.urls) return
     imgs.current = new Map()
-    const all = [...Object.values(d.urls.body), ...Object.values(d.urls.head), ...Object.values(d.urls.mouth), ...Object.values(d.urls.sitting ?? {}), ...(d.urls.blink ? [d.urls.blink] : [])]
+    const all = [...Object.values(d.urls.body), ...Object.values(d.urls.head), ...Object.values(d.urls.mouth), ...Object.values(d.urls.sitting ?? {}), ...Object.values(d.urls.chairs ?? {}), ...(d.urls.blink ? [d.urls.blink] : [])]
     for (const u of all) {
       const im = new Image()
       im.onload = () => { imgs.current.set(u, im); setTick((t) => t + 1) }
@@ -156,6 +165,11 @@ export function CardCharacterPage() {
                             setSittingHeadOffset(m.sitting_head_offsets?.[family.default_reference] ?? [200, 0])
                             setSittingHeadScale(m.sitting_head_scales?.[family.default_reference] ?? 1)
                             setSittingBodyScale(m.sitting_body_scales?.[family.default_reference] ?? 1)
+                            const chair = m.sitting_chairs?.[family.default_reference]
+                            setSittingChair(chair?.asset ?? 'wooden_dining_chair')
+                            setSittingChairX(chair?.x ?? 0)
+                            setSittingChairY(chair?.y ?? 0)
+                            setSittingChairScale(chair?.scale ?? 0.5)
                           }}>{family.label}</button>
                         ))}
                       </div>
@@ -165,7 +179,7 @@ export function CardCharacterPage() {
                           <div key={family.id} style={{ marginTop: 10 }}>
                             <div className="small"><strong>Variasi referensi</strong></div>
                             <div className="row" style={{ gap: 6, flexWrap: 'wrap', marginTop: 5 }}>
-                              {refs.map((ref) => <button key={ref} className={sittingReference === ref ? 'primary' : ''} onClick={() => { setSittingReference(ref); setSittingHeadOffset(m.sitting_head_offsets?.[ref] ?? [200, 0]); setSittingHeadScale(m.sitting_head_scales?.[ref] ?? 1); setSittingBodyScale(m.sitting_body_scales?.[ref] ?? 1) }}>{ref}</button>)}
+                              {refs.map((ref) => <button key={ref} className={sittingReference === ref ? 'primary' : ''} onClick={() => { setSittingReference(ref); setSittingHeadOffset(m.sitting_head_offsets?.[ref] ?? [200, 0]); setSittingHeadScale(m.sitting_head_scales?.[ref] ?? 1); setSittingBodyScale(m.sitting_body_scales?.[ref] ?? 1); const chair = m.sitting_chairs?.[ref]; setSittingChair(chair?.asset ?? 'wooden_dining_chair'); setSittingChairX(chair?.x ?? 0); setSittingChairY(chair?.y ?? 0); setSittingChairScale(chair?.scale ?? 0.5) }}>{ref}</button>)}
                             </div>
                             {d.sitting_reference_urls?.[sittingReference] ? (
                               <div style={{ marginTop: 10, display: 'inline-flex', flexDirection: 'column', gap: 5, maxWidth: 240 }}>
@@ -227,16 +241,32 @@ export function CardCharacterPage() {
                                   <span>{Math.round(canvasZoom * 100)}%</span>
                                 </label>
                                 <button className="primary" disabled={busy || !d.sitting_reference_urls?.[sittingReference]} onClick={() => void act(async () => {
-                                  const updated = await api.cardSaveSittingHeadOffset(d.id, sittingReference, sittingHeadOffset[0], sittingHeadOffset[1], sittingHeadScale, sittingBodyScale)
+                                  const updated = await api.cardSaveSittingHeadOffset(d.id, sittingReference, sittingHeadOffset[0], sittingHeadOffset[1], sittingHeadScale, sittingBodyScale, family.requires_prop ? sittingChair : null, sittingChairX, sittingChairY, sittingChairScale)
                                   setD(updated)
                                 })}>Simpan kalibrasi</button>
                                 <button disabled={!m.sitting_head_offsets?.[sittingReference]} onClick={() => setView((v) => ({ ...v, pose: `sitting:${sittingReference}`, mouth: null, blink: false }))}>Gunakan di canvas</button>
                               </div>
+                              {family.requires_prop && (
+                                <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid var(--border)' }}>
+                                  <div className="small"><strong>Prop kursi</strong></div>
+                                  <p className="muted small" style={{ margin: '4px 0 8px' }}>Kursi digambar di belakang badan. Atur posisi X/Y dan ukuran dalam koordinat canvas karakter.</p>
+                                  <div className="row" style={{ gap: 8, flexWrap: 'wrap', alignItems: 'end' }}>
+                                    <label className="small">Jenis kursi
+                                      <select value={sittingChair} onChange={(e) => setSittingChair(e.target.value)}>
+                                        {Object.keys(d.urls?.chairs ?? {}).map((key) => <option key={key} value={key}>{({ wooden_dining_chair: 'Kursi kayu', office_chair: 'Kursi kantor', folding_chair: 'Kursi lipat', lounge_armchair: 'Armchair santai', gaming_chair: 'Kursi gaming', school_chair: 'Kursi sekolah', directors_chair: 'Kursi sutradara', bean_bag: 'Bean bag' } as Record<string, string>)[key] ?? key}</option>)}
+                                      </select>
+                                    </label>
+                                    <label className="small">X <input type="number" value={sittingChairX} onChange={(e) => setSittingChairX(Number(e.target.value))} style={{ width: 88 }} /></label>
+                                    <label className="small">Y <input type="number" value={sittingChairY} onChange={(e) => setSittingChairY(Number(e.target.value))} style={{ width: 88 }} /></label>
+                                    <label className="small">Skala <input type="range" min="0.1" max="2" step="0.01" value={sittingChairScale} onChange={(e) => setSittingChairScale(Number(e.target.value))} /><span>{Math.round(sittingChairScale * 100)}%</span></label>
+                                  </div>
+                                </div>
+                              )}
                               <p className="muted small" style={{ margin: '6px 0 0' }}>Tersimpan per variasi pose dan membuat versi karakter baru. Setelah tersimpan, klik Gunakan di canvas untuk mengaktifkan pose ini.</p>
                             </div>
                             <p className="muted small" style={{ margin: '8px 0 0' }}>
                               {family.requires_prop ? `Memerlukan prop terpisah: ${family.requires_prop}. ` : 'Tidak memerlukan prop kursi. '}
-                              Prop kursi akan ditambahkan setelah kalibrasi kepala selesai.
+Aset kursi dapat dipilih dan dikalibrasi pada bagian Prop kursi.
                             </p>
                           </div>
                         )
