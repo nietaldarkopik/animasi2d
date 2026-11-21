@@ -130,7 +130,18 @@ export function SceneLabPage() {
   const selected = draft.items.find(x => x.id === selectedId) ?? null
 
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify(draft)) }, [draft])
-  useEffect(() => { api.environments().then(setEnvironmentAssets).catch(() => setMessage('Environment Library belum dapat dimuat.')) }, [])
+  useEffect(() => {
+    api.environments().then(assets => {
+      setEnvironmentAssets(assets)
+      const byId = new Map(assets.map(asset => [asset.id, asset]))
+      const refresh = (items: SceneItem[]) => items.map(item => {
+        const asset = item.libraryAssetId ? byId.get(item.libraryAssetId) : undefined
+        return asset ? { ...item, modelUrl: asset.url } : item
+      })
+      setDraft(d => ({ ...d, items: refresh(d.items) }))
+      setSavedPresets(presets => presets.map(p => ({ ...p, draft: { ...p.draft, items: refresh(p.draft.items) } })))
+    }).catch(() => setMessage('Environment Library belum dapat dimuat.'))
+  }, [])
   useEffect(() => { localStorage.setItem(SAVED_KEY, JSON.stringify(savedPresets)) }, [savedPresets])
 
   useEffect(() => {
@@ -432,8 +443,8 @@ export function SceneLabPage() {
           {selected ? <>
             <label>Nama<input value={selected.name} onChange={e => patchItem(selected.id, { name: e.target.value })} /></label>
             <label>Jenis<select value={selected.kind} onChange={e => patchItem(selected.id, { kind: e.target.value as Kind })}><option value="place">Bagian tempat</option><option value="prop">Properti</option><option value="character">Karakter</option></select></label>
-            <label>Bentuk<select value={selected.shape} onChange={e => patchItem(selected.id, { shape: e.target.value as Shape })}><option value="box">Kotak</option><option value="sphere">Bola</option><option value="cylinder">Silinder</option><option value="plane">Bidang / karakter</option></select></label>
-            <label>Warna<input type="color" value={selected.color} onChange={e => patchItem(selected.id, { color: e.target.value })} /></label>
+            <label>Bentuk<select value={selected.shape} onChange={e => patchItem(selected.id, { shape: e.target.value as Shape })}><option value="box">Kotak</option><option value="sphere">Bola</option><option value="cylinder">Silinder</option><option value="plane">Bidang / karakter</option><option value="model">Model GLB</option></select></label>
+            {selected.shape !== 'model' && <label>Warna<input type="color" value={selected.color} onChange={e => patchItem(selected.id, { color: e.target.value })} /></label>}
             <div className="grid2">
               {(['x','y','z'] as const).map(axis => <label key={axis}>{axis.toUpperCase()}<input type="number" step=".1" value={selected[axis]} onChange={e => patchItem(selected.id, { [axis]: Number(e.target.value) })} /></label>)}
               {(['width','height','depth'] as const).map(axis => <label key={axis}>{axis === 'width' ? 'Lebar' : axis === 'height' ? 'Tinggi' : 'Kedalaman'}<input type="number" min=".02" step=".1" value={selected[axis]} onChange={e => patchItem(selected.id, { [axis]: clamp(Number(e.target.value), .02, 30) })} /></label>)}
