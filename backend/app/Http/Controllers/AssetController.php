@@ -60,6 +60,54 @@ class AssetController extends Controller
         return response()->json(['data' => $this->present($asset)], 201);
     }
 
+    /** Store a self-contained GLB or glTF model as a project asset. External sidecar files are rejected. */
+    public function storeModel(Request $request, Project $project): JsonResponse
+    {
+        abort_unless($project->user_id === $request->user()->id, 404);
+        $request->validate(['file' => 'required|file|max:51200']);
+
+        $file = $request->file('file');
+        $extension = strtolower($file->getClientOriginalExtension());
+        $mime = null;
+
+        if ($extension === 'glb') {
+            $handle = fopen($file->getRealPath(), 'rb');
+            $magic = $handle ? fread($handle, 4) : '';
+            if ($handle) fclose($handle);
+            if ($magic !== 'glTF') {
+                return response()->json(['message' => 'File GLB tidak valid.', 'errors' => ['file' => ['Header GLB tidak dikenali.']]], 422);
+            }
+            $mime = 'model/gltf-binary';
+        } elseif ($extension === 'gltf') {
+            $json = json_decode(file_get_contents($file->getRealPath()), true);
+            if (! is_array($json) || ($json['asset']['version'] ?? null) !== '2.0') {
+                return response()->json(['message' => 'File glTF 2.0 tidak valid.', 'errors' => ['file' => ['Dokumen glTF tidak valid.']]], 422);
+            }
+            foreach (array_merge($json['buffers'] ?? [], $json['images'] ?? []) as $dependency) {
+                $uri = $dependency['uri'] ?? null;
+                if ($uri !== null && ! str_starts_with($uri, 'data:')) {
+                    return response()->json(['message' => 'File glTF harus mandiri. Gunakan GLB atau sematkan seluruh tekstur dan buffer sebagai data URI.', 'errors' => ['file' => ['Ditemukan file eksternal yang belum diunggah.']]], 422);
+                }
+            }
+            $mime = 'model/gltf+json';
+        } else {
+            return response()->json(['message' => 'Gunakan file .glb atau .gltf.', 'errors' => ['file' => ['Format model 3D tidak didukung.']]], 422);
+        }
+
+        $path = $file->storeAs('projects/'.$project->id.'/assets', Str::uuid().'.'.$extension, 'local');
+        $asset = $project->assets()->create([
+            'user_id' => $request->user()->id,
+            'kind' => 'original',
+            'disk' => 'local',
+            'path' => $path,
+            'original_name' => Str::limit($file->getClientOriginalName(), 200, ''),
+            'mime' => $mime,
+            'size' => $file->getSize(),
+        ]);
+
+        return response()->json(['data' => $this->present($asset)], 201);
+    }
+
     /**
      * Non-destructive image clean-up: runs the Python/Pillow worker and stores the result as a NEW asset
      * (the original is kept). Ops: crop, resize, remove_bg, sketch, trim, enhance.
