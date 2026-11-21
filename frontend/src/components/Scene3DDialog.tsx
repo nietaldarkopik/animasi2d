@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import * as THREE from 'three'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { api } from '../api'
 import { uid, useEditor } from '../store'
 import type { Scene3DConfig, Scene3DObject } from '../types'
@@ -33,6 +34,8 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
   onClose: () => void
 }) {
   const host = useRef<HTMLDivElement>(null)
+  const modelLoadGeneration = useRef(0)
+  const modelInput = useRef<HTMLInputElement>(null)
   const renderer = useRef<THREE.WebGLRenderer | null>(null)
   const world = useRef<THREE.Scene | null>(null)
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
@@ -40,6 +43,7 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
   const [camera, setCamera] = useState<[number, number, number]>(() => [...(initial?.camera ?? freshConfig().camera)])
   const [selected, setSelected] = useState<string | null>(config.objects[0]?.id ?? null)
   const [busy, setBusy] = useState(false)
+  const [modelsLoading, setModelsLoading] = useState(false)
   const [error, setError] = useState('')
   const active = config.objects.find((o) => o.id === selected) ?? null
   const aspect = useEditor((s) => s.doc ? s.doc.settings.width / s.doc.settings.height : 9 / 16)
@@ -80,6 +84,25 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
       cameraRef.current = null
     }
   }, [aspect])
+
+  useEffect(() => {
+    let alive = true
+    api.assets(projectId).then((assets) => {
+      if (!alive) return
+      const byId = new Map(assets.map((asset) => [asset.id, asset]))
+      setConfig((current) => ({
+        ...current,
+        objects: current.objects.map((item) => {
+          if (item.shape !== 'model' || !item.assetId) return item
+          const asset = byId.get(item.assetId)
+          return asset ? { ...item, modelUrl: asset.url } : item
+        }),
+      }))
+    }).catch(() => {
+      // Keep saved URLs as a fallback; they may still be valid.
+    })
+    return () => { alive = false }
+  }, [projectId])
 
   useEffect(() => {
     const scene = world.current
@@ -126,7 +149,40 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
       scene.add(side)
     }
 
+    const generation = ++modelLoadGeneration.current
+    const modelItems = config.objects.filter((item) => item.shape === 'model')
+    setModelsLoading(modelItems.length > 0)
+    let pendingModels = modelItems.length
+    const modelReady = () => {
+      pendingModels -= 1
+      if (generation === modelLoadGeneration.current && pendingModels <= 0) setModelsLoading(false)
+      if (generation === modelLoadGeneration.current) gl.render(scene, cam)
+    }
+
     for (const item of config.objects) {
+      if (item.shape === 'model') {
+        if (!item.modelUrl) { modelReady(); continue }
+        new GLTFLoader().load(item.modelUrl, (gltf) => {
+          if (generation !== modelLoadGeneration.current) return
+          const model = gltf.scene
+          const bounds = new THREE.Box3().setFromObject(model)
+          const size = bounds.getSize(new THREE.Vector3())
+          const center = bounds.getCenter(new THREE.Vector3())
+          model.position.sub(center)
+          const largest = Math.max(size.x, size.y, size.z, 0.001)
+          model.scale.setScalar(1.8 / largest)
+          model.position.set(...item.position)
+          model.rotation.set(...item.rotation.map((v) => THREE.MathUtils.degToRad(v)) as [number, number, number])
+          model.scale.multiply(new THREE.Vector3(...item.scale))
+          model.traverse((node) => {
+            const mesh = node as THREE.Mesh
+            if (mesh.isMesh) { mesh.castShadow = true; mesh.receiveShadow = true }
+          })
+          scene.add(model)
+          modelReady()
+        }, undefined, () => modelReady())
+        continue
+      }
       const geometry = item.shape === 'sphere'
         ? new THREE.SphereGeometry(0.65, 32, 24)
         : item.shape === 'cylinder'
@@ -145,7 +201,41 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
     cam.position.set(...camera)
     cam.lookAt(0, 0.8, 0)
     gl.render(scene, cam)
+    return () => { modelLoadGeneration.current += 1 }
   }, [config, camera])
+
+  async function importModel(file?: File) {
+    if (!file) return
+    const extension = file.name.toLowerCase().split('.').pop()
+    if (extension !== 'glb' && extension !== 'gltf') {
+      setError('Pilih file .glb atau .gltf.')
+      return
+    }
+    setBusy(true)
+    setError('')
+    try {
+      const asset = await api.upload3DModel(projectId, file)
+      useEditor.getState().addAsset(asset)
+      const item: Scene3DObject = {
+        id: uid(),
+        name: file.name.replace(/\\.(glb|gltf)$/i, ''),
+        shape: 'model',
+        assetId: asset.id,
+        modelUrl: asset.url,
+        position: [0, 0.9, 0],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1],
+        color: '#ffffff',
+      }
+      setConfig((current) => ({ ...current, objects: [...current.objects, item] }))
+      setSelected(item.id)
+    } catch (e) {
+      setError((e as Error).message || 'Gagal mengunggah model 3D.')
+    } finally {
+      setBusy(false)
+      if (modelInput.current) modelInput.current.value = ''
+    }
+  }
 
   function patchObject(patch: Partial<Scene3DObject>) {
     if (!active) return
@@ -264,6 +354,9 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
               <h3>Tambah objek 3D</h3>
               <div className="row" style={{ flexWrap: 'wrap' }}><button onClick={() => add('box')}>+ Kubus</button><button onClick={() => add('sphere')}>+ Bola</button><button onClick={() => add('cylinder')}>+ Silinder</button></div>
               <div className="row" style={{ flexWrap: 'wrap', marginTop: 6 }}><button onClick={() => addPreset('chair')}>+ Kursi sekolah</button><button onClick={() => addPreset('desk')}>+ Meja sekolah</button></div>
+              <input ref={modelInput} type="file" accept=".glb,.gltf,model/gltf-binary,model/gltf+json" hidden onChange={(e) => void importModel(e.target.files?.[0])} />
+              <button onClick={() => modelInput.current?.click()} disabled={busy}>+ Impor model 3D (.GLB / .GLTF)</button>
+              {modelsLoading && <p className="muted small">Memuat model 3D…</p>}
               <div style={{ display: 'grid', gap: 4, marginTop: 8 }}>
                 {config.objects.map((o) => <button key={o.id} className={o.id === selected ? 'primary' : ''} onClick={() => setSelected(o.id)} style={{ textAlign: 'left' }}>{o.name}</button>)}
                 {config.objects.length === 0 && <p className="muted small">Belum ada objek. Tambahkan bentuk dasar di atas.</p>}
@@ -272,12 +365,12 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
             {active && <section>
               <div className="row between"><h3>{active.name}</h3><button className="danger" onClick={() => { setConfig((c) => ({ ...c, objects: c.objects.filter((o) => o.id !== active.id) })); setSelected(null) }}>Hapus</button></div>
               <label className="field"><span>Nama</span><input value={active.name} onChange={(e) => patchObject({ name: e.target.value })} /></label>
-              <label className="field"><span>Warna</span><input type="color" value={active.color} onChange={(e) => patchObject({ color: e.target.value })} /></label>
+              {active.shape !== 'model' && <label className="field"><span>Warna</span><input type="color" value={active.color} onChange={(e) => patchObject({ color: e.target.value })} /></label>}
               {(['position', 'rotation', 'scale'] as const).map((key) => <div key={key}><h3>{key === 'position' ? 'Posisi XYZ' : key === 'rotation' ? 'Rotasi XYZ (derajat)' : 'Skala XYZ'}</h3><div className="grid2">{(['X', 'Y', 'Z'] as const).map((axis, i) => <label className="field" key={axis}><span>{axis}</span><input type="number" step={key === 'rotation' ? 5 : 0.1} value={active[key][i]} onChange={(e) => patchVector(key, i as 0 | 1 | 2, Number(e.target.value))} /></label>)}</div></div>)}
             </section>}
             <section><h3>Kamera</h3><p className="muted small">Seret area preview untuk memutar kamera, scroll untuk zoom.</p><div className="grid2">{(['X', 'Y', 'Z'] as const).map((axis, i) => <label className="field" key={axis}><span>{axis}</span><input type="number" step="0.5" value={camera[i]} onChange={(e) => setCamera((c) => c.map((v, j) => j === i ? Number(e.target.value) : v) as [number, number, number])} /></label>)}</div></section>
             {error && <p className="error small" role="alert">{error}</p>}
-            <button className="primary" disabled={busy} onClick={() => void save()}>{busy ? 'Merender…' : 'Simpan & gunakan sebagai latar'}</button>
+            <button className="primary" disabled={busy || modelsLoading} onClick={() => void save()}>{busy ? 'Merender…' : 'Simpan & gunakan sebagai latar'}</button>
           </aside>
         </div>
       </div>
