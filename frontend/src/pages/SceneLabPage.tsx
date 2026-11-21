@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { api } from '../api'
+import type { LibAsset } from '../builder/types'
 import { AppNav } from '../components/AppNav'
 
 type Kind = 'place' | 'prop' | 'character'
-type Shape = 'box' | 'sphere' | 'cylinder' | 'plane'
+type Shape = 'box' | 'sphere' | 'cylinder' | 'plane' | 'model'
 interface SceneItem {
   id: string
   name: string
@@ -14,6 +17,8 @@ interface SceneItem {
   width: number; height: number; depth: number
   color: string
   imageData?: string
+  modelUrl?: string
+  libraryAssetId?: number
 }
 interface SceneDraft { placeName: string; items: SceneItem[] }
 
@@ -117,11 +122,15 @@ export function SceneLabPage() {
   const [selectedId, setSelectedId] = useState<string | null>('sink')
   const [prompt, setPrompt] = useState('')
   const [message, setMessage] = useState('Scene tersimpan otomatis di browser ini.')
+  const [environmentAssets, setEnvironmentAssets] = useState<LibAsset[]>([])
+  const [uploadingEnvironment, setUploadingEnvironment] = useState(false)
+  const modelInput = useRef<HTMLInputElement>(null)
   const host = useRef<HTMLDivElement>(null)
   const runtime = useRef<{ renderer: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.PerspectiveCamera; controls: OrbitControls; meshes: Map<string, THREE.Object3D>; raf: number } | null>(null)
   const selected = draft.items.find(x => x.id === selectedId) ?? null
 
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify(draft)) }, [draft])
+  useEffect(() => { api.environments().then(setEnvironmentAssets).catch(() => setMessage('Environment Library belum dapat dimuat.')) }, [])
   useEffect(() => { localStorage.setItem(SAVED_KEY, JSON.stringify(savedPresets)) }, [savedPresets])
 
   useEffect(() => {
@@ -193,6 +202,7 @@ export function SceneLabPage() {
     for (const item of draft.items) {
       let object = rt.meshes.get(item.id)
       if (!object) {
+        if (item.shape === 'model') continue
         let geometry: THREE.BufferGeometry
         if (item.shape === 'sphere') geometry = new THREE.SphereGeometry(.5, 24, 16)
         else if (item.shape === 'cylinder') geometry = new THREE.CylinderGeometry(.5, .5, 1, 24)
@@ -221,6 +231,29 @@ export function SceneLabPage() {
       })
     }
   }, [draft, selectedId])
+
+  useEffect(() => {
+    const rt = runtime.current
+    if (!rt) return
+    let cancelled = false
+    for (const item of draft.items.filter(x => x.shape === 'model' && x.modelUrl && !rt.meshes.has(x.id))) {
+      new GLTFLoader().load(item.modelUrl!, gltf => {
+        if (cancelled) { gltf.scene.traverse(n => { const m = n as THREE.Mesh; m.geometry?.dispose(); if (Array.isArray(m.material)) m.material.forEach(x => x.dispose()); else m.material?.dispose() }); return }
+        const model = gltf.scene
+        const bounds = new THREE.Box3().setFromObject(model)
+        const size = bounds.getSize(new THREE.Vector3())
+        const center = bounds.getCenter(new THREE.Vector3())
+        const fit = 3 / Math.max(size.x, size.y, size.z, 0.001)
+        model.scale.setScalar(fit)
+        model.position.copy(center).multiplyScalar(-fit)
+        model.traverse(n => { const m = n as THREE.Mesh; if (m.isMesh) { m.castShadow = true; m.receiveShadow = true } })
+        const wrapper = new THREE.Group(); wrapper.add(model)
+        wrapper.position.set(item.x, item.y, item.z); wrapper.scale.set(item.width, item.height, item.depth)
+        rt.scene.add(wrapper); rt.meshes.set(item.id, wrapper)
+      }, undefined, () => setMessage('Gagal memuat GLB dari Environment Library.'))
+    }
+    return () => { cancelled = true }
+  }, [draft])
 
   const patchItem = (id: string, patch: Partial<SceneItem>) => setDraft(d => ({ ...d, items: d.items.map(x => x.id === id ? { ...x, ...patch } : x) }))
   const addItem = (kind: Kind, shape: Shape = 'box', name?: string, imageData?: string) => {
@@ -299,7 +332,8 @@ export function SceneLabPage() {
       camera: [8, 6.5, 10],
       objects: draft.items.filter(item => item.kind !== 'character').map(item => ({
         id: item.id, name: item.name,
-        shape: item.shape === 'sphere' || item.shape === 'cylinder' ? item.shape : 'box',
+        shape: item.shape === 'model' ? 'model' : item.shape === 'sphere' || item.shape === 'cylinder' ? item.shape : 'box',
+        ...(item.shape === 'model' ? { modelUrl: item.modelUrl } : {}),
         position: [item.x, item.y, item.z],
         rotation: [0, 0, 0],
         scale: [item.width, item.height, item.depth],
@@ -310,6 +344,26 @@ export function SceneLabPage() {
     const url = URL.createObjectURL(blob); const a = document.createElement('a')
     a.href = url; a.download = `environment-${draft.placeName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.json`; a.click(); URL.revokeObjectURL(url)
     setMessage('Environment diekspor. Impor JSON ini melalui 3D Scene Studio.')
+  }
+  const importEnvironmentModel = async (file?: File) => {
+    if (!file) return
+    if (!file.name.toLowerCase().endsWith('.glb')) { setMessage('Gunakan file .glb.'); return }
+    setUploadingEnvironment(true)
+    try {
+      const name = file.name.replace(/\\.glb$/i, '')
+      const asset = await api.uploadEnvironment(file, name)
+      setEnvironmentAssets(items => [asset, ...items.filter(x => x.id !== asset.id)])
+      const item: SceneItem = { id: uid(), name: asset.name, kind: 'place', shape: 'model', x: 0, y: 0, z: 0, width: 1, height: 1, depth: 1, color: '#ffffff', modelUrl: asset.url, libraryAssetId: asset.id }
+      setDraft(d => ({ ...d, placeName: asset.name, items: [...d.items, item] }))
+      setSelectedId(item.id)
+      setMessage(`GLB "${asset.name}" disimpan di Environment Library dan dimuat ke scene.`)
+    } catch (e) { setMessage((e as Error).message || 'Gagal mengimpor GLB.') }
+    finally { setUploadingEnvironment(false); if (modelInput.current) modelInput.current.value = '' }
+  }
+  const addLibraryEnvironment = (asset: LibAsset) => {
+    const item: SceneItem = { id: uid(), name: asset.name, kind: 'place', shape: 'model', x: 0, y: 0, z: 0, width: 1, height: 1, depth: 1, color: '#ffffff', modelUrl: asset.url, libraryAssetId: asset.id }
+    setDraft(d => ({ ...d, placeName: asset.name, items: [...d.items, item] })); setSelectedId(item.id)
+    setMessage(`Environment "${asset.name}" ditambahkan dari Library.`)
   }
   const exportDraft = () => {
     const blob = new Blob([JSON.stringify(draft, null, 2)], { type: 'application/json' })
@@ -336,7 +390,9 @@ export function SceneLabPage() {
         <div className="row" style={{ padding: 10, borderBottom: '1px solid var(--border)' }}>
           <strong>{draft.placeName}</strong><span className="muted small">{draft.items.length} objek</span>
           <label style={{ width: 'auto', minWidth: 160 }}><span className="muted small">Pilih environment</span><select defaultValue="" onChange={e => { if (e.target.value) loadPreset(e.target.value); e.target.value = '' }}><option value="">Muat preset…</option><optgroup label="Preset bawaan">{BUILT_IN_PRESETS.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</optgroup>{savedPresets.length > 0 && <optgroup label="Preset milik saya">{savedPresets.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</optgroup>}</select></label>
-          <button onClick={saveAsPreset}>Simpan sebagai preset</button><span className="spacer" />
+          <button onClick={saveAsPreset}>Simpan sebagai preset</button>
+          <input ref={modelInput} type="file" accept=".glb,model/gltf-binary" hidden onChange={e => void importEnvironmentModel(e.target.files?.[0])} />
+          <button onClick={() => modelInput.current?.click()} disabled={uploadingEnvironment}>{uploadingEnvironment ? 'Mengunggah GLB…' : 'Import GLB environment'}</button><span className="spacer" />
           <button onClick={() => { runtime.current?.camera.position.set(8, 6.5, 10); runtime.current?.controls.target.set(0, 1, 0) }}>Reset kamera</button>
           <button onClick={exportDraft}>Export JSON</button>
           <button className="primary" onClick={exportEnvironment}>Export untuk 3D Studio</button>
@@ -364,6 +420,11 @@ export function SceneLabPage() {
           <div style={{ display: 'grid', gap: 4 }}>
             {draft.items.map(item => <button key={item.id} onClick={() => setSelectedId(item.id)} style={{ textAlign: 'left', borderColor: item.id === selectedId ? 'var(--accent)' : 'var(--border)', background: item.id === selectedId ? '#263449' : 'var(--panel2)' }}>{item.kind === 'character' ? '◉ ' : item.kind === 'place' ? '▧ ' : '□ '}{item.name}</button>)}
           </div>
+        </section>
+        <section style={{ display: 'grid', gap: 8 }}>
+          <h3>Environment Library</h3>
+          <p className="muted small">Model GLB tersimpan di server dan dapat digunakan kembali.</p>
+          {environmentAssets.length ? environmentAssets.map(asset => <div key={asset.id} className="row" style={{ gap: 6 }}><button onClick={() => addLibraryEnvironment(asset)} style={{ flex: 1, textAlign: 'left' }}>＋ {asset.name}</button><span className="muted small">GLB</span></div>) : <p className="muted small">Belum ada environment GLB. Import file untuk menambahkannya.</p>}
         </section>
         <section style={{ display: 'grid', gap: 8 }}>
           <h3>Properti objek</h3>
