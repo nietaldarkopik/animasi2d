@@ -400,6 +400,10 @@ class CardCharacterController extends Controller
             'y' => ['required', 'numeric', 'between:-800,1400'],
             'head_scale' => ['sometimes', 'numeric', 'between:0.45,1.8'],
             'body_scale' => ['sometimes', 'numeric', 'between:0.65,1.5'],
+            'chair' => ['nullable', 'string', 'regex:/^[a-z0-9_-]+$/'],
+            'chair_x' => ['sometimes', 'numeric', 'between:-1200,1600'],
+            'chair_y' => ['sometimes', 'numeric', 'between:-1200,1800'],
+            'chair_scale' => ['sometimes', 'numeric', 'between:0.1,3'],
         ]);
         $source = $character->versions()->where('number', $character->current_version)->firstOrFail();
         abort_unless(isset($source->config['sitting_references'][$data['reference']]), 404, 'Referensi pose duduk tidak ditemukan pada versi ini.');
@@ -412,6 +416,19 @@ class CardCharacterController extends Controller
         $meta['sitting_head_scales'][$data['reference']] = (float) ($data['head_scale'] ?? ($meta['sitting_head_scales'][$data['reference']] ?? 1));
         $meta['sitting_body_scales'] = $meta['sitting_body_scales'] ?? [];
         $meta['sitting_body_scales'][$data['reference']] = (float) ($data['body_scale'] ?? ($meta['sitting_body_scales'][$data['reference']] ?? 1));
+        $meta['sitting_chairs'] = $meta['sitting_chairs'] ?? [];
+        $chair = $data['chair'] ?? null;
+        if ($chair !== null) {
+            abort_unless(isset($config['chair_props'][$chair]), 422, 'Aset kursi tidak tersedia pada versi ini.');
+            $meta['sitting_chairs'][$data['reference']] = [
+                'asset' => $chair,
+                'x' => (float) ($data['chair_x'] ?? ($meta['sitting_chairs'][$data['reference']]['x'] ?? 0)),
+                'y' => (float) ($data['chair_y'] ?? ($meta['sitting_chairs'][$data['reference']]['y'] ?? 0)),
+                'scale' => (float) ($data['chair_scale'] ?? ($meta['sitting_chairs'][$data['reference']]['scale'] ?? 1)),
+            ];
+        } else {
+            unset($meta['sitting_chairs'][$data['reference']]);
+        }
         $config['meta'] = $meta;
 
         $version = DB::transaction(function () use ($character, $source, $config, $data) {
@@ -583,8 +600,17 @@ class CardCharacterController extends Controller
             }
         }
 
+        $chairProps = [];
+        $propsDir = $dir.DIRECTORY_SEPARATOR.'props';
+        foreach (['wooden_dining_chair', 'office_chair', 'folding_chair', 'lounge_armchair', 'gaming_chair', 'school_chair', 'directors_chair', 'bean_bag'] as $propId) {
+            $propFile = $propsDir.DIRECTORY_SEPARATOR.$propId.'.png';
+            if (is_file($propFile)) {
+                $chairProps[$propId] = ['source' => $propFile, 'stored' => 'prop_'.$propId.'.png'];
+            }
+        }
+
         return ['meta' => $meta, 'files' => ['body' => $body, 'head' => $head, 'mouth' => $mouth, 'blink' => $blink],
-            'sitting_references' => $sittingReferences];
+            'sitting_references' => $sittingReferences, 'chair_props' => $chairProps];
     }
 
     private function addVersion(Character $c, string $slug, array $spec, string $note): CharacterVersion
@@ -601,13 +627,18 @@ class CardCharacterController extends Controller
             $disk->put($dir.'/'.$reference['stored'], (string) file_get_contents($reference['source']));
             $sittingFiles[$id] = $reference['stored'];
         }
+        $chairFiles = [];
+        foreach (($spec['chair_props'] ?? []) as $id => $prop) {
+            $disk->put($dir.'/'.$prop['stored'], (string) file_get_contents($prop['source']));
+            $chairFiles[$id] = $prop['stored'];
+        }
         $thumb = $this->thumbnail($disk->path($dir), $spec);
         if ($thumb) {
             $disk->put($dir.'/_thumb.png', $thumb);
         }
         $n = (int) $c->versions()->max('number') + 1;
         $config = ['type' => 'card', 'schema_version' => 1, 'source' => $slug, 'dir' => $dir, 'meta' => $spec['meta'], 'files' => $spec['files'],
-            'sitting_references' => $sittingFiles];
+            'sitting_references' => $sittingFiles, 'chair_props' => $chairFiles];
         $v = CharacterVersion::create(['character_id' => $c->id, 'number' => $n, 'config' => $config, 'thumbnail_path' => $thumb ? $dir.'/_thumb.png' : null, 'note' => $note]);
         $c->update(['current_version' => $n]);
 
@@ -797,8 +828,12 @@ class CardCharacterController extends Controller
             foreach (($v->config['sitting_references'] ?? []) as $reference => $filename) {
                 $sittingReferenceUrls[$reference] = $this->fileUrl($v, $filename);
             }
+            $chairPropUrls = [];
+            foreach (($v->config['chair_props'] ?? []) as $prop => $filename) {
+                $chairPropUrls[$prop] = $this->fileUrl($v, $filename);
+            }
             $urls = ['body' => $map($f['body']), 'head' => $map($f['head']), 'mouth' => $map($f['mouth'] ?? []),
-                'blink' => ! empty($f['blink']) ? $this->fileUrl($v, $f['blink']) : null, 'sitting' => $sittingReferenceUrls];
+                'blink' => ! empty($f['blink']) ? $this->fileUrl($v, $f['blink']) : null, 'sitting' => $sittingReferenceUrls, 'chairs' => $chairPropUrls];
         }
 
         return $this->summary($c) + [
