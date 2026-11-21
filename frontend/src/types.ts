@@ -1,3 +1,23 @@
+export interface Scene3DObject {
+  id: string
+  name: string
+  shape: 'box' | 'sphere' | 'cylinder'
+  position: [number, number, number]
+  rotation: [number, number, number]
+  scale: [number, number, number]
+  color: string
+}
+
+export interface Scene3DConfig {
+  background: string
+  floor: boolean
+  walls: boolean
+  ambient: number
+  directional: number
+  camera: [number, number, number]
+  objects: Scene3DObject[]
+}
+
 export type LayerType = 'image' | 'text' | 'shape' | 'bone' | 'balloon'
 
 export type AnimProp = 'x' | 'y' | 'scaleX' | 'scaleY' | 'rotation' | 'opacity'
