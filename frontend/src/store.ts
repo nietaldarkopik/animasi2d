@@ -28,7 +28,7 @@ interface EditorState {
   duplicateScene: (id: string) => void
   deleteScene: (id: string) => void
   moveScene: (id: string, dir: -1 | 1) => void
-  updateScene: (id: string, patch: Partial<Pick<Scene, 'name' | 'transition' | 'board' | 'duration' | 'background'>>) => void
+  updateScene: (id: string, patch: Partial<Pick<Scene, 'name' | 'transition' | 'board' | 'duration' | 'background' | 'threeScene'>>) => void
   /** add layers to any scene of the film (the open one goes through the undo history) */
   addLayersToScene: (sceneId: string, layers: Layer[], opts?: { first?: boolean; replacePrefix?: string }) => void
   /** append scenes to the film (a still-blank single scene is replaced); opens the first new one */
