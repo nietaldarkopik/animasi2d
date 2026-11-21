@@ -165,6 +165,29 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
     setSelected(item.id)
   }
 
+  function addPreset(kind: 'chair' | 'desk') {
+    const base = config.objects.length * 0.08
+    const parts: Omit<Scene3DObject, 'id'>[] = kind === 'chair'
+      ? [
+          { name: 'Kursi - dudukan', shape: 'box', position: [base, 0.66, 0], rotation: [0, 0, 0], scale: [1.05, 0.14, 0.95], color: '#b77945' },
+          { name: 'Kursi - sandaran', shape: 'box', position: [base, 1.22, -0.4], rotation: [0, 0, 0], scale: [1.05, 1.05, 0.13], color: '#9b6038' },
+          { name: 'Kursi - kaki kiri depan', shape: 'box', position: [base - 0.42, 0.32, 0.36], rotation: [0, 0, 0], scale: [0.12, 0.64, 0.12], color: '#765039' },
+          { name: 'Kursi - kaki kanan depan', shape: 'box', position: [base + 0.42, 0.32, 0.36], rotation: [0, 0, 0], scale: [0.12, 0.64, 0.12], color: '#765039' },
+          { name: 'Kursi - kaki kiri belakang', shape: 'box', position: [base - 0.42, 0.32, -0.36], rotation: [0, 0, 0], scale: [0.12, 0.64, 0.12], color: '#765039' },
+          { name: 'Kursi - kaki kanan belakang', shape: 'box', position: [base + 0.42, 0.32, -0.36], rotation: [0, 0, 0], scale: [0.12, 0.64, 0.12], color: '#765039' },
+        ]
+      : [
+          { name: 'Meja - permukaan', shape: 'box', position: [base, 0.94, 0], rotation: [0, 0, 0], scale: [2.2, 0.14, 1.25], color: '#bd8956' },
+          { name: 'Meja - kaki kiri depan', shape: 'box', position: [base - 0.88, 0.46, 0.45], rotation: [0, 0, 0], scale: [0.13, 0.92, 0.13], color: '#80583a' },
+          { name: 'Meja - kaki kanan depan', shape: 'box', position: [base + 0.88, 0.46, 0.45], rotation: [0, 0, 0], scale: [0.13, 0.92, 0.13], color: '#80583a' },
+          { name: 'Meja - kaki kiri belakang', shape: 'box', position: [base - 0.88, 0.46, -0.45], rotation: [0, 0, 0], scale: [0.13, 0.92, 0.13], color: '#80583a' },
+          { name: 'Meja - kaki kanan belakang', shape: 'box', position: [base + 0.88, 0.46, -0.45], rotation: [0, 0, 0], scale: [0.13, 0.92, 0.13], color: '#80583a' },
+        ]
+    const created = parts.map((part) => ({ ...part, id: uid() } as Scene3DObject))
+    setConfig((c) => ({ ...c, objects: [...c.objects, ...created] }))
+    setSelected(created[0]?.id ?? null)
+  }
+
   function orbit(e: PointerEvent<HTMLDivElement>) {
     if (e.buttons !== 1) return
     const target = e.currentTarget
@@ -239,7 +262,8 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
             </section>
             <section>
               <h3>Tambah objek 3D</h3>
-              <div className="row"><button onClick={() => add('box')}>+ Kubus</button><button onClick={() => add('sphere')}>+ Bola</button><button onClick={() => add('cylinder')}>+ Silinder</button></div>
+              <div className="row" style={{ flexWrap: 'wrap' }}><button onClick={() => add('box')}>+ Kubus</button><button onClick={() => add('sphere')}>+ Bola</button><button onClick={() => add('cylinder')}>+ Silinder</button></div>
+              <div className="row" style={{ flexWrap: 'wrap', marginTop: 6 }}><button onClick={() => addPreset('chair')}>+ Kursi sekolah</button><button onClick={() => addPreset('desk')}>+ Meja sekolah</button></div>
               <div style={{ display: 'grid', gap: 4, marginTop: 8 }}>
                 {config.objects.map((o) => <button key={o.id} className={o.id === selected ? 'primary' : ''} onClick={() => setSelected(o.id)} style={{ textAlign: 'left' }}>{o.name}</button>)}
                 {config.objects.length === 0 && <p className="muted small">Belum ada objek. Tambahkan bentuk dasar di atas.</p>}
