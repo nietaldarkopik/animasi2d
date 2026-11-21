@@ -79,6 +79,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/projects/{project}/assets', [AssetController::class, 'index']);
     Route::post('/projects/{project}/assets', [AssetController::class, 'store'])->middleware('throttle:uploads');
+    Route::post('/projects/{project}/models3d', [AssetController::class, 'storeModel'])->middleware('throttle:uploads');
     Route::post('/projects/{project}/audio', [AssetController::class, 'storeAudio'])->middleware('throttle:audio');
     Route::delete('/assets/{asset}', [AssetController::class, 'destroy']);
     Route::post('/assets/{asset}/process', [AssetController::class, 'process'])->middleware('throttle:20,1');
