@@ -86,6 +86,14 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
     const gl = renderer.current
     const cam = cameraRef.current
     if (!scene || !gl || !cam) return
+    scene.traverse((node) => {
+      const mesh = node as THREE.Mesh
+      if (mesh.geometry) mesh.geometry.dispose()
+      if (mesh.material) {
+        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+        materials.forEach((material) => material.dispose())
+      }
+    })
     scene.clear()
     scene.background = new THREE.Color(config.background)
     scene.add(new THREE.HemisphereLight(0xffffff, 0x657080, config.ambient))
