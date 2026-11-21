@@ -256,6 +256,16 @@ export function CardCharacterPage() {
                                         {Object.keys(d.urls?.chairs ?? {}).map((key) => <option key={key} value={key}>{({ wooden_dining_chair: 'Kursi kayu', office_chair: 'Kursi kantor', folding_chair: 'Kursi lipat', lounge_armchair: 'Armchair santai', gaming_chair: 'Kursi gaming', school_chair: 'Kursi sekolah', directors_chair: 'Kursi sutradara', bean_bag: 'Bean bag' } as Record<string, string>)[key] ?? key}</option>)}
                                       </select>
                                     </label>
+                                    {d.urls?.chairs?.[sittingChair] ? (
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 150 }}>
+                                        <div style={{ width: 112, height: 112, background: CHECKER, border: '1px solid var(--border)', borderRadius: 8, display: 'grid', placeItems: 'center', overflow: 'hidden' }}>
+                                          <img src={absUrl(d.urls.chairs[sittingChair])} alt={sittingChair} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                                        </div>
+                                        <span className="muted small">Pratinjau aset kursi</span>
+                                      </div>
+                                    ) : (
+                                      <span className="muted small">Gambar kursi belum tersedia. Klik “Perbarui dari folder” setelah memastikan PNG ada di karakter/uki/props/.</span>
+                                    )}
                                     <label className="small">X <input type="number" value={sittingChairX} onChange={(e) => setSittingChairX(Number(e.target.value))} style={{ width: 88 }} /></label>
                                     <label className="small">Y <input type="number" value={sittingChairY} onChange={(e) => setSittingChairY(Number(e.target.value))} style={{ width: 88 }} /></label>
                                     <label className="small">Skala <input type="range" min="0.1" max="2" step="0.01" value={sittingChairScale} onChange={(e) => setSittingChairScale(Number(e.target.value))} /><span>{Math.round(sittingChairScale * 100)}%</span></label>
