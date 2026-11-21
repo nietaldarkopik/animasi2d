@@ -270,6 +270,7 @@ export function SceneLabPage() {
           rt.camera.far = Math.max(100000, radius * 20)
           rt.camera.updateProjectionMatrix()
         }
+        setMessage(`GLB "${item.name}" dimuat dengan dimensi asli.`)
       }, undefined, () => setMessage('Gagal memuat GLB dari Environment Library.'))
     }
     return () => { cancelled = true }
