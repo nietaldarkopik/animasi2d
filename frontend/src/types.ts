@@ -126,6 +126,8 @@ export interface Scene {
   effects?: SceneEffect[]
   subtitles?: Subtitle[]
   board?: SceneBoard
+  /** Editable Three.js environment; the rendered PNG is also stored as a normal scene image layer. */
+  threeScene?: Scene3DConfig
   id: string
   name: string
   duration: number
