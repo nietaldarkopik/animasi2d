@@ -1,7 +1,9 @@
 export interface Scene3DObject {
   id: string
   name: string
-  shape: 'box' | 'sphere' | 'cylinder'
+  shape: 'box' | 'sphere' | 'cylinder' | 'model'
+  assetId?: number
+  modelUrl?: string
   position: [number, number, number]
   rotation: [number, number, number]
   scale: [number, number, number]
