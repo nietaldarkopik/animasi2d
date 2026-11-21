@@ -235,6 +235,19 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
           color: item.color ?? '#a6b4c2',
         }))
       } else throw new Error('File tidak berisi daftar objek environment yang dikenali.')
+      // Models from the shared Environment Library must become project-owned assets
+      // before the scene is saved, so project duplication and validation remain reliable.
+      for (const object of objects) {
+        if (object.shape !== 'model' || object.assetId || !object.modelUrl) continue
+        const response = await fetch(object.modelUrl)
+        if (!response.ok) throw new Error(`Tidak dapat mengambil model environment: ${object.name}`)
+        const blob = await response.blob()
+        const file = new File([blob], `${object.name || 'environment'}.glb`, { type: 'model/gltf-binary' })
+        const asset = await api.upload3DModel(projectId, file)
+        useEditor.getState().addAsset(asset)
+        object.assetId = asset.id
+        object.modelUrl = asset.url
+      }
       const nextCamera = Array.isArray(source.camera) && source.camera.length === 3
         ? source.camera.map(Number) as [number, number, number]
         : [7, 6, 9] as [number, number, number]
