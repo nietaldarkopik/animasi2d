@@ -168,17 +168,20 @@ export function Scene3DDialog({ projectId, sceneId, initial, onClose }: {
           const bounds = new THREE.Box3().setFromObject(model)
           const size = bounds.getSize(new THREE.Vector3())
           const center = bounds.getCenter(new THREE.Vector3())
-          model.position.sub(center)
           const largest = Math.max(size.x, size.y, size.z, 0.001)
-          model.scale.setScalar(1.8 / largest)
-          model.position.set(...item.position)
-          model.rotation.set(...item.rotation.map((v) => THREE.MathUtils.degToRad(v)) as [number, number, number])
-          model.scale.multiply(new THREE.Vector3(...item.scale))
+          const fitScale = 1.8 / largest
+          model.scale.setScalar(fitScale)
+          model.position.copy(center).multiplyScalar(-fitScale)
           model.traverse((node) => {
             const mesh = node as THREE.Mesh
             if (mesh.isMesh) { mesh.castShadow = true; mesh.receiveShadow = true }
           })
-          scene.add(model)
+          const wrapper = new THREE.Group()
+          wrapper.add(model)
+          wrapper.position.set(...item.position)
+          wrapper.rotation.set(...item.rotation.map((v) => THREE.MathUtils.degToRad(v)) as [number, number, number])
+          wrapper.scale.set(...item.scale)
+          scene.add(wrapper)
           modelReady()
         }, undefined, () => modelReady())
         continue
