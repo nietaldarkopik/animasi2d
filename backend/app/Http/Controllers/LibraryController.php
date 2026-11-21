@@ -109,6 +109,9 @@ class LibraryController extends Controller
             'disk' => 'local',
             'path' => $path,
             'mime' => 'model/gltf-binary',
+            // Library schema requires 2D dimensions; GLB assets do not have raster dimensions.
+            'width' => 0,
+            'height' => 0,
             'tintable' => false,
             'meta' => ['asset_type' => 'environment', 'format' => 'glb', 'original_name' => $file->getClientOriginalName()],
         ]);
