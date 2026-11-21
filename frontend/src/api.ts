@@ -102,6 +102,11 @@ export const api = {
     fd.append('file', file, name ?? (file as File).name)
     return req<{ data: Asset }>(`/projects/${id}/assets`, { method: 'POST', body: fd }).then((r) => r.data)
   },
+  upload3DModel: (id: number, file: File) => {
+    const fd = new FormData()
+    fd.append('file', file, file.name)
+    return req<{ data: Asset }>(`/projects/${id}/models3d`, { method: 'POST', body: fd }).then((r) => r.data)
+  },
   processAsset: (id: number, ops: ImageOp[], name?: string) =>
     req<{ data: Asset; notes: string[]; geometry: Geometry }>(`/assets/${id}/process`, json('POST', { ops, name })),
   enhanceModes: () => req<{ data: { modes: EnhanceModeInfo[]; provider: { configured: boolean; model: string | null; daily_limit: number } } }>('/enhance/modes').then((r) => r.data),
