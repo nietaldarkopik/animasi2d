@@ -30,6 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/design/templates', [\App\Http\Controllers\DesignController::class, 'templates']);
     Route::get('/design/template', [\App\Http\Controllers\DesignController::class, 'template']);
     Route::get('/library/categories', [LibraryController::class, 'categories']);
+    Route::get('/library/environments', [LibraryController::class, 'environments']);
+    Route::post('/library/environments', [LibraryController::class, 'storeEnvironment'])->middleware('throttle:uploads');
     Route::get('/library/assets', [LibraryController::class, 'index']);
     Route::post('/library/assets', [LibraryController::class, 'store'])->middleware('throttle:30,1');
     Route::post('/library/assets/{asset}/file', [LibraryController::class, 'replace'])->middleware('throttle:30,1');
