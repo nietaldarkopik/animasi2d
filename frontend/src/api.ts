@@ -223,7 +223,7 @@ export const api = {
   cardGet: (id: number, version?: number) => req<{ data: CardDetail }>(`/builder/cards/${id}${version ? `?version=${version}` : ''}`).then((r) => r.data),
   cardRefresh: (id: number) => req<{ data: CardDetail }>(`/builder/cards/${id}/refresh`, json('POST', {})).then((r) => r.data),
   cardRename: (id: number, name: string) => req(`/builder/cards/${id}`, json('PATCH', { name })),
-  cardSaveSittingHeadOffset: (id: number, reference: string, x: number, y: number, head_scale = 1, body_scale = 1, chair: string | null = null, chair_x = 0, chair_y = 0, chair_scale = 1) => req<{ data: CardDetail }>(`/builder/cards/${id}/sitting-head-offset`, json('PATCH', { reference, x, y, head_scale, body_scale, chair, chair_x, chair_y, chair_scale })).then((r) => r.data),
+  cardSaveSittingHeadOffset: (id: number, reference: string, x: number, y: number, head_scale = 1, body_scale = 1) => req<{ data: CardDetail }>(`/builder/cards/${id}/sitting-head-offset`, json('PATCH', { reference, x, y, head_scale, body_scale })).then((r) => r.data),
   cardDuplicate: (id: number) => req<{ data: CardDetail }>(`/builder/cards/${id}/duplicate`, json('POST', {})).then((r) => r.data),
   cardDelete: (id: number) => req(`/builder/cards/${id}`, json('DELETE')),
   uploadAudio: (id: number, file: File) => {
