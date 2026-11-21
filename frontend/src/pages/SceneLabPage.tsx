@@ -31,6 +31,76 @@ const starter = (): SceneDraft => ({
   ],
 })
 
+
+type SavedEnvironment = { id: string; name: string; draft: SceneDraft }
+const SAVED_KEY = 'cm_three_scene_lab_presets_v1'
+const box = (id: string, name: string, kind: Kind, x: number, y: number, z: number, width: number, height: number, depth: number, color: string): SceneItem =>
+  ({ id, name, kind, shape: 'box', x, y, z, width, height, depth, color })
+const room = (placeName: string, floorColor: string, wallColor: string, extras: SceneItem[]): SceneDraft => ({
+  placeName,
+  items: [
+    box('floor', 'Lantai', 'place', 0, -.12, 0, 8, .2, 7, floorColor),
+    box('back-wall', 'Dinding belakang', 'place', 0, 1.7, -3.45, 8, 3.4, .12, wallColor),
+    box('left-wall', 'Dinding kiri', 'place', -3.95, 1.7, 0, .12, 3.4, 7, wallColor),
+    ...extras,
+  ],
+})
+const BUILT_IN_PRESETS: { id: string; name: string; create: () => SceneDraft }[] = [
+  { id: 'bathroom', name: 'Kamar mandi', create: starter },
+  { id: 'classroom', name: 'Ruang kelas', create: () => room('Ruang kelas', '#8c8170', '#e5dfd2', [
+    box('board', 'Papan tulis', 'prop', 0, 2.1, -3.34, 3.6, 1.25, .08, '#287c68'),
+    box('teacher-desk', 'Meja guru', 'prop', 0, .55, -2.2, 1.8, .9, .8, '#9b7048'),
+    box('student-desk-1', 'Meja siswa 1', 'prop', -1.6, .55, .1, 1.2, .9, .7, '#b98958'),
+    box('student-desk-2', 'Meja siswa 2', 'prop', 1.6, .55, .1, 1.2, .9, .7, '#b98958'),
+    box('door', 'Pintu', 'prop', 3.2, 1.05, -3.35, .9, 2.1, .08, '#80583d'),
+    box('window', 'Jendela', 'prop', -2.6, 2, -3.35, 1.5, 1.1, .06, '#8bc4dc'),
+  ]) },
+  { id: 'bedroom', name: 'Kamar tidur', create: () => room('Kamar tidur', '#8b7968', '#d8c8b7', [
+    box('bed-base', 'Rangka tempat tidur', 'prop', -.7, .35, -1.3, 2.8, .55, 2.1, '#805b46'),
+    box('mattress', 'Kasur', 'prop', -.7, .72, -1.3, 2.65, .25, 1.95, '#e8e0d7'),
+    box('pillow', 'Bantal', 'prop', -.7, .91, -2.05, .85, .18, .55, '#f4f0e9'),
+    box('wardrobe', 'Lemari pakaian', 'prop', 2.7, 1.25, -2.9, 1.1, 2.5, .8, '#80583d'),
+    box('nightstand', 'Meja samping', 'prop', -2.5, .45, -1.7, .65, .9, .65, '#9a704d'),
+    box('window', 'Jendela', 'prop', 0, 2.25, -3.35, 1.8, 1.1, .06, '#8bc4dc'),
+  ]) },
+  { id: 'living-room', name: 'Ruang tamu', create: () => room('Ruang tamu', '#8b8276', '#ddd8d0', [
+    box('sofa-base', 'Sofa', 'prop', 0, .55, -1.8, 3.2, .9, 1.05, '#667f8e'),
+    box('sofa-back', 'Sandaran sofa', 'prop', 0, 1.2, -2.25, 3.2, .8, .28, '#526c7b'),
+    box('coffee-table', 'Meja tamu', 'prop', 0, .4, .2, 1.8, .15, .9, '#956c4b'),
+    box('tv-cabinet', 'Meja TV', 'prop', 0, .45, -3.05, 2.5, .75, .4, '#604b3d'),
+    box('tv', 'Televisi', 'prop', 0, 1.35, -3.1, 1.8, 1.05, .12, '#202a35'),
+    box('door', 'Pintu', 'prop', 3.1, 1.05, -3.35, .9, 2.1, .08, '#80583d'),
+  ]) },
+  { id: 'office', name: 'Ruang kantor', create: () => room('Ruang kantor', '#77736d', '#d4d9dc', [
+    box('desk', 'Meja kerja', 'prop', 0, .8, -1.5, 2.2, .14, 1.1, '#8b6344'),
+    box('desk-leg-a', 'Kaki meja kiri', 'prop', -.9, .38, -1.5, .12, .76, .12, '#494d52'),
+    box('desk-leg-b', 'Kaki meja kanan', 'prop', .9, .38, -1.5, .12, .76, .12, '#494d52'),
+    box('monitor', 'Monitor', 'prop', 0, 1.55, -1.85, 1.1, .75, .1, '#263443'),
+    box('cabinet', 'Lemari arsip', 'prop', 3, 1.15, -2.9, .9, 2.3, .8, '#777f89'),
+    box('door', 'Pintu', 'prop', -3, 1.05, -3.35, .9, 2.1, .08, '#80583d'),
+  ]) },
+  { id: 'park', name: 'Taman', create: () => ({
+    placeName: 'Taman',
+    items: [
+      box('ground', 'Tanah taman', 'place', 0, -.18, 0, 16, .3, 14, '#66834c'),
+      box('path', 'Jalur pejalan kaki', 'place', 0, -.01, 1.5, 2.2, .08, 9, '#b6aa91'),
+      box('trunk-1', 'Batang pohon kiri', 'prop', -3, 1.1, -2, .45, 2.2, .45, '#765039'),
+      { id: 'leaves-1', name: 'Daun pohon kiri', kind: 'prop', shape: 'sphere', x: -3, y: 2.7, z: -2, width: 2.1, height: 2.1, depth: 2.1, color: '#477b48' },
+      box('trunk-2', 'Batang pohon kanan', 'prop', 3.2, 1.1, -3, .45, 2.2, .45, '#765039'),
+      { id: 'leaves-2', name: 'Daun pohon kanan', kind: 'prop', shape: 'sphere', x: 3.2, y: 2.7, z: -3, width: 2.1, height: 2.1, depth: 2.1, color: '#477b48' },
+      box('bench-seat', 'Bangku taman', 'prop', 0, .65, -1.4, 1.8, .14, .55, '#8b603e'),
+      box('bench-back', 'Sandaran bangku', 'prop', 0, 1.1, -1.65, 1.8, .75, .12, '#8b603e'),
+    ],
+  }) },
+]
+function readSavedPresets(): SavedEnvironment[] {
+  try {
+    const raw = localStorage.getItem(SAVED_KEY)
+    const parsed = raw ? JSON.parse(raw) as SavedEnvironment[] : []
+    return Array.isArray(parsed) ? parsed.filter(x => x && x.id && x.name && x.draft?.items) : []
+  } catch { return [] }
+}
+
 function readDraft(): SceneDraft {
   try {
     const raw = localStorage.getItem(KEY)
@@ -43,6 +113,7 @@ const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n
 
 export function SceneLabPage() {
   const [draft, setDraft] = useState<SceneDraft>(readDraft)
+  const [savedPresets, setSavedPresets] = useState<SavedEnvironment[]>(readSavedPresets)
   const [selectedId, setSelectedId] = useState<string | null>('sink')
   const [prompt, setPrompt] = useState('')
   const [message, setMessage] = useState('Scene tersimpan otomatis di browser ini.')
@@ -51,6 +122,7 @@ export function SceneLabPage() {
   const selected = draft.items.find(x => x.id === selectedId) ?? null
 
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify(draft)) }, [draft])
+  useEffect(() => { localStorage.setItem(SAVED_KEY, JSON.stringify(savedPresets)) }, [savedPresets])
 
   useEffect(() => {
     const el = host.current
@@ -201,6 +273,44 @@ export function SceneLabPage() {
     reader.onload = () => addItem('character', 'plane', file.name.replace(/\.[^.]+$/, ''), String(reader.result))
     reader.readAsDataURL(file)
   }
+  const loadPreset = (key: string) => {
+    const builtIn = BUILT_IN_PRESETS.find(x => x.id === key)
+    const saved = savedPresets.find(x => x.id === key)
+    const next = builtIn ? builtIn.create() : saved ? structuredClone(saved.draft) : null
+    if (!next) return
+    setDraft(next); setSelectedId(next.items[0]?.id ?? null)
+    setMessage(`Environment "${next.placeName}" dimuat. Kamu bisa mengubahnya tanpa mengubah preset asal.`)
+  }
+  const saveAsPreset = () => {
+    const name = window.prompt('Nama environment baru:', draft.placeName)?.trim()
+    if (!name) return
+    const entry = { id: uid(), name, draft: { ...structuredClone(draft), placeName: name } }
+    setSavedPresets(items => [...items, entry])
+    setMessage(`Environment "${name}" disimpan ke preset milikmu.`)
+  }
+  const exportEnvironment = () => {
+    const config = {
+      placeName: draft.placeName,
+      background: '#202a35',
+      floor: false,
+      walls: false,
+      ambient: 1.4,
+      directional: 2.2,
+      camera: [8, 6.5, 10],
+      objects: draft.items.filter(item => item.kind !== 'character').map(item => ({
+        id: item.id, name: item.name,
+        shape: item.shape === 'sphere' || item.shape === 'cylinder' ? item.shape : 'box',
+        position: [item.x, item.y, item.z],
+        rotation: [0, 0, 0],
+        scale: [item.width, item.height, item.depth],
+        color: item.color,
+      })),
+    }
+    const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob); const a = document.createElement('a')
+    a.href = url; a.download = `environment-${draft.placeName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.json`; a.click(); URL.revokeObjectURL(url)
+    setMessage('Environment diekspor. Impor JSON ini melalui 3D Scene Studio.')
+  }
   const exportDraft = () => {
     const blob = new Blob([JSON.stringify(draft, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob); const a = document.createElement('a')
@@ -224,9 +334,12 @@ export function SceneLabPage() {
     <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 310px', flex: 1, minHeight: 0 }}>
       <main style={{ display: 'flex', flexDirection: 'column', minWidth: 0, background: '#171c24' }}>
         <div className="row" style={{ padding: 10, borderBottom: '1px solid var(--border)' }}>
-          <strong>{draft.placeName}</strong><span className="muted small">{draft.items.length} objek</span><span className="spacer" />
+          <strong>{draft.placeName}</strong><span className="muted small">{draft.items.length} objek</span>
+          <label style={{ width: 'auto', minWidth: 160 }}><span className="muted small">Pilih environment</span><select defaultValue="" onChange={e => { if (e.target.value) loadPreset(e.target.value); e.target.value = '' }}><option value="">Muat preset…</option><optgroup label="Preset bawaan">{BUILT_IN_PRESETS.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</optgroup>{savedPresets.length > 0 && <optgroup label="Preset milik saya">{savedPresets.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</optgroup>}</select></label>
+          <button onClick={saveAsPreset}>Simpan sebagai preset</button><span className="spacer" />
           <button onClick={() => { runtime.current?.camera.position.set(8, 6.5, 10); runtime.current?.controls.target.set(0, 1, 0) }}>Reset kamera</button>
           <button onClick={exportDraft}>Export JSON</button>
+          <button className="primary" onClick={exportEnvironment}>Export untuk 3D Studio</button>
           <label style={{ width: 'auto' }}><span className="muted small">Import JSON</span><input type="file" accept="application/json" onChange={e => void importDraft(e.target.files?.[0])} /></label>
         </div>
         <div ref={host} style={{ flex: 1, minHeight: 260, position: 'relative' }} />
